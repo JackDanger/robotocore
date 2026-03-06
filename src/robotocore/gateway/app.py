@@ -23,6 +23,7 @@ from robotocore.services.lambda_.provider import handle_lambda_request
 from robotocore.services.s3.provider import handle_s3_request
 from robotocore.services.sns.provider import handle_sns_request
 from robotocore.services.sqs.provider import handle_sqs_request
+from robotocore.services.stepfunctions.provider import handle_stepfunctions_request
 
 # Services with native providers (bypass Moto)
 NATIVE_PROVIDERS = {
@@ -33,6 +34,7 @@ NATIVE_PROVIDERS = {
     "s3": handle_s3_request,
     "sqs": handle_sqs_request,
     "sns": handle_sns_request,
+    "stepfunctions": handle_stepfunctions_request,
 }
 
 
