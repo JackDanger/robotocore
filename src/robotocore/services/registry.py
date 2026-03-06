@@ -42,7 +42,7 @@ SERVICE_REGISTRY: dict[str, ServiceInfo] = {
     "cloudwatch": ServiceInfo(
         "cloudwatch", ServiceStatus.NATIVE, "query", "CloudWatch Metrics with alarm evaluation"
     ),
-    "logs": ServiceInfo("logs", ServiceStatus.MOTO_BACKED, "json", "CloudWatch Logs"),
+    "logs": ServiceInfo("logs", ServiceStatus.NATIVE, "json", "CloudWatch Logs"),
     "kms": ServiceInfo("kms", ServiceStatus.MOTO_BACKED, "json", "Key Management Service"),
     "lambda": ServiceInfo(
         "lambda", ServiceStatus.NATIVE, "rest-json", "Lambda with in-process Python execution"
@@ -59,6 +59,12 @@ SERVICE_REGISTRY: dict[str, ServiceInfo] = {
     ),
     # Phase 2 - Integration (Moto-backed)
     "apigateway": ServiceInfo("apigateway", ServiceStatus.MOTO_BACKED, "rest-json", "API Gateway"),
+    "apigatewayv2": ServiceInfo(
+        "apigatewayv2",
+        ServiceStatus.NATIVE,
+        "rest-json",
+        "API Gateway V2 (HTTP APIs + WebSocket)",
+    ),
     "secretsmanager": ServiceInfo(
         "secretsmanager", ServiceStatus.MOTO_BACKED, "json", "Secrets Manager"
     ),
@@ -91,8 +97,11 @@ SERVICE_REGISTRY: dict[str, ServiceInfo] = {
         "opensearch", ServiceStatus.MOTO_BACKED, "rest-json", "OpenSearch Service"
     ),
     "cognito-idp": ServiceInfo(
-        "cognito-idp", ServiceStatus.MOTO_BACKED, "json", "Cognito Identity Provider"
+        "cognito-idp", ServiceStatus.NATIVE, "json", "Cognito Identity Provider"
     ),
+    "appsync": ServiceInfo("appsync", ServiceStatus.NATIVE, "rest-json", "AppSync GraphQL"),
+    "ecs": ServiceInfo("ecs", ServiceStatus.NATIVE, "json", "Elastic Container Service"),
+    "batch": ServiceInfo("batch", ServiceStatus.NATIVE, "rest-json", "AWS Batch"),
     "ecr": ServiceInfo("ecr", ServiceStatus.MOTO_BACKED, "json", "Elastic Container Registry"),
 }
 

@@ -1,4 +1,4 @@
-"""State persistence manager — save and restore emulator state across restarts.
+"""State persistence manager -- save and restore emulator state across restarts.
 
 Supports saving all Moto backend state plus native provider state to disk,
 and restoring it on startup. This enables "Cloud Pods"-like functionality
@@ -7,12 +7,14 @@ where you can snapshot and share emulator state.
 Configuration via environment variables:
     ROBOTOCORE_STATE_DIR=/path/to/state    Save/load state directory
     ROBOTOCORE_PERSIST=1                   Enable auto-save on shutdown
+    PERSISTENCE=1                          Enable auto-save after mutations
 """
 
 import json
 import logging
 import os
 import pickle
+import threading
 import time
 from pathlib import Path
 
@@ -25,6 +27,9 @@ class StateManager:
     def __init__(self, state_dir: str | None = None) -> None:
         self.state_dir = Path(state_dir) if state_dir else None
         self._native_handlers: dict[str, tuple] = {}
+        self._last_save_time: float = 0.0
+        self._save_lock = threading.Lock()
+        self._debounce_interval: float = 1.0  # seconds
 
     def register_native_handler(
         self,
@@ -63,8 +68,25 @@ class StateManager:
         meta_path = save_dir / "metadata.json"
         meta_path.write_text(json.dumps(meta, indent=2))
 
+        self._last_save_time = time.monotonic()
         logger.info("State saved to %s", save_dir)
         return str(save_dir)
+
+    def save_debounced(self) -> bool:
+        """Save state with debouncing -- at most once per debounce_interval.
+
+        Returns True if save was performed, False if skipped due to debounce.
+        """
+        now = time.monotonic()
+        if now - self._last_save_time < self._debounce_interval:
+            return False
+
+        with self._save_lock:
+            # Double-check after acquiring lock
+            if time.monotonic() - self._last_save_time < self._debounce_interval:
+                return False
+            self.save()
+            return True
 
     def load(self, path: str | Path | None = None) -> bool:
         """Load state from disk. Returns True if successful."""
@@ -75,7 +97,7 @@ class StateManager:
 
         meta_path = load_dir / "metadata.json"
         if not meta_path.exists():
-            logger.warning("No metadata.json in %s — skipping load", load_dir)
+            logger.warning("No metadata.json in %s -- skipping load", load_dir)
             return False
 
         meta = json.loads(meta_path.read_text())
@@ -108,6 +130,37 @@ class StateManager:
                 logger.debug("Failed to reset native state for %s", service, exc_info=True)
         logger.info("All state reset")
 
+    def export_json(self) -> dict:
+        """Export native provider state as a JSON-serializable dict."""
+        state: dict = {
+            "version": "1.0",
+            "exported_at": time.time(),
+            "native_state": {},
+        }
+        for service, (save_fn, _) in self._native_handlers.items():
+            try:
+                state["native_state"][service] = save_fn()
+            except Exception:
+                logger.debug(
+                    "Could not export state for %s", service, exc_info=True
+                )
+        return state
+
+    def import_json(self, data: dict) -> None:
+        """Import native provider state from a JSON dict."""
+        native_state = data.get("native_state", {})
+        for service, (_, load_fn) in self._native_handlers.items():
+            if service in native_state:
+                try:
+                    load_fn(native_state[service])
+                except Exception:
+                    logger.debug(
+                        "Could not import state for %s",
+                        service,
+                        exc_info=True,
+                    )
+        logger.info("State imported from JSON")
+
     def _save_moto_state(self, path: Path) -> None:
         """Pickle all Moto backends."""
         try:
@@ -127,7 +180,11 @@ class StateManager:
                         service_state[account_id] = account_state
                     state[service_name] = service_state
                 except Exception:
-                    logger.debug("Could not save Moto state for %s", service_name, exc_info=True)
+                    logger.debug(
+                        "Could not save Moto state for %s",
+                        service_name,
+                        exc_info=True,
+                    )
 
             with open(path, "wb") as f:
                 pickle.dump(state, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -141,7 +198,7 @@ class StateManager:
             from moto.backends import get_backend
 
             with open(path, "rb") as f:
-                state = pickle.load(f)
+                state = pickle.load(f)  # noqa: S301
 
             for service_name, service_state in state.items():
                 try:
@@ -150,7 +207,11 @@ class StateManager:
                         for region, backend in account_state.items():
                             backend_dict[account_id][region] = backend
                 except Exception:
-                    logger.debug("Could not load Moto state for %s", service_name, exc_info=True)
+                    logger.debug(
+                        "Could not load Moto state for %s",
+                        service_name,
+                        exc_info=True,
+                    )
 
         except Exception:
             logger.warning("Failed to load Moto state", exc_info=True)
@@ -162,7 +223,11 @@ class StateManager:
             try:
                 state[service] = save_fn()
             except Exception:
-                logger.debug("Could not save native state for %s", service, exc_info=True)
+                logger.debug(
+                    "Could not save native state for %s",
+                    service,
+                    exc_info=True,
+                )
 
         path.write_text(json.dumps(state, indent=2, default=str))
 
@@ -174,7 +239,11 @@ class StateManager:
                 try:
                     load_fn(state[service])
                 except Exception:
-                    logger.debug("Could not load native state for %s", service, exc_info=True)
+                    logger.debug(
+                        "Could not load native state for %s",
+                        service,
+                        exc_info=True,
+                    )
 
     def _reset_moto_state(self) -> None:
         """Reset all Moto backends."""
