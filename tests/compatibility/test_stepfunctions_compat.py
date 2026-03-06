@@ -1,6 +1,7 @@
-"""Step Functions compatibility tests."""
+"""Step Functions compatibility tests — including ASL execution."""
 
 import json
+import uuid
 
 import pytest
 from tests.compatibility.conftest import make_client
@@ -100,3 +101,217 @@ class TestStepFunctionsOperations:
         exec_arn = exec_resp["executionArn"]
         response = sfn.describe_execution(executionArn=exec_arn)
         assert response["stateMachineArn"] == state_machine
+
+
+class TestASLExecution:
+    """Test actual ASL state machine execution — Enterprise-grade feature."""
+
+    @pytest.fixture
+    def role_arn(self):
+        iam = make_client("iam")
+        name = f"sfn-exec-role-{uuid.uuid4().hex[:8]}"
+        iam.create_role(
+            RoleName=name,
+            AssumeRolePolicyDocument=json.dumps({
+                "Version": "2012-10-17",
+                "Statement": [{"Effect": "Allow", "Principal": {"Service": "states.amazonaws.com"}, "Action": "sts:AssumeRole"}],
+            }),
+        )
+        yield f"arn:aws:iam::123456789012:role/{name}"
+        iam.delete_role(RoleName=name)
+
+    def _create_and_execute(self, sfn, role_arn, definition: dict, input_data: dict = None) -> dict:
+        """Helper: create state machine, execute, return describe_execution result."""
+        name = f"test-sm-{uuid.uuid4().hex[:8]}"
+        sm = sfn.create_state_machine(
+            name=name,
+            definition=json.dumps(definition),
+            roleArn=role_arn,
+        )
+        sm_arn = sm["stateMachineArn"]
+
+        exec_resp = sfn.start_execution(
+            stateMachineArn=sm_arn,
+            input=json.dumps(input_data or {}),
+        )
+        result = sfn.describe_execution(executionArn=exec_resp["executionArn"])
+        sfn.delete_state_machine(stateMachineArn=sm_arn)
+        return result
+
+    def test_pass_state(self, role_arn):
+        """Test Pass state with Result."""
+        sfn = make_client("stepfunctions")
+        result = self._create_and_execute(sfn, role_arn, {
+            "StartAt": "MyPass",
+            "States": {
+                "MyPass": {
+                    "Type": "Pass",
+                    "Result": {"greeting": "hello world"},
+                    "End": True,
+                }
+            }
+        })
+        assert result["status"] == "SUCCEEDED"
+        output = json.loads(result["output"])
+        assert output["greeting"] == "hello world"
+
+    def test_choice_state(self, role_arn):
+        """Test Choice state with numeric comparison."""
+        sfn = make_client("stepfunctions")
+        result = self._create_and_execute(sfn, role_arn, {
+            "StartAt": "CheckValue",
+            "States": {
+                "CheckValue": {
+                    "Type": "Choice",
+                    "Choices": [
+                        {
+                            "Variable": "$.value",
+                            "NumericGreaterThan": 10,
+                            "Next": "High",
+                        },
+                    ],
+                    "Default": "Low",
+                },
+                "High": {
+                    "Type": "Pass",
+                    "Result": {"level": "high"},
+                    "End": True,
+                },
+                "Low": {
+                    "Type": "Pass",
+                    "Result": {"level": "low"},
+                    "End": True,
+                },
+            }
+        }, {"value": 25})
+        assert result["status"] == "SUCCEEDED"
+        output = json.loads(result["output"])
+        assert output["level"] == "high"
+
+    def test_choice_default(self, role_arn):
+        """Test Choice state falls to Default."""
+        sfn = make_client("stepfunctions")
+        result = self._create_and_execute(sfn, role_arn, {
+            "StartAt": "CheckValue",
+            "States": {
+                "CheckValue": {
+                    "Type": "Choice",
+                    "Choices": [
+                        {"Variable": "$.value", "NumericGreaterThan": 100, "Next": "High"},
+                    ],
+                    "Default": "Low",
+                },
+                "High": {"Type": "Pass", "Result": {"level": "high"}, "End": True},
+                "Low": {"Type": "Pass", "Result": {"level": "low"}, "End": True},
+            }
+        }, {"value": 5})
+        assert result["status"] == "SUCCEEDED"
+        output = json.loads(result["output"])
+        assert output["level"] == "low"
+
+    def test_chain_of_states(self, role_arn):
+        """Test multiple states chained together."""
+        sfn = make_client("stepfunctions")
+        result = self._create_and_execute(sfn, role_arn, {
+            "StartAt": "Step1",
+            "States": {
+                "Step1": {
+                    "Type": "Pass",
+                    "Result": {"step": 1},
+                    "ResultPath": "$.step1",
+                    "Next": "Step2",
+                },
+                "Step2": {
+                    "Type": "Pass",
+                    "Result": {"step": 2},
+                    "ResultPath": "$.step2",
+                    "Next": "Step3",
+                },
+                "Step3": {
+                    "Type": "Pass",
+                    "Result": {"step": 3},
+                    "ResultPath": "$.step3",
+                    "End": True,
+                },
+            }
+        }, {"input": "start"})
+        assert result["status"] == "SUCCEEDED"
+        output = json.loads(result["output"])
+        assert output["step1"]["step"] == 1
+        assert output["step2"]["step"] == 2
+        assert output["step3"]["step"] == 3
+
+    def test_fail_state(self, role_arn):
+        """Test Fail state produces FAILED execution."""
+        sfn = make_client("stepfunctions")
+        result = self._create_and_execute(sfn, role_arn, {
+            "StartAt": "FailNow",
+            "States": {
+                "FailNow": {
+                    "Type": "Fail",
+                    "Error": "CustomError",
+                    "Cause": "Something went wrong",
+                }
+            }
+        })
+        assert result["status"] == "FAILED"
+
+    def test_parallel_state(self, role_arn):
+        """Test Parallel state executes branches."""
+        sfn = make_client("stepfunctions")
+        result = self._create_and_execute(sfn, role_arn, {
+            "StartAt": "ParallelStep",
+            "States": {
+                "ParallelStep": {
+                    "Type": "Parallel",
+                    "Branches": [
+                        {
+                            "StartAt": "B1",
+                            "States": {"B1": {"Type": "Pass", "Result": {"branch": 1}, "End": True}},
+                        },
+                        {
+                            "StartAt": "B2",
+                            "States": {"B2": {"Type": "Pass", "Result": {"branch": 2}, "End": True}},
+                        },
+                    ],
+                    "End": True,
+                }
+            }
+        })
+        assert result["status"] == "SUCCEEDED"
+        output = json.loads(result["output"])
+        assert len(output) == 2
+        assert output[0]["branch"] == 1
+        assert output[1]["branch"] == 2
+
+    def test_succeed_state(self, role_arn):
+        """Test Succeed state."""
+        sfn = make_client("stepfunctions")
+        result = self._create_and_execute(sfn, role_arn, {
+            "StartAt": "Done",
+            "States": {
+                "Done": {"Type": "Succeed"},
+            }
+        }, {"data": "preserved"})
+        assert result["status"] == "SUCCEEDED"
+
+    def test_parameters(self, role_arn):
+        """Test Parameters field with dynamic references."""
+        sfn = make_client("stepfunctions")
+        result = self._create_and_execute(sfn, role_arn, {
+            "StartAt": "Transform",
+            "States": {
+                "Transform": {
+                    "Type": "Pass",
+                    "Parameters": {
+                        "greeting.$": "$.name",
+                        "static": "value",
+                    },
+                    "End": True,
+                }
+            }
+        }, {"name": "Alice"})
+        assert result["status"] == "SUCCEEDED"
+        output = json.loads(result["output"])
+        assert output["greeting"] == "Alice"
+        assert output["static"] == "value"

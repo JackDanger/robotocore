@@ -36,7 +36,7 @@ SERVICE_REGISTRY: dict[str, ServiceInfo] = {
     "events": ServiceInfo("events", ServiceStatus.NATIVE, "json", "EventBridge with cross-service target invocation"),
     "kinesis": ServiceInfo("kinesis", ServiceStatus.MOTO_BACKED, "json", "Kinesis Streams"),
     "firehose": ServiceInfo("firehose", ServiceStatus.NATIVE, "json", "Firehose with S3 delivery"),
-    "stepfunctions": ServiceInfo("stepfunctions", ServiceStatus.MOTO_BACKED, "json", "Step Functions"),
+    "stepfunctions": ServiceInfo("stepfunctions", ServiceStatus.NATIVE, "json", "Step Functions with ASL execution"),
     # Phase 2 - Integration (Moto-backed)
     "apigateway": ServiceInfo("apigateway", ServiceStatus.MOTO_BACKED, "rest-json", "API Gateway"),
     "secretsmanager": ServiceInfo("secretsmanager", ServiceStatus.MOTO_BACKED, "json", "Secrets Manager"),
