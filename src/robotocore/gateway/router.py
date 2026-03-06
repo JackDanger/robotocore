@@ -17,6 +17,7 @@ TARGET_PREFIX_MAP: dict[str, str] = {
     "AWSCognitoIdentityService": "cognito-identity",
     "AWSStepFunctions": "stepfunctions",
     "AmazonEC2ContainerRegistry": "ecr",
+    "AmazonEC2ContainerServiceV20141113": "ecs",
     "CloudWatchEvents": "events",
     "DynamoDB": "dynamodb",
     "DynamoDBStreams": "dynamodbstreams",
@@ -45,6 +46,19 @@ PATH_PATTERNS: list[tuple[re.Pattern, str]] = [
     (re.compile(r"^/2014-11-13/"), "logs"),
     (re.compile(r"^/tags"), "resourcegroupstaggingapi"),
     (re.compile(r"^/prod/"), "kafka"),
+    (re.compile(r"^/v1/apis"), "appsync"),
+    (re.compile(r"^/v1/create"), "batch"),
+    (re.compile(r"^/v1/describe"), "batch"),
+    (re.compile(r"^/v1/update"), "batch"),
+    (re.compile(r"^/v1/delete"), "batch"),
+    (re.compile(r"^/v1/register"), "batch"),
+    (re.compile(r"^/v1/deregister"), "batch"),
+    (re.compile(r"^/v1/submit"), "batch"),
+    (re.compile(r"^/v1/list"), "batch"),
+    (re.compile(r"^/v1/terminate"), "batch"),
+    (re.compile(r"^/v1/cancel"), "batch"),
+    (re.compile(r"^/v1/tags"), "batch"),
+    (re.compile(r"^/v1/untag"), "batch"),
 ]
 
 # Service name extracted from credential scope in Authorization header

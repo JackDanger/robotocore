@@ -1,7 +1,11 @@
-"""ASGI application — the main HTTP entry point for Robotocore."""
+"""ASGI application -- the main HTTP entry point for Robotocore."""
+
+import json
+import os
+import re
+import time
 
 from starlette.applications import Starlette
-from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from starlette.routing import Route
@@ -15,14 +19,25 @@ from robotocore.gateway.handlers import (
     populate_context_handler,
 )
 from robotocore.gateway.router import route_to_service
+from robotocore.observability.hooks import run_init_hooks
+from robotocore.observability.metrics import request_counter
+from robotocore.observability.tracing import TracingMiddleware
 from robotocore.providers.moto_bridge import forward_to_moto
+from robotocore.services.apigatewayv2.provider import handle_apigatewayv2_request
+from robotocore.services.appsync.provider import handle_appsync_request
+from robotocore.services.batch.provider import handle_batch_request
 from robotocore.services.cloudformation.provider import handle_cloudformation_request
+from robotocore.services.cloudwatch.logs_provider import handle_logs_request
+from robotocore.services.cloudwatch.provider import handle_cloudwatch_request
+from robotocore.services.cognito.provider import handle_cognito_request
 from robotocore.services.dynamodb.provider import handle_dynamodb_request
 from robotocore.services.dynamodbstreams.provider import handle_dynamodbstreams_request
+from robotocore.services.ecs.provider import handle_ecs_request
 from robotocore.services.events.provider import handle_events_request
 from robotocore.services.firehose.provider import handle_firehose_request
 from robotocore.services.kinesis.provider import handle_kinesis_request
 from robotocore.services.lambda_.provider import handle_lambda_request
+from robotocore.services.registry import SERVICE_REGISTRY, ServiceStatus
 from robotocore.services.s3.provider import handle_s3_request
 from robotocore.services.scheduler.provider import handle_scheduler_request
 from robotocore.services.sns.provider import handle_sns_request
@@ -31,19 +46,35 @@ from robotocore.services.stepfunctions.provider import handle_stepfunctions_requ
 
 # Services with native providers (bypass Moto)
 NATIVE_PROVIDERS = {
+    "apigatewayv2": handle_apigatewayv2_request,
+    "appsync": handle_appsync_request,
+    "batch": handle_batch_request,
     "cloudformation": handle_cloudformation_request,
+    "cloudwatch": handle_cloudwatch_request,
+    "cognito-idp": handle_cognito_request,
     "dynamodb": handle_dynamodb_request,
     "dynamodbstreams": handle_dynamodbstreams_request,
+    "ecs": handle_ecs_request,
     "events": handle_events_request,
     "firehose": handle_firehose_request,
     "kinesis": handle_kinesis_request,
     "lambda": handle_lambda_request,
+    "logs": handle_logs_request,
     "s3": handle_s3_request,
     "scheduler": handle_scheduler_request,
     "sqs": handle_sqs_request,
     "sns": handle_sns_request,
     "stepfunctions": handle_stepfunctions_request,
 }
+
+# Default account ID (matches LocalStack)
+DEFAULT_ACCOUNT_ID = "000000000000"
+
+# Regex to extract account ID from SigV4 Credential
+_CREDENTIAL_RE = re.compile(r"Credential=(\d+)/")
+
+# Track server start time for uptime
+_server_start_time: float = 0.0
 
 
 def _build_handler_chain() -> HandlerChain:
@@ -60,8 +91,87 @@ def _build_handler_chain() -> HandlerChain:
 _handler_chain = _build_handler_chain()
 
 
+def _extract_account_id(request: Request) -> str:
+    """Extract account ID from SigV4 credentials, defaulting to 000000000000."""
+    auth = request.headers.get("authorization", "")
+    match = _CREDENTIAL_RE.search(auth)
+    if match:
+        return match.group(1)
+    # Check query param for presigned URLs
+    credential = request.query_params.get("X-Amz-Credential", "")
+    if credential:
+        parts = credential.split("/")
+        if parts and parts[0].isdigit():
+            return parts[0]
+    return DEFAULT_ACCOUNT_ID
+
+
+def _extract_region_account(request: Request) -> tuple[str, str]:
+    """Extract region and account from auth header."""
+    region = "us-east-1"
+    account_id = _extract_account_id(request)
+    auth = request.headers.get("authorization", "")
+    region_match = re.search(r"Credential=[^/]+/\d{8}/([^/]+)/", auth)
+    if region_match:
+        region = region_match.group(1)
+    return region, account_id
+
+
+# ---------------------------------------------------------------------------
+# Management endpoints
+# ---------------------------------------------------------------------------
+
+
 async def health(request: Request) -> JSONResponse:
-    return JSONResponse({"status": "running", "services": "all"})
+    """Enhanced health endpoint with per-service status and request counts."""
+    uptime = time.monotonic() - _server_start_time if _server_start_time else 0
+
+    counts = request_counter.get_all()
+    services_status = {}
+    for name, info in sorted(SERVICE_REGISTRY.items()):
+        stype = "native" if info.status == ServiceStatus.NATIVE else "moto"
+        services_status[name] = {
+            "status": "running",
+            "type": stype,
+            "requests": counts.get(name, 0),
+        }
+
+    return JSONResponse({
+        "status": "running",
+        "version": "1.0.0",
+        "uptime_seconds": round(uptime, 1),
+        "services": services_status,
+    })
+
+
+async def services_endpoint(request: Request) -> JSONResponse:
+    """List all registered services with their status and protocol."""
+    services = []
+    for name, info in sorted(SERVICE_REGISTRY.items()):
+        stype = "native" if info.status == ServiceStatus.NATIVE else "moto"
+        services.append({
+            "name": name,
+            "status": stype,
+            "protocol": info.protocol,
+            "description": info.description,
+        })
+    return JSONResponse({"services": services})
+
+
+async def config_endpoint(request: Request) -> JSONResponse:
+    """Return current Robotocore configuration."""
+    native_count = sum(
+        1 for s in SERVICE_REGISTRY.values() if s.status == ServiceStatus.NATIVE
+    )
+    return JSONResponse({
+        "enforce_iam": False,
+        "persistence": os.environ.get("PERSISTENCE", "0") == "1",
+        "log_level": os.environ.get("LOG_LEVEL", "INFO").upper(),
+        "debug": os.environ.get("DEBUG", "0") == "1",
+        "region": os.environ.get("DEFAULT_REGION", "us-east-1"),
+        "services_count": len(SERVICE_REGISTRY),
+        "native_providers": native_count,
+    })
 
 
 async def save_state(request: Request) -> JSONResponse:
@@ -71,8 +181,6 @@ async def save_state(request: Request) -> JSONResponse:
     body = await request.body()
     params = {}
     if body:
-        import json
-
         params = json.loads(body)
 
     manager = get_state_manager()
@@ -94,8 +202,6 @@ async def load_state(request: Request) -> JSONResponse:
     body = await request.body()
     params = {}
     if body:
-        import json
-
         params = json.loads(body)
 
     manager = get_state_manager()
@@ -118,6 +224,34 @@ async def reset_state(request: Request) -> JSONResponse:
     return JSONResponse({"status": "reset"})
 
 
+async def export_state(request: Request) -> JSONResponse:
+    """Export emulator state as JSON."""
+    from robotocore.state.manager import get_state_manager
+
+    manager = get_state_manager()
+    data = manager.export_json()
+    return JSONResponse(data)
+
+
+async def import_state(request: Request) -> JSONResponse:
+    """Import emulator state from JSON."""
+    from robotocore.state.manager import get_state_manager
+
+    body = await request.body()
+    if not body:
+        return JSONResponse({"error": "No data provided"}, status_code=400)
+
+    data = json.loads(body)
+    manager = get_state_manager()
+    manager.import_json(data)
+    return JSONResponse({"status": "imported"})
+
+
+# ---------------------------------------------------------------------------
+# AWS request handler
+# ---------------------------------------------------------------------------
+
+
 async def handle_aws_request(request: Request) -> Response:
     """Main handler: route, build context, run handler chain, forward to Moto."""
     service_name = route_to_service(request)
@@ -127,13 +261,23 @@ async def handle_aws_request(request: Request) -> Response:
             status_code=400,
         )
 
-    context = RequestContext(request=request, service_name=service_name)
+    # Multi-account support: extract account ID from request
+    account_id = _extract_account_id(request)
+
+    context = RequestContext(
+        request=request,
+        service_name=service_name,
+        account_id=account_id,
+    )
 
     _handler_chain.handle(context)
 
     # If a handler already set a response (e.g. CORS preflight), return it
     if context.response is not None:
         return context.response
+
+    # Track request count
+    request_counter.increment(service_name)
 
     # Use native provider if available, otherwise forward to Moto
     native_handler = NATIVE_PROVIDERS.get(service_name)
@@ -147,74 +291,44 @@ async def handle_aws_request(request: Request) -> Response:
     for handler in _handler_chain.response_handlers:
         handler(context)
 
+    # Auto-save if PERSISTENCE=1
+    if os.environ.get("PERSISTENCE", "0") == "1":
+        _maybe_persist()
+
     return context.response
 
 
-# Health and management endpoints
-management_routes = [
-    Route("/_robotocore/health", health, methods=["GET"]),
-    Route("/_robotocore/state/save", save_state, methods=["POST"]),
-    Route("/_robotocore/state/load", load_state, methods=["POST"]),
-    Route("/_robotocore/state/reset", reset_state, methods=["POST"]),
-]
+def _maybe_persist() -> None:
+    """Debounced auto-save: at most once per second."""
+    from robotocore.state.manager import get_state_manager
+
+    manager = get_state_manager()
+    if not manager.state_dir:
+        default_dir = os.environ.get(
+            "ROBOTOCORE_STATE_DIR", "/tmp/robotocore/state"
+        )
+        from pathlib import Path
+
+        manager.state_dir = Path(default_dir)
+
+    manager.save_debounced()
 
 
-def _start_background_engines():
-    """Start background engines for cross-service integrations."""
-    import os
-
-    from robotocore.services.lambda_.event_source import get_engine
-
-    get_engine().start()
-    from robotocore.services.cloudwatch.alarm_scheduler import get_alarm_scheduler
-
-    get_alarm_scheduler().start()
-
-    # Auto-load state if configured
-    if os.environ.get("ROBOTOCORE_STATE_DIR"):
-        from robotocore.state.manager import get_state_manager
-
-        get_state_manager().load()
-
-
-def _shutdown():
-    """Shutdown hook — auto-save state if configured."""
-    import os
-
-    if os.environ.get("ROBOTOCORE_PERSIST", "0") == "1":
-        from robotocore.state.manager import get_state_manager
-
-        manager = get_state_manager()
-        if manager.state_dir:
-            manager.save()
-
-
-app = Starlette(
-    routes=management_routes,
-    on_startup=[_start_background_engines],
-    on_shutdown=[_shutdown],
-)
+# ---------------------------------------------------------------------------
+# API Gateway execution endpoints
+# ---------------------------------------------------------------------------
 
 
 async def handle_execute_api(
     request: Request, rest_api_id: str, stage: str, proxy_path: str
 ) -> Response:
     """Handle API Gateway execute-api requests (invoke deployed APIs)."""
-    import re
-
     from robotocore.services.apigateway.executor import execute_api_request
 
     body = await request.body()
     headers = dict(request.headers)
     query_params = dict(request.query_params)
-
-    # Extract region/account from auth header
-    region = "us-east-1"
-    account_id = "123456789012"
-    auth = request.headers.get("authorization", "")
-    region_match = re.search(r"Credential=[^/]+/\d{8}/([^/]+)/", auth)
-    if region_match:
-        region = region_match.group(1)
+    region, account_id = _extract_region_account(request)
 
     status_code, resp_headers, resp_body = execute_api_request(
         rest_api_id=rest_api_id,
@@ -235,24 +349,202 @@ async def handle_execute_api(
     )
 
 
-class AWSRoutingMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        if request.url.path.startswith("/_robotocore/"):
-            return await call_next(request)
+async def handle_execute_api_v2(
+    request: Request, api_id: str, stage: str, proxy_path: str
+) -> Response:
+    """Handle API Gateway V2 HTTP API execute-api requests."""
+    from robotocore.services.apigatewayv2.executor import execute_v2_request
 
-        # Check for API Gateway execute-api path: /restapis/{id}/{stage}/_user_request_/{path}
-        import re
+    body = await request.body()
+    headers = dict(request.headers)
+    query_params = dict(request.query_params)
+    region, account_id = _extract_region_account(request)
 
-        exec_match = re.match(r"^/restapis/([^/]+)/([^/]+)/_user_request_/?(.*)", request.url.path)
+    status_code, resp_headers, resp_body = execute_v2_request(
+        api_id=api_id,
+        stage=stage,
+        method=request.method,
+        path="/" + proxy_path if proxy_path else "/",
+        body=body,
+        headers=headers,
+        query_params=query_params,
+        region=region,
+        account_id=account_id,
+    )
+    return Response(
+        content=resp_body,
+        status_code=status_code,
+        headers=resp_headers,
+        media_type="application/json",
+    )
+
+
+async def handle_connections_api(
+    request: Request, api_id: str, stage: str, connection_id: str,
+) -> Response:
+    """Handle @connections API for WebSocket management."""
+    from robotocore.services.apigatewayv2.provider import (
+        delete_connection,
+        get_connection,
+        post_to_connection,
+    )
+
+    method = request.method.upper()
+
+    if method == "POST":
+        body = await request.body()
+        success = post_to_connection(api_id, connection_id, body)
+        if success:
+            return Response(status_code=200)
+        return Response(
+            content=json.dumps({"message": "Connection not found"}),
+            status_code=410,
+            media_type="application/json",
+        )
+    elif method == "DELETE":
+        delete_connection(api_id, connection_id)
+        return Response(status_code=204)
+    elif method == "GET":
+        conn = get_connection(api_id, connection_id)
+        if conn:
+            return Response(
+                content=json.dumps(conn),
+                status_code=200,
+                media_type="application/json",
+            )
+        return Response(
+            content=json.dumps({"message": "Connection not found"}),
+            status_code=410,
+            media_type="application/json",
+        )
+
+
+# ---------------------------------------------------------------------------
+# Routes
+# ---------------------------------------------------------------------------
+
+management_routes = [
+    Route("/_robotocore/health", health, methods=["GET"]),
+    Route("/_robotocore/services", services_endpoint, methods=["GET"]),
+    Route("/_robotocore/config", config_endpoint, methods=["GET"]),
+    Route("/_robotocore/state/save", save_state, methods=["POST"]),
+    Route("/_robotocore/state/load", load_state, methods=["POST"]),
+    Route("/_robotocore/state/reset", reset_state, methods=["POST"]),
+    Route("/_robotocore/state/export", export_state, methods=["GET"]),
+    Route("/_robotocore/state/import", import_state, methods=["POST"]),
+]
+
+
+def _start_background_engines():
+    """Start background engines for cross-service integrations."""
+    global _server_start_time
+    _server_start_time = time.monotonic()
+
+    from robotocore.services.lambda_.event_source import get_engine
+
+    get_engine().start()
+    from robotocore.services.cloudwatch.alarm_scheduler import get_alarm_scheduler
+
+    get_alarm_scheduler().start()
+
+    # Auto-load state if configured
+    if os.environ.get("ROBOTOCORE_STATE_DIR"):
+        from robotocore.state.manager import get_state_manager
+
+        get_state_manager().load()
+
+    # Run ready hooks
+    run_init_hooks("ready")
+
+
+def _shutdown():
+    """Shutdown hook -- auto-save state if configured."""
+    if os.environ.get("ROBOTOCORE_PERSIST", "0") == "1":
+        from robotocore.state.manager import get_state_manager
+
+        manager = get_state_manager()
+        if manager.state_dir:
+            manager.save()
+
+    # Run shutdown hooks
+    run_init_hooks("shutdown")
+
+
+app = Starlette(
+    routes=management_routes,
+    on_startup=[_start_background_engines],
+    on_shutdown=[_shutdown],
+)
+
+
+class AWSRoutingMiddleware:
+    """Lightweight ASGI middleware for routing AWS vs management requests."""
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        path = scope.get("path", "")
+
+        if path.startswith("/_robotocore/"):
+            await self.app(scope, receive, send)
+            return
+
+        request = Request(scope, receive)
+
+        # V1: /restapis/{id}/{stage}/_user_request_/{path}
+        exec_match = re.match(
+            r"^/restapis/([^/]+)/([^/]+)/_user_request_/?(.*)", path
+        )
         if exec_match:
-            return await handle_execute_api(
+            response = await handle_execute_api(
                 request,
                 rest_api_id=exec_match.group(1),
                 stage=exec_match.group(2),
                 proxy_path=exec_match.group(3),
             )
+            await response(scope, receive, send)
+            return
 
-        return await handle_aws_request(request)
+        # V2: /@connections/{connection_id} (WebSocket management)
+        conn_match = re.match(
+            r"^/@connections/([^/]+)$", path
+        )
+        if conn_match:
+            api_id = request.query_params.get("apiId", "")
+            stage = request.query_params.get("stage", "$default")
+            response = await handle_connections_api(
+                request,
+                api_id=api_id,
+                stage=stage,
+                connection_id=conn_match.group(1),
+            )
+            await response(scope, receive, send)
+            return
+
+        # V2: /v2-exec/{api_id}/{stage}/{path} (HTTP API execution)
+        v2_match = re.match(
+            r"^/v2-exec/([^/]+)/([^/]+)/?(.*)", path
+        )
+        if v2_match:
+            response = await handle_execute_api_v2(
+                request,
+                api_id=v2_match.group(1),
+                stage=v2_match.group(2),
+                proxy_path=v2_match.group(3),
+            )
+            await response(scope, receive, send)
+            return
+
+        response = await handle_aws_request(request)
+        await response(scope, receive, send)
 
 
+# Order matters: AWSRoutingMiddleware is added first (inner), TracingMiddleware second (outer).
+# Request flow: TracingMiddleware -> AWSRoutingMiddleware -> app/handler
 app.add_middleware(AWSRoutingMiddleware)
+app.add_middleware(TracingMiddleware)
