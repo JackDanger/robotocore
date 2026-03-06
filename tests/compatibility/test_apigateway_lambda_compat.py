@@ -196,3 +196,130 @@ class TestAPIGatewayLambdaProxy:
 
         lam.delete_function(FunctionName=func_name)
         apigw.delete_rest_api(restApiId=api_id)
+
+    def test_lambda_proxy_path_params(self, apigw, lam, role):
+        """Test that path parameters like /users/{userId} are extracted correctly."""
+        suffix = uuid.uuid4().hex[:8]
+        func_name = f"apigw-path-{suffix}"
+
+        code = _make_zip(
+            'import json\n'
+            'def handler(event, ctx):\n'
+            '    path_params = event.get("pathParameters") or {}\n'
+            '    user_id = path_params.get("userId", "unknown")\n'
+            '    return {\n'
+            '        "statusCode": 200,\n'
+            '        "headers": {"Content-Type": "application/json"},\n'
+            '        "body": json.dumps({"userId": user_id, "path": event.get("path", "")})\n'
+            '    }\n'
+        )
+        lam.create_function(
+            FunctionName=func_name,
+            Runtime="python3.12",
+            Role=role,
+            Handler="lambda_function.handler",
+            Code={"ZipFile": code},
+        )
+
+        api = apigw.create_rest_api(name=f"path-api-{suffix}")
+        api_id = api["id"]
+        resources = apigw.get_resources(restApiId=api_id)
+        root_id = resources["items"][0]["id"]
+
+        # Build /users/{userId} resource hierarchy
+        users_resource = apigw.create_resource(
+            restApiId=api_id, parentId=root_id, pathPart="users"
+        )
+        user_id_resource = apigw.create_resource(
+            restApiId=api_id, parentId=users_resource["id"], pathPart="{userId}"
+        )
+
+        apigw.put_method(
+            restApiId=api_id,
+            resourceId=user_id_resource["id"],
+            httpMethod="GET",
+            authorizationType="NONE",
+        )
+
+        lambda_uri = f"arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:123456789012:function:{func_name}/invocations"
+        apigw.put_integration(
+            restApiId=api_id,
+            resourceId=user_id_resource["id"],
+            httpMethod="GET",
+            type="AWS_PROXY",
+            integrationHttpMethod="POST",
+            uri=lambda_uri,
+        )
+
+        apigw.create_deployment(restApiId=api_id, stageName="test")
+
+        url = f"{ENDPOINT_URL}/restapis/{api_id}/test/_user_request_/users/abc123"
+        resp = requests.get(url)
+        assert resp.status_code == 200
+        body = resp.json()
+        assert body["userId"] == "abc123"
+
+        lam.delete_function(FunctionName=func_name)
+        apigw.delete_rest_api(restApiId=api_id)
+
+    def test_lambda_proxy_multiple_query_params(self, apigw, lam, role):
+        """Test that multiple query string parameters are passed correctly."""
+        suffix = uuid.uuid4().hex[:8]
+        func_name = f"apigw-query-{suffix}"
+
+        code = _make_zip(
+            'import json\n'
+            'def handler(event, ctx):\n'
+            '    params = event.get("queryStringParameters") or {}\n'
+            '    multi = event.get("multiValueQueryStringParameters") or {}\n'
+            '    return {\n'
+            '        "statusCode": 200,\n'
+            '        "headers": {"Content-Type": "application/json"},\n'
+            '        "body": json.dumps({"params": params, "multi": multi})\n'
+            '    }\n'
+        )
+        lam.create_function(
+            FunctionName=func_name,
+            Runtime="python3.12",
+            Role=role,
+            Handler="lambda_function.handler",
+            Code={"ZipFile": code},
+        )
+
+        api = apigw.create_rest_api(name=f"query-api-{suffix}")
+        api_id = api["id"]
+        resources = apigw.get_resources(restApiId=api_id)
+        root_id = resources["items"][0]["id"]
+
+        resource = apigw.create_resource(
+            restApiId=api_id, parentId=root_id, pathPart="{proxy+}"
+        )
+        apigw.put_method(
+            restApiId=api_id,
+            resourceId=resource["id"],
+            httpMethod="ANY",
+            authorizationType="NONE",
+        )
+
+        lambda_uri = f"arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:123456789012:function:{func_name}/invocations"
+        apigw.put_integration(
+            restApiId=api_id,
+            resourceId=resource["id"],
+            httpMethod="ANY",
+            type="AWS_PROXY",
+            integrationHttpMethod="POST",
+            uri=lambda_uri,
+        )
+
+        apigw.create_deployment(restApiId=api_id, stageName="test")
+
+        url = f"{ENDPOINT_URL}/restapis/{api_id}/test/_user_request_/search?category=books&sort=price&sort=date"
+        resp = requests.get(url)
+        assert resp.status_code == 200
+        body = resp.json()
+        assert body["params"]["category"] == "books"
+        # sort should have a value (last value wins for single-value params)
+        assert "sort" in body["params"]
+
+        lam.delete_function(FunctionName=func_name)
+        apigw.delete_rest_api(restApiId=api_id)
