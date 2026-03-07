@@ -34,7 +34,7 @@ SERVICE_REGISTRY: dict[str, ServiceInfo] = {
         "json",
         "DynamoDB Streams with native stream reading",
     ),
-    "iam": ServiceInfo("iam", ServiceStatus.MOTO_BACKED, "query", "Identity and Access Management"),
+    "iam": ServiceInfo("iam", ServiceStatus.NATIVE, "query", "Identity and Access Management"),
     "sts": ServiceInfo("sts", ServiceStatus.NATIVE, "query", "Security Token Service"),
     "cloudformation": ServiceInfo(
         "cloudformation", ServiceStatus.NATIVE, "query", "CloudFormation engine"
@@ -68,34 +68,34 @@ SERVICE_REGISTRY: dict[str, ServiceInfo] = {
     "secretsmanager": ServiceInfo(
         "secretsmanager", ServiceStatus.NATIVE, "json", "Secrets Manager"
     ),
-    "ssm": ServiceInfo("ssm", ServiceStatus.MOTO_BACKED, "json", "Systems Manager"),
+    "ssm": ServiceInfo("ssm", ServiceStatus.NATIVE, "json", "Systems Manager"),
     "scheduler": ServiceInfo(
         "scheduler", ServiceStatus.NATIVE, "rest-json", "EventBridge Scheduler with schedule CRUD"
     ),
     "s3control": ServiceInfo("s3control", ServiceStatus.MOTO_BACKED, "rest-xml", "S3 Control"),
     # Phase 3 - Remaining (Moto-backed)
-    "acm": ServiceInfo("acm", ServiceStatus.MOTO_BACKED, "json", "Certificate Manager"),
+    "acm": ServiceInfo("acm", ServiceStatus.NATIVE, "json", "Certificate Manager"),
     "config": ServiceInfo("config", ServiceStatus.NATIVE, "json", "Config"),
-    "ec2": ServiceInfo("ec2", ServiceStatus.MOTO_BACKED, "ec2", "Elastic Compute Cloud"),
+    "ec2": ServiceInfo("ec2", ServiceStatus.NATIVE, "ec2", "Elastic Compute Cloud"),
     "redshift": ServiceInfo("redshift", ServiceStatus.MOTO_BACKED, "query", "Redshift"),
     "resource-groups": ServiceInfo(
-        "resource-groups", ServiceStatus.MOTO_BACKED, "rest-json", "Resource Groups"
+        "resource-groups", ServiceStatus.NATIVE, "rest-json", "Resource Groups"
     ),
     "resourcegroupstaggingapi": ServiceInfo(
         "resourcegroupstaggingapi", ServiceStatus.NATIVE, "json", "Resource Groups Tagging API"
     ),
-    "route53": ServiceInfo("route53", ServiceStatus.MOTO_BACKED, "rest-xml", "Route 53"),
+    "route53": ServiceInfo("route53", ServiceStatus.NATIVE, "rest-xml", "Route 53"),
     "route53resolver": ServiceInfo(
         "route53resolver", ServiceStatus.MOTO_BACKED, "json", "Route 53 Resolver"
     ),
     "ses": ServiceInfo("ses", ServiceStatus.NATIVE, "query", "Simple Email Service"),
     "sesv2": ServiceInfo("sesv2", ServiceStatus.NATIVE, "rest-json", "Simple Email Service v2"),
-    "support": ServiceInfo("support", ServiceStatus.MOTO_BACKED, "json", "Support"),
+    "support": ServiceInfo("support", ServiceStatus.NATIVE, "json", "Support"),
     "swf": ServiceInfo("swf", ServiceStatus.MOTO_BACKED, "json", "Simple Workflow"),
     "transcribe": ServiceInfo("transcribe", ServiceStatus.MOTO_BACKED, "json", "Transcribe"),
-    "es": ServiceInfo("es", ServiceStatus.MOTO_BACKED, "rest-json", "Elasticsearch Service"),
+    "es": ServiceInfo("es", ServiceStatus.NATIVE, "rest-json", "Elasticsearch Service"),
     "opensearch": ServiceInfo(
-        "opensearch", ServiceStatus.MOTO_BACKED, "rest-json", "OpenSearch Service"
+        "opensearch", ServiceStatus.NATIVE, "rest-json", "OpenSearch Service"
     ),
     "cognito-idp": ServiceInfo(
         "cognito-idp", ServiceStatus.NATIVE, "json", "Cognito Identity Provider"
@@ -103,7 +103,7 @@ SERVICE_REGISTRY: dict[str, ServiceInfo] = {
     "appsync": ServiceInfo("appsync", ServiceStatus.NATIVE, "rest-json", "AppSync GraphQL"),
     "ecs": ServiceInfo("ecs", ServiceStatus.NATIVE, "json", "Elastic Container Service"),
     "batch": ServiceInfo("batch", ServiceStatus.NATIVE, "rest-json", "AWS Batch"),
-    "ecr": ServiceInfo("ecr", ServiceStatus.MOTO_BACKED, "json", "Elastic Container Registry"),
+    "ecr": ServiceInfo("ecr", ServiceStatus.NATIVE, "json", "Elastic Container Registry"),
 }
 
 

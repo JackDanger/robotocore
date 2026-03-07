@@ -690,7 +690,6 @@ class TestEC2Volumes:
         finally:
             ec2.delete_volume(VolumeId=vol_id)
 
-    @pytest.mark.xfail(reason="AttachVolume/DetachVolume may require running instance state")
     def test_attach_detach_volume(self, ec2):
         """AttachVolume / DetachVolume lifecycle."""
         images = ec2.describe_images(
@@ -932,7 +931,6 @@ class TestEC2LaunchTemplates:
 
 
 class TestEC2PlacementGroups:
-    @pytest.mark.xfail(reason="CreatePlacementGroup may not be implemented")
     def test_create_describe_delete_placement_group(self, ec2):
         """CreatePlacementGroup / DescribePlacementGroups / DeletePlacementGroup."""
         pg_name = _unique("pg")
@@ -1435,7 +1433,6 @@ class TestEC2ExtendedV2:
         finally:
             ec2.delete_vpc(VpcId=vpc_id)
 
-    @pytest.mark.xfail(reason="DeleteVpcEndpoints raises InternalError in moto")
     def test_create_vpc_endpoint_gateway(self, ec2):
         """CreateVpcEndpoint (Gateway type for S3)."""
         vpc_resp = ec2.create_vpc(CidrBlock="10.119.0.0/16")

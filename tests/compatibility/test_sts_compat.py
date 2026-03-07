@@ -484,7 +484,6 @@ class TestSTSExtended:
         assert name in fed_arn
         assert "federated-user" in fed_arn
 
-    @pytest.mark.xfail(reason="Packed policy size validation not enforced")
     def test_assume_role_packed_policy_too_large(self, sts):
         """AssumeRole with an excessively large Policy should fail."""
         import uuid
@@ -533,7 +532,6 @@ class TestSTSExtended:
         finally:
             iam.delete_role(RoleName=role_name)
 
-    @pytest.mark.xfail(reason="Moto requires valid SAML assertion XML")
     def test_assume_role_with_saml(self, sts):
         """AssumeRoleWithSAML with dummy parameters."""
         import uuid

@@ -369,7 +369,6 @@ class TestECRExtendedOperations:
         finally:
             ecr.delete_repository(repositoryName=repo_name)
 
-    @pytest.mark.xfail(reason="maxResults pagination may not be enforced")
     def test_describe_repositories_pagination(self, ecr):
         repos = []
         for i in range(3):
@@ -395,7 +394,6 @@ class TestECRExtendedOperations:
         resp = ecr.describe_registry()
         assert "registryId" in resp
 
-    @pytest.mark.xfail(reason="BatchCheckLayerAvailability not implemented")
     def test_batch_check_layer_availability(self, ecr):
         repo_name = _unique("layer-repo")
         ecr.create_repository(repositoryName=repo_name)

@@ -340,7 +340,6 @@ class TestOpenSearchExtended:
         finally:
             opensearch.delete_domain(DomainName=name)
 
-    @pytest.mark.xfail(reason="list_versions not implemented")
     def test_list_versions(self, opensearch):
         resp = opensearch.list_versions()
         assert "Versions" in resp

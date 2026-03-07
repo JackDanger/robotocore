@@ -1,7 +1,6 @@
 """Step Functions compatibility tests — including ASL execution."""
 
 import json
-import time
 import uuid
 
 import pytest

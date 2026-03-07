@@ -122,7 +122,6 @@ class TestResourceGroupsExtended:
         finally:
             resource_groups.delete_group(GroupName=name)
 
-    @pytest.mark.xfail(reason="get_tags not implemented")
     def test_get_tags(self, resource_groups):
         name = f"gettag-group-{_uid()}"
         resp = resource_groups.create_group(
@@ -138,7 +137,6 @@ class TestResourceGroupsExtended:
         finally:
             resource_groups.delete_group(GroupName=name)
 
-    @pytest.mark.xfail(reason="tag/untag not implemented for resource-groups")
     def test_tag_and_untag_group(self, resource_groups):
         name = f"tagop-group-{_uid()}"
         resp = resource_groups.create_group(

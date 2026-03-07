@@ -477,7 +477,6 @@ class TestSSMDocumentOperations:
 
 
 class TestSSMCommandOperations:
-    @pytest.mark.xfail(reason="SendCommand/ListCommands may not be supported")
     def test_send_list_commands(self, ssm):
         """SendCommand / ListCommands / ListCommandInvocations."""
         resp = ssm.send_command(

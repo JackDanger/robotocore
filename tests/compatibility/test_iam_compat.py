@@ -1211,7 +1211,6 @@ class TestIAMSAMLProvider:
 
 
 class TestIAMSimulatePolicy:
-    @pytest.mark.xfail(reason="SimulatePrincipalPolicy may not be supported")
     def test_simulate_principal_policy(self, iam):
         """SimulatePrincipalPolicy."""
         role_name = _unique("sim-role")
@@ -1231,7 +1230,6 @@ class TestIAMSimulatePolicy:
             iam.delete_policy(PolicyArn=arn)
             iam.delete_role(RoleName=role_name)
 
-    @pytest.mark.xfail(reason="SimulateCustomPolicy may not be supported")
     def test_simulate_custom_policy(self, iam):
         """SimulateCustomPolicy."""
         resp = iam.simulate_custom_policy(
@@ -1350,7 +1348,6 @@ class TestIAMAccountPasswordPolicy:
 
 
 class TestIAMChangePassword:
-    @pytest.mark.xfail(reason="ChangePassword requires actual user session")
     def test_change_password(self, iam):
         """ChangePassword."""
         iam.change_password(OldPassword="oldpass", NewPassword="newpass123!")
@@ -1881,7 +1878,6 @@ class TestIAMExtendedV2:
             except Exception:
                 pass
 
-    @pytest.mark.xfail(reason="PutUserPermissionsBoundary not implemented")
     def test_put_delete_user_permissions_boundary(self, iam):
         """PutUserPermissionsBoundary / DeleteUserPermissionsBoundary."""
         user_name = _unique("ext-upb")

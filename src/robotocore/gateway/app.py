@@ -23,6 +23,7 @@ from robotocore.observability.hooks import run_init_hooks
 from robotocore.observability.metrics import request_counter
 from robotocore.observability.tracing import TracingMiddleware
 from robotocore.providers.moto_bridge import forward_to_moto
+from robotocore.services.acm.provider import handle_acm_request
 from robotocore.services.apigateway.provider import handle_apigateway_request
 from robotocore.services.apigatewayv2.provider import handle_apigatewayv2_request
 from robotocore.services.appsync.provider import handle_appsync_request
@@ -34,12 +35,18 @@ from robotocore.services.cognito.provider import handle_cognito_request
 from robotocore.services.config.provider import handle_config_request
 from robotocore.services.dynamodb.provider import handle_dynamodb_request
 from robotocore.services.dynamodbstreams.provider import handle_dynamodbstreams_request
+from robotocore.services.ec2.provider import handle_ec2_request
+from robotocore.services.ecr.provider import handle_ecr_request
 from robotocore.services.ecs.provider import handle_ecs_request
 from robotocore.services.events.provider import handle_events_request
 from robotocore.services.firehose.provider import handle_firehose_request
+from robotocore.services.iam.provider import handle_iam_request
 from robotocore.services.kinesis.provider import handle_kinesis_request
 from robotocore.services.lambda_.provider import handle_lambda_request
+from robotocore.services.opensearch.provider import handle_es_request, handle_opensearch_request
 from robotocore.services.registry import SERVICE_REGISTRY, ServiceStatus
+from robotocore.services.resource_groups.provider import handle_resource_groups_request
+from robotocore.services.route53.provider import handle_route53_request
 from robotocore.services.s3.provider import handle_s3_request
 from robotocore.services.scheduler.provider import handle_scheduler_request
 from robotocore.services.secretsmanager.provider import handle_secretsmanager_request
@@ -47,8 +54,10 @@ from robotocore.services.ses.provider import handle_ses_request
 from robotocore.services.ses.sesv2_provider import handle_sesv2_request
 from robotocore.services.sns.provider import handle_sns_request
 from robotocore.services.sqs.provider import handle_sqs_request
+from robotocore.services.ssm.provider import handle_ssm_request
 from robotocore.services.stepfunctions.provider import handle_stepfunctions_request
 from robotocore.services.sts.provider import handle_sts_request
+from robotocore.services.support.provider import handle_support_request
 from robotocore.services.tagging.provider import handle_tagging_request
 
 # Services with native providers (bypass Moto)
@@ -79,6 +88,16 @@ NATIVE_PROVIDERS = {
     "stepfunctions": handle_stepfunctions_request,
     "sts": handle_sts_request,
     "resourcegroupstaggingapi": handle_tagging_request,
+    "acm": handle_acm_request,
+    "ec2": handle_ec2_request,
+    "ecr": handle_ecr_request,
+    "es": handle_es_request,
+    "iam": handle_iam_request,
+    "opensearch": handle_opensearch_request,
+    "resource-groups": handle_resource_groups_request,
+    "route53": handle_route53_request,
+    "ssm": handle_ssm_request,
+    "support": handle_support_request,
 }
 
 # Default account ID (matches LocalStack)

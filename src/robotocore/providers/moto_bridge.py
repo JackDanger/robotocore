@@ -146,3 +146,51 @@ async def forward_to_moto(request: Request, service_name: str) -> Response:
             status_code=500,
             media_type="application/xml",
         )
+
+
+async def forward_to_moto_with_body(
+    request: Request, service_name: str, body: bytes
+) -> Response:
+    """Forward to Moto with a custom body (for request body modifications)."""
+    raw_path = request.url.path
+    try:
+        dispatch = _get_dispatcher(service_name, raw_path)
+    except Exception:
+        return Response(
+            content=(
+                f"<ErrorResponse><Error><Code>NotImplemented</Code>"
+                f"<Message>Service {service_name} is not yet implemented</Message>"
+                f"</Error></ErrorResponse>"
+            ),
+            status_code=501,
+            media_type="application/xml",
+        )
+
+    werkzeug_request = _build_werkzeug_request(request, body)
+    full_url = str(request.url)
+
+    try:
+        result = dispatch(werkzeug_request, full_url, werkzeug_request.headers)
+        if not result:
+            raise NotImplementedError(f"Moto returned None for {service_name}")
+        status, response_headers, response_body = result
+        if isinstance(response_body, str) and len(response_body) == 0:
+            response_body = None
+        headers_dict = dict(response_headers) if response_headers else {}
+        clean_headers = {
+            k: v for k, v in headers_dict.items() if k.lower() != "content-length"
+        }
+        return Response(
+            content=response_body,
+            status_code=status,
+            headers=clean_headers,
+        )
+    except Exception as e:
+        return Response(
+            content=(
+                f"<ErrorResponse><Error><Code>InternalError</Code>"
+                f"<Message>{e}</Message></Error></ErrorResponse>"
+            ),
+            status_code=500,
+            media_type="application/xml",
+        )

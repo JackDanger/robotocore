@@ -1,7 +1,6 @@
 """CloudWatch Metrics compatibility tests."""
 
 import datetime
-import json
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -1193,7 +1192,6 @@ class TestCloudWatchOperations:
             dim_vals = [d["Value"] for d in m["Dimensions"] if d["Name"] == "Endpoint"]
             assert "/api/v1" in dim_vals
 
-    @pytest.mark.xfail(reason="ExtendedStatistics percentiles may not be supported")
     def test_get_metric_statistics_extended_stats(self, cw):
         """GetMetricStatistics with ExtendedStatistics (percentiles)."""
         import uuid

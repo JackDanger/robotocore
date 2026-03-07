@@ -932,7 +932,6 @@ class TestAPIGatewayExtended:
         apigw.delete_stage(restApiId=rest_api, stageName=stage_name)
 
     def test_tag_rest_api(self, apigw, rest_api):
-        import uuid
         apigw.tag_resource(
             resourceArn=f"arn:aws:apigateway:us-east-1::/restapis/{rest_api}",
             tags={"env": "test", "team": "api"},

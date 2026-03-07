@@ -2516,7 +2516,6 @@ class TestDynamoDBAdvanced:
         assert r["Item"]["empty"]["NULL"] is True
 
     def test_put_item_with_binary(self, dynamodb, table):
-        import base64
         data = b"\x00\x01\x02\x03"
         dynamodb.put_item(
             TableName=table,

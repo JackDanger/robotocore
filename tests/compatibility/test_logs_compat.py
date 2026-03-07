@@ -4,7 +4,6 @@ import time
 import uuid
 
 import pytest
-from botocore.exceptions import ClientError
 
 from tests.compatibility.conftest import make_client
 

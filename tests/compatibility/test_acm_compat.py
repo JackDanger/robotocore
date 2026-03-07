@@ -271,7 +271,6 @@ class TestACMOperations:
                 "ResourceNotFoundException",
             )
 
-    @pytest.mark.xfail(reason="update_certificate_options may not be supported")
     def test_update_certificate_options(self, acm):
         """Request cert and update certificate options."""
         arn = acm.request_certificate(DomainName="update-opts.example.com")["CertificateArn"]

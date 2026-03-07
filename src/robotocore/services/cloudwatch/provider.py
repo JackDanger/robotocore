@@ -720,6 +720,33 @@ async def handle_cloudwatch_request(
                                 media_type="application/x-amz-json-1.0")
             return _xml_response("DescribeAlarmsResponse", result)
 
+    # GetMetricStatistics: intercept when ExtendedStatistics requested (Moto doesn't compute them)
+    if action == "GetMetricStatistics":
+        ext_stats = params.get("ExtendedStatistics", [])
+        # Query protocol: ExtendedStatistics.member.1, ExtendedStatistics.member.2 etc.
+        if not ext_stats:
+            ext_list = []
+            i = 1
+            while True:
+                key = f"ExtendedStatistics.member.{i}"
+                if key in params:
+                    ext_list.append(params[key])
+                    i += 1
+                else:
+                    break
+            if ext_list:
+                ext_stats = ext_list
+        if ext_stats:
+            params["ExtendedStatistics"] = ext_stats
+            try:
+                result = _handle_get_metric_statistics(params, region, account_id)
+                if use_json_protocol:
+                    return Response(content=json.dumps(result), status_code=200,
+                                    media_type="application/x-amz-json-1.0")
+                return _xml_response("GetMetricStatisticsResponse", result)
+            except Exception as e:
+                logger.error("ExtendedStatistics error: %s", e)
+
     handler = _ACTION_MAP.get(action)
     if handler is not None:
         try:
@@ -942,6 +969,71 @@ def _error_response(code: str, message: str, status: int) -> Response:
   <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
 </ErrorResponse>"""
     return Response(content=xml, status_code=status, media_type="text/xml")
+
+
+# ---------------------------------------------------------------------------
+# ExtendedStatistics (percentiles)
+# ---------------------------------------------------------------------------
+
+
+def _handle_get_metric_statistics(params: dict, region: str, account_id: str) -> dict:
+    """GetMetricStatistics with ExtendedStatistics support."""
+    from moto.backends import get_backend
+
+    backend = get_backend("cloudwatch")[account_id][region]
+    namespace = params.get("Namespace", "")
+    metric_name = params.get("MetricName", "")
+    extended_stats = params.get("ExtendedStatistics", [])
+    if isinstance(extended_stats, str):
+        extended_stats = [extended_stats]
+
+    # Collect all raw values from Moto's metric data store
+    values = []
+    for md in getattr(backend, "metric_data", []):
+        if md.namespace == namespace and md.name == metric_name:
+            if hasattr(md, "value") and md.value is not None:
+                values.append(float(md.value))
+            elif hasattr(md, "statistics") and md.statistics:
+                # Handle StatisticValues
+                count = int(getattr(md.statistics, "sample_count", 1) or 1)
+                avg = float(getattr(md.statistics, "sum", 0) or 0) / max(count, 1)
+                values.extend([avg] * count)
+
+    if not values:
+        return {"Label": metric_name, "Datapoints": []}
+
+    values.sort()
+    ext_stats_result = {}
+    for stat in extended_stats:
+        # Parse percentile: "p50", "p99", "p99.9", etc.
+        if stat.startswith("p"):
+            try:
+                pct = float(stat[1:])
+                idx = (pct / 100.0) * (len(values) - 1)
+                lower = int(idx)
+                upper = min(lower + 1, len(values) - 1)
+                frac = idx - lower
+                val = values[lower] * (1 - frac) + values[upper] * frac
+                ext_stats_result[stat] = val
+            except (ValueError, IndexError):
+                ext_stats_result[stat] = 0.0
+
+    # Build single aggregated datapoint
+    import datetime as dt
+
+    datapoint = {
+        "Timestamp": dt.datetime.now(dt.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "Unit": "None",
+        "ExtendedStatistics": ext_stats_result,
+    }
+    # Try to get unit from first metric
+    for md in getattr(backend, "metric_data", []):
+        if md.namespace == namespace and md.name == metric_name:
+            if hasattr(md, "unit") and md.unit:
+                datapoint["Unit"] = md.unit
+            break
+
+    return {"Label": metric_name, "Datapoints": [datapoint]}
 
 
 # ---------------------------------------------------------------------------

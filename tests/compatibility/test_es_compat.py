@@ -161,7 +161,6 @@ class TestElasticsearchOperations:
         finally:
             es.delete_elasticsearch_domain(DomainName=name)
 
-    @pytest.mark.xfail(reason="GetCompatibleElasticsearchVersions not implemented")
     def test_get_compatible_versions(self, es):
         name = f"es-{_uid()}"
         es.create_elasticsearch_domain(DomainName=name, ElasticsearchVersion="7.10")

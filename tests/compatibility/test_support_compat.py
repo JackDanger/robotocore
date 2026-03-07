@@ -70,7 +70,6 @@ class TestSupportExtended:
     def support(self):
         return make_client("support")
 
-    @pytest.mark.xfail(reason="describe_services not implemented")
     def test_describe_services(self, support):
         resp = support.describe_services(language="en")
         assert "services" in resp
@@ -79,7 +78,6 @@ class TestSupportExtended:
         assert "code" in svc
         assert "name" in svc
 
-    @pytest.mark.xfail(reason="describe_severity_levels not implemented")
     def test_describe_severity_levels(self, support):
         resp = support.describe_severity_levels(language="en")
         assert "severityLevels" in resp
@@ -98,14 +96,12 @@ class TestSupportExtended:
         check = resp["checks"][0]
         assert "description" in check
 
-    @pytest.mark.xfail(reason="describe_trusted_advisor_check_result not implemented")
     def test_describe_trusted_advisor_check_result(self, support):
         checks = support.describe_trusted_advisor_checks(language="en")
         check_id = checks["checks"][0]["id"]
         resp = support.describe_trusted_advisor_check_result(checkId=check_id, language="en")
         assert "result" in resp
 
-    @pytest.mark.xfail(reason="describe_trusted_advisor_check_summaries not implemented")
     def test_describe_trusted_advisor_check_summaries(self, support):
         checks = support.describe_trusted_advisor_checks(language="en")
         check_id = checks["checks"][0]["id"]
@@ -138,7 +134,6 @@ class TestSupportExtended:
         resp = support.describe_cases(caseIdList=[case_id], includeResolvedCases=True)
         assert len(resp["cases"]) >= 1
 
-    @pytest.mark.xfail(reason="add_communication_to_case not implemented")
     def test_add_communication_to_case(self, support):
         create_resp = support.create_case(
             subject="Comm Test",
@@ -155,7 +150,6 @@ class TestSupportExtended:
         )
         assert resp["result"] is True
 
-    @pytest.mark.xfail(reason="describe_communications not implemented")
     def test_describe_communications(self, support):
         create_resp = support.create_case(
             subject="Desc Comm Test",

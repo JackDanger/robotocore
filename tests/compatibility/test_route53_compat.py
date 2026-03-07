@@ -964,7 +964,6 @@ class TestRoute53Extended:
         assert "team" not in tags
         assert tags["env"] == "test"
 
-    @pytest.mark.xfail(reason="AssociateVPCWithHostedZone may not be supported")
     def test_associate_disassociate_vpc(self, route53):
         """AssociateVPCWithHostedZone / DisassociateVPCFromHostedZone."""
         ec2 = make_client("ec2")
@@ -995,7 +994,6 @@ class TestRoute53Extended:
             route53.delete_hosted_zone(Id=zone_id)
             ec2.delete_vpc(VpcId=vpc_id)
 
-    @pytest.mark.xfail(reason="TestDNSAnswer may not be supported")
     def test_dns_answer(self, route53, hosted_zone):
         """TestDNSAnswer."""
         route53.change_resource_record_sets(
@@ -1039,7 +1037,6 @@ class TestRoute53Extended:
                 },
             )
 
-    @pytest.mark.xfail(reason="CreateQueryLoggingConfig may not be supported")
     def test_create_query_logging_config(self, route53, hosted_zone):
         """CreateQueryLoggingConfig."""
         logs = make_client("logs")
@@ -1060,7 +1057,6 @@ class TestRoute53ExtendedV2:
     def route53(self):
         return make_client("route53")
 
-    @pytest.mark.xfail(reason="Private hosted zones may have issues")
     def test_create_private_hosted_zone(self, route53):
         ec2 = make_client("ec2")
         vpc = ec2.create_vpc(CidrBlock="10.99.0.0/16")

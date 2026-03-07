@@ -49,8 +49,8 @@ class TestHealthEndpoint:
         data = response.json()
         # SQS is native
         assert data["services"]["sqs"]["type"] == "native"
-        # IAM is moto
-        assert data["services"]["iam"]["type"] == "moto"
+        # IAM is native (has interceptors for simulate, permissions boundary, etc.)
+        assert data["services"]["iam"]["type"] == "native"
 
 
 class TestServicesEndpoint:
