@@ -454,6 +454,25 @@ def _json(status_code: int, data) -> Response:
     )
 
 
+def _describe_state_machine_for_execution(params: dict, region: str, account_id: str) -> dict:
+    exec_arn = params.get("executionArn", "")
+    with _exec_lock:
+        execution = _executions.get(exec_arn)
+        if not execution:
+            raise SfnError("ExecutionDoesNotExist", f"Execution {exec_arn} not found", 400)
+        sm_arn = execution.get("stateMachineArn", "")
+        sm = _state_machines.get(sm_arn)
+        if not sm:
+            raise SfnError("StateMachineDoesNotExist", f"State machine not found", 400)
+    return {
+        "stateMachineArn": sm_arn,
+        "name": sm.get("name", ""),
+        "definition": sm.get("definition", "{}"),
+        "roleArn": sm.get("roleArn", ""),
+        "updateDate": sm.get("creationDate", 0),
+    }
+
+
 def _error(code: str, message: str, status: int) -> Response:
     body = json.dumps({"__type": code, "message": message})
     return Response(content=body, status_code=status, media_type="application/x-amz-json-1.0")
@@ -477,4 +496,5 @@ _ACTION_MAP = {
     "TagResource": _tag_resource,
     "UntagResource": _untag_resource,
     "ListTagsForResource": _list_tags_for_resource,
+    "DescribeStateMachineForExecution": _describe_state_machine_for_execution,
 }

@@ -647,6 +647,21 @@ def _json_response(data: dict) -> Response:
     )
 
 
+def _put_cluster_capacity_providers(
+    store: EcsStore, params: dict, region: str, account_id: str
+) -> dict:
+    cluster_name = params.get("cluster", "default")
+    capacity_providers = params.get("capacityProviders", [])
+    default_strategy = params.get("defaultCapacityProviderStrategy", [])
+    with store.lock:
+        cluster = store.clusters.get(cluster_name)
+        if not cluster:
+            raise EcsError("ClusterNotFoundException", f"Cluster {cluster_name} not found", 404)
+        cluster["capacityProviders"] = capacity_providers
+        cluster["defaultCapacityProviderStrategy"] = default_strategy
+    return {"cluster": cluster}
+
+
 def _error(code: str, message: str, status: int) -> Response:
     body = json.dumps({"__type": code, "message": message})
     return Response(
@@ -680,4 +695,5 @@ _ACTION_MAP: dict[str, Callable] = {
     "TagResource": _tag_resource,
     "UntagResource": _untag_resource,
     "ListTagsForResource": _list_tags_for_resource,
+    "PutClusterCapacityProviders": _put_cluster_capacity_providers,
 }

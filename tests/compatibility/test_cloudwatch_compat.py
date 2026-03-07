@@ -1133,7 +1133,6 @@ class TestCloudWatchOperations:
         )
         assert len(resp["Metrics"]) >= 1
 
-    @pytest.mark.xfail(reason="PutCompositeAlarm may not be supported")
     def test_put_composite_alarm(self, cw):
         """PutCompositeAlarm creates a composite alarm from metric alarms."""
         import uuid

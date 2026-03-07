@@ -147,7 +147,6 @@ class TestDataSources:
         assert resp["dataSource"]["name"] == name
         assert resp["dataSource"]["type"] == "NONE"
 
-    @pytest.mark.xfail(reason="UpdateDataSource not implemented")
     def test_update_data_source(self, appsync, api):
         name = _unique("ds-upd")
         appsync.create_data_source(apiId=api, name=name, type="NONE")
@@ -258,7 +257,6 @@ class TestAppSyncExtended:
             for api_id in apis:
                 appsync.delete_graphql_api(apiId=api_id)
 
-    @pytest.mark.xfail(reason="ARN may be too short for tag_resource validation")
     def test_tag_graphql_api(self, appsync, api):
         resp = appsync.get_graphql_api(apiId=api)
         arn = resp["graphqlApi"]["arn"]
@@ -269,7 +267,6 @@ class TestAppSyncExtended:
         tags_resp = appsync.list_tags_for_resource(resourceArn=arn)
         assert tags_resp["tags"]["env"] == "test"
 
-    @pytest.mark.xfail(reason="ARN may be too short for untag_resource validation")
     def test_untag_graphql_api(self, appsync, api):
         resp = appsync.get_graphql_api(apiId=api)
         arn = resp["graphqlApi"]["arn"]

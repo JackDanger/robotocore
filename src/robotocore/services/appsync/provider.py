@@ -188,6 +188,10 @@ async def handle_appsync_request(
                 return _json_response(
                     _delete_data_source(store, api_id, ds_name)
                 )
+            elif method in ("POST", "PUT"):
+                return _json_response(
+                    _update_data_source(store, api_id, ds_name, params, region, account_id)
+                )
 
         m = _DATA_SOURCES_LIST.match(path)
         if m:
@@ -248,7 +252,7 @@ async def handle_appsync_request(
 def _create_graphql_api(
     store: AppSyncStore, params: dict, region: str, account_id: str
 ) -> dict:
-    api_id = _new_id()[:8]
+    api_id = _new_id()[:26]
     name = params.get("name", "")
     if not name:
         raise AppSyncError("BadRequestException", "name is required.")
@@ -564,6 +568,30 @@ def _delete_data_source(
             )
         del sources[name]
     return {}
+
+
+def _update_data_source(
+    store: AppSyncStore, api_id: str, name: str, params: dict, region: str, account_id: str
+) -> dict:
+    _require_api(store, api_id)
+    with store.lock:
+        sources = store.data_sources.get(api_id, {})
+        ds = sources.get(name)
+        if not ds:
+            raise AppSyncError(
+                "NotFoundException", f"Data source {name} not found.", 404
+            )
+        if "type" in params:
+            ds["type"] = params["type"]
+        if "description" in params:
+            ds["description"] = params["description"]
+        if "serviceRoleArn" in params:
+            ds["serviceRoleArn"] = params["serviceRoleArn"]
+        if "dynamodbConfig" in params:
+            ds["dynamodbConfig"] = params["dynamodbConfig"]
+        if "lambdaConfig" in params:
+            ds["lambdaConfig"] = params["lambdaConfig"]
+    return {"dataSource": ds}
 
 
 # ---------------------------------------------------------------------------

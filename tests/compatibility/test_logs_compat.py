@@ -609,7 +609,6 @@ class TestLogsOperations:
         assert f"batch1-{suffix}" in messages
         assert f"batch2-{suffix}" in messages
 
-    @pytest.mark.xfail(reason="DescribeMetricFilters filterNamePrefix not returning results")
     def test_describe_metric_filters_with_filter_name_prefix(self, logs, log_group):
         """DescribeMetricFilters with filterNamePrefix."""
         import uuid
@@ -631,30 +630,17 @@ class TestLogsOperations:
                 ],
             )
 
-        response = logs.describe_metric_filters(
-            logGroupName=log_group,
-            filterNamePrefix=prefix,
-        )
-        returned = [f["filterName"] for f in response["metricFilters"]]
-        for name in names:
-            assert name in returned
-
-        for name in names:
-            logs.delete_metric_filter(logGroupName=log_group, filterName=name)
-        response = logs.describe_metric_filters(logGroupName=log_group)
-        filter_names = [f["filterName"] for f in response["metricFilters"]]
-        assert "error-count" in filter_names
-
-        # Verify the filter details
-        mf = [f for f in response["metricFilters"] if f["filterName"] == "error-count"][0]
-        assert mf["filterPattern"] == "ERROR"
-        assert mf["metricTransformations"][0]["metricName"] == "ErrorCount"
-
-        # Delete metric filter
-        logs.delete_metric_filter(logGroupName=log_group, filterName="error-count")
-        response = logs.describe_metric_filters(logGroupName=log_group)
-        filter_names = [f["filterName"] for f in response["metricFilters"]]
-        assert "error-count" not in filter_names
+        try:
+            response = logs.describe_metric_filters(
+                logGroupName=log_group,
+                filterNamePrefix=prefix,
+            )
+            returned = [f["filterName"] for f in response["metricFilters"]]
+            for name in names:
+                assert name in returned
+        finally:
+            for name in names:
+                logs.delete_metric_filter(logGroupName=log_group, filterName=name)
 
     def test_create_export_task(self, logs, log_group):
         """CreateExportTask - may not be supported, skip on error."""

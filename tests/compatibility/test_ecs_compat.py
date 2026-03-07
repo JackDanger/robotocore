@@ -328,7 +328,6 @@ class TestECSExtended:
         finally:
             ecs.delete_cluster(cluster=name)
 
-    @pytest.mark.xfail(reason="PutClusterCapacityProviders may not be supported")
     def test_put_cluster_capacity_providers(self, ecs):
         name = _unique("cap-cluster")
         ecs.create_cluster(clusterName=name)
@@ -347,7 +346,7 @@ class TestECSExtended:
             ecs.delete_cluster(cluster=name)
 
 
-class TestECSExtended:
+class TestECSExtendedV2:
     @pytest.fixture
     def ecs(self):
         return make_client("ecs")

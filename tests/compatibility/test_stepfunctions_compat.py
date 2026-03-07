@@ -533,7 +533,6 @@ class TestStepFunctionsExtended:
         finally:
             sfn.delete_state_machine(stateMachineArn=sm_arn)
 
-    @pytest.mark.xfail(reason="DescribeStateMachineForExecution may not be supported")
     def test_describe_state_machine_for_execution(self, sfn, role_arn):
         """DescribeStateMachineForExecution returns SM details from exec ARN."""
         sm_name = f"desc-sm-exec-{uuid.uuid4().hex[:8]}"

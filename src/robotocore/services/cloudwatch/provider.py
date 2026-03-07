@@ -290,14 +290,17 @@ def put_composite_alarm(params: dict, region: str, account_id: str) -> dict:
 def describe_composite_alarms(
     params: dict, region: str, account_id: str
 ) -> list[dict]:
-    """Return composite alarms, optionally filtered by name prefix."""
+    """Return composite alarms, optionally filtered by name prefix or names."""
     store = _get_composite_store(region)
     prefix = params.get("AlarmNamePrefix", "")
+    alarm_names = params.get("AlarmNames", [])
 
     results = []
     with _composite_lock:
         for alarm in store.values():
             if prefix and not alarm["AlarmName"].startswith(prefix):
+                continue
+            if alarm_names and alarm["AlarmName"] not in alarm_names:
                 continue
             results.append({
                 k: v for k, v in alarm.items() if k != "rule_ast"
@@ -703,6 +706,19 @@ async def handle_cloudwatch_request(
             parsed = parse_qs(str(request.url.query), keep_blank_values=True)
         params = _flatten_query_params(parsed)
         action = params.get("Action", "")
+
+    # DescribeAlarms: intercept if CompositeAlarm type requested, else Moto
+    if action == "DescribeAlarms":
+        alarm_types = params.get("AlarmTypes", [])
+        if isinstance(alarm_types, str):
+            alarm_types = [alarm_types]
+        if "CompositeAlarm" in alarm_types:
+            composites = describe_composite_alarms(params, region, account_id)
+            result = {"CompositeAlarms": composites, "MetricAlarms": []}
+            if use_json_protocol:
+                return Response(content=json.dumps(result), status_code=200,
+                                media_type="application/x-amz-json-1.0")
+            return _xml_response("DescribeAlarmsResponse", result)
 
     handler = _ACTION_MAP.get(action)
     if handler is not None:
