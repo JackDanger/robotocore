@@ -494,7 +494,6 @@ class TestSSMCommandOperations:
 
 
 class TestSSMMaintenanceWindow:
-    @pytest.mark.xfail(reason="CreateMaintenanceWindow may not be supported")
     def test_create_describe_delete_maintenance_window(self, ssm):
         """CreateMaintenanceWindow / DescribeMaintenanceWindows / DeleteMaintenanceWindow."""
         name = _unique("mw")
