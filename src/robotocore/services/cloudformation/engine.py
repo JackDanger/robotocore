@@ -32,6 +32,9 @@ class CfnStack:
     status_reason: str = ""
     created: float = field(default_factory=time.time)
     tags: list = field(default_factory=list)
+    description: str = ""
+    events: list = field(default_factory=list)
+    exports: dict = field(default_factory=dict)
 
     @property
     def arn(self) -> str:
@@ -43,6 +46,7 @@ class CfnStore:
 
     def __init__(self):
         self.stacks: dict[str, CfnStack] = {}
+        self.exports: dict[str, dict] = {}  # export_name -> {Value, StackId}
         self.mutex = threading.RLock()
 
     def get_stack(self, name_or_id: str) -> CfnStack | None:
@@ -260,6 +264,18 @@ def resolve_intrinsics(
         k: resolve_intrinsics(v, resources, parameters, region, account_id)
         for k, v in value.items()
     }
+
+
+def evaluate_conditions(
+    template: dict, resources: dict, parameters: dict, region: str, account_id: str
+) -> dict[str, bool]:
+    """Evaluate all Conditions in a template, returning {name: bool}."""
+    conditions = template.get("Conditions", {})
+    result = {}
+    for name, expr in conditions.items():
+        val = resolve_intrinsics(expr, resources, parameters, region, account_id)
+        result[name] = bool(val)
+    return result
 
 
 def build_dependency_order(template: dict) -> list[str]:

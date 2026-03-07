@@ -179,7 +179,6 @@ class TestLogsRetentionPolicy:
             group = [g for g in response["logGroups"] if g["logGroupName"] == log_group][0]
             assert group["retentionInDays"] == days
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_put_retention_invalid_value(self, logs, log_group):
         """Retention policy rejects invalid day values."""
         with pytest.raises(ClientError) as exc_info:
@@ -338,7 +337,6 @@ class TestLogsFilterEvents:
         )
         assert len(response["events"]) == 0
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_filter_log_events_stream_name_prefix(self, logs, log_group):
         """Filter log events using logStreamNamePrefix."""
         logs.create_log_stream(logGroupName=log_group, logStreamName="app-stream-1")
@@ -749,7 +747,6 @@ class TestLogsKmsEncryption:
             except ClientError:
                 pass
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_associate_kms_key(self, logs, log_group):
         """Associate a KMS key with an existing log group."""
         kms = make_client("kms")
@@ -772,7 +769,6 @@ class TestLogsKmsEncryption:
             except ClientError:
                 pass
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_disassociate_kms_key(self, logs, log_group):
         """Disassociate a KMS key from a log group."""
         kms = make_client("kms")

@@ -405,7 +405,6 @@ class TestLambdaLayers:
 
 
 class TestLambdaVersions:
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_publish_multiple_versions(self, lam, role):
         """Test publishing multiple versions of a function."""
         code = _make_zip('def handler(e, c): return "v1"')
@@ -421,13 +420,15 @@ class TestLambdaVersions:
         assert v1["Version"] == "1"
         assert v1["Description"] == "first version"
 
+        # Update code before publishing next version (Moto requires code change)
+        code_v2 = _make_zip('def handler(e, c): return "v2"')
+        lam.update_function_code(FunctionName=fname, ZipFile=code_v2)
         v2 = lam.publish_version(FunctionName=fname, Description="second version")
         assert v2["Version"] == "2"
         assert v2["Description"] == "second version"
 
         lam.delete_function(FunctionName=fname)
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_list_versions_by_function(self, lam, role):
         """Test listing all versions including $LATEST."""
         code = _make_zip('def handler(e, c): return "ok"')
@@ -440,6 +441,9 @@ class TestLambdaVersions:
             Code={"ZipFile": code},
         )
         lam.publish_version(FunctionName=fname)
+        # Update code before second publish
+        code_v2 = _make_zip('def handler(e, c): return "v2"')
+        lam.update_function_code(FunctionName=fname, ZipFile=code_v2)
         lam.publish_version(FunctionName=fname)
 
         response = lam.list_versions_by_function(FunctionName=fname)
@@ -508,7 +512,6 @@ class TestLambdaAliases:
         lam.delete_alias(FunctionName=fname, Name="staging")
         lam.delete_function(FunctionName=fname)
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_update_alias(self, lam, role):
         """Test updating an alias to point to a new version."""
         code = _make_zip('def handler(e, c): return "ok"')
@@ -521,6 +524,8 @@ class TestLambdaAliases:
             Code={"ZipFile": code},
         )
         lam.publish_version(FunctionName=fname)
+        code_v2 = _make_zip('def handler(e, c): return "v2"')
+        lam.update_function_code(FunctionName=fname, ZipFile=code_v2)
         lam.publish_version(FunctionName=fname)
 
         lam.create_alias(FunctionName=fname, Name="live", FunctionVersion="1")

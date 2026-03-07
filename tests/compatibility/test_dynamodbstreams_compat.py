@@ -235,7 +235,6 @@ class TestDynamoDBStreamsOperations:
 class TestStreamRecordTypes:
     """Test that stream records correctly capture INSERT, MODIFY, and REMOVE events."""
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_insert_record(self, dynamodb, dynamodbstreams):
         """PutItem on a new key produces an INSERT stream record."""
         table_name = _create_stream_table(dynamodb)
@@ -290,7 +289,6 @@ class TestStreamRecordTypes:
         finally:
             dynamodb.delete_table(TableName=table_name)
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_remove_record(self, dynamodb, dynamodbstreams):
         """Deleting an item produces a REMOVE stream record."""
         table_name = _create_stream_table(dynamodb)
@@ -501,7 +499,6 @@ class TestMultipleItemStreaming:
         finally:
             dynamodb.delete_table(TableName=table_name)
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_update_item_produces_modify_record(self, dynamodb, dynamodbstreams):
         """UpdateItem on existing item produces a MODIFY record."""
         table_name = _create_stream_table(dynamodb)
@@ -513,7 +510,8 @@ class TestMultipleItemStreaming:
             dynamodb.update_item(
                 TableName=table_name,
                 Key={"pk": {"S": "upd-item"}},
-                UpdateExpression="SET counter = counter + :inc",
+                UpdateExpression="SET #c = #c + :inc",
+                ExpressionAttributeNames={"#c": "counter"},
                 ExpressionAttributeValues={":inc": {"N": "1"}},
             )
 

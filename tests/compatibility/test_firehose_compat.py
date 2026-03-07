@@ -117,7 +117,6 @@ class TestFirehoseOperations:
 
 
 class TestFirehoseUpdateDestination:
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_update_destination_prefix(self, firehose, delivery_stream):
         """Update the S3 prefix on an existing delivery stream destination."""
         name, bucket = delivery_stream
@@ -142,7 +141,6 @@ class TestFirehoseUpdateDestination:
         s3_dest = updated_dest.get("ExtendedS3DestinationDescription", {})
         assert s3_dest.get("Prefix") == "updated-prefix/"
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_update_destination_buffering_hints(self, firehose, delivery_stream):
         """Update buffering hints on an existing delivery stream."""
         name, bucket = delivery_stream
@@ -174,13 +172,12 @@ class TestFirehoseUpdateDestination:
 
 
 class TestFirehoseEncryption:
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_start_delivery_stream_encryption(self, firehose, delivery_stream):
         """Start encryption on a delivery stream."""
         name, _ = delivery_stream
         firehose.start_delivery_stream_encryption(
             DeliveryStreamName=name,
-            DeliveryStreamEncryptionInput={
+            DeliveryStreamEncryptionConfigurationInput={
                 "KeyType": "AWS_OWNED_CMK",
             },
         )
@@ -190,13 +187,12 @@ class TestFirehoseEncryption:
         )
         assert encryption.get("KeyType") == "AWS_OWNED_CMK"
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_stop_delivery_stream_encryption(self, firehose, delivery_stream):
         """Start and then stop encryption on a delivery stream."""
         name, _ = delivery_stream
         firehose.start_delivery_stream_encryption(
             DeliveryStreamName=name,
-            DeliveryStreamEncryptionInput={
+            DeliveryStreamEncryptionConfigurationInput={
                 "KeyType": "AWS_OWNED_CMK",
             },
         )

@@ -14,6 +14,7 @@ from robotocore.services.cloudformation.engine import (
     CfnStack,
     CfnStore,
     build_dependency_order,
+    evaluate_conditions,
     parse_template,
     resolve_intrinsics,
 )
@@ -105,27 +106,65 @@ def _create_stack(store: CfnStore, params: dict, region: str, account_id: str) -
         )
         i += 1
 
+    # Parse template to get description
+    template = parse_template(template_body)
+    description = template.get("Description", "")
+
     stack = CfnStack(
         stack_id=stack_id,
         stack_name=name,
         template_body=template_body,
         parameters=cfn_params,
         tags=tags,
+        description=description,
     )
+
+    # Add initial event
+    _add_event(stack, name, "AWS::CloudFormation::Stack", stack_id, "CREATE_IN_PROGRESS")
 
     # Deploy resources
     try:
-        _deploy_stack(stack, region, account_id)
+        _deploy_stack(stack, region, account_id, store)
         stack.status = "CREATE_COMPLETE"
+        _add_event(stack, name, "AWS::CloudFormation::Stack", stack_id, "CREATE_COMPLETE")
     except Exception as e:
         stack.status = "CREATE_FAILED"
         stack.status_reason = str(e)
+        _add_event(
+            stack, name, "AWS::CloudFormation::Stack", stack_id, "CREATE_FAILED", str(e)
+        )
 
     store.put_stack(stack)
     return {"StackId": stack_id}
 
 
-def _deploy_stack(stack: CfnStack, region: str, account_id: str) -> None:
+def _add_event(
+    stack: CfnStack,
+    logical_id: str,
+    resource_type: str,
+    physical_id: str,
+    status: str,
+    reason: str = "",
+) -> None:
+    """Add a stack event."""
+    event = {
+        "StackId": stack.stack_id,
+        "StackName": stack.stack_name,
+        "EventId": _new_id(),
+        "LogicalResourceId": logical_id,
+        "PhysicalResourceId": physical_id,
+        "ResourceType": resource_type,
+        "ResourceStatus": status,
+        "Timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+    if reason:
+        event["ResourceStatusReason"] = reason
+    stack.events.append(event)
+
+
+def _deploy_stack(
+    stack: CfnStack, region: str, account_id: str, store: CfnStore | None = None
+) -> None:
     """Parse template and create all resources in dependency order."""
     template = parse_template(stack.template_body)
 
@@ -143,8 +182,26 @@ def _deploy_stack(stack: CfnStack, region: str, account_id: str) -> None:
     resource_defs = template.get("Resources", {})
     order = build_dependency_order(template)
 
+    # Evaluate conditions
+    conditions = evaluate_conditions(
+        template, stack.resources, stack.parameters, region, account_id
+    )
+    # Store conditions so Fn::If can use them
+    stack.parameters["__conditions__"] = conditions
+
+    # Collect global exports for Fn::ImportValue resolution
+    if store:
+        stack.parameters["__imports__"] = dict(store.exports)
+
     for logical_id in order:
         res_def = resource_defs[logical_id]
+
+        # Check if resource has a Condition that evaluates to false
+        condition_name = res_def.get("Condition")
+        if condition_name and not conditions.get(condition_name, True):
+            # Skip this resource — condition is false
+            continue
+
         res_type = res_def["Type"]
         raw_props = res_def.get("Properties", {})
 
@@ -159,11 +216,20 @@ def _deploy_stack(stack: CfnStack, region: str, account_id: str) -> None:
             properties=resolved_props,
         )
 
+        _add_event(stack, logical_id, res_type, "", "CREATE_IN_PROGRESS")
         create_resource(resource, region, account_id)
+        _add_event(
+            stack, logical_id, res_type, resource.physical_id or "", "CREATE_COMPLETE"
+        )
         stack.resources[logical_id] = resource
 
     # Resolve outputs
     for out_name, out_def in template.get("Outputs", {}).items():
+        # Check output condition
+        condition_name = out_def.get("Condition")
+        if condition_name and not conditions.get(condition_name, True):
+            continue
+
         value = resolve_intrinsics(
             out_def.get("Value"), stack.resources, stack.parameters, region, account_id
         )
@@ -176,7 +242,12 @@ def _deploy_stack(stack: CfnStack, region: str, account_id: str) -> None:
             export_name = resolve_intrinsics(
                 out_def["Export"].get("Name"), stack.resources, stack.parameters, region, account_id
             )
-            stack.outputs[out_name]["ExportName"] = str(export_name)
+            export_str = str(export_name)
+            stack.outputs[out_name]["ExportName"] = export_str
+            stack.exports[export_str] = str(value)
+            # Also register in global store
+            if store:
+                store.exports[export_str] = str(value)
 
 
 def _delete_stack_action(store: CfnStore, params: dict, region: str, account_id: str) -> dict:
@@ -216,6 +287,8 @@ def _describe_stacks(store: CfnStore, params: dict, region: str, account_id: str
             "StackStatus": s.status,
             "CreationTime": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(s.created)),
         }
+        if s.description:
+            member["Description"] = s.description
         if s.status_reason:
             member["StackStatusReason"] = s.status_reason
         if s.outputs:
@@ -306,7 +379,7 @@ def _update_stack(store: CfnStore, params: dict, region: str, account_id: str) -
         stack.parameters = cfn_params
 
         # Deploy new resources
-        _deploy_stack(stack, region, account_id)
+        _deploy_stack(stack, region, account_id, store)
         stack.status = "UPDATE_COMPLETE"
     except Exception as e:
         stack.status = "UPDATE_FAILED"
@@ -356,6 +429,79 @@ def _get_template(store: CfnStore, params: dict, region: str, account_id: str) -
     if not stack:
         raise CfnError("ValidationError", f"Stack [{name}] does not exist")
     return {"TemplateBody": stack.template_body}
+
+
+def _describe_stack_events(store: CfnStore, params: dict, region: str, account_id: str) -> dict:
+    name = params.get("StackName", "")
+    stack = store.get_stack(name)
+    if not stack:
+        raise CfnError("ValidationError", f"Stack [{name}] does not exist")
+    # Return events in reverse chronological order (newest first)
+    return {"StackEvents": list(reversed(stack.events))}
+
+
+def _list_stack_resources(store: CfnStore, params: dict, region: str, account_id: str) -> dict:
+    name = params.get("StackName", "")
+    stack = store.get_stack(name)
+    if not stack:
+        raise CfnError("ValidationError", f"Stack [{name}] does not exist")
+
+    summaries = []
+    for lid, res in stack.resources.items():
+        summaries.append(
+            {
+                "LogicalResourceId": lid,
+                "PhysicalResourceId": res.physical_id or "",
+                "ResourceType": res.resource_type,
+                "ResourceStatus": res.status,
+                "LastUpdatedTimestamp": time.strftime(
+                    "%Y-%m-%dT%H:%M:%SZ", time.gmtime(stack.created)
+                ),
+            }
+        )
+    return {"StackResourceSummaries": summaries}
+
+
+def _describe_stack_resource(store: CfnStore, params: dict, region: str, account_id: str) -> dict:
+    name = params.get("StackName", "")
+    logical_id = params.get("LogicalResourceId", "")
+    stack = store.get_stack(name)
+    if not stack:
+        raise CfnError("ValidationError", f"Stack [{name}] does not exist")
+
+    res = stack.resources.get(logical_id)
+    if not res:
+        raise CfnError(
+            "ValidationError",
+            f"Resource [{logical_id}] does not exist in stack [{name}]",
+        )
+
+    return {
+        "StackResourceDetail": {
+            "StackId": stack.stack_id,
+            "StackName": stack.stack_name,
+            "LogicalResourceId": logical_id,
+            "PhysicalResourceId": res.physical_id or "",
+            "ResourceType": res.resource_type,
+            "ResourceStatus": res.status,
+            "LastUpdatedTimestamp": time.strftime(
+                "%Y-%m-%dT%H:%M:%SZ", time.gmtime(stack.created)
+            ),
+        }
+    }
+
+
+def _list_exports(store: CfnStore, params: dict, region: str, account_id: str) -> dict:
+    exports = []
+    for export_name, export_value in store.exports.items():
+        exports.append(
+            {
+                "ExportingStackId": "",
+                "Name": export_name,
+                "Value": str(export_value),
+            }
+        )
+    return {"Exports": exports}
 
 
 # --- XML Response ---
@@ -415,6 +561,10 @@ _ACTION_MAP: dict[str, Callable] = {
     "DescribeStacks": _describe_stacks,
     "ListStacks": _list_stacks,
     "DescribeStackResources": _describe_stack_resources,
+    "DescribeStackResource": _describe_stack_resource,
+    "DescribeStackEvents": _describe_stack_events,
+    "ListStackResources": _list_stack_resources,
+    "ListExports": _list_exports,
     "GetTemplate": _get_template,
     "ValidateTemplate": _validate_template,
 }
