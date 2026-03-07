@@ -12,7 +12,6 @@ from starlette.responses import Response
 
 _delivery_streams: dict[str, dict] = {}
 _stream_buffers: dict[str, list[bytes]] = {}
-_stream_tags: dict[str, list[dict[str, str]]] = {}
 _lock = threading.Lock()
 _worker_started = False
 _worker_lock = threading.Lock()
@@ -146,10 +145,10 @@ def _create_delivery_stream(params: dict, region: str, account_id: str) -> dict:
             "region": region,
             "account_id": account_id,
             "created": time.time(),
+            "version_id": 1,
         }
         _delivery_streams[name] = stream
         _stream_buffers[name] = []
-        _stream_tags[name] = list(params.get("Tags", []))
 
     return {"DeliveryStreamARN": stream["arn"]}
 
@@ -161,7 +160,6 @@ def _delete_delivery_stream(params: dict, region: str, account_id: str) -> dict:
             raise FirehoseError("ResourceNotFoundException", f"Stream {name} not found")
         del _delivery_streams[name]
         _stream_buffers.pop(name, None)
-        _stream_tags.pop(name, None)
     return {}
 
 
@@ -186,17 +184,22 @@ def _describe_delivery_stream(params: dict, region: str, account_id: str) -> dic
             }
         )
 
-    return {
-        "DeliveryStreamDescription": {
-            "DeliveryStreamName": name,
-            "DeliveryStreamARN": stream["arn"],
-            "DeliveryStreamStatus": stream["status"],
-            "DeliveryStreamType": stream["type"],
-            "Destinations": destinations,
-            "HasMoreDestinations": False,
-            "CreateTimestamp": stream["created"],
-        }
+    desc = {
+        "DeliveryStreamName": name,
+        "DeliveryStreamARN": stream["arn"],
+        "DeliveryStreamStatus": stream["status"],
+        "DeliveryStreamType": stream["type"],
+        "VersionId": str(stream.get("version_id", 1)),
+        "Destinations": destinations,
+        "HasMoreDestinations": False,
+        "CreateTimestamp": stream["created"],
     }
+
+    encryption = stream.get("encryption")
+    if encryption:
+        desc["DeliveryStreamEncryptionConfiguration"] = encryption
+
+    return {"DeliveryStreamDescription": desc}
 
 
 def _list_delivery_streams(params: dict, region: str, account_id: str) -> dict:
@@ -265,41 +268,73 @@ def _put_record_batch(params: dict, region: str, account_id: str) -> dict:
     }
 
 
-def _tag_delivery_stream(params: dict, region: str, account_id: str) -> dict:
+def _update_destination(params: dict, region: str, account_id: str) -> dict:
     name = params.get("DeliveryStreamName", "")
-    tags = params.get("Tags", [])
+    destination_id = params.get("DestinationId", "")
+
     with _lock:
-        if name not in _delivery_streams:
+        stream = _delivery_streams.get(name)
+        if not stream:
             raise FirehoseError("ResourceNotFoundException", f"Stream {name} not found")
-        existing = _stream_tags.setdefault(name, [])
-        # Merge: update existing keys, add new ones
-        existing_keys = {t["Key"]: i for i, t in enumerate(existing)}
-        for tag in tags:
-            if tag["Key"] in existing_keys:
-                existing[existing_keys[tag["Key"]]] = tag
-            else:
-                existing.append(tag)
+
+        if not destination_id:
+            raise FirehoseError("ValidationException", "DestinationId is required")
+
+        # Merge updates into existing s3_config
+        s3_update = (
+            params.get("ExtendedS3DestinationUpdate")
+            or params.get("S3DestinationUpdate")
+            or {}
+        )
+        if s3_update:
+            s3_config = stream.get("s3_config", {})
+            for key, value in s3_update.items():
+                if isinstance(value, dict) and isinstance(s3_config.get(key), dict):
+                    s3_config[key].update(value)
+                else:
+                    s3_config[key] = value
+            stream["s3_config"] = s3_config
+
+        stream["version_id"] = stream.get("version_id", 1) + 1
+
     return {}
 
 
-def _untag_delivery_stream(params: dict, region: str, account_id: str) -> dict:
+def _start_delivery_stream_encryption(params: dict, region: str, account_id: str) -> dict:
     name = params.get("DeliveryStreamName", "")
-    tag_keys = params.get("TagKeys", [])
+
     with _lock:
-        if name not in _delivery_streams:
+        stream = _delivery_streams.get(name)
+        if not stream:
             raise FirehoseError("ResourceNotFoundException", f"Stream {name} not found")
-        existing = _stream_tags.get(name, [])
-        _stream_tags[name] = [t for t in existing if t["Key"] not in tag_keys]
+
+        encryption_config = (
+            params.get("DeliveryStreamEncryptionConfigurationInput")
+            or params.get("DeliveryStreamEncryptionInput")
+            or {}
+        )
+        stream["encryption"] = {
+            "KeyType": encryption_config.get("KeyType", "AWS_OWNED_CMK"),
+            "KeyARN": encryption_config.get("KeyARN"),
+            "Status": "ENABLED",
+        }
+
     return {}
 
 
-def _list_tags_for_delivery_stream(params: dict, region: str, account_id: str) -> dict:
+def _stop_delivery_stream_encryption(params: dict, region: str, account_id: str) -> dict:
     name = params.get("DeliveryStreamName", "")
+
     with _lock:
-        if name not in _delivery_streams:
+        stream = _delivery_streams.get(name)
+        if not stream:
             raise FirehoseError("ResourceNotFoundException", f"Stream {name} not found")
-        tags = list(_stream_tags.get(name, []))
-    return {"Tags": tags, "HasMoreTags": False}
+
+        stream["encryption"] = {
+            "Status": "DISABLED",
+        }
+
+    return {}
 
 
 def _error(code: str, message: str, status: int) -> Response:
@@ -314,7 +349,7 @@ _ACTION_MAP: dict[str, Callable] = {
     "ListDeliveryStreams": _list_delivery_streams,
     "PutRecord": _put_record,
     "PutRecordBatch": _put_record_batch,
-    "TagDeliveryStream": _tag_delivery_stream,
-    "UntagDeliveryStream": _untag_delivery_stream,
-    "ListTagsForDeliveryStream": _list_tags_for_delivery_stream,
+    "UpdateDestination": _update_destination,
+    "StartDeliveryStreamEncryption": _start_delivery_stream_encryption,
+    "StopDeliveryStreamEncryption": _stop_delivery_stream_encryption,
 }

@@ -400,7 +400,6 @@ class TestCloudFormationBasic:
 
         cfn.delete_stack(StackName=stack_name)
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_stack_events(self, cfn):
         """Create a stack and verify events are recorded."""
         stack_name = _unique("test-events")
@@ -426,7 +425,6 @@ class TestCloudFormationBasic:
 
         cfn.delete_stack(StackName=stack_name)
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_list_stack_resources(self, cfn):
         """List stack resources via list_stack_resources API."""
         stack_name = _unique("test-list-res")
@@ -443,7 +441,6 @@ class TestCloudFormationBasic:
 
         cfn.delete_stack(StackName=stack_name)
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_describe_stack_resource(self, cfn):
         """Describe a single stack resource by logical ID."""
         stack_name = _unique("test-desc-res")
@@ -464,7 +461,6 @@ class TestCloudFormationBasic:
 
         cfn.delete_stack(StackName=stack_name)
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_stack_description_field(self, cfn):
         """Verify that the Description field from the template appears in describe_stacks."""
         stack_name = _unique("test-desc-field")
@@ -567,7 +563,6 @@ class TestCloudFormationCrossService:
 
         cfn.delete_stack(StackName=stack_name)
 
-    @pytest.mark.xfail(reason="Cross-stack references (exports/imports) not yet implemented")
     def test_cross_stack_references(self, cfn, sqs):
         """Create two stacks where stack B imports an output from stack A."""
         queue_name = _unique("cfn-export-q")
@@ -1310,7 +1305,6 @@ class TestCloudFormationConditions:
 
         cfn.delete_stack(StackName=stack_name)
 
-    @pytest.mark.xfail(reason="Conditions not yet fully implemented")
     def test_condition_false(self, cfn, sqs):
         """Template with a condition that evaluates to false skips the resource."""
         queue_name = _unique("cfn-cond-false")

@@ -16,13 +16,12 @@ from robotocore.services.firehose.provider import (
     _error,
     _flush_buffer,
     _list_delivery_streams,
-    _list_tags_for_delivery_stream,
     _put_record,
     _put_record_batch,
+    _start_delivery_stream_encryption,
+    _stop_delivery_stream_encryption,
     _stream_buffers,
-    _stream_tags,
-    _tag_delivery_stream,
-    _untag_delivery_stream,
+    _update_destination,
     _write_to_s3,
     handle_firehose_request,
 )
@@ -70,11 +69,9 @@ def _clear_streams():
     """Reset global state between tests."""
     _delivery_streams.clear()
     _stream_buffers.clear()
-    _stream_tags.clear()
     yield
     _delivery_streams.clear()
     _stream_buffers.clear()
-    _stream_tags.clear()
 
 
 # ---------------------------------------------------------------------------
@@ -327,100 +324,193 @@ class TestWriteToS3:
 
 
 # ---------------------------------------------------------------------------
-# _tag_delivery_stream / _untag_delivery_stream / _list_tags_for_delivery_stream
+# _update_destination
 # ---------------------------------------------------------------------------
 
 
-class TestTagDeliveryStream:
-    def test_tag_stream(self):
-        _create_delivery_stream({"DeliveryStreamName": "s1"}, "us-east-1", "123456789012")
-        _tag_delivery_stream(
+class TestUpdateDestination:
+    def test_updates_prefix(self):
+        _create_delivery_stream(
             {
                 "DeliveryStreamName": "s1",
-                "Tags": [{"Key": "env", "Value": "dev"}],
+                "ExtendedS3DestinationConfiguration": {
+                    "BucketARN": "arn:aws:s3:::mybucket",
+                    "Prefix": "original/",
+                    "RoleARN": "arn:aws:iam::123456789012:role/test",
+                },
             },
             "us-east-1",
             "123456789012",
         )
-        result = _list_tags_for_delivery_stream(
-            {"DeliveryStreamName": "s1"}, "us-east-1", "123456789012"
-        )
-        assert result["Tags"] == [{"Key": "env", "Value": "dev"}]
-
-    def test_tag_overwrites_existing_key(self):
-        _create_delivery_stream({"DeliveryStreamName": "s1"}, "us-east-1", "123456789012")
-        _tag_delivery_stream(
-            {"DeliveryStreamName": "s1", "Tags": [{"Key": "env", "Value": "dev"}]},
-            "us-east-1",
-            "123456789012",
-        )
-        _tag_delivery_stream(
-            {"DeliveryStreamName": "s1", "Tags": [{"Key": "env", "Value": "prod"}]},
-            "us-east-1",
-            "123456789012",
-        )
-        result = _list_tags_for_delivery_stream(
-            {"DeliveryStreamName": "s1"}, "us-east-1", "123456789012"
-        )
-        assert len(result["Tags"]) == 1
-        assert result["Tags"][0]["Value"] == "prod"
-
-    def test_tag_nonexistent_stream_raises(self):
-        with pytest.raises(FirehoseError) as exc:
-            _tag_delivery_stream(
-                {"DeliveryStreamName": "nope", "Tags": []}, "us-east-1", "123456789012"
-            )
-        assert exc.value.code == "ResourceNotFoundException"
-
-
-class TestUntagDeliveryStream:
-    def test_untag_stream(self):
-        _create_delivery_stream({"DeliveryStreamName": "s1"}, "us-east-1", "123456789012")
-        _tag_delivery_stream(
+        result = _update_destination(
             {
                 "DeliveryStreamName": "s1",
-                "Tags": [
-                    {"Key": "env", "Value": "dev"},
-                    {"Key": "team", "Value": "platform"},
-                ],
+                "DestinationId": "dest-1",
+                "CurrentDeliveryStreamVersionId": "1",
+                "ExtendedS3DestinationUpdate": {"Prefix": "updated/"},
             },
             "us-east-1",
             "123456789012",
         )
-        _untag_delivery_stream(
-            {"DeliveryStreamName": "s1", "TagKeys": ["env"]},
+        assert result == {}
+        assert _delivery_streams["s1"]["s3_config"]["Prefix"] == "updated/"
+        # Original fields preserved
+        assert _delivery_streams["s1"]["s3_config"]["BucketARN"] == "arn:aws:s3:::mybucket"
+
+    def test_updates_buffering_hints(self):
+        _create_delivery_stream(
+            {
+                "DeliveryStreamName": "s1",
+                "ExtendedS3DestinationConfiguration": {
+                    "BucketARN": "arn:aws:s3:::mybucket",
+                },
+            },
             "us-east-1",
             "123456789012",
         )
-        result = _list_tags_for_delivery_stream(
-            {"DeliveryStreamName": "s1"}, "us-east-1", "123456789012"
+        _update_destination(
+            {
+                "DeliveryStreamName": "s1",
+                "DestinationId": "dest-1",
+                "CurrentDeliveryStreamVersionId": "1",
+                "ExtendedS3DestinationUpdate": {
+                    "BufferingHints": {"SizeInMBs": 10, "IntervalInSeconds": 300},
+                },
+            },
+            "us-east-1",
+            "123456789012",
         )
-        keys = [t["Key"] for t in result["Tags"]]
-        assert "env" not in keys
-        assert "team" in keys
-
-    def test_untag_nonexistent_stream_raises(self):
-        with pytest.raises(FirehoseError) as exc:
-            _untag_delivery_stream(
-                {"DeliveryStreamName": "nope", "TagKeys": ["x"]}, "us-east-1", "123456789012"
-            )
-        assert exc.value.code == "ResourceNotFoundException"
-
-
-class TestListTagsForDeliveryStream:
-    def test_empty_tags(self):
-        _create_delivery_stream({"DeliveryStreamName": "s1"}, "us-east-1", "123456789012")
-        result = _list_tags_for_delivery_stream(
-            {"DeliveryStreamName": "s1"}, "us-east-1", "123456789012"
-        )
-        assert result["Tags"] == []
-        assert result["HasMoreTags"] is False
+        hints = _delivery_streams["s1"]["s3_config"]["BufferingHints"]
+        assert hints == {"SizeInMBs": 10, "IntervalInSeconds": 300}
 
     def test_not_found_raises(self):
-        with pytest.raises(FirehoseError):
-            _list_tags_for_delivery_stream(
+        with pytest.raises(FirehoseError) as exc:
+            _update_destination(
+                {
+                    "DeliveryStreamName": "nope",
+                    "DestinationId": "dest-1",
+                    "CurrentDeliveryStreamVersionId": "1",
+                },
+                "us-east-1",
+                "123456789012",
+            )
+        assert exc.value.code == "ResourceNotFoundException"
+
+    def test_missing_destination_id_raises(self):
+        _create_delivery_stream({"DeliveryStreamName": "s1"}, "us-east-1", "123456789012")
+        with pytest.raises(FirehoseError) as exc:
+            _update_destination(
+                {
+                    "DeliveryStreamName": "s1",
+                    "CurrentDeliveryStreamVersionId": "1",
+                },
+                "us-east-1",
+                "123456789012",
+            )
+        assert exc.value.code == "ValidationException"
+
+    def test_describe_shows_updated_prefix(self):
+        _create_delivery_stream(
+            {
+                "DeliveryStreamName": "s1",
+                "ExtendedS3DestinationConfiguration": {
+                    "BucketARN": "arn:aws:s3:::mybucket",
+                    "Prefix": "old/",
+                },
+            },
+            "us-east-1",
+            "123456789012",
+        )
+        _update_destination(
+            {
+                "DeliveryStreamName": "s1",
+                "DestinationId": "dest-1",
+                "CurrentDeliveryStreamVersionId": "1",
+                "ExtendedS3DestinationUpdate": {"Prefix": "new/"},
+            },
+            "us-east-1",
+            "123456789012",
+        )
+        result = _describe_delivery_stream(
+            {"DeliveryStreamName": "s1"}, "us-east-1", "123456789012"
+        )
+        dest = result["DeliveryStreamDescription"]["Destinations"][0]
+        assert dest["ExtendedS3DestinationDescription"]["Prefix"] == "new/"
+
+
+# ---------------------------------------------------------------------------
+# _start/_stop_delivery_stream_encryption
+# ---------------------------------------------------------------------------
+
+
+class TestDeliveryStreamEncryption:
+    def test_start_encryption(self):
+        _create_delivery_stream({"DeliveryStreamName": "s1"}, "us-east-1", "123456789012")
+        result = _start_delivery_stream_encryption(
+            {
+                "DeliveryStreamName": "s1",
+                "DeliveryStreamEncryptionInput": {"KeyType": "AWS_OWNED_CMK"},
+            },
+            "us-east-1",
+            "123456789012",
+        )
+        assert result == {}
+        assert _delivery_streams["s1"]["encryption"]["Status"] == "ENABLED"
+        assert _delivery_streams["s1"]["encryption"]["KeyType"] == "AWS_OWNED_CMK"
+
+    def test_stop_encryption(self):
+        _create_delivery_stream({"DeliveryStreamName": "s1"}, "us-east-1", "123456789012")
+        _start_delivery_stream_encryption(
+            {
+                "DeliveryStreamName": "s1",
+                "DeliveryStreamEncryptionInput": {"KeyType": "AWS_OWNED_CMK"},
+            },
+            "us-east-1",
+            "123456789012",
+        )
+        result = _stop_delivery_stream_encryption(
+            {"DeliveryStreamName": "s1"}, "us-east-1", "123456789012"
+        )
+        assert result == {}
+        assert _delivery_streams["s1"]["encryption"]["Status"] == "DISABLED"
+
+    def test_start_not_found_raises(self):
+        with pytest.raises(FirehoseError) as exc:
+            _start_delivery_stream_encryption(
                 {"DeliveryStreamName": "nope"}, "us-east-1", "123456789012"
             )
+        assert exc.value.code == "ResourceNotFoundException"
+
+    def test_stop_not_found_raises(self):
+        with pytest.raises(FirehoseError) as exc:
+            _stop_delivery_stream_encryption(
+                {"DeliveryStreamName": "nope"}, "us-east-1", "123456789012"
+            )
+        assert exc.value.code == "ResourceNotFoundException"
+
+    def test_describe_shows_encryption(self):
+        _create_delivery_stream({"DeliveryStreamName": "s1"}, "us-east-1", "123456789012")
+        _start_delivery_stream_encryption(
+            {
+                "DeliveryStreamName": "s1",
+                "DeliveryStreamEncryptionInput": {"KeyType": "AWS_OWNED_CMK"},
+            },
+            "us-east-1",
+            "123456789012",
+        )
+        result = _describe_delivery_stream(
+            {"DeliveryStreamName": "s1"}, "us-east-1", "123456789012"
+        )
+        enc = result["DeliveryStreamDescription"]["DeliveryStreamEncryptionConfiguration"]
+        assert enc["Status"] == "ENABLED"
+        assert enc["KeyType"] == "AWS_OWNED_CMK"
+
+    def test_describe_no_encryption_field(self):
+        _create_delivery_stream({"DeliveryStreamName": "s1"}, "us-east-1", "123456789012")
+        result = _describe_delivery_stream(
+            {"DeliveryStreamName": "s1"}, "us-east-1", "123456789012"
+        )
+        assert "DeliveryStreamEncryptionConfiguration" not in result["DeliveryStreamDescription"]
 
 
 # ---------------------------------------------------------------------------

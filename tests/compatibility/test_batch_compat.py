@@ -448,7 +448,6 @@ class TestJobs:
         assert id1 in returned_ids
         assert id2 in returned_ids
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_list_jobs(self, batch, job_infra):
         jq_name, jd_name = job_infra
         batch.submit_job(
@@ -460,7 +459,6 @@ class TestJobs:
         assert "jobSummaryList" in resp
         assert len(resp["jobSummaryList"]) >= 1
 
-    @pytest.mark.xfail(reason="Not yet implemented")
     def test_list_jobs_has_summary_fields(self, batch, job_infra):
         """Verify job summary list entries have expected fields."""
         jq_name, jd_name = job_infra
