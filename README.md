@@ -13,7 +13,8 @@
   <a href="#for-ai-agents">For AI Agents</a> ·
   <a href="#supported-services">42 Services</a> ·
   <a href="#why-robotocore">Why robotocore</a> ·
-  <a href="#architecture">Architecture</a>
+  <a href="#architecture">Architecture</a> ·
+  <a href="AGENTS.md">AGENTS.md</a>
 </p>
 
 ---
@@ -35,10 +36,18 @@ Built by [Jack Danger](https://github.com/jackdanger), a maintainer of [Moto](ht
 ## Quick Start
 
 ```bash
-docker run -p 4566:4566 robotocore
+# Docker Hub
+docker run -d -p 4566:4566 jackdanger/robotocore:latest
+
+# GitHub Container Registry (alternative)
+docker run -d -p 4566:4566 ghcr.io/jackdanger/robotocore:latest
 ```
 
-That's it. Your local AWS digital twin is running.
+Verify it's running:
+
+```bash
+curl -s http://localhost:4566/_localstack/health | python3 -m json.tool
+```
 
 ### Python (boto3)
 
@@ -79,7 +88,7 @@ aws dynamodb list-tables
 ```yaml
 services:
   aws:
-    image: robotocore
+    image: jackdanger/robotocore:latest
     ports:
       - "4566:4566"
 
@@ -90,6 +99,31 @@ services:
       - AWS_ACCESS_KEY_ID=123456789012
       - AWS_SECRET_ACCESS_KEY=test
       - AWS_DEFAULT_REGION=us-east-1
+```
+
+### GitHub Actions
+
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      robotocore:
+        image: jackdanger/robotocore:latest
+        ports:
+          - 4566:4566
+        options: >-
+          --health-cmd "curl -f http://localhost:4566/_localstack/health"
+          --health-interval 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: pytest tests/
+        env:
+          AWS_ENDPOINT_URL: http://localhost:4566
+          AWS_ACCESS_KEY_ID: "123456789012"
+          AWS_SECRET_ACCESS_KEY: test
+          AWS_DEFAULT_REGION: us-east-1
 ```
 
 ---
@@ -167,6 +201,8 @@ If you omit credentials or use a non-numeric access key (e.g. `"test"`), robotoc
 ---
 
 ## For AI Agents
+
+> **If you are an AI agent**, read [AGENTS.md](AGENTS.md) — it's a standalone reference with everything you need: Docker image, endpoint, credentials, multi-account setup, common patterns, health checks, and troubleshooting. No prior context required.
 
 If you are an AI agent or LLM being asked to work with AWS infrastructure locally, here is everything you need to know:
 
