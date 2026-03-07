@@ -121,6 +121,73 @@ class TestS3BasicOperations:
         assert len(response.get("Deleted", [])) == 2
 
 
+class TestS3BucketConfiguration:
+    def test_get_bucket_versioning(self, s3, bucket):
+        """Test that versioning is not enabled by default."""
+        response = s3.get_bucket_versioning(Bucket=bucket)
+        # A new bucket has no versioning status set
+        assert response.get("Status") in (None, "")
+
+    def test_put_bucket_versioning(self, s3, bucket):
+        """Test enabling bucket versioning."""
+        s3.put_bucket_versioning(
+            Bucket=bucket,
+            VersioningConfiguration={"Status": "Enabled"},
+        )
+        response = s3.get_bucket_versioning(Bucket=bucket)
+        assert response["Status"] == "Enabled"
+
+    def test_put_and_get_bucket_policy(self, s3, bucket):
+        """Test setting and retrieving a bucket policy."""
+        policy = json.dumps(
+            {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Sid": "PublicRead",
+                        "Effect": "Allow",
+                        "Principal": "*",
+                        "Action": "s3:GetObject",
+                        "Resource": f"arn:aws:s3:::{bucket}/*",
+                    }
+                ],
+            }
+        )
+        s3.put_bucket_policy(Bucket=bucket, Policy=policy)
+        response = s3.get_bucket_policy(Bucket=bucket)
+        retrieved = json.loads(response["Policy"])
+        assert retrieved["Statement"][0]["Sid"] == "PublicRead"
+        assert retrieved["Statement"][0]["Action"] == "s3:GetObject"
+        s3.delete_bucket_policy(Bucket=bucket)
+
+    def test_put_get_delete_bucket_cors(self, s3, bucket):
+        """Test CORS configuration lifecycle."""
+        cors_config = {
+            "CORSRules": [
+                {
+                    "AllowedHeaders": ["*"],
+                    "AllowedMethods": ["GET", "PUT"],
+                    "AllowedOrigins": ["https://example.com"],
+                    "MaxAgeSeconds": 3600,
+                }
+            ]
+        }
+        s3.put_bucket_cors(Bucket=bucket, CORSConfiguration=cors_config)
+
+        response = s3.get_bucket_cors(Bucket=bucket)
+        rules = response["CORSRules"]
+        assert len(rules) == 1
+        assert "GET" in rules[0]["AllowedMethods"]
+        assert "PUT" in rules[0]["AllowedMethods"]
+        assert rules[0]["AllowedOrigins"] == ["https://example.com"]
+        assert rules[0]["MaxAgeSeconds"] == 3600
+
+        s3.delete_bucket_cors(Bucket=bucket)
+        # After deletion, get_bucket_cors should raise
+        with pytest.raises(Exception):
+            s3.get_bucket_cors(Bucket=bucket)
+
+
 class TestS3Multipart:
     def test_multipart_upload(self, s3, bucket):
         # Create multipart upload

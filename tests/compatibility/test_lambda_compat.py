@@ -690,6 +690,11 @@ class TestLambdaAliases:
     def test_delete_alias(self, lam, role):
         code = _make_zip('def handler(e, c): return "ok"')
         fname = f"alias-del-{uuid.uuid4().hex[:8]}"
+class TestLambdaPermissions:
+    def test_add_and_remove_permission(self, lam, role):
+        """Test adding and removing a resource-based policy statement."""
+        code = _make_zip("def handler(event, context): return {'statusCode': 200}")
+        fname = f"perm-func-{uuid.uuid4().hex[:8]}"
         lam.create_function(
             FunctionName=fname,
             Runtime="python3.12",
@@ -1169,4 +1174,37 @@ class TestLambdaUpdateCode:
         assert resp["FunctionName"] == fname
         assert resp["Runtime"] == "python3.12"
         assert "FunctionArn" in resp
+
+        # Add permission
+        lam.add_permission(
+            FunctionName=fname,
+            StatementId="s3-invoke",
+            Action="lambda:InvokeFunction",
+            Principal="s3.amazonaws.com",
+        )
+
+        # Verify via get_policy
+        policy_response = lam.get_policy(FunctionName=fname)
+        policy = json.loads(policy_response["Policy"])
+        statements = policy["Statement"]
+        stmt_ids = [s["Sid"] for s in statements]
+        assert "s3-invoke" in stmt_ids
+
+        # Find the statement and verify fields
+        stmt = [s for s in statements if s["Sid"] == "s3-invoke"][0]
+        assert stmt["Action"] == "lambda:InvokeFunction"
+        assert "s3.amazonaws.com" in json.dumps(stmt["Principal"])
+
+        # Remove permission
+        lam.remove_permission(FunctionName=fname, StatementId="s3-invoke")
+
+        # After removal, get_policy should either raise or return empty statements
+        try:
+            policy_response = lam.get_policy(FunctionName=fname)
+            policy = json.loads(policy_response["Policy"])
+            stmt_ids = [s["Sid"] for s in policy["Statement"]]
+            assert "s3-invoke" not in stmt_ids
+        except lam.exceptions.ResourceNotFoundException:
+            pass  # No policy left is also valid
+
         lam.delete_function(FunctionName=fname)
