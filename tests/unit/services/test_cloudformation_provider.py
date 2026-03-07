@@ -10,8 +10,11 @@ from starlette.requests import Request
 from robotocore.services.cloudformation.engine import CfnStore
 from robotocore.services.cloudformation.provider import (
     CfnError,
+    _create_change_set,
     _create_stack,
+    _delete_change_set,
     _delete_stack_action,
+    _describe_change_set,
     _describe_stack_events,
     _describe_stack_resource,
     _describe_stacks,
@@ -633,6 +636,74 @@ class TestConditions:
         stack = store.get_stack("cond-stack2")
         assert "AlwaysQueue" in stack.resources
         assert "ConditionalQueue" in stack.resources
+
+
+class TestChangeSet:
+    def test_create_change_set(self):
+        store = CfnStore()
+        result = _create_change_set(
+            store,
+            {
+                "StackName": "my-stack",
+                "ChangeSetName": "my-cs",
+                "TemplateBody": '{"AWSTemplateFormatVersion":"2010-09-09","Resources":{}}',
+                "ChangeSetType": "CREATE",
+            },
+            "us-east-1",
+            "123456789012",
+        )
+        assert "Id" in result
+        assert "StackId" in result
+        assert len(store.change_sets) == 1
+
+    def test_describe_change_set(self):
+        store = CfnStore()
+        create_result = _create_change_set(
+            store,
+            {"StackName": "s1", "ChangeSetName": "cs1", "ChangeSetType": "CREATE"},
+            "us-east-1",
+            "123",
+        )
+        desc = _describe_change_set(
+            store, {"ChangeSetName": "cs1", "StackName": "s1"}, "us-east-1", "123"
+        )
+        assert desc["ChangeSetName"] == "cs1"
+        assert desc["StackName"] == "s1"
+        assert desc["Status"] == "CREATE_COMPLETE"
+
+    def test_describe_change_set_not_found(self):
+        store = CfnStore()
+        with pytest.raises(CfnError) as exc_info:
+            _describe_change_set(
+                store, {"ChangeSetName": "nonexistent"}, "us-east-1", "123"
+            )
+        assert "ChangeSetNotFoundException" in exc_info.value.code
+
+    def test_delete_change_set(self):
+        store = CfnStore()
+        _create_change_set(
+            store,
+            {"StackName": "s1", "ChangeSetName": "cs1", "ChangeSetType": "CREATE"},
+            "us-east-1",
+            "123",
+        )
+        assert len(store.change_sets) == 1
+        _delete_change_set(
+            store, {"ChangeSetName": "cs1", "StackName": "s1"}, "us-east-1", "123"
+        )
+        assert len(store.change_sets) == 0
+
+    def test_create_change_set_creates_stub_stack(self):
+        store = CfnStore()
+        _create_change_set(
+            store,
+            {"StackName": "new-stack", "ChangeSetName": "cs1", "ChangeSetType": "CREATE"},
+            "us-east-1",
+            "123",
+        )
+        stack = store.get_stack("new-stack")
+        assert stack is not None
+        assert stack.status == "REVIEW_IN_PROGRESS"
 
 
 class TestCrossStackExports:
