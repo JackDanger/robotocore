@@ -146,7 +146,12 @@ def _create_delivery_stream(params: dict, region: str, account_id: str) -> dict:
             "account_id": account_id,
             "created": time.time(),
             "version_id": 1,
+            "tags": {},
         }
+        # Store initial tags if provided
+        initial_tags = params.get("Tags", [])
+        for tag in initial_tags:
+            stream["tags"][tag["Key"]] = tag.get("Value", "")
         _delivery_streams[name] = stream
         _stream_buffers[name] = []
 
@@ -337,6 +342,40 @@ def _stop_delivery_stream_encryption(params: dict, region: str, account_id: str)
     return {}
 
 
+def _tag_delivery_stream(params: dict, region: str, account_id: str) -> dict:
+    name = params.get("DeliveryStreamName", "")
+    tags = params.get("Tags", [])
+    with _lock:
+        stream = _delivery_streams.get(name)
+        if not stream:
+            raise FirehoseError("ResourceNotFoundException", f"Stream {name} not found")
+        for tag in tags:
+            stream["tags"][tag["Key"]] = tag.get("Value", "")
+    return {}
+
+
+def _untag_delivery_stream(params: dict, region: str, account_id: str) -> dict:
+    name = params.get("DeliveryStreamName", "")
+    tag_keys = params.get("TagKeys", [])
+    with _lock:
+        stream = _delivery_streams.get(name)
+        if not stream:
+            raise FirehoseError("ResourceNotFoundException", f"Stream {name} not found")
+        for key in tag_keys:
+            stream["tags"].pop(key, None)
+    return {}
+
+
+def _list_tags_for_delivery_stream(params: dict, region: str, account_id: str) -> dict:
+    name = params.get("DeliveryStreamName", "")
+    with _lock:
+        stream = _delivery_streams.get(name)
+        if not stream:
+            raise FirehoseError("ResourceNotFoundException", f"Stream {name} not found")
+        tags = [{"Key": k, "Value": v} for k, v in stream["tags"].items()]
+    return {"Tags": tags, "HasMoreTags": False}
+
+
 def _error(code: str, message: str, status: int) -> Response:
     body = json.dumps({"__type": code, "message": message})
     return Response(content=body, status_code=status, media_type="application/x-amz-json-1.1")
@@ -352,4 +391,7 @@ _ACTION_MAP: dict[str, Callable] = {
     "UpdateDestination": _update_destination,
     "StartDeliveryStreamEncryption": _start_delivery_stream_encryption,
     "StopDeliveryStreamEncryption": _stop_delivery_stream_encryption,
+    "TagDeliveryStream": _tag_delivery_stream,
+    "UntagDeliveryStream": _untag_delivery_stream,
+    "ListTagsForDeliveryStream": _list_tags_for_delivery_stream,
 }

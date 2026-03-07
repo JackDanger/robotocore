@@ -183,7 +183,7 @@ class TestFirehoseOperations:
         assert dest2["BufferingHints"]["SizeInMBs"] == 10
         assert dest2["BufferingHints"]["IntervalInSeconds"] == 120
 
-    @pytest.mark.xfail(reason="TagDeliveryStream not yet implemented")
+
     def test_tag_delivery_stream(self, firehose, delivery_stream):
         """TagDeliveryStream adds tags."""
         firehose.tag_delivery_stream(
@@ -200,7 +200,7 @@ class TestFirehoseOperations:
         assert tag_map["env"] == "test"
         assert tag_map["project"] == "robotocore"
 
-    @pytest.mark.xfail(reason="TagDeliveryStream not yet implemented")
+
     def test_untag_delivery_stream(self, firehose, delivery_stream):
         """UntagDeliveryStream removes tags."""
         firehose.tag_delivery_stream(
@@ -347,7 +347,7 @@ class TestFirehoseOperations:
                 firehose.delete_delivery_stream(DeliveryStreamName=name)
             s3.delete_bucket(Bucket="fh-multi-test")
 
-    @pytest.mark.xfail(reason="ListTagsForDeliveryStream not yet implemented")
+
     def test_list_tags_for_delivery_stream_empty(self, firehose, delivery_stream):
         """ListTagsForDeliveryStream on untagged stream returns empty list."""
         response = firehose.list_tags_for_delivery_stream(

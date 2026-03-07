@@ -144,6 +144,8 @@ def _describe_stream(store: KinesisStore, params: dict, region: str, account_id:
             "HasMoreShards": False,
             "RetentionPeriodHours": stream.retention_hours,
             "EnhancedMonitoring": [{"ShardLevelMetrics": []}],
+            "EncryptionType": stream.encryption_type,
+            "KeyId": stream.key_id if stream.key_id else None,
             "StreamCreationTimestamp": stream.created,
         }
     }
@@ -491,6 +493,136 @@ def _list_tags(store: KinesisStore, params: dict, region: str, account_id: str) 
     return {"Tags": tags, "HasMoreTags": False}
 
 
+def _start_stream_encryption(store: KinesisStore, params: dict, region: str, account_id: str) -> dict:
+    name = params.get("StreamName", "")
+    key_id = params.get("KeyId", "")
+    encryption_type = params.get("EncryptionType", "KMS")
+    stream = store.get_stream(name)
+    if not stream:
+        raise KinesisError("ResourceNotFoundException", f"Stream {name} not found")
+    stream.encryption_type = encryption_type
+    stream.key_id = key_id
+    return {}
+
+
+def _stop_stream_encryption(store: KinesisStore, params: dict, region: str, account_id: str) -> dict:
+    name = params.get("StreamName", "")
+    stream = store.get_stream(name)
+    if not stream:
+        raise KinesisError("ResourceNotFoundException", f"Stream {name} not found")
+    stream.encryption_type = "NONE"
+    stream.key_id = ""
+    return {}
+
+
+def _register_stream_consumer(store: KinesisStore, params: dict, region: str, account_id: str) -> dict:
+    stream_arn = params.get("StreamARN", "")
+    consumer_name = params.get("ConsumerName", "")
+    # Find stream by ARN
+    stream = None
+    for s in store.streams.values():
+        if s.arn == stream_arn:
+            stream = s
+            break
+    if not stream:
+        raise KinesisError("ResourceNotFoundException", f"Stream not found: {stream_arn}")
+
+    import time as _time
+    consumer_arn = f"{stream_arn}/consumer/{consumer_name}:{int(_time.time())}"
+    consumer = {
+        "ConsumerName": consumer_name,
+        "ConsumerARN": consumer_arn,
+        "ConsumerStatus": "ACTIVE",
+        "ConsumerCreationTimestamp": _time.time(),
+    }
+    stream.consumers[consumer_name] = consumer
+    return {"Consumer": consumer}
+
+
+def _describe_stream_consumer(store: KinesisStore, params: dict, region: str, account_id: str) -> dict:
+    stream_arn = params.get("StreamARN", "")
+    consumer_name = params.get("ConsumerName", "")
+    for s in store.streams.values():
+        if s.arn == stream_arn and consumer_name in s.consumers:
+            return {"ConsumerDescription": s.consumers[consumer_name]}
+    raise KinesisError("ResourceNotFoundException", f"Consumer {consumer_name} not found")
+
+
+def _list_stream_consumers(store: KinesisStore, params: dict, region: str, account_id: str) -> dict:
+    stream_arn = params.get("StreamARN", "")
+    for s in store.streams.values():
+        if s.arn == stream_arn:
+            return {"Consumers": list(s.consumers.values())}
+    raise KinesisError("ResourceNotFoundException", f"Stream not found: {stream_arn}")
+
+
+def _deregister_stream_consumer(store: KinesisStore, params: dict, region: str, account_id: str) -> dict:
+    stream_arn = params.get("StreamARN", "")
+    consumer_name = params.get("ConsumerName", "")
+    for s in store.streams.values():
+        if s.arn == stream_arn:
+            s.consumers.pop(consumer_name, None)
+            return {}
+    raise KinesisError("ResourceNotFoundException", f"Stream not found: {stream_arn}")
+
+
+def _split_shard(store: KinesisStore, params: dict, region: str, account_id: str) -> dict:
+    name = params.get("StreamName", "")
+    stream = store.get_stream(name)
+    if not stream:
+        raise KinesisError("ResourceNotFoundException", f"Stream {name} not found")
+    shard_id = params.get("ShardToSplit", "")
+    new_hash = params.get("NewStartingHashKey", "")
+    # Find the shard
+    target = None
+    for shard in stream.shards:
+        if shard.shard_id == shard_id:
+            target = shard
+            break
+    if not target:
+        raise KinesisError("ResourceNotFoundException", f"Shard {shard_id} not found")
+    # Create two new shards from the split
+    mid = int(new_hash) if new_hash else (target.hash_key_start + target.hash_key_end) // 2
+    from robotocore.services.kinesis.models import Shard
+    new_id1 = f"shardId-{len(stream.shards):012d}"
+    new_id2 = f"shardId-{len(stream.shards) + 1:012d}"
+    shard1 = Shard(shard_id=new_id1, hash_key_start=target.hash_key_start, hash_key_end=mid - 1)
+    shard2 = Shard(shard_id=new_id2, hash_key_start=mid, hash_key_end=target.hash_key_end)
+    stream.shards.remove(target)
+    stream.shards.extend([shard1, shard2])
+    stream.shard_count = len(stream.shards)
+    return {}
+
+
+def _merge_shards(store: KinesisStore, params: dict, region: str, account_id: str) -> dict:
+    name = params.get("StreamName", "")
+    stream = store.get_stream(name)
+    if not stream:
+        raise KinesisError("ResourceNotFoundException", f"Stream {name} not found")
+    shard1_id = params.get("ShardToMerge", "")
+    shard2_id = params.get("AdjacentShardToMerge", "")
+    s1 = s2 = None
+    for shard in stream.shards:
+        if shard.shard_id == shard1_id:
+            s1 = shard
+        if shard.shard_id == shard2_id:
+            s2 = shard
+    if not s1 or not s2:
+        raise KinesisError("ResourceNotFoundException", "Shard not found")
+    from robotocore.services.kinesis.models import Shard
+    new_id = f"shardId-{len(stream.shards):012d}"
+    merged = Shard(
+        shard_id=new_id,
+        hash_key_start=min(s1.hash_key_start, s2.hash_key_start),
+        hash_key_end=max(s1.hash_key_end, s2.hash_key_end),
+    )
+    stream.shards.remove(s1)
+    stream.shards.remove(s2)
+    stream.shards.append(merged)
+    stream.shard_count = len(stream.shards)
+    return {}
+
+
 def _error(code: str, message: str, status: int) -> Response:
     body = json.dumps({"__type": code, "message": message})
     return Response(content=body, status_code=status, media_type="application/x-amz-json-1.1")
@@ -513,4 +645,12 @@ _ACTION_MAP: dict[str, Callable] = {
     "ListTagsForStream": _list_tags,
     "DescribeStreamSummary": _describe_stream_summary,
     "UpdateShardCount": _update_shard_count,
+    "StartStreamEncryption": _start_stream_encryption,
+    "StopStreamEncryption": _stop_stream_encryption,
+    "RegisterStreamConsumer": _register_stream_consumer,
+    "DescribeStreamConsumer": _describe_stream_consumer,
+    "ListStreamConsumers": _list_stream_consumers,
+    "DeregisterStreamConsumer": _deregister_stream_consumer,
+    "SplitShard": _split_shard,
+    "MergeShards": _merge_shards,
 }
