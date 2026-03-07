@@ -483,8 +483,6 @@ class TestKMSOperations:
             assert tag_map2["project"] == "robotocore"
         finally:
             kms.schedule_key_deletion(KeyId=key_id, PendingWindowInDays=7)
-
-    @pytest.mark.xfail(reason="Sign/Verify with RSA may not be fully supported")
     def test_sign_verify_rsa(self, kms):
         """Test Sign and Verify with an RSA key."""
         key = kms.create_key(

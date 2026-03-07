@@ -779,8 +779,6 @@ class TestLogsOperations:
             assert "retentionInDays" not in group
         finally:
             logs.delete_log_group(logGroupName=name)
-
-    @pytest.mark.xfail(reason="PutDestination may not be supported")
     def test_put_describe_delete_destination(self, logs):
         """PutDestination / DescribeDestinations / DeleteDestination."""
         dest_name = _unique("dest")
@@ -795,14 +793,11 @@ class TestLogsOperations:
             assert dest_name in names
         finally:
             logs.delete_destination(destinationName=dest_name)
-
-    @pytest.mark.xfail(reason="DescribeQueries may not be supported")
     def test_describe_queries(self, logs):
         """DescribeQueries."""
         resp = logs.describe_queries()
         assert "queries" in resp
 
-    @pytest.mark.xfail(reason="StartQuery/GetQueryResults (Log Insights) may not be supported")
     def test_start_query_and_get_results(self, logs, log_group):
         """StartQuery / GetQueryResults - Log Insights."""
         now = int(time.time())
@@ -838,8 +833,6 @@ class TestLogsOperations:
             assert resp["tags"]["env"] == "staging"
         finally:
             logs.delete_log_group(logGroupName=name)
-
-    @pytest.mark.xfail(reason="AssociateKmsKey/DisassociateKmsKey may not be supported")
     def test_associate_disassociate_kms_key(self, logs):
         """AssociateKmsKey / DisassociateKmsKey."""
         name = _unique("/test/kms-group")

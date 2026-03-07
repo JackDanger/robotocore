@@ -1366,7 +1366,6 @@ class TestIAMSigningCertificates:
 
 
 class TestIAMSSHPublicKeys:
-    @pytest.mark.xfail(reason="ListSSHPublicKeys may not be supported")
     def test_list_ssh_public_keys(self, iam):
         """ListSSHPublicKeys."""
         user_name = _unique("ssh-user")
@@ -1433,7 +1432,6 @@ class TestIAMRoleTags:
 
 
 class TestIAMPermissionsBoundary:
-    @pytest.mark.xfail(reason="PutRolePermissionsBoundary may not be supported")
     def test_put_delete_role_permissions_boundary(self, iam):
         """PutRolePermissionsBoundary / DeleteRolePermissionsBoundary."""
         role_name = _unique("pb-role")
