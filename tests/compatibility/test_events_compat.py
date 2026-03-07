@@ -175,6 +175,66 @@ class TestEventBridgeOperations:
         events.delete_rule(Name=rule_name)
 
 
+    def test_describe_event_bus(self, events):
+        """Call describe_event_bus for 'default', assert Name='default' and Arn present."""
+        response = events.describe_event_bus(Name="default")
+        assert response["Name"] == "default"
+        assert "Arn" in response
+
+    def test_create_and_delete_event_bus(self, events):
+        """Create event bus with unique name, verify, describe, delete."""
+        suffix = uuid.uuid4().hex[:8]
+        bus_name = f"lifecycle-bus-{suffix}"
+        create_resp = events.create_event_bus(Name=bus_name)
+        assert "EventBusArn" in create_resp
+        assert bus_name in create_resp["EventBusArn"]
+        desc_resp = events.describe_event_bus(Name=bus_name)
+        assert desc_resp["Name"] == bus_name
+        events.delete_event_bus(Name=bus_name)
+
+    def test_list_event_buses(self, events):
+        """Create event bus, list_event_buses, assert name in list. Cleanup."""
+        suffix = uuid.uuid4().hex[:8]
+        bus_name = f"listable-bus-{suffix}"
+        events.create_event_bus(Name=bus_name)
+        response = events.list_event_buses()
+        names = [b["Name"] for b in response["EventBuses"]]
+        assert bus_name in names
+        events.delete_event_bus(Name=bus_name)
+
+    def test_enable_disable_rule_with_pattern(self, events):
+        """Create rule with event pattern, disable, verify DISABLED, enable, verify ENABLED."""
+        suffix = uuid.uuid4().hex[:8]
+        rule_name = f"pattern-toggle-{suffix}"
+        pattern = {"source": ["test.toggle"]}
+        events.put_rule(Name=rule_name, EventPattern=json.dumps(pattern))
+        events.disable_rule(Name=rule_name)
+        desc = events.describe_rule(Name=rule_name)
+        assert desc["State"] == "DISABLED"
+        events.enable_rule(Name=rule_name)
+        desc = events.describe_rule(Name=rule_name)
+        assert desc["State"] == "ENABLED"
+        events.delete_rule(Name=rule_name)
+
+    def test_create_and_delete_archive(self, events):
+        """Create archive from default event bus, describe, delete."""
+        suffix = uuid.uuid4().hex[:8]
+        archive_name = f"test-archive-{suffix}"
+        # Get default event bus ARN
+        bus = events.describe_event_bus(Name="default")
+        bus_arn = bus["Arn"]
+        create_resp = events.create_archive(
+            ArchiveName=archive_name,
+            EventSourceArn=bus_arn,
+            EventPattern=json.dumps({"source": ["test.archive"]}),
+            RetentionDays=1,
+        )
+        assert "ArchiveArn" in create_resp
+        desc_resp = events.describe_archive(ArchiveName=archive_name)
+        assert desc_resp["ArchiveName"] == archive_name
+        events.delete_archive(ArchiveName=archive_name)
+
+
 class TestEventBridgeSQSTarget:
     """Test EventBridge → SQS cross-service delivery."""
 

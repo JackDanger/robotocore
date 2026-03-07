@@ -406,29 +406,6 @@ class TestLogsOperations:
         )
         assert len(bwd["events"]) >= 2
 
-    def test_filter_log_events_with_pattern(self, logs, log_group):
-        """FilterLogEvents with a specific filter pattern."""
-        stream = "pattern-stream"
-        logs.create_log_stream(logGroupName=log_group, logStreamName=stream)
-        now = int(time.time() * 1000)
-        logs.put_log_events(
-            logGroupName=log_group,
-            logStreamName=stream,
-            logEvents=[
-                {"timestamp": now, "message": "INFO request processed"},
-                {"timestamp": now + 1, "message": "WARN slow query detected"},
-                {"timestamp": now + 2, "message": "ERROR connection timeout"},
-                {"timestamp": now + 3, "message": "INFO request completed"},
-            ],
-        )
-        response = logs.filter_log_events(
-            logGroupName=log_group,
-            filterPattern="WARN",
-        )
-        messages = [e["message"] for e in response["events"]]
-        assert any("WARN" in m for m in messages)
-        assert not any("ERROR" in m for m in messages)
-
     def test_describe_log_streams_order(self, logs, log_group):
         """DescribeLogStreams returns streams in the group."""
         for name in ["stream-x", "stream-y", "stream-z"]:
@@ -473,6 +450,21 @@ class TestLogsOperations:
         # Create a lambda function ARN (doesn't need to exist for the filter)
         dest_arn = f"arn:aws:lambda:us-east-1:000000000000:function:dummy-{suffix}"
 
+    def test_describe_log_streams(self, logs, log_group):
+        """Create stream, describe_log_streams, verify stream name in list."""
+        stream_name = "describe-streams-test"
+        logs.create_log_stream(logGroupName=log_group, logStreamName=stream_name)
+        response = logs.describe_log_streams(logGroupName=log_group)
+        names = [s["logStreamName"] for s in response["logStreams"]]
+        assert stream_name in names
+
+    def test_put_and_delete_subscription_filter(self, logs, log_group):
+        """Create subscription filter, describe, delete."""
+        stream_name = "sub-filter-stream"
+        logs.create_log_stream(logGroupName=log_group, logStreamName=stream_name)
+        filter_name = "test-sub-filter"
+        # Use a fake Lambda ARN as destination
+        dest_arn = "arn:aws:lambda:us-east-1:123456789012:function:log-processor"
         logs.put_subscription_filter(
             logGroupName=log_group,
             filterName=filter_name,

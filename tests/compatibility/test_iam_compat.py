@@ -285,6 +285,27 @@ class TestIAMGroupExtended:
         finally:
             iam.delete_group(GroupName=group_name)
 
+
+# Group CRUD
+# ---------------------------------------------------------------------------
+
+
+class TestIAMGroupCRUD:
+    def test_create_and_delete_group(self, iam):
+        group_name = _unique("crud-group")
+        resp = iam.create_group(GroupName=group_name)
+        assert resp["Group"]["GroupName"] == group_name
+        iam.delete_group(GroupName=group_name)
+
+    def test_get_group(self, iam):
+        group_name = _unique("get-group")
+        iam.create_group(GroupName=group_name)
+        try:
+            resp = iam.get_group(GroupName=group_name)
+            assert resp["Group"]["GroupName"] == group_name
+        finally:
+            iam.delete_group(GroupName=group_name)
+
     def test_list_groups(self, iam):
         g1 = _unique("lg-grp")
         g2 = _unique("lg-grp")
@@ -342,6 +363,13 @@ class TestIAMGroupExtended:
         finally:
             iam.remove_user_from_group(GroupName=group_name, UserName=user_name)
             iam.delete_user(UserName=user_name)
+        group_name = _unique("list-group")
+        iam.create_group(GroupName=group_name)
+        try:
+            resp = iam.list_groups()
+            names = [g["GroupName"] for g in resp["Groups"]]
+            assert group_name in names
+        finally:
             iam.delete_group(GroupName=group_name)
 
 
@@ -885,27 +913,8 @@ class TestIAMPolicyVersionsExtended:
 
 
 
-class TestIAMGroupCRUD:
-    def test_create_and_delete_group(self, iam):
-        group_name = _unique("crud-group")
-        resp = iam.create_group(GroupName=group_name)
-        assert resp["Group"]["GroupName"] == group_name
-        iam.delete_group(GroupName=group_name)
-
-    def test_get_group(self, iam):
-        group_name = _unique("get-group")
-        iam.create_group(GroupName=group_name)
-        resp = iam.get_group(GroupName=group_name)
-        assert resp["Group"]["GroupName"] == group_name
-        iam.delete_group(GroupName=group_name)
-
-    def test_list_groups(self, iam):
-        group_name = _unique("list-group")
-        iam.create_group(GroupName=group_name)
-        resp = iam.list_groups()
-        names = [g["GroupName"] for g in resp["Groups"]]
-        assert group_name in names
-        iam.delete_group(GroupName=group_name)
+# Group membership
+# ---------------------------------------------------------------------------
 
 
 class TestIAMGroupMembership:
@@ -931,6 +940,11 @@ class TestIAMGroupMembership:
                 pass
             iam.delete_user(UserName=user_name)
             iam.delete_group(GroupName=group_name)
+
+
+# ---------------------------------------------------------------------------
+# Attach/detach role policy
+# ---------------------------------------------------------------------------
 
 
 class TestIAMAttachDetachRolePolicy:
@@ -959,14 +973,21 @@ class TestIAMAttachDetachRolePolicy:
             iam.delete_role(RoleName=role_name)
 
 
+# ---------------------------------------------------------------------------
+# Instance profile CRUD
+# ---------------------------------------------------------------------------
+
+
 class TestIAMInstanceProfileCRUD:
     def test_create_delete_list_instance_profiles(self, iam):
         profile_name = _unique("ip-crud")
         iam.create_instance_profile(InstanceProfileName=profile_name)
-        resp = iam.list_instance_profiles()
-        names = [p["InstanceProfileName"] for p in resp["InstanceProfiles"]]
-        assert profile_name in names
-        iam.delete_instance_profile(InstanceProfileName=profile_name)
+        try:
+            resp = iam.list_instance_profiles()
+            names = [p["InstanceProfileName"] for p in resp["InstanceProfiles"]]
+            assert profile_name in names
+        finally:
+            iam.delete_instance_profile(InstanceProfileName=profile_name)
 
     def test_add_remove_role_from_instance_profile(self, iam):
         profile_name = _unique("ip-role")
@@ -998,6 +1019,11 @@ class TestIAMInstanceProfileCRUD:
             iam.delete_role(RoleName=role_name)
 
 
+# ---------------------------------------------------------------------------
+# Role inline policy
+# ---------------------------------------------------------------------------
+
+
 class TestIAMRoleInlinePolicy:
     def test_put_get_delete_list_role_policy(self, iam):
         role_name = _unique("rp-role")
@@ -1026,6 +1052,11 @@ class TestIAMRoleInlinePolicy:
             iam.delete_role(RoleName=role_name)
 
 
+# ---------------------------------------------------------------------------
+# Access keys lifecycle
+# ---------------------------------------------------------------------------
+
+
 class TestIAMAccessKeysLifecycle:
     def test_create_list_delete_access_key(self, iam):
         user_name = _unique("ak-user")
@@ -1045,6 +1076,11 @@ class TestIAMAccessKeysLifecycle:
             assert access_key_id not in key_ids
         finally:
             iam.delete_user(UserName=user_name)
+
+
+# ---------------------------------------------------------------------------
+# Login profile
+# ---------------------------------------------------------------------------
 
 
 class TestIAMLoginProfile:
