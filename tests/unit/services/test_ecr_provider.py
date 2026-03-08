@@ -28,13 +28,16 @@ def _make_request(action: str, body: dict | None = None) -> MagicMock:
 @pytest.mark.asyncio
 class TestBatchCheckLayerAvailability:
     async def test_layers_returned_as_unavailable(self):
-        req = _make_request("BatchCheckLayerAvailability", {
-            "repositoryName": "test-repo",
-            "layerDigests": [
-                "sha256:abc123",
-                "sha256:def456",
-            ],
-        })
+        req = _make_request(
+            "BatchCheckLayerAvailability",
+            {
+                "repositoryName": "test-repo",
+                "layerDigests": [
+                    "sha256:abc123",
+                    "sha256:def456",
+                ],
+            },
+        )
         resp = await handle_ecr_request(req, "us-east-1", "123456789012")
         assert resp.status_code == 200
         body = json.loads(resp.body)
@@ -44,10 +47,13 @@ class TestBatchCheckLayerAvailability:
             assert layer["layerAvailability"] == "UNAVAILABLE"
 
     async def test_empty_layer_digests(self):
-        req = _make_request("BatchCheckLayerAvailability", {
-            "repositoryName": "test-repo",
-            "layerDigests": [],
-        })
+        req = _make_request(
+            "BatchCheckLayerAvailability",
+            {
+                "repositoryName": "test-repo",
+                "layerDigests": [],
+            },
+        )
         resp = await handle_ecr_request(req, "us-east-1", "123456789012")
         assert resp.status_code == 200
         body = json.loads(resp.body)

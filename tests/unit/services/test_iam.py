@@ -1683,6 +1683,7 @@ class TestAdditionalMiddlewareEdgeCases:
 # IAM native provider error-path tests
 # ===========================================================================
 
+
 def _make_iam_request(body: bytes = b"", headers: dict | None = None):
     request = MagicMock()
     request.body = AsyncMock(return_value=body)

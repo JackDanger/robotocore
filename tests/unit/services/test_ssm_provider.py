@@ -26,11 +26,14 @@ def _make_request(action: str, body: dict | None = None) -> MagicMock:
 @pytest.mark.asyncio
 class TestSendCommand:
     async def test_send_command_with_instance_ids(self):
-        req = _make_request("SendCommand", {
-            "DocumentName": "AWS-RunShellScript",
-            "Targets": [{"Key": "instanceids", "Values": ["i-1234567890abcdef0"]}],
-            "Parameters": {"commands": ["echo hello"]},
-        })
+        req = _make_request(
+            "SendCommand",
+            {
+                "DocumentName": "AWS-RunShellScript",
+                "Targets": [{"Key": "instanceids", "Values": ["i-1234567890abcdef0"]}],
+                "Parameters": {"commands": ["echo hello"]},
+            },
+        )
         resp = await handle_ssm_request(req, "us-east-1", "123456789012")
         assert resp.status_code == 200
         body = json.loads(resp.body)
@@ -43,10 +46,13 @@ class TestSendCommand:
 class TestListCommands:
     async def test_list_commands_with_known_id(self):
         # First send a command
-        send_req = _make_request("SendCommand", {
-            "DocumentName": "AWS-RunShellScript",
-            "Targets": [{"Key": "InstanceIds", "Values": ["i-abc"]}],
-        })
+        send_req = _make_request(
+            "SendCommand",
+            {
+                "DocumentName": "AWS-RunShellScript",
+                "Targets": [{"Key": "InstanceIds", "Values": ["i-abc"]}],
+            },
+        )
         send_resp = await handle_ssm_request(send_req, "us-east-1", "123456789012")
         cmd_id = json.loads(send_resp.body)["Command"]["CommandId"]
 
@@ -64,10 +70,13 @@ class TestListCommands:
 class TestListCommandInvocations:
     async def test_list_invocations_for_native_command(self):
         # Send a command first
-        send_req = _make_request("SendCommand", {
-            "DocumentName": "AWS-RunShellScript",
-            "Targets": [{"Key": "InstanceIds", "Values": ["i-abc"]}],
-        })
+        send_req = _make_request(
+            "SendCommand",
+            {
+                "DocumentName": "AWS-RunShellScript",
+                "Targets": [{"Key": "InstanceIds", "Values": ["i-abc"]}],
+            },
+        )
         send_resp = await handle_ssm_request(send_req, "us-east-1", "123456789012")
         cmd_id = json.loads(send_resp.body)["Command"]["CommandId"]
 

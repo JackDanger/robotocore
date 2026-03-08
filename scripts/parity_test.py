@@ -126,9 +126,7 @@ def _s3_tests(rp: int, lp: int) -> list[dict]:
     )
 
     # ListBuckets
-    results.append(
-        _run_test("s3.ListBuckets", rc.list_buckets, lc.list_buckets)
-    )
+    results.append(_run_test("s3.ListBuckets", rc.list_buckets, lc.list_buckets))
 
     # PutObject
     results.append(
@@ -192,9 +190,7 @@ def _sqs_tests(rp: int, lp: int) -> list[dict]:
     results.append(_run_test("sqs.CreateQueue", _create_r, _create_l))
 
     # ListQueues
-    results.append(
-        _run_test("sqs.ListQueues", rc.list_queues, lc.list_queues)
-    )
+    results.append(_run_test("sqs.ListQueues", rc.list_queues, lc.list_queues))
 
     # SendMessage + ReceiveMessage
     if r_url and l_url:
@@ -281,9 +277,7 @@ def _dynamodb_tests(rp: int, lp: int) -> list[dict]:
         )
     )
 
-    results.append(
-        _run_test("dynamodb.ListTables", rc.list_tables, lc.list_tables)
-    )
+    results.append(_run_test("dynamodb.ListTables", rc.list_tables, lc.list_tables))
 
     results.append(
         _run_test(
@@ -319,12 +313,8 @@ def _iam_tests(rp: int, lp: int) -> list[dict]:
     lc = _client("iam", lp)
 
     results = []
-    results.append(
-        _run_test("iam.ListUsers", rc.list_users, lc.list_users)
-    )
-    results.append(
-        _run_test("iam.ListRoles", rc.list_roles, lc.list_roles)
-    )
+    results.append(_run_test("iam.ListUsers", rc.list_users, lc.list_users))
+    results.append(_run_test("iam.ListRoles", rc.list_roles, lc.list_roles))
     return results
 
 
@@ -333,9 +323,7 @@ def _lambda_tests(rp: int, lp: int) -> list[dict]:
     lc = _client("lambda", lp)
 
     results = []
-    results.append(
-        _run_test("lambda.ListFunctions", rc.list_functions, lc.list_functions)
-    )
+    results.append(_run_test("lambda.ListFunctions", rc.list_functions, lc.list_functions))
     return results
 
 
@@ -344,12 +332,8 @@ def _events_tests(rp: int, lp: int) -> list[dict]:
     lc = _client("events", lp)
 
     results = []
-    results.append(
-        _run_test("events.ListRules", rc.list_rules, lc.list_rules)
-    )
-    results.append(
-        _run_test("events.ListEventBuses", rc.list_event_buses, lc.list_event_buses)
-    )
+    results.append(_run_test("events.ListRules", rc.list_rules, lc.list_rules))
+    results.append(_run_test("events.ListEventBuses", rc.list_event_buses, lc.list_event_buses))
     return results
 
 
@@ -420,7 +404,9 @@ def main():
         print()
 
     total = total_match + total_diverged + total_error
-    print(f"Summary: {total_match}/{total} matched, {total_diverged} diverged, {total_error} errors")  # noqa: E501
+    print(
+        f"Summary: {total_match}/{total} matched, {total_diverged} diverged, {total_error} errors"
+    )  # noqa: E501
 
     if total_diverged > 0 or total_error > 0:
         sys.exit(1)

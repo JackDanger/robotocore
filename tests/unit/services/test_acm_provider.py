@@ -27,10 +27,13 @@ def _make_request(action: str, body: dict | None = None) -> MagicMock:
 class TestUpdateCertificateOptions:
     async def test_update_nonexistent_certificate(self):
         """UpdateCertificateOptions on a nonexistent cert should not crash."""
-        req = _make_request("UpdateCertificateOptions", {
-            "CertificateArn": "arn:aws:acm:us-east-1:123456789012:certificate/nonexistent",
-            "Options": {"CertificateTransparencyLoggingPreference": "ENABLED"},
-        })
+        req = _make_request(
+            "UpdateCertificateOptions",
+            {
+                "CertificateArn": "arn:aws:acm:us-east-1:123456789012:certificate/nonexistent",
+                "Options": {"CertificateTransparencyLoggingPreference": "ENABLED"},
+            },
+        )
         resp = await handle_acm_request(req, "us-east-1", "123456789012")
         # Should either succeed silently or return an error, not crash
         assert resp.status_code in (200, 400, 404, 500)

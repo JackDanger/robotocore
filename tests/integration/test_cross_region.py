@@ -24,9 +24,7 @@ class TestSNSCrossRegionDelivery:
         sqs = make_boto_client("sqs", region_name="us-west-2")
         q_resp = sqs.create_queue(QueueName=f"cross-queue-{suffix}")
         queue_url = q_resp["QueueUrl"]
-        q_attrs = sqs.get_queue_attributes(
-            QueueUrl=queue_url, AttributeNames=["QueueArn"]
-        )
+        q_attrs = sqs.get_queue_attributes(QueueUrl=queue_url, AttributeNames=["QueueArn"])
         queue_arn = q_attrs["Attributes"]["QueueArn"]
 
         # Subscribe the us-west-2 queue to the us-east-1 topic
@@ -65,9 +63,7 @@ class TestEventBridgeCrossRegionDelivery:
         sqs = make_boto_client("sqs", region_name="eu-west-1")
         q_resp = sqs.create_queue(QueueName=f"eb-cross-{suffix}")
         queue_url = q_resp["QueueUrl"]
-        q_attrs = sqs.get_queue_attributes(
-            QueueUrl=queue_url, AttributeNames=["QueueArn"]
-        )
+        q_attrs = sqs.get_queue_attributes(QueueUrl=queue_url, AttributeNames=["QueueArn"])
         queue_arn = q_attrs["Attributes"]["QueueArn"]
 
         # Create EventBridge rule in us-east-1

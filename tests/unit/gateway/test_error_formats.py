@@ -155,4 +155,4 @@ class TestSpecialCharactersInErrors:
         error_normalizer(ctx, ValueError('key "foo" has <invalid> chars'))
         body = json.loads(ctx.response.body.decode())
         # JSON handles these natively
-        assert '<invalid>' in body["message"]
+        assert "<invalid>" in body["message"]

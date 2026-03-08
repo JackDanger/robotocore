@@ -77,26 +77,35 @@ class TestRekognitionCollectionErrors:
 @pytest.mark.asyncio
 class TestRekognitionTaggingErrors:
     async def test_tag_nonexistent_resource(self):
-        req = _make_request("TagResource", {
-            "ResourceArn": "arn:aws:rekognition:us-east-1:123456789012:collection/nonexistent",
-            "Tags": {"env": "test"},
-        })
+        req = _make_request(
+            "TagResource",
+            {
+                "ResourceArn": "arn:aws:rekognition:us-east-1:123456789012:collection/nonexistent",
+                "Tags": {"env": "test"},
+            },
+        )
         resp = await handle_rekognition_request(req, "us-east-1", "123456789012")
         assert resp.status_code == 400
         body = json.loads(resp.body)
         assert "ResourceNotFoundException" in body.get("__type", "")
 
     async def test_list_tags_nonexistent_resource(self):
-        req = _make_request("ListTagsForResource", {
-            "ResourceArn": "arn:aws:rekognition:us-east-1:123456789012:collection/nonexistent",
-        })
+        req = _make_request(
+            "ListTagsForResource",
+            {
+                "ResourceArn": "arn:aws:rekognition:us-east-1:123456789012:collection/nonexistent",
+            },
+        )
         resp = await handle_rekognition_request(req, "us-east-1", "123456789012")
         assert resp.status_code == 400
 
     async def test_untag_nonexistent_resource(self):
-        req = _make_request("UntagResource", {
-            "ResourceArn": "arn:aws:rekognition:us-east-1:123456789012:collection/nonexistent",
-            "TagKeys": ["env"],
-        })
+        req = _make_request(
+            "UntagResource",
+            {
+                "ResourceArn": "arn:aws:rekognition:us-east-1:123456789012:collection/nonexistent",
+                "TagKeys": ["env"],
+            },
+        )
         resp = await handle_rekognition_request(req, "us-east-1", "123456789012")
         assert resp.status_code == 400

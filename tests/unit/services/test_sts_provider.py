@@ -58,13 +58,17 @@ class TestSTSProvider:
     def test_assume_role_packed_policy_too_large(self):
         """AssumeRole with an oversized packed policy returns PackedPolicyTooLarge error."""
         # Build a policy that exceeds 2048 bytes when packed
-        large_policy = '{"Version":"2012-10-17","Statement":[' + ",".join(
-            [
-                '{"Effect":"Allow","Action":"s3:GetObject",'
-                f'"Resource":"arn:aws:s3:::bucket-{i}/*"}}'
-                for i in range(100)
-            ]
-        ) + "]}"
+        large_policy = (
+            '{"Version":"2012-10-17","Statement":['
+            + ",".join(
+                [
+                    '{"Effect":"Allow","Action":"s3:GetObject",'
+                    f'"Resource":"arn:aws:s3:::bucket-{i}/*"}}'
+                    for i in range(100)
+                ]
+            )
+            + "]}"
+        )
         body = (
             b"Action=AssumeRole"
             b"&RoleArn=arn:aws:iam::123456789012:role/test"

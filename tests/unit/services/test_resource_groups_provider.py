@@ -34,8 +34,12 @@ class TestResourceGroupsTagOperations:
 
     async def test_put_tags_for_nonexistent_resource(self):
         arn = "arn:aws:resource-groups:us-east-1:123456789012:group/nonexistent"
-        req = _make_request("PUT", f"/resources/{arn}/tags", {
-            "Tags": {"env": "test"},
-        })
+        req = _make_request(
+            "PUT",
+            f"/resources/{arn}/tags",
+            {
+                "Tags": {"env": "test"},
+            },
+        )
         resp = await handle_resource_groups_request(req, "us-east-1", "123456789012")
         assert resp.status_code in (200, 400, 404, 500)

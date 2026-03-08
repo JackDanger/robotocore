@@ -53,18 +53,24 @@ class TestDescribeSeverityLevels:
 @pytest.mark.asyncio
 class TestTrustedAdvisor:
     async def test_check_result(self):
-        req = _make_request("DescribeTrustedAdvisorCheckResult", {
-            "checkId": "some-check-id",
-        })
+        req = _make_request(
+            "DescribeTrustedAdvisorCheckResult",
+            {
+                "checkId": "some-check-id",
+            },
+        )
         resp = await handle_support_request(req, "us-east-1", "123456789012")
         assert resp.status_code == 200
         body = json.loads(resp.body)
         assert "result" in body
 
     async def test_check_summaries(self):
-        req = _make_request("DescribeTrustedAdvisorCheckSummaries", {
-            "checkIds": ["check-1", "check-2"],
-        })
+        req = _make_request(
+            "DescribeTrustedAdvisorCheckSummaries",
+            {
+                "checkIds": ["check-1", "check-2"],
+            },
+        )
         resp = await handle_support_request(req, "us-east-1", "123456789012")
         assert resp.status_code == 200
         body = json.loads(resp.body)
@@ -75,10 +81,13 @@ class TestTrustedAdvisor:
 @pytest.mark.asyncio
 class TestCommunications:
     async def test_add_communication_to_case(self):
-        req = _make_request("AddCommunicationToCase", {
-            "caseId": "case-123",
-            "communicationBody": "Test message",
-        })
+        req = _make_request(
+            "AddCommunicationToCase",
+            {
+                "caseId": "case-123",
+                "communicationBody": "Test message",
+            },
+        )
         resp = await handle_support_request(req, "us-east-1", "123456789012")
         assert resp.status_code == 200
         body = json.loads(resp.body)
@@ -86,16 +95,22 @@ class TestCommunications:
 
     async def test_describe_communications(self):
         # Add a communication first
-        add_req = _make_request("AddCommunicationToCase", {
-            "caseId": "case-456",
-            "communicationBody": "First message",
-        })
+        add_req = _make_request(
+            "AddCommunicationToCase",
+            {
+                "caseId": "case-456",
+                "communicationBody": "First message",
+            },
+        )
         await handle_support_request(add_req, "us-east-1", "123456789012")
 
         # Now describe
-        desc_req = _make_request("DescribeCommunications", {
-            "caseId": "case-456",
-        })
+        desc_req = _make_request(
+            "DescribeCommunications",
+            {
+                "caseId": "case-456",
+            },
+        )
         resp = await handle_support_request(desc_req, "us-east-1", "123456789012")
         assert resp.status_code == 200
         body = json.loads(resp.body)

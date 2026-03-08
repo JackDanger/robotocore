@@ -3,7 +3,6 @@
 Phase 5B: Region isolation verification for top native providers.
 """
 
-
 from robotocore.services.events.provider import _get_store as get_events_store
 from robotocore.services.sns.provider import _get_store as get_sns_store
 from robotocore.services.sqs.provider import _get_store as get_sqs_store

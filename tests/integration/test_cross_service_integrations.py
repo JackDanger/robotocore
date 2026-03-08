@@ -23,18 +23,14 @@ class TestSNSToSQSSameRegion:
 
         q = sqs.create_queue(QueueName=f"same-queue-{suffix}")
         queue_url = q["QueueUrl"]
-        q_attrs = sqs.get_queue_attributes(
-            QueueUrl=queue_url, AttributeNames=["QueueArn"]
-        )
+        q_attrs = sqs.get_queue_attributes(QueueUrl=queue_url, AttributeNames=["QueueArn"])
         queue_arn = q_attrs["Attributes"]["QueueArn"]
 
         sns.subscribe(TopicArn=topic_arn, Protocol="sqs", Endpoint=queue_arn)
         sns.publish(TopicArn=topic_arn, Message="same-region test")
 
         time.sleep(1)
-        recv = sqs.receive_message(
-            QueueUrl=queue_url, MaxNumberOfMessages=1, WaitTimeSeconds=5
-        )
+        recv = sqs.receive_message(QueueUrl=queue_url, MaxNumberOfMessages=1, WaitTimeSeconds=5)
         msgs = recv.get("Messages", [])
         assert len(msgs) >= 1
         body = json.loads(msgs[0]["Body"])
@@ -55,9 +51,7 @@ class TestEventBridgeToSQSSameRegion:
 
         q = sqs.create_queue(QueueName=f"eb-same-{suffix}")
         queue_url = q["QueueUrl"]
-        q_attrs = sqs.get_queue_attributes(
-            QueueUrl=queue_url, AttributeNames=["QueueArn"]
-        )
+        q_attrs = sqs.get_queue_attributes(QueueUrl=queue_url, AttributeNames=["QueueArn"])
         queue_arn = q_attrs["Attributes"]["QueueArn"]
 
         events.put_rule(
@@ -80,9 +74,7 @@ class TestEventBridgeToSQSSameRegion:
         )
 
         time.sleep(1)
-        recv = sqs.receive_message(
-            QueueUrl=queue_url, MaxNumberOfMessages=1, WaitTimeSeconds=5
-        )
+        recv = sqs.receive_message(QueueUrl=queue_url, MaxNumberOfMessages=1, WaitTimeSeconds=5)
         msgs = recv.get("Messages", [])
         assert len(msgs) >= 1
 
@@ -108,9 +100,7 @@ class TestEventBridgeToSNS:
         # Create SQS queue subscribed to SNS (to verify delivery)
         q = sqs.create_queue(QueueName=f"eb-sns-q-{suffix}")
         queue_url = q["QueueUrl"]
-        q_attrs = sqs.get_queue_attributes(
-            QueueUrl=queue_url, AttributeNames=["QueueArn"]
-        )
+        q_attrs = sqs.get_queue_attributes(QueueUrl=queue_url, AttributeNames=["QueueArn"])
         queue_arn = q_attrs["Attributes"]["QueueArn"]
         sns.subscribe(TopicArn=topic_arn, Protocol="sqs", Endpoint=queue_arn)
 
@@ -136,9 +126,7 @@ class TestEventBridgeToSNS:
         )
 
         time.sleep(2)  # Extra time for EB→SNS→SQS chain
-        recv = sqs.receive_message(
-            QueueUrl=queue_url, MaxNumberOfMessages=1, WaitTimeSeconds=5
-        )
+        recv = sqs.receive_message(QueueUrl=queue_url, MaxNumberOfMessages=1, WaitTimeSeconds=5)
         msgs = recv.get("Messages", [])
         assert len(msgs) >= 1
 
@@ -161,30 +149,34 @@ class TestStepFunctionsIntegration:
         # Create IAM role
         role = iam.create_role(
             RoleName=f"sfn-role-{suffix}",
-            AssumeRolePolicyDocument=json.dumps({
-                "Version": "2012-10-17",
-                "Statement": [
-                    {
-                        "Effect": "Allow",
-                        "Principal": {"Service": "states.amazonaws.com"},
-                        "Action": "sts:AssumeRole",
-                    }
-                ],
-            }),
+            AssumeRolePolicyDocument=json.dumps(
+                {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {"Service": "states.amazonaws.com"},
+                            "Action": "sts:AssumeRole",
+                        }
+                    ],
+                }
+            ),
         )
         role_arn = role["Role"]["Arn"]
 
         # Simple pass state machine
-        definition = json.dumps({
-            "StartAt": "PassState",
-            "States": {
-                "PassState": {
-                    "Type": "Pass",
-                    "Result": {"message": "hello from sfn"},
-                    "End": True,
-                }
-            },
-        })
+        definition = json.dumps(
+            {
+                "StartAt": "PassState",
+                "States": {
+                    "PassState": {
+                        "Type": "Pass",
+                        "Result": {"message": "hello from sfn"},
+                        "End": True,
+                    }
+                },
+            }
+        )
 
         sm = sfn.create_state_machine(
             name=f"test-sm-{suffix}",
@@ -272,7 +264,5 @@ class TestSecretsManagerToSSM:
         assert param["Parameter"]["Value"] == "my-param-value"
 
         # Cleanup
-        sm.delete_secret(
-            SecretId=f"integ-secret-{suffix}", ForceDeleteWithoutRecovery=True
-        )
+        sm.delete_secret(SecretId=f"integ-secret-{suffix}", ForceDeleteWithoutRecovery=True)
         ssm.delete_parameter(Name=f"/integ/param/{suffix}")

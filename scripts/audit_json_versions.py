@@ -33,18 +33,20 @@ def get_expected_json_versions() -> dict[str, str]:
 def find_hardcoded_json_versions(src_dir: Path) -> list[dict]:
     """Find all hardcoded x-amz-json-* Content-Type strings in source."""
     results = []
-    pattern = re.compile(r'application/x-amz-json-(\d+\.\d+)')
+    pattern = re.compile(r"application/x-amz-json-(\d+\.\d+)")
 
     for py_file in src_dir.rglob("*.py"):
         content = py_file.read_text()
         for i, line in enumerate(content.splitlines(), 1):
             for match in pattern.finditer(line):
-                results.append({
-                    "file": str(py_file.relative_to(src_dir.parent.parent)),
-                    "line": i,
-                    "version": match.group(1),
-                    "text": line.strip(),
-                })
+                results.append(
+                    {
+                        "file": str(py_file.relative_to(src_dir.parent.parent)),
+                        "line": i,
+                        "version": match.group(1),
+                        "text": line.strip(),
+                    }
+                )
     return results
 
 
@@ -53,10 +55,7 @@ def main():
     expected = get_expected_json_versions()
 
     # Native providers that use JSON protocol
-    json_services = {
-        name: ver for name, ver in expected.items()
-        if ver in ("1.0", "1.1")
-    }
+    json_services = {name: ver for name, ver in expected.items() if ver in ("1.0", "1.1")}
 
     # Find all hardcoded versions in source
     hardcoded = find_hardcoded_json_versions(src_dir)
@@ -83,12 +82,14 @@ def main():
                 normalized = "logs"
             expected_ver = expected.get(normalized, expected.get(service_name))
             if expected_ver and entry["version"] != expected_ver:
-                mismatches.append({
-                    **entry,
-                    "service": normalized,
-                    "expected": expected_ver,
-                    "actual": entry["version"],
-                })
+                mismatches.append(
+                    {
+                        **entry,
+                        "service": normalized,
+                        "expected": expected_ver,
+                        "actual": entry["version"],
+                    }
+                )
 
     # Report
     print("=== JSON Protocol Version Audit ===\n")
@@ -112,10 +113,24 @@ def main():
     # Also print a reference table
     print("\n--- Reference: Expected JSON versions for native providers ---")
     native_services = [
-        "dynamodb", "dynamodbstreams", "kinesis", "logs", "cognito-idp",
-        "ecs", "events", "stepfunctions", "firehose", "secretsmanager",
-        "cloudwatch", "ecr", "batch", "rekognition", "xray", "support",
-        "appsync", "scheduler",
+        "dynamodb",
+        "dynamodbstreams",
+        "kinesis",
+        "logs",
+        "cognito-idp",
+        "ecs",
+        "events",
+        "stepfunctions",
+        "firehose",
+        "secretsmanager",
+        "cloudwatch",
+        "ecr",
+        "batch",
+        "rekognition",
+        "xray",
+        "support",
+        "appsync",
+        "scheduler",
     ]
     for svc in sorted(native_services):
         ver = expected.get(svc, "N/A")

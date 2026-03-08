@@ -100,9 +100,7 @@ class TestKinesisListShardsPagination:
 
         # Verify all shards returned, no duplicates
         all_shard_ids = [
-            s["ShardId"]
-            for page in [result1, result2, result3]
-            for s in page["Shards"]
+            s["ShardId"] for page in [result1, result2, result3] for s in page["Shards"]
         ]
         assert len(all_shard_ids) == 3
         assert len(set(all_shard_ids)) == 3  # no duplicates
@@ -248,9 +246,7 @@ class TestRekognitionListCollectionsPagination:
         assert "NextToken" not in result3
 
         # All returned, no duplicates
-        all_ids = (
-            result1["CollectionIds"] + result2["CollectionIds"] + result3["CollectionIds"]
-        )
+        all_ids = result1["CollectionIds"] + result2["CollectionIds"] + result3["CollectionIds"]
         assert len(all_ids) == 3
         assert len(set(all_ids)) == 3
 
@@ -353,9 +349,7 @@ class TestCognitoListUserPoolsTruncation:
         from robotocore.services.cognito.provider import _list_user_pools
 
         store = self._create_pools(5)
-        result = _list_user_pools(
-            store, {"MaxResults": 2}, "us-east-1", "123456789012"
-        )
+        result = _list_user_pools(store, {"MaxResults": 2}, "us-east-1", "123456789012")
         assert len(result["UserPools"]) == 2
 
     def test_list_user_pools_max_results_exceeds_count(self):
@@ -363,9 +357,7 @@ class TestCognitoListUserPoolsTruncation:
         from robotocore.services.cognito.provider import _list_user_pools
 
         store = self._create_pools(3)
-        result = _list_user_pools(
-            store, {"MaxResults": 100}, "us-east-1", "123456789012"
-        )
+        result = _list_user_pools(store, {"MaxResults": 100}, "us-east-1", "123456789012")
         assert len(result["UserPools"]) == 3
 
 

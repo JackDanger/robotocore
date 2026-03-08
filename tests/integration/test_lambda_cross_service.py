@@ -30,14 +30,18 @@ class TestSNSToLambda:
         # Create IAM role
         iam.create_role(
             RoleName=f"sns-lambda-role-{suffix}",
-            AssumeRolePolicyDocument=json.dumps({
-                "Version": "2012-10-17",
-                "Statement": [{
-                    "Effect": "Allow",
-                    "Principal": {"Service": "lambda.amazonaws.com"},
-                    "Action": "sts:AssumeRole",
-                }],
-            }),
+            AssumeRolePolicyDocument=json.dumps(
+                {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {"Service": "lambda.amazonaws.com"},
+                            "Action": "sts:AssumeRole",
+                        }
+                    ],
+                }
+            ),
         )
         role_arn = f"arn:aws:iam::123456789012:role/sns-lambda-role-{suffix}"
 
@@ -84,14 +88,18 @@ class TestEventBridgeToLambda:
         # Create IAM role
         iam.create_role(
             RoleName=f"eb-lambda-role-{suffix}",
-            AssumeRolePolicyDocument=json.dumps({
-                "Version": "2012-10-17",
-                "Statement": [{
-                    "Effect": "Allow",
-                    "Principal": {"Service": "lambda.amazonaws.com"},
-                    "Action": "sts:AssumeRole",
-                }],
-            }),
+            AssumeRolePolicyDocument=json.dumps(
+                {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {"Service": "lambda.amazonaws.com"},
+                            "Action": "sts:AssumeRole",
+                        }
+                    ],
+                }
+            ),
         )
         role_arn = f"arn:aws:iam::123456789012:role/eb-lambda-role-{suffix}"
 
@@ -118,11 +126,13 @@ class TestEventBridgeToLambda:
 
         # Put event
         resp = events.put_events(
-            Entries=[{
-                "Source": "eb-lambda.test",
-                "DetailType": "LambdaTest",
-                "Detail": json.dumps({"key": "value"}),
-            }]
+            Entries=[
+                {
+                    "Source": "eb-lambda.test",
+                    "DetailType": "LambdaTest",
+                    "Detail": json.dumps({"key": "value"}),
+                }
+            ]
         )
         assert resp["FailedEntryCount"] == 0
 
@@ -139,17 +149,19 @@ class TestCloudFormationProvisioning:
         suffix = uuid.uuid4().hex[:8]
         cfn = make_boto_client("cloudformation")
 
-        template = json.dumps({
-            "AWSTemplateFormatVersion": "2010-09-09",
-            "Resources": {
-                "TestQueue": {
-                    "Type": "AWS::SQS::Queue",
-                    "Properties": {
-                        "QueueName": f"cfn-queue-{suffix}",
+        template = json.dumps(
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Resources": {
+                    "TestQueue": {
+                        "Type": "AWS::SQS::Queue",
+                        "Properties": {
+                            "QueueName": f"cfn-queue-{suffix}",
+                        },
                     },
                 },
-            },
-        })
+            }
+        )
 
         stack_name = f"test-sqs-stack-{suffix}"
         cfn.create_stack(
@@ -162,7 +174,8 @@ class TestCloudFormationProvisioning:
         stacks = desc["Stacks"]
         assert len(stacks) == 1
         assert stacks[0]["StackStatus"] in (
-            "CREATE_COMPLETE", "CREATE_IN_PROGRESS",
+            "CREATE_COMPLETE",
+            "CREATE_IN_PROGRESS",
         )
 
         cfn.delete_stack(StackName=stack_name)
@@ -171,24 +184,26 @@ class TestCloudFormationProvisioning:
         suffix = uuid.uuid4().hex[:8]
         cfn = make_boto_client("cloudformation")
 
-        template = json.dumps({
-            "AWSTemplateFormatVersion": "2010-09-09",
-            "Resources": {
-                "TestTable": {
-                    "Type": "AWS::DynamoDB::Table",
-                    "Properties": {
-                        "TableName": f"cfn-table-{suffix}",
-                        "AttributeDefinitions": [
-                            {"AttributeName": "pk", "AttributeType": "S"},
-                        ],
-                        "KeySchema": [
-                            {"AttributeName": "pk", "KeyType": "HASH"},
-                        ],
-                        "BillingMode": "PAY_PER_REQUEST",
+        template = json.dumps(
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Resources": {
+                    "TestTable": {
+                        "Type": "AWS::DynamoDB::Table",
+                        "Properties": {
+                            "TableName": f"cfn-table-{suffix}",
+                            "AttributeDefinitions": [
+                                {"AttributeName": "pk", "AttributeType": "S"},
+                            ],
+                            "KeySchema": [
+                                {"AttributeName": "pk", "KeyType": "HASH"},
+                            ],
+                            "BillingMode": "PAY_PER_REQUEST",
+                        },
                     },
                 },
-            },
-        })
+            }
+        )
 
         stack_name = f"test-ddb-stack-{suffix}"
         cfn.create_stack(
@@ -205,17 +220,19 @@ class TestCloudFormationProvisioning:
         suffix = uuid.uuid4().hex[:8]
         cfn = make_boto_client("cloudformation")
 
-        template = json.dumps({
-            "AWSTemplateFormatVersion": "2010-09-09",
-            "Resources": {
-                "TestTopic": {
-                    "Type": "AWS::SNS::Topic",
-                    "Properties": {
-                        "TopicName": f"cfn-topic-{suffix}",
+        template = json.dumps(
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Resources": {
+                    "TestTopic": {
+                        "Type": "AWS::SNS::Topic",
+                        "Properties": {
+                            "TopicName": f"cfn-topic-{suffix}",
+                        },
                     },
                 },
-            },
-        })
+            }
+        )
 
         stack_name = f"test-sns-stack-{suffix}"
         cfn.create_stack(
@@ -232,25 +249,29 @@ class TestCloudFormationProvisioning:
         suffix = uuid.uuid4().hex[:8]
         cfn = make_boto_client("cloudformation")
 
-        template = json.dumps({
-            "AWSTemplateFormatVersion": "2010-09-09",
-            "Resources": {
-                "TestRole": {
-                    "Type": "AWS::IAM::Role",
-                    "Properties": {
-                        "RoleName": f"cfn-role-{suffix}",
-                        "AssumeRolePolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [{
-                                "Effect": "Allow",
-                                "Principal": {"Service": "lambda.amazonaws.com"},
-                                "Action": "sts:AssumeRole",
-                            }],
+        template = json.dumps(
+            {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Resources": {
+                    "TestRole": {
+                        "Type": "AWS::IAM::Role",
+                        "Properties": {
+                            "RoleName": f"cfn-role-{suffix}",
+                            "AssumeRolePolicyDocument": {
+                                "Version": "2012-10-17",
+                                "Statement": [
+                                    {
+                                        "Effect": "Allow",
+                                        "Principal": {"Service": "lambda.amazonaws.com"},
+                                        "Action": "sts:AssumeRole",
+                                    }
+                                ],
+                            },
                         },
                     },
                 },
-            },
-        })
+            }
+        )
 
         stack_name = f"test-iam-stack-{suffix}"
         cfn.create_stack(
@@ -274,14 +295,18 @@ class TestLambdaFunctionLifecycle:
 
         iam.create_role(
             RoleName=f"lifecycle-role-{suffix}",
-            AssumeRolePolicyDocument=json.dumps({
-                "Version": "2012-10-17",
-                "Statement": [{
-                    "Effect": "Allow",
-                    "Principal": {"Service": "lambda.amazonaws.com"},
-                    "Action": "sts:AssumeRole",
-                }],
-            }),
+            AssumeRolePolicyDocument=json.dumps(
+                {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {"Service": "lambda.amazonaws.com"},
+                            "Action": "sts:AssumeRole",
+                        }
+                    ],
+                }
+            ),
         )
 
         func_name = f"lifecycle-fn-{suffix}"
