@@ -8,7 +8,6 @@ Usage:
     uv run python scripts/audit_json_versions.py
 """
 
-import ast
 import re
 import sys
 from pathlib import Path

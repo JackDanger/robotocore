@@ -30,7 +30,6 @@ from robotocore.services.rekognition.provider import (
     _list_collections,
 )
 
-
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -322,7 +321,7 @@ class TestCognitoListUserPoolsTruncation:
 
     @pytest.fixture(autouse=True)
     def _setup_store(self):
-        from robotocore.services.cognito.provider import CognitoStore, _stores
+        from robotocore.services.cognito.provider import _stores
 
         _stores.clear()
         yield

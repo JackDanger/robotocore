@@ -7,7 +7,6 @@ Phase 2C: Verify error responses use the correct format per protocol:
 
 import json
 import xml.etree.ElementTree as ET
-
 from unittest.mock import MagicMock
 
 from robotocore.gateway.handler_chain import RequestContext
