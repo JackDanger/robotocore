@@ -3057,6 +3057,8 @@ class TestIAMCreateSAMLProvider:
         resp = iam.create_saml_provider(SAMLMetadataDocument=saml_doc, Name=name)
         assert "SAMLProviderArn" in resp
         arn = resp["SAMLProviderArn"]
+        assert "SAMLProviderArn" in resp
+        arn = resp["SAMLProviderArn"]
         try:
             assert "arn:aws:iam:" in arn
             provider = iam.get_saml_provider(SAMLProviderArn=arn)
@@ -4827,6 +4829,7 @@ class TestIAMSshPublicKeys:
         try:
             resp = iam.list_ssh_public_keys(UserName=user_name)
             assert "SSHPublicKeys" in resp
+            assert isinstance(resp["SSHPublicKeys"], list)
             assert len(resp["SSHPublicKeys"]) == 0
         finally:
             iam.delete_user(UserName=user_name)
@@ -5096,6 +5099,7 @@ class TestIAMSAMLProviderExplicit:
             assert "SAMLMetadataDocument" in get_resp
             assert isinstance(get_resp["SAMLMetadataDocument"], str)
             assert len(get_resp["SAMLMetadataDocument"]) > 0
+            assert "EntityDescriptor" in get_resp["SAMLMetadataDocument"]
         finally:
             iam.delete_saml_provider(SAMLProviderArn=arn)
 
@@ -5725,6 +5729,7 @@ class TestIAMSSHPublicKeyOperations:
         try:
             resp = iam.list_ssh_public_keys(UserName=user)
             assert "SSHPublicKeys" in resp
+            assert isinstance(resp["SSHPublicKeys"], list)
             assert len(resp["SSHPublicKeys"]) == 0
         finally:
             iam.delete_user(UserName=user)
