@@ -50,6 +50,11 @@ def _store(top: dict, *keys) -> dict:
     return current
 
 
+def _acct_region(account_id: str, region: str) -> str:
+    """Composite store key: account-scoped region bucket."""
+    return f"{account_id}:{region}"
+
+
 # ---------------------------------------------------------------------------
 # REST-JSON path patterns
 # ---------------------------------------------------------------------------
@@ -124,50 +129,50 @@ async def handle_apigatewayv2_request(
             if method == "POST":
                 return _json_response(_create_api(params, region, account_id), 201)
             if method == "GET":
-                return _json_response(_get_apis(region))
+                return _json_response(_get_apis(region, account_id))
 
         # CORS configuration
         m = _CORS_PATH.match(path)
         if m:
             api_id = m.group(1)
             if method == "DELETE":
-                _delete_cors_configuration(api_id, region)
+                _delete_cors_configuration(api_id, region, account_id)
                 return Response(status_code=204)
 
         m = _API_PATH.match(path)
         if m:
             api_id = m.group(1)
             if method == "GET":
-                return _json_response(_get_api(api_id, region))
+                return _json_response(_get_api(api_id, region, account_id))
             if method == "PATCH":
-                return _json_response(_update_api(api_id, params, region))
+                return _json_response(_update_api(api_id, params, region, account_id))
             if method == "DELETE":
-                _delete_api(api_id, region)
+                _delete_api(api_id, region, account_id)
                 return Response(status_code=204)
             if method == "PUT":
                 # reimport_api
-                return _json_response(_reimport_api(api_id, params, region))
+                return _json_response(_reimport_api(api_id, params, region, account_id))
 
         # Route Responses (must match before Routes — longer path)
         m = _ROUTE_RESPONSES_LIST.match(path)
         if m:
             api_id, route_id = m.group(1), m.group(2)
             if method == "POST":
-                return _json_response(_create_route_response(api_id, route_id, params, region), 201)
+                return _json_response(_create_route_response(api_id, route_id, params, region, account_id), 201)
             if method == "GET":
-                return _json_response(_get_route_responses(api_id, route_id, region))
+                return _json_response(_get_route_responses(api_id, route_id, region, account_id))
 
         m = _ROUTE_RESPONSE_PATH.match(path)
         if m:
             api_id, route_id, rr_id = m.group(1), m.group(2), m.group(3)
             if method == "GET":
-                return _json_response(_get_route_response(api_id, route_id, rr_id, region))
+                return _json_response(_get_route_response(api_id, route_id, rr_id, region, account_id))
             if method == "PATCH":
                 return _json_response(
-                    _update_route_response(api_id, route_id, rr_id, params, region)
+                    _update_route_response(api_id, route_id, rr_id, params, region, account_id)
                 )
             if method == "DELETE":
-                _delete_route_response(api_id, route_id, rr_id, region)
+                _delete_route_response(api_id, route_id, rr_id, region, account_id)
                 return Response(status_code=204)
 
         # Route Request Parameters
@@ -175,7 +180,7 @@ async def handle_apigatewayv2_request(
         if m:
             api_id, route_id, param_key = m.group(1), m.group(2), unquote(m.group(3))
             if method == "DELETE":
-                _delete_route_request_parameter(api_id, route_id, param_key, region)
+                _delete_route_request_parameter(api_id, route_id, param_key, region, account_id)
                 return Response(status_code=204)
 
         # Routes
@@ -185,17 +190,17 @@ async def handle_apigatewayv2_request(
             if method == "POST":
                 return _json_response(_create_route(api_id, params, region, account_id), 201)
             if method == "GET":
-                return _json_response(_get_routes(api_id, region))
+                return _json_response(_get_routes(api_id, region, account_id))
 
         m = _ROUTE_PATH.match(path)
         if m:
             api_id, route_id = m.group(1), m.group(2)
             if method == "GET":
-                return _json_response(_get_route(api_id, route_id, region))
+                return _json_response(_get_route(api_id, route_id, region, account_id))
             if method == "PATCH":
-                return _json_response(_update_route(api_id, route_id, params, region))
+                return _json_response(_update_route(api_id, route_id, params, region, account_id))
             if method == "DELETE":
-                _delete_route(api_id, route_id, region)
+                _delete_route(api_id, route_id, region, account_id)
                 return Response(status_code=204)
 
         # Integration Responses (must match before Integrations — longer path)
@@ -204,22 +209,22 @@ async def handle_apigatewayv2_request(
             api_id, integ_id = m.group(1), m.group(2)
             if method == "POST":
                 return _json_response(
-                    _create_integration_response(api_id, integ_id, params, region), 201
+                    _create_integration_response(api_id, integ_id, params, region, account_id), 201
                 )
             if method == "GET":
-                return _json_response(_get_integration_responses(api_id, integ_id, region))
+                return _json_response(_get_integration_responses(api_id, integ_id, region, account_id))
 
         m = _INTEGRATION_RESPONSE_PATH.match(path)
         if m:
             api_id, integ_id, ir_id = m.group(1), m.group(2), m.group(3)
             if method == "GET":
-                return _json_response(_get_integration_response(api_id, integ_id, ir_id, region))
+                return _json_response(_get_integration_response(api_id, integ_id, ir_id, region, account_id))
             if method == "PATCH":
                 return _json_response(
-                    _update_integration_response(api_id, integ_id, ir_id, params, region)
+                    _update_integration_response(api_id, integ_id, ir_id, params, region, account_id)
                 )
             if method == "DELETE":
-                _delete_integration_response(api_id, integ_id, ir_id, region)
+                _delete_integration_response(api_id, integ_id, ir_id, region, account_id)
                 return Response(status_code=204)
 
         # Integrations
@@ -229,17 +234,17 @@ async def handle_apigatewayv2_request(
             if method == "POST":
                 return _json_response(_create_integration(api_id, params, region, account_id), 201)
             if method == "GET":
-                return _json_response(_get_integrations(api_id, region))
+                return _json_response(_get_integrations(api_id, region, account_id))
 
         m = _INTEGRATION_PATH.match(path)
         if m:
             api_id, integ_id = m.group(1), m.group(2)
             if method == "GET":
-                return _json_response(_get_integration(api_id, integ_id, region))
+                return _json_response(_get_integration(api_id, integ_id, region, account_id))
             if method == "PATCH":
-                return _json_response(_update_integration(api_id, integ_id, params, region))
+                return _json_response(_update_integration(api_id, integ_id, params, region, account_id))
             if method == "DELETE":
-                _delete_integration(api_id, integ_id, region)
+                _delete_integration(api_id, integ_id, region, account_id)
                 return Response(status_code=204)
 
         # Stages
@@ -249,17 +254,17 @@ async def handle_apigatewayv2_request(
             if method == "POST":
                 return _json_response(_create_stage(api_id, params, region, account_id), 201)
             if method == "GET":
-                return _json_response(_get_stages(api_id, region))
+                return _json_response(_get_stages(api_id, region, account_id))
 
         m = _STAGE_PATH.match(path)
         if m:
             api_id, stage_name = m.group(1), m.group(2)
             if method == "GET":
-                return _json_response(_get_stage(api_id, stage_name, region))
+                return _json_response(_get_stage(api_id, stage_name, region, account_id))
             if method == "PATCH":
-                return _json_response(_update_stage(api_id, stage_name, params, region))
+                return _json_response(_update_stage(api_id, stage_name, params, region, account_id))
             if method == "DELETE":
-                _delete_stage(api_id, stage_name, region)
+                _delete_stage(api_id, stage_name, region, account_id)
                 return Response(status_code=204)
 
         # Authorizers
@@ -269,17 +274,17 @@ async def handle_apigatewayv2_request(
             if method == "POST":
                 return _json_response(_create_authorizer(api_id, params, region, account_id), 201)
             if method == "GET":
-                return _json_response(_get_authorizers(api_id, region))
+                return _json_response(_get_authorizers(api_id, region, account_id))
 
         m = _AUTHORIZER_PATH.match(path)
         if m:
             api_id, auth_id = m.group(1), m.group(2)
             if method == "GET":
-                return _json_response(_get_authorizer(api_id, auth_id, region))
+                return _json_response(_get_authorizer(api_id, auth_id, region, account_id))
             if method == "PATCH":
-                return _json_response(_update_authorizer(api_id, auth_id, params, region))
+                return _json_response(_update_authorizer(api_id, auth_id, params, region, account_id))
             if method == "DELETE":
-                _delete_authorizer(api_id, auth_id, region)
+                _delete_authorizer(api_id, auth_id, region, account_id)
                 return Response(status_code=204)
 
         # Deployments
@@ -289,15 +294,15 @@ async def handle_apigatewayv2_request(
             if method == "POST":
                 return _json_response(_create_deployment(api_id, params, region, account_id), 201)
             if method == "GET":
-                return _json_response(_get_deployments(api_id, region))
+                return _json_response(_get_deployments(api_id, region, account_id))
 
         m = _DEPLOYMENT_PATH.match(path)
         if m:
             api_id, deploy_id = m.group(1), m.group(2)
             if method == "GET":
-                return _json_response(_get_deployment(api_id, deploy_id, region))
+                return _json_response(_get_deployment(api_id, deploy_id, region, account_id))
             if method == "DELETE":
-                _delete_deployment(api_id, deploy_id, region)
+                _delete_deployment(api_id, deploy_id, region, account_id)
                 return Response(status_code=204)
 
         # VPC Links
@@ -306,17 +311,17 @@ async def handle_apigatewayv2_request(
             if method == "POST":
                 return _json_response(_create_vpc_link(params, region, account_id), 201)
             if method == "GET":
-                return _json_response(_get_vpc_links(region))
+                return _json_response(_get_vpc_links(region, account_id))
 
         m = _VPC_LINK_PATH.match(path)
         if m:
             vpc_link_id = m.group(1)
             if method == "GET":
-                return _json_response(_get_vpc_link(vpc_link_id, region))
+                return _json_response(_get_vpc_link(vpc_link_id, region, account_id))
             if method == "PATCH":
-                return _json_response(_update_vpc_link(vpc_link_id, params, region))
+                return _json_response(_update_vpc_link(vpc_link_id, params, region, account_id))
             if method == "DELETE":
-                _delete_vpc_link(vpc_link_id, region)
+                _delete_vpc_link(vpc_link_id, region, account_id)
                 return Response(status_code=204)
 
         # Domain Names
@@ -325,34 +330,34 @@ async def handle_apigatewayv2_request(
             if method == "POST":
                 return _json_response(_create_domain_name(params, region, account_id), 201)
             if method == "GET":
-                return _json_response(_get_domain_names(region))
+                return _json_response(_get_domain_names(region, account_id))
 
         m = _API_MAPPINGS_LIST.match(path)
         if m:
             domain = m.group(1)
             if method == "POST":
-                return _json_response(_create_api_mapping(domain, params, region), 201)
+                return _json_response(_create_api_mapping(domain, params, region, account_id), 201)
             if method == "GET":
-                return _json_response(_get_api_mappings(domain, region))
+                return _json_response(_get_api_mappings(domain, region, account_id))
 
         m = _API_MAPPING_PATH.match(path)
         if m:
             domain, mapping_id = m.group(1), m.group(2)
             if method == "GET":
-                return _json_response(_get_api_mapping(domain, mapping_id, region))
+                return _json_response(_get_api_mapping(domain, mapping_id, region, account_id))
             if method == "DELETE":
-                _delete_api_mapping(domain, mapping_id, region)
+                _delete_api_mapping(domain, mapping_id, region, account_id)
                 return Response(status_code=204)
 
         m = _DOMAIN_NAME_PATH.match(path)
         if m:
             domain = m.group(1)
             if method == "GET":
-                return _json_response(_get_domain_name(domain, region))
+                return _json_response(_get_domain_name(domain, region, account_id))
             if method == "PATCH":
-                return _json_response(_update_domain_name(domain, params, region))
+                return _json_response(_update_domain_name(domain, params, region, account_id))
             if method == "DELETE":
-                _delete_domain_name(domain, region)
+                _delete_domain_name(domain, region, account_id)
                 return Response(status_code=204)
 
         # Models
@@ -360,19 +365,19 @@ async def handle_apigatewayv2_request(
         if m:
             api_id = m.group(1)
             if method == "POST":
-                return _json_response(_create_model(api_id, params, region), 201)
+                return _json_response(_create_model(api_id, params, region, account_id), 201)
             if method == "GET":
-                return _json_response(_get_models(api_id, region))
+                return _json_response(_get_models(api_id, region, account_id))
 
         m = _MODEL_PATH.match(path)
         if m:
             api_id, model_id = m.group(1), m.group(2)
             if method == "GET":
-                return _json_response(_get_model(api_id, model_id, region))
+                return _json_response(_get_model(api_id, model_id, region, account_id))
             if method == "PATCH":
-                return _json_response(_update_model(api_id, model_id, params, region))
+                return _json_response(_update_model(api_id, model_id, params, region, account_id))
             if method == "DELETE":
-                _delete_model(api_id, model_id, region)
+                _delete_model(api_id, model_id, region, account_id)
                 return Response(status_code=204)
 
         # Tags
@@ -380,14 +385,14 @@ async def handle_apigatewayv2_request(
         if m:
             resource_arn = unquote(m.group(1))
             if method == "GET":
-                return _json_response({"Tags": _list_tags_v2(resource_arn, region)})
+                return _json_response({"Tags": _list_tags_v2(resource_arn, region, account_id)})
             if method == "POST":
                 new_tags = params.get("Tags", {})
-                _tag_resource_v2(resource_arn, new_tags, region)
+                _tag_resource_v2(resource_arn, new_tags, region, account_id)
                 return _json_response({})
             if method == "DELETE":
                 tag_keys = request.query_params.getlist("tagKeys")
-                _untag_resource_v2(resource_arn, tag_keys, region)
+                _untag_resource_v2(resource_arn, tag_keys, region, account_id)
                 return Response(status_code=204)
 
         return _error("NotFoundException", f"Unknown path: {method} {path}", 404)
@@ -404,7 +409,7 @@ async def handle_apigatewayv2_request(
 
 
 def _create_api(params: dict, region: str, account_id: str) -> dict:
-    apis = _store(_apis, region)
+    apis = _store(_apis, _acct_region(account_id, region))
     api_id = _short_id()
     protocol_type = params.get("ProtocolType", "HTTP")
 
@@ -436,13 +441,13 @@ def _create_api(params: dict, region: str, account_id: str) -> dict:
 
     # Auto-create $default stage for HTTP APIs if requested
     if protocol_type == "HTTP":
-        _store(_stages, region, api_id)
+        _store(_stages, _acct_region(account_id, region), api_id)
 
     return api
 
 
-def _get_api(api_id: str, region: str) -> dict:
-    apis = _store(_apis, region)
+def _get_api(api_id: str, region: str, account_id: str) -> dict:
+    apis = _store(_apis, _acct_region(account_id, region))
     with _lock:
         api = apis.get(api_id)
     if not api:
@@ -450,15 +455,15 @@ def _get_api(api_id: str, region: str) -> dict:
     return api
 
 
-def _get_apis(region: str) -> dict:
-    apis = _store(_apis, region)
+def _get_apis(region: str, account_id: str) -> dict:
+    apis = _store(_apis, _acct_region(account_id, region))
     with _lock:
         items = list(apis.values())
     return {"Items": items}
 
 
-def _update_api(api_id: str, params: dict, region: str) -> dict:
-    apis = _store(_apis, region)
+def _update_api(api_id: str, params: dict, region: str, account_id: str) -> dict:
+    apis = _store(_apis, _acct_region(account_id, region))
     with _lock:
         api = apis.get(api_id)
         if not api:
@@ -477,15 +482,15 @@ def _update_api(api_id: str, params: dict, region: str) -> dict:
     return api
 
 
-def _delete_api(api_id: str, region: str) -> None:
-    apis = _store(_apis, region)
+def _delete_api(api_id: str, region: str, account_id: str) -> None:
+    apis = _store(_apis, _acct_region(account_id, region))
     with _lock:
         if api_id not in apis:
             raise ApiGatewayV2Error("NotFoundException", f"API {api_id} not found", 404)
         del apis[api_id]
     # Clean up related resources
     for store in (_routes, _integrations, _stages, _authorizers, _deployments):
-        region_store = store.get(region, {})
+        region_store = store.get(_acct_region(account_id, region), {})
         region_store.pop(api_id, None)
 
 
@@ -495,8 +500,8 @@ def _delete_api(api_id: str, region: str) -> None:
 
 
 def _create_route(api_id: str, params: dict, region: str, account_id: str) -> dict:
-    _require_api(api_id, region)
-    routes = _store(_routes, region, api_id)
+    _require_api(api_id, region, account_id)
+    routes = _store(_routes, _acct_region(account_id, region), api_id)
     route_id = _short_id()
 
     route = {
@@ -520,9 +525,9 @@ def _create_route(api_id: str, params: dict, region: str, account_id: str) -> di
     return route
 
 
-def _get_route(api_id: str, route_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    routes = _store(_routes, region, api_id)
+def _get_route(api_id: str, route_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    routes = _store(_routes, _acct_region(account_id, region), api_id)
     with _lock:
         route = routes.get(route_id)
     if not route:
@@ -530,17 +535,17 @@ def _get_route(api_id: str, route_id: str, region: str) -> dict:
     return route
 
 
-def _get_routes(api_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    routes = _store(_routes, region, api_id)
+def _get_routes(api_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    routes = _store(_routes, _acct_region(account_id, region), api_id)
     with _lock:
         items = list(routes.values())
     return {"Items": items}
 
 
-def _update_route(api_id: str, route_id: str, params: dict, region: str) -> dict:
-    _require_api(api_id, region)
-    routes = _store(_routes, region, api_id)
+def _update_route(api_id: str, route_id: str, params: dict, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    routes = _store(_routes, _acct_region(account_id, region), api_id)
     with _lock:
         route = routes.get(route_id)
         if not route:
@@ -558,9 +563,9 @@ def _update_route(api_id: str, route_id: str, params: dict, region: str) -> dict
     return route
 
 
-def _delete_route(api_id: str, route_id: str, region: str) -> None:
-    _require_api(api_id, region)
-    routes = _store(_routes, region, api_id)
+def _delete_route(api_id: str, route_id: str, region: str, account_id: str) -> None:
+    _require_api(api_id, region, account_id)
+    routes = _store(_routes, _acct_region(account_id, region), api_id)
     with _lock:
         if route_id not in routes:
             raise ApiGatewayV2Error("NotFoundException", f"Route {route_id} not found", 404)
@@ -578,8 +583,8 @@ def _create_integration(
     region: str,
     account_id: str,
 ) -> dict:
-    _require_api(api_id, region)
-    integrations = _store(_integrations, region, api_id)
+    _require_api(api_id, region, account_id)
+    integrations = _store(_integrations, _acct_region(account_id, region), api_id)
     integ_id = _short_id()
 
     integ = {
@@ -605,9 +610,9 @@ def _create_integration(
     return integ
 
 
-def _get_integration(api_id: str, integ_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    integrations = _store(_integrations, region, api_id)
+def _get_integration(api_id: str, integ_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    integrations = _store(_integrations, _acct_region(account_id, region), api_id)
     with _lock:
         integ = integrations.get(integ_id)
     if not integ:
@@ -615,9 +620,9 @@ def _get_integration(api_id: str, integ_id: str, region: str) -> dict:
     return integ
 
 
-def _get_integrations(api_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    integrations = _store(_integrations, region, api_id)
+def _get_integrations(api_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    integrations = _store(_integrations, _acct_region(account_id, region), api_id)
     with _lock:
         items = list(integrations.values())
     return {"Items": items}
@@ -628,9 +633,10 @@ def _update_integration(
     integ_id: str,
     params: dict,
     region: str,
+    account_id: str,
 ) -> dict:
-    _require_api(api_id, region)
-    integrations = _store(_integrations, region, api_id)
+    _require_api(api_id, region, account_id)
+    integrations = _store(_integrations, _acct_region(account_id, region), api_id)
     with _lock:
         integ = integrations.get(integ_id)
         if not integ:
@@ -650,9 +656,9 @@ def _update_integration(
     return integ
 
 
-def _delete_integration(api_id: str, integ_id: str, region: str) -> None:
-    _require_api(api_id, region)
-    integrations = _store(_integrations, region, api_id)
+def _delete_integration(api_id: str, integ_id: str, region: str, account_id: str) -> None:
+    _require_api(api_id, region, account_id)
+    integrations = _store(_integrations, _acct_region(account_id, region), api_id)
     with _lock:
         if integ_id not in integrations:
             raise ApiGatewayV2Error("NotFoundException", f"Integration {integ_id} not found", 404)
@@ -664,10 +670,10 @@ def _delete_integration(api_id: str, integ_id: str, region: str) -> None:
 # ---------------------------------------------------------------------------
 
 
-def _create_integration_response(api_id: str, integ_id: str, params: dict, region: str) -> dict:
-    _require_api(api_id, region)
-    _get_integration(api_id, integ_id, region)  # ensure integration exists
-    irs = _store(_integration_responses, region, api_id, integ_id)
+def _create_integration_response(api_id: str, integ_id: str, params: dict, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    _get_integration(api_id, integ_id, region, account_id)  # ensure integration exists
+    irs = _store(_integration_responses, _acct_region(account_id, region), api_id, integ_id)
     ir_id = _short_id()
     ir = {
         "IntegrationResponseId": ir_id,
@@ -682,9 +688,9 @@ def _create_integration_response(api_id: str, integ_id: str, params: dict, regio
     return ir
 
 
-def _get_integration_response(api_id: str, integ_id: str, ir_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    irs = _store(_integration_responses, region, api_id, integ_id)
+def _get_integration_response(api_id: str, integ_id: str, ir_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    irs = _store(_integration_responses, _acct_region(account_id, region), api_id, integ_id)
     with _lock:
         ir = irs.get(ir_id)
     if not ir:
@@ -692,19 +698,19 @@ def _get_integration_response(api_id: str, integ_id: str, ir_id: str, region: st
     return ir
 
 
-def _get_integration_responses(api_id: str, integ_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    irs = _store(_integration_responses, region, api_id, integ_id)
+def _get_integration_responses(api_id: str, integ_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    irs = _store(_integration_responses, _acct_region(account_id, region), api_id, integ_id)
     with _lock:
         items = list(irs.values())
     return {"Items": items}
 
 
 def _update_integration_response(
-    api_id: str, integ_id: str, ir_id: str, params: dict, region: str
+    api_id: str, integ_id: str, ir_id: str, params: dict, region: str, account_id: str = ""
 ) -> dict:
-    _require_api(api_id, region)
-    irs = _store(_integration_responses, region, api_id, integ_id)
+    _require_api(api_id, region, account_id)
+    irs = _store(_integration_responses, _acct_region(account_id, region), api_id, integ_id)
     with _lock:
         ir = irs.get(ir_id)
         if not ir:
@@ -723,9 +729,9 @@ def _update_integration_response(
     return ir
 
 
-def _delete_integration_response(api_id: str, integ_id: str, ir_id: str, region: str) -> None:
-    _require_api(api_id, region)
-    irs = _store(_integration_responses, region, api_id, integ_id)
+def _delete_integration_response(api_id: str, integ_id: str, ir_id: str, region: str, account_id: str) -> None:
+    _require_api(api_id, region, account_id)
+    irs = _store(_integration_responses, _acct_region(account_id, region), api_id, integ_id)
     with _lock:
         if ir_id not in irs:
             raise ApiGatewayV2Error(
@@ -739,10 +745,10 @@ def _delete_integration_response(api_id: str, integ_id: str, ir_id: str, region:
 # ---------------------------------------------------------------------------
 
 
-def _create_route_response(api_id: str, route_id: str, params: dict, region: str) -> dict:
-    _require_api(api_id, region)
-    _get_route(api_id, route_id, region)  # ensure route exists
-    rrs = _store(_route_responses, region, api_id, route_id)
+def _create_route_response(api_id: str, route_id: str, params: dict, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    _get_route(api_id, route_id, region, account_id)  # ensure route exists
+    rrs = _store(_route_responses, _acct_region(account_id, region), api_id, route_id)
     rr_id = _short_id()
     rr = {
         "RouteResponseId": rr_id,
@@ -756,9 +762,9 @@ def _create_route_response(api_id: str, route_id: str, params: dict, region: str
     return rr
 
 
-def _get_route_response(api_id: str, route_id: str, rr_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    rrs = _store(_route_responses, region, api_id, route_id)
+def _get_route_response(api_id: str, route_id: str, rr_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    rrs = _store(_route_responses, _acct_region(account_id, region), api_id, route_id)
     with _lock:
         rr = rrs.get(rr_id)
     if not rr:
@@ -766,19 +772,19 @@ def _get_route_response(api_id: str, route_id: str, rr_id: str, region: str) -> 
     return rr
 
 
-def _get_route_responses(api_id: str, route_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    rrs = _store(_route_responses, region, api_id, route_id)
+def _get_route_responses(api_id: str, route_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    rrs = _store(_route_responses, _acct_region(account_id, region), api_id, route_id)
     with _lock:
         items = list(rrs.values())
     return {"Items": items}
 
 
 def _update_route_response(
-    api_id: str, route_id: str, rr_id: str, params: dict, region: str
+    api_id: str, route_id: str, rr_id: str, params: dict, region: str, account_id: str = ""
 ) -> dict:
-    _require_api(api_id, region)
-    rrs = _store(_route_responses, region, api_id, route_id)
+    _require_api(api_id, region, account_id)
+    rrs = _store(_route_responses, _acct_region(account_id, region), api_id, route_id)
     with _lock:
         rr = rrs.get(rr_id)
         if not rr:
@@ -794,9 +800,9 @@ def _update_route_response(
     return rr
 
 
-def _delete_route_response(api_id: str, route_id: str, rr_id: str, region: str) -> None:
-    _require_api(api_id, region)
-    rrs = _store(_route_responses, region, api_id, route_id)
+def _delete_route_response(api_id: str, route_id: str, rr_id: str, region: str, account_id: str) -> None:
+    _require_api(api_id, region, account_id)
+    rrs = _store(_route_responses, _acct_region(account_id, region), api_id, route_id)
     with _lock:
         if rr_id not in rrs:
             raise ApiGatewayV2Error("NotFoundException", f"Route response {rr_id} not found", 404)
@@ -808,9 +814,9 @@ def _delete_route_response(api_id: str, route_id: str, rr_id: str, region: str) 
 # ---------------------------------------------------------------------------
 
 
-def _delete_cors_configuration(api_id: str, region: str) -> None:
-    _require_api(api_id, region)
-    apis = _store(_apis, region)
+def _delete_cors_configuration(api_id: str, region: str, account_id: str) -> None:
+    _require_api(api_id, region, account_id)
+    apis = _store(_apis, _acct_region(account_id, region))
     with _lock:
         api = apis.get(api_id)
         if api:
@@ -818,10 +824,10 @@ def _delete_cors_configuration(api_id: str, region: str) -> None:
 
 
 def _delete_route_request_parameter(
-    api_id: str, route_id: str, param_key: str, region: str
+    api_id: str, route_id: str, param_key: str, region: str, account_id: str = ""
 ) -> None:
-    _require_api(api_id, region)
-    routes = _store(_routes, region, api_id)
+    _require_api(api_id, region, account_id)
+    routes = _store(_routes, _acct_region(account_id, region), api_id)
     with _lock:
         route = routes.get(route_id)
         if not route:
@@ -831,10 +837,10 @@ def _delete_route_request_parameter(
             del params[param_key]
 
 
-def _reimport_api(api_id: str, params: dict, region: str) -> dict:
+def _reimport_api(api_id: str, params: dict, region: str, account_id: str) -> dict:
     """Reimport an API from an OpenAPI spec. Simplified implementation."""
-    _require_api(api_id, region)
-    apis = _store(_apis, region)
+    _require_api(api_id, region, account_id)
+    apis = _store(_apis, _acct_region(account_id, region))
     with _lock:
         api = apis.get(api_id)
         if not api:
@@ -864,8 +870,8 @@ def _create_stage(
     region: str,
     account_id: str,
 ) -> dict:
-    _require_api(api_id, region)
-    stages = _store(_stages, region, api_id)
+    _require_api(api_id, region, account_id)
+    stages = _store(_stages, _acct_region(account_id, region), api_id)
     stage_name = params.get("StageName", "$default")
 
     with _lock:
@@ -891,9 +897,9 @@ def _create_stage(
     return stage
 
 
-def _get_stage(api_id: str, stage_name: str, region: str) -> dict:
-    _require_api(api_id, region)
-    stages = _store(_stages, region, api_id)
+def _get_stage(api_id: str, stage_name: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    stages = _store(_stages, _acct_region(account_id, region), api_id)
     with _lock:
         stage = stages.get(stage_name)
     if not stage:
@@ -901,9 +907,9 @@ def _get_stage(api_id: str, stage_name: str, region: str) -> dict:
     return stage
 
 
-def _get_stages(api_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    stages = _store(_stages, region, api_id)
+def _get_stages(api_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    stages = _store(_stages, _acct_region(account_id, region), api_id)
     with _lock:
         items = list(stages.values())
     return {"Items": items}
@@ -914,9 +920,10 @@ def _update_stage(
     stage_name: str,
     params: dict,
     region: str,
+    account_id: str,
 ) -> dict:
-    _require_api(api_id, region)
-    stages = _store(_stages, region, api_id)
+    _require_api(api_id, region, account_id)
+    stages = _store(_stages, _acct_region(account_id, region), api_id)
     with _lock:
         stage = stages.get(stage_name)
         if not stage:
@@ -935,9 +942,9 @@ def _update_stage(
     return stage
 
 
-def _delete_stage(api_id: str, stage_name: str, region: str) -> None:
-    _require_api(api_id, region)
-    stages = _store(_stages, region, api_id)
+def _delete_stage(api_id: str, stage_name: str, region: str, account_id: str) -> None:
+    _require_api(api_id, region, account_id)
+    stages = _store(_stages, _acct_region(account_id, region), api_id)
     with _lock:
         if stage_name not in stages:
             raise ApiGatewayV2Error("NotFoundException", f"Stage {stage_name} not found", 404)
@@ -955,8 +962,8 @@ def _create_authorizer(
     region: str,
     account_id: str,
 ) -> dict:
-    _require_api(api_id, region)
-    authorizers = _store(_authorizers, region, api_id)
+    _require_api(api_id, region, account_id)
+    authorizers = _store(_authorizers, _acct_region(account_id, region), api_id)
     auth_id = _short_id()
 
     auth = {
@@ -977,9 +984,9 @@ def _create_authorizer(
     return auth
 
 
-def _get_authorizer(api_id: str, auth_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    authorizers = _store(_authorizers, region, api_id)
+def _get_authorizer(api_id: str, auth_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    authorizers = _store(_authorizers, _acct_region(account_id, region), api_id)
     with _lock:
         auth = authorizers.get(auth_id)
     if not auth:
@@ -987,9 +994,9 @@ def _get_authorizer(api_id: str, auth_id: str, region: str) -> dict:
     return auth
 
 
-def _get_authorizers(api_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    authorizers = _store(_authorizers, region, api_id)
+def _get_authorizers(api_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    authorizers = _store(_authorizers, _acct_region(account_id, region), api_id)
     with _lock:
         items = list(authorizers.values())
     return {"Items": items}
@@ -1000,9 +1007,10 @@ def _update_authorizer(
     auth_id: str,
     params: dict,
     region: str,
+    account_id: str,
 ) -> dict:
-    _require_api(api_id, region)
-    authorizers = _store(_authorizers, region, api_id)
+    _require_api(api_id, region, account_id)
+    authorizers = _store(_authorizers, _acct_region(account_id, region), api_id)
     with _lock:
         auth = authorizers.get(auth_id)
         if not auth:
@@ -1020,9 +1028,9 @@ def _update_authorizer(
     return auth
 
 
-def _delete_authorizer(api_id: str, auth_id: str, region: str) -> None:
-    _require_api(api_id, region)
-    authorizers = _store(_authorizers, region, api_id)
+def _delete_authorizer(api_id: str, auth_id: str, region: str, account_id: str) -> None:
+    _require_api(api_id, region, account_id)
+    authorizers = _store(_authorizers, _acct_region(account_id, region), api_id)
     with _lock:
         if auth_id not in authorizers:
             raise ApiGatewayV2Error("NotFoundException", f"Authorizer {auth_id} not found", 404)
@@ -1040,8 +1048,8 @@ def _create_deployment(
     region: str,
     account_id: str,
 ) -> dict:
-    _require_api(api_id, region)
-    deployments = _store(_deployments, region, api_id)
+    _require_api(api_id, region, account_id)
+    deployments = _store(_deployments, _acct_region(account_id, region), api_id)
     deploy_id = _short_id()
 
     deployment = {
@@ -1059,7 +1067,7 @@ def _create_deployment(
     # Update stage deployment ID if specified
     stage_name = params.get("StageName")
     if stage_name:
-        stages = _store(_stages, region, api_id)
+        stages = _store(_stages, _acct_region(account_id, region), api_id)
         with _lock:
             stage = stages.get(stage_name)
             if stage:
@@ -1068,9 +1076,9 @@ def _create_deployment(
     return deployment
 
 
-def _get_deployment(api_id: str, deploy_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    deployments = _store(_deployments, region, api_id)
+def _get_deployment(api_id: str, deploy_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    deployments = _store(_deployments, _acct_region(account_id, region), api_id)
     with _lock:
         deploy = deployments.get(deploy_id)
     if not deploy:
@@ -1078,17 +1086,17 @@ def _get_deployment(api_id: str, deploy_id: str, region: str) -> dict:
     return deploy
 
 
-def _get_deployments(api_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    deployments = _store(_deployments, region, api_id)
+def _get_deployments(api_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    deployments = _store(_deployments, _acct_region(account_id, region), api_id)
     with _lock:
         items = list(deployments.values())
     return {"Items": items}
 
 
-def _delete_deployment(api_id: str, deploy_id: str, region: str) -> None:
-    _require_api(api_id, region)
-    deployments = _store(_deployments, region, api_id)
+def _delete_deployment(api_id: str, deploy_id: str, region: str, account_id: str) -> None:
+    _require_api(api_id, region, account_id)
+    deployments = _store(_deployments, _acct_region(account_id, region), api_id)
     with _lock:
         if deploy_id not in deployments:
             raise ApiGatewayV2Error("NotFoundException", f"Deployment {deploy_id} not found", 404)
@@ -1101,7 +1109,7 @@ def _delete_deployment(api_id: str, deploy_id: str, region: str) -> None:
 
 
 def _create_vpc_link(params: dict, region: str, account_id: str) -> dict:
-    links = _store(_vpc_links, region)
+    links = _store(_vpc_links, _acct_region(account_id, region))
     vpc_link_id = _short_id()
     link = {
         "VpcLinkId": vpc_link_id,
@@ -1119,8 +1127,8 @@ def _create_vpc_link(params: dict, region: str, account_id: str) -> dict:
     return link
 
 
-def _get_vpc_link(vpc_link_id: str, region: str) -> dict:
-    links = _store(_vpc_links, region)
+def _get_vpc_link(vpc_link_id: str, region: str, account_id: str) -> dict:
+    links = _store(_vpc_links, _acct_region(account_id, region))
     with _lock:
         link = links.get(vpc_link_id)
     if not link:
@@ -1128,15 +1136,15 @@ def _get_vpc_link(vpc_link_id: str, region: str) -> dict:
     return link
 
 
-def _get_vpc_links(region: str) -> dict:
-    links = _store(_vpc_links, region)
+def _get_vpc_links(region: str, account_id: str) -> dict:
+    links = _store(_vpc_links, _acct_region(account_id, region))
     with _lock:
         items = list(links.values())
     return {"Items": items}
 
 
-def _update_vpc_link(vpc_link_id: str, params: dict, region: str) -> dict:
-    links = _store(_vpc_links, region)
+def _update_vpc_link(vpc_link_id: str, params: dict, region: str, account_id: str) -> dict:
+    links = _store(_vpc_links, _acct_region(account_id, region))
     with _lock:
         link = links.get(vpc_link_id)
         if not link:
@@ -1147,8 +1155,8 @@ def _update_vpc_link(vpc_link_id: str, params: dict, region: str) -> dict:
     return link
 
 
-def _delete_vpc_link(vpc_link_id: str, region: str) -> None:
-    links = _store(_vpc_links, region)
+def _delete_vpc_link(vpc_link_id: str, region: str, account_id: str) -> None:
+    links = _store(_vpc_links, _acct_region(account_id, region))
     with _lock:
         if vpc_link_id not in links:
             raise ApiGatewayV2Error("NotFoundException", f"VPC link {vpc_link_id} not found", 404)
@@ -1161,7 +1169,7 @@ def _delete_vpc_link(vpc_link_id: str, region: str) -> None:
 
 
 def _create_domain_name(params: dict, region: str, account_id: str) -> dict:
-    domains = _store(_domain_names, region)
+    domains = _store(_domain_names, _acct_region(account_id, region))
     domain_name = params.get("DomainName", "")
     domain = {
         "DomainName": domain_name,
@@ -1175,8 +1183,8 @@ def _create_domain_name(params: dict, region: str, account_id: str) -> dict:
     return domain
 
 
-def _get_domain_name(domain: str, region: str) -> dict:
-    domains = _store(_domain_names, region)
+def _get_domain_name(domain: str, region: str, account_id: str) -> dict:
+    domains = _store(_domain_names, _acct_region(account_id, region))
     with _lock:
         d = domains.get(domain)
     if not d:
@@ -1184,15 +1192,15 @@ def _get_domain_name(domain: str, region: str) -> dict:
     return d
 
 
-def _get_domain_names(region: str) -> dict:
-    domains = _store(_domain_names, region)
+def _get_domain_names(region: str, account_id: str) -> dict:
+    domains = _store(_domain_names, _acct_region(account_id, region))
     with _lock:
         items = list(domains.values())
     return {"Items": items}
 
 
-def _update_domain_name(domain: str, params: dict, region: str) -> dict:
-    domains = _store(_domain_names, region)
+def _update_domain_name(domain: str, params: dict, region: str, account_id: str) -> dict:
+    domains = _store(_domain_names, _acct_region(account_id, region))
     with _lock:
         d = domains.get(domain)
         if not d:
@@ -1203,8 +1211,8 @@ def _update_domain_name(domain: str, params: dict, region: str) -> dict:
     return d
 
 
-def _delete_domain_name(domain: str, region: str) -> None:
-    domains = _store(_domain_names, region)
+def _delete_domain_name(domain: str, region: str, account_id: str) -> None:
+    domains = _store(_domain_names, _acct_region(account_id, region))
     with _lock:
         if domain not in domains:
             raise ApiGatewayV2Error("NotFoundException", f"Domain {domain} not found", 404)
@@ -1218,10 +1226,10 @@ def _delete_domain_name(domain: str, region: str) -> None:
 # ---------------------------------------------------------------------------
 
 
-def _create_api_mapping(domain: str, params: dict, region: str) -> dict:
+def _create_api_mapping(domain: str, params: dict, region: str, account_id: str) -> dict:
     # Verify domain exists
-    _get_domain_name(domain, region)
-    mappings = _store(_api_mappings, region, domain)
+    _get_domain_name(domain, region, account_id)
+    mappings = _store(_api_mappings, _acct_region(account_id, region), domain)
     mapping_id = _short_id()
     mapping = {
         "ApiMappingId": mapping_id,
@@ -1234,8 +1242,8 @@ def _create_api_mapping(domain: str, params: dict, region: str) -> dict:
     return mapping
 
 
-def _get_api_mapping(domain: str, mapping_id: str, region: str) -> dict:
-    mappings = _store(_api_mappings, region, domain)
+def _get_api_mapping(domain: str, mapping_id: str, region: str, account_id: str) -> dict:
+    mappings = _store(_api_mappings, _acct_region(account_id, region), domain)
     with _lock:
         mapping = mappings.get(mapping_id)
     if not mapping:
@@ -1243,15 +1251,15 @@ def _get_api_mapping(domain: str, mapping_id: str, region: str) -> dict:
     return mapping
 
 
-def _get_api_mappings(domain: str, region: str) -> dict:
-    mappings = _store(_api_mappings, region, domain)
+def _get_api_mappings(domain: str, region: str, account_id: str) -> dict:
+    mappings = _store(_api_mappings, _acct_region(account_id, region), domain)
     with _lock:
         items = list(mappings.values())
     return {"Items": items}
 
 
-def _delete_api_mapping(domain: str, mapping_id: str, region: str) -> None:
-    mappings = _store(_api_mappings, region, domain)
+def _delete_api_mapping(domain: str, mapping_id: str, region: str, account_id: str) -> None:
+    mappings = _store(_api_mappings, _acct_region(account_id, region), domain)
     with _lock:
         if mapping_id not in mappings:
             raise ApiGatewayV2Error("NotFoundException", f"API mapping {mapping_id} not found", 404)
@@ -1263,9 +1271,9 @@ def _delete_api_mapping(domain: str, mapping_id: str, region: str) -> None:
 # ---------------------------------------------------------------------------
 
 
-def _create_model(api_id: str, params: dict, region: str) -> dict:
-    _require_api(api_id, region)
-    models = _store(_models, region, api_id)
+def _create_model(api_id: str, params: dict, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    models = _store(_models, _acct_region(account_id, region), api_id)
     model_id = _short_id()
     model = {
         "ModelId": model_id,
@@ -1279,9 +1287,9 @@ def _create_model(api_id: str, params: dict, region: str) -> dict:
     return model
 
 
-def _get_model(api_id: str, model_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    models = _store(_models, region, api_id)
+def _get_model(api_id: str, model_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    models = _store(_models, _acct_region(account_id, region), api_id)
     with _lock:
         model = models.get(model_id)
     if not model:
@@ -1289,17 +1297,17 @@ def _get_model(api_id: str, model_id: str, region: str) -> dict:
     return model
 
 
-def _get_models(api_id: str, region: str) -> dict:
-    _require_api(api_id, region)
-    models = _store(_models, region, api_id)
+def _get_models(api_id: str, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    models = _store(_models, _acct_region(account_id, region), api_id)
     with _lock:
         items = list(models.values())
     return {"Items": items}
 
 
-def _update_model(api_id: str, model_id: str, params: dict, region: str) -> dict:
-    _require_api(api_id, region)
-    models = _store(_models, region, api_id)
+def _update_model(api_id: str, model_id: str, params: dict, region: str, account_id: str) -> dict:
+    _require_api(api_id, region, account_id)
+    models = _store(_models, _acct_region(account_id, region), api_id)
     with _lock:
         model = models.get(model_id)
         if not model:
@@ -1310,9 +1318,9 @@ def _update_model(api_id: str, model_id: str, params: dict, region: str) -> dict
     return model
 
 
-def _delete_model(api_id: str, model_id: str, region: str) -> None:
-    _require_api(api_id, region)
-    models = _store(_models, region, api_id)
+def _delete_model(api_id: str, model_id: str, region: str, account_id: str) -> None:
+    _require_api(api_id, region, account_id)
+    models = _store(_models, _acct_region(account_id, region), api_id)
     with _lock:
         if model_id not in models:
             raise ApiGatewayV2Error("NotFoundException", f"Model {model_id} not found", 404)
@@ -1326,12 +1334,12 @@ def _delete_model(api_id: str, model_id: str, region: str) -> None:
 
 def _auto_deploy_if_needed(api_id: str, region: str, account_id: str) -> None:
     """If any stage has AutoDeploy=True, create a deployment."""
-    stages = _store(_stages, region, api_id)
+    stages = _store(_stages, _acct_region(account_id, region), api_id)
     with _lock:
         for stage in stages.values():
             if stage.get("AutoDeploy"):
                 deploy_id = _short_id()
-                deployments = _store(_deployments, region, api_id)
+                deployments = _store(_deployments, _acct_region(account_id, region), api_id)
                 deployments[deploy_id] = {
                     "DeploymentId": deploy_id,
                     "Description": "Auto-deployed",
@@ -1412,9 +1420,9 @@ def post_to_connection(api_id: str, connection_id: str, data: bytes) -> bool:
 # ---------------------------------------------------------------------------
 
 
-def _require_api(api_id: str, region: str) -> dict:
+def _require_api(api_id: str, region: str, account_id: str) -> dict:
     """Verify API exists, raise if not."""
-    apis = _store(_apis, region)
+    apis = _store(_apis, _acct_region(account_id, region))
     with _lock:
         api = apis.get(api_id)
     if not api:
@@ -1431,9 +1439,9 @@ def _iso_time() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
 
-def _find_resource_by_arn_v2(resource_arn: str, region: str) -> dict | None:
+def _find_resource_by_arn_v2(resource_arn: str, region: str, account_id: str) -> dict | None:
     """Find any v2 resource by ARN. Searches APIs, stages, routes, etc."""
-    apis = _store(_apis, region)
+    apis = _store(_apis, _acct_region(account_id, region))
     with _lock:
         for api in apis.values():
             if f"/apis/{api.get('ApiId', '')}" in resource_arn:
@@ -1441,16 +1449,16 @@ def _find_resource_by_arn_v2(resource_arn: str, region: str) -> dict | None:
     return None
 
 
-def _list_tags_v2(resource_arn: str, region: str) -> dict:
-    resource = _find_resource_by_arn_v2(resource_arn, region)
+def _list_tags_v2(resource_arn: str, region: str, account_id: str) -> dict:
+    resource = _find_resource_by_arn_v2(resource_arn, region, account_id)
     if resource is None:
         return {}
     with _lock:
         return dict(resource.get("Tags", {}))
 
 
-def _tag_resource_v2(resource_arn: str, new_tags: dict, region: str) -> None:
-    resource = _find_resource_by_arn_v2(resource_arn, region)
+def _tag_resource_v2(resource_arn: str, new_tags: dict, region: str, account_id: str) -> None:
+    resource = _find_resource_by_arn_v2(resource_arn, region, account_id)
     if resource is None:
         return
     with _lock:
@@ -1458,8 +1466,8 @@ def _tag_resource_v2(resource_arn: str, new_tags: dict, region: str) -> None:
         existing.update(new_tags)
 
 
-def _untag_resource_v2(resource_arn: str, tag_keys: list[str], region: str) -> None:
-    resource = _find_resource_by_arn_v2(resource_arn, region)
+def _untag_resource_v2(resource_arn: str, tag_keys: list[str], region: str, account_id: str) -> None:
+    resource = _find_resource_by_arn_v2(resource_arn, region, account_id)
     if resource is None:
         return
     with _lock:
@@ -1538,26 +1546,26 @@ def _error(code: str, message: str, status: int) -> Response:
 # ---------------------------------------------------------------------------
 
 
-def get_api_store(region: str) -> dict:
+def get_api_store(region: str, account_id: str) -> dict:
     """Get the API store for a region (used by executor)."""
-    return _store(_apis, region)
+    return _store(_apis, _acct_region(account_id, region))
 
 
-def get_route_store(region: str, api_id: str) -> dict:
+def get_route_store(region: str, api_id: str, account_id: str) -> dict:
     """Get routes for an API (used by executor)."""
-    return _store(_routes, region, api_id)
+    return _store(_routes, _acct_region(account_id, region), api_id)
 
 
-def get_integration_store(region: str, api_id: str) -> dict:
+def get_integration_store(region: str, api_id: str, account_id: str) -> dict:
     """Get integrations for an API (used by executor)."""
-    return _store(_integrations, region, api_id)
+    return _store(_integrations, _acct_region(account_id, region), api_id)
 
 
-def get_stage_store(region: str, api_id: str) -> dict:
+def get_stage_store(region: str, api_id: str, account_id: str) -> dict:
     """Get stages for an API (used by executor)."""
-    return _store(_stages, region, api_id)
+    return _store(_stages, _acct_region(account_id, region), api_id)
 
 
-def get_authorizer_store(region: str, api_id: str) -> dict:
+def get_authorizer_store(region: str, api_id: str, account_id: str) -> dict:
     """Get authorizers for an API (used by executor)."""
-    return _store(_authorizers, region, api_id)
+    return _store(_authorizers, _acct_region(account_id, region), api_id)

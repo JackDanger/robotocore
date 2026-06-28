@@ -59,20 +59,22 @@ REGION = "us-east-1"
 ACCOUNT = "123456789012"
 
 
-def _clear_composite_store(region: str = REGION) -> None:
+def _clear_composite_store(region: str = REGION, account: str = ACCOUNT) -> None:
     """Clear composite alarm store for test isolation."""
     from robotocore.services.cloudwatch.provider import _composite_alarms, _composite_lock
 
     with _composite_lock:
-        _composite_alarms.pop(region, None)
+        _composite_alarms.pop(f"{account}:{region}", None)
+        _composite_alarms.pop(region, None)  # legacy unscoped key
 
 
-def _clear_dashboard_store(region: str = REGION) -> None:
+def _clear_dashboard_store(region: str = REGION, account: str = ACCOUNT) -> None:
     """Clear dashboard store for test isolation."""
     from robotocore.services.cloudwatch.provider import _dashboard_lock, _dashboards
 
     with _dashboard_lock:
-        _dashboards.pop(region, None)
+        _dashboards.pop(f"{account}:{region}", None)
+        _dashboards.pop(region, None)  # legacy unscoped key
 
 
 @pytest.fixture(autouse=True)
@@ -720,7 +722,7 @@ class TestCompositeAlarmCRUD:
             REGION,
             ACCOUNT,
         )
-        delete_composite_alarms(["composite-del"], REGION)
+        delete_composite_alarms(["composite-del"], REGION, ACCOUNT)
         alarms = describe_composite_alarms({}, REGION, ACCOUNT)
         assert len(alarms) == 0
 

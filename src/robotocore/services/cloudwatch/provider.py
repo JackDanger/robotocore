@@ -229,11 +229,12 @@ def _eval_node(node: dict, states: dict[str, str]) -> bool:
 # ---------------------------------------------------------------------------
 
 
-def _get_composite_store(region: str) -> dict[str, dict]:
+def _get_composite_store(region: str, account_id: str = "") -> dict[str, dict]:
+    key = f"{account_id}:{region}" if account_id else region
     with _composite_lock:
-        if region not in _composite_alarms:
-            _composite_alarms[region] = {}
-        return _composite_alarms[region]
+        if key not in _composite_alarms:
+            _composite_alarms[key] = {}
+        return _composite_alarms[key]
 
 
 def put_composite_alarm(params: dict, region: str, account_id: str) -> dict:
@@ -254,7 +255,7 @@ def put_composite_alarm(params: dict, region: str, account_id: str) -> dict:
     except Exception as e:  # noqa: BLE001
         raise CloudWatchError("InvalidParameterValue", f"Invalid AlarmRule: {e}")
 
-    store = _get_composite_store(region)
+    store = _get_composite_store(region, account_id)
     alarm_arn = f"arn:aws:cloudwatch:{region}:{account_id}:alarm:{alarm_name}"
 
     alarm_data = {
@@ -280,7 +281,7 @@ def put_composite_alarm(params: dict, region: str, account_id: str) -> dict:
 
 def describe_composite_alarms(params: dict, region: str, account_id: str) -> list[dict]:
     """Return composite alarms, optionally filtered by name prefix or names."""
-    store = _get_composite_store(region)
+    store = _get_composite_store(region, account_id)
     prefix = params.get("AlarmNamePrefix", "")
     alarm_names = params.get("AlarmNames", [])
 
@@ -295,9 +296,9 @@ def describe_composite_alarms(params: dict, region: str, account_id: str) -> lis
     return results
 
 
-def delete_composite_alarms(alarm_names: list[str], region: str) -> None:
+def delete_composite_alarms(alarm_names: list[str], region: str, account_id: str = "") -> None:
     """Delete composite alarms by name."""
-    store = _get_composite_store(region)
+    store = _get_composite_store(region, account_id)
     with _composite_lock:
         for name in alarm_names:
             store.pop(name, None)
@@ -308,11 +309,12 @@ def delete_composite_alarms(alarm_names: list[str], region: str) -> None:
 # ---------------------------------------------------------------------------
 
 
-def _get_dashboard_store(region: str) -> dict[str, dict]:
+def _get_dashboard_store(region: str, account_id: str = "") -> dict[str, dict]:
+    key = f"{account_id}:{region}" if account_id else region
     with _dashboard_lock:
-        if region not in _dashboards:
-            _dashboards[region] = {}
-        return _dashboards[region]
+        if key not in _dashboards:
+            _dashboards[key] = {}
+        return _dashboards[key]
 
 
 def put_dashboard(params: dict, region: str, account_id: str) -> dict:
@@ -349,7 +351,7 @@ def put_dashboard(params: dict, region: str, account_id: str) -> dict:
         raise CloudWatchError("InvalidParameterInput", f"Invalid JSON in DashboardBody: {e}")
 
     arn = f"arn:aws:cloudwatch::{account_id}:dashboard/{name}"
-    store = _get_dashboard_store(region)
+    store = _get_dashboard_store(region, account_id)
 
     with _dashboard_lock:
         store[name] = {
@@ -366,7 +368,7 @@ def put_dashboard(params: dict, region: str, account_id: str) -> dict:
 def get_dashboard(params: dict, region: str, account_id: str) -> dict:
     """Get a dashboard by name."""
     name = params.get("DashboardName", "")
-    store = _get_dashboard_store(region)
+    store = _get_dashboard_store(region, account_id)
 
     with _dashboard_lock:
         dash = store.get(name)
@@ -384,7 +386,7 @@ def get_dashboard(params: dict, region: str, account_id: str) -> dict:
 def list_dashboards(params: dict, region: str, account_id: str) -> list[dict]:
     """List dashboards, optionally filtered by prefix."""
     prefix = params.get("DashboardNamePrefix", "")
-    store = _get_dashboard_store(region)
+    store = _get_dashboard_store(region, account_id)
 
     results = []
     with _dashboard_lock:
@@ -408,7 +410,7 @@ def delete_dashboards(params: dict, region: str, account_id: str) -> dict:
     This operation is atomic: if any dashboard doesn't exist, none are deleted.
     """
     names = params.get("DashboardNames", [])
-    store = _get_dashboard_store(region)
+    store = _get_dashboard_store(region, account_id)
 
     with _dashboard_lock:
         # Validate all names exist before deleting any (atomic)
@@ -864,7 +866,7 @@ def _handle_delete_alarms(params: dict, region: str, account_id: str) -> dict:
         alarm_names = [alarm_names]
 
     # Delete any composite alarms with these names
-    delete_composite_alarms(alarm_names, region)
+    delete_composite_alarms(alarm_names, region, account_id)
 
     # Also delete from Moto (for metric alarms)
     try:
@@ -907,7 +909,7 @@ def _handle_enable_alarm_actions(params: dict, region: str, account_id: str) -> 
         alarm_names = [alarm_names]
 
     # Update composite alarms
-    store = _get_composite_store(region)
+    store = _get_composite_store(region, account_id)
     with _composite_lock:
         for name in alarm_names:
             if name in store:
@@ -930,7 +932,7 @@ def _handle_disable_alarm_actions(params: dict, region: str, account_id: str) ->
         alarm_names = [alarm_names]
 
     # Update composite alarms
-    store = _get_composite_store(region)
+    store = _get_composite_store(region, account_id)
     with _composite_lock:
         for name in alarm_names:
             if name in store:
@@ -960,11 +962,12 @@ _metric_streams: dict[str, dict[str, dict]] = {}
 _metric_stream_lock = threading.Lock()
 
 
-def _get_stream_store(region: str) -> dict[str, dict]:
+def _get_stream_store(region: str, account_id: str = "") -> dict[str, dict]:
+    key = f"{account_id}:{region}" if account_id else region
     with _metric_stream_lock:
-        if region not in _metric_streams:
-            _metric_streams[region] = {}
-        return _metric_streams[region]
+        if key not in _metric_streams:
+            _metric_streams[key] = {}
+        return _metric_streams[key]
 
 
 def _handle_put_metric_stream(params: dict, region: str, account_id: str) -> dict:
@@ -976,7 +979,7 @@ def _handle_put_metric_stream(params: dict, region: str, account_id: str) -> dic
     role_arn = params.get("RoleArn", "")
     output_format = params.get("OutputFormat", "json")
 
-    store = _get_stream_store(region)
+    store = _get_stream_store(region, account_id)
     arn = f"arn:aws:cloudwatch:{region}:{account_id}:metric-stream/{name}"
 
     import datetime as dt
@@ -1004,7 +1007,7 @@ def _handle_put_metric_stream(params: dict, region: str, account_id: str) -> dic
 def _handle_get_metric_stream(params: dict, region: str, account_id: str) -> dict:
     """Get a metric stream by name."""
     name = params.get("Name", "")
-    store = _get_stream_store(region)
+    store = _get_stream_store(region, account_id)
     with _metric_stream_lock:
         stream = store.get(name)
     if not stream:
@@ -1019,7 +1022,7 @@ def _handle_get_metric_stream(params: dict, region: str, account_id: str) -> dic
 def _handle_delete_metric_stream(params: dict, region: str, account_id: str) -> dict:
     """Delete a metric stream by name."""
     name = params.get("Name", "")
-    store = _get_stream_store(region)
+    store = _get_stream_store(region, account_id)
     with _metric_stream_lock:
         store.pop(name, None)
     return {}
@@ -1030,7 +1033,7 @@ def _handle_start_metric_streams(params: dict, region: str, account_id: str) -> 
     names = params.get("Names", [])
     if isinstance(names, str):
         names = [names]
-    store = _get_stream_store(region)
+    store = _get_stream_store(region, account_id)
     with _metric_stream_lock:
         for name in names:
             if name in store:
@@ -1043,7 +1046,7 @@ def _handle_stop_metric_streams(params: dict, region: str, account_id: str) -> d
     names = params.get("Names", [])
     if isinstance(names, str):
         names = [names]
-    store = _get_stream_store(region)
+    store = _get_stream_store(region, account_id)
     with _metric_stream_lock:
         for name in names:
             if name in store:
@@ -1053,7 +1056,7 @@ def _handle_stop_metric_streams(params: dict, region: str, account_id: str) -> d
 
 def _handle_list_metric_streams(params: dict, region: str, account_id: str) -> dict:
     """List all metric streams."""
-    store = _get_stream_store(region)
+    store = _get_stream_store(region, account_id)
     with _metric_stream_lock:
         entries = list(store.values())
     return {"Entries": entries}
