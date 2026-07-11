@@ -100,7 +100,7 @@ async def handle_websocket(scope: dict, receive, send) -> None:
     api_id, stage = resolved
 
     # Verify the API exists and is a WEBSOCKET type
-    apis = get_api_store(region)
+    apis = get_api_store(region, account_id)
     api = apis.get(api_id)
     if not api or api.get("ProtocolType", "").upper() != "WEBSOCKET":
         await send({"type": "websocket.close", "code": 4000})

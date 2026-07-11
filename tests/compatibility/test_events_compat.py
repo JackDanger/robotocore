@@ -1716,10 +1716,32 @@ class TestEventBridgeEndpointAndPartnerOps:
     """Tests for DescribeEndpoint, ListPartnerEventSources, ListPartnerEventSourceAccounts."""
 
     def test_describe_endpoint(self, events):
-        resp = events.describe_endpoint(Name="test-endpoint")
-        assert "Name" in resp
-        assert "Arn" in resp
-        assert resp["Name"] == "test-endpoint"
+        name = "test-endpoint"
+        events.create_endpoint(
+            Name=name,
+            RoutingConfig={
+                "FailoverConfig": {
+                    "Primary": {"HealthCheck": "arn:aws:route53:::healthcheck/abc123"},
+                    "Secondary": {"Route": "us-west-2"},
+                }
+            },
+            EventBuses=[
+                {"EventBusArn": "arn:aws:events:us-east-1:123456789012:event-bus/default"},
+                {"EventBusArn": "arn:aws:events:us-west-2:123456789012:event-bus/default"},
+            ],
+        )
+        try:
+            resp = events.describe_endpoint(Name=name)
+            assert "Name" in resp
+            assert "Arn" in resp
+            assert resp["Name"] == name
+        finally:
+            events.delete_endpoint(Name=name)
+
+    def test_describe_endpoint_nonexistent_raises(self, events):
+        with pytest.raises(events.exceptions.ClientError) as exc_info:
+            events.describe_endpoint(Name=f"nonexistent-{uuid.uuid4().hex[:8]}")
+        assert exc_info.value.response["Error"]["Code"] == "ResourceNotFoundException"
 
     def test_list_partner_event_sources(self, events):
         resp = events.list_partner_event_sources(NamePrefix="aws.partner")

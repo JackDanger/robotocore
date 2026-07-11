@@ -248,15 +248,23 @@ def client(service, account_id, region="us-east-1"):
     )
 
 # Two completely isolated AWS accounts
-prod  = client("s3", "111111111111")
-dev   = client("s3", "222222222222")
+prod = client("dynamodb", "111111111111")
+dev  = client("dynamodb", "222222222222")
 
-prod.create_bucket(Bucket="assets")   # exists only in account 111111111111
-dev.create_bucket(Bucket="assets")    # separate bucket in account 222222222222
+prod.create_table(
+    TableName="orders",
+    KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
+    AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
+    BillingMode="PAY_PER_REQUEST",
+)
 
 # Resources in one account are invisible to the other
-print(prod.list_buckets()["Buckets"])  # [{"Name": "assets", ...}]
-print(dev.list_buckets()["Buckets"])   # [{"Name": "assets", ...}]  — separate state
+print(prod.list_tables()["TableNames"])  # ["orders"]
+print(dev.list_tables()["TableNames"])   # []  — completely separate
+
+# Note: S3 bucket names are globally unique in AWS (like real AWS).
+# Creating the same bucket name in two accounts raises BucketAlreadyExists.
+# Use a per-account resource (DynamoDB, SNS, SQS, IAM, etc.) to demonstrate isolation.
 ```
 
 ### Multi-region
