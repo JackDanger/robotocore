@@ -158,7 +158,9 @@ async def handle_apigatewayv2_request(
         if m:
             api_id, route_id = m.group(1), m.group(2)
             if method == "POST":
-                return _json_response(_create_route_response(api_id, route_id, params, region, account_id), 201)
+                return _json_response(
+                    _create_route_response(api_id, route_id, params, region, account_id), 201
+                )
             if method == "GET":
                 return _json_response(_get_route_responses(api_id, route_id, region, account_id))
 
@@ -166,7 +168,9 @@ async def handle_apigatewayv2_request(
         if m:
             api_id, route_id, rr_id = m.group(1), m.group(2), m.group(3)
             if method == "GET":
-                return _json_response(_get_route_response(api_id, route_id, rr_id, region, account_id))
+                return _json_response(
+                    _get_route_response(api_id, route_id, rr_id, region, account_id)
+                )
             if method == "PATCH":
                 return _json_response(
                     _update_route_response(api_id, route_id, rr_id, params, region, account_id)
@@ -212,16 +216,22 @@ async def handle_apigatewayv2_request(
                     _create_integration_response(api_id, integ_id, params, region, account_id), 201
                 )
             if method == "GET":
-                return _json_response(_get_integration_responses(api_id, integ_id, region, account_id))
+                return _json_response(
+                    _get_integration_responses(api_id, integ_id, region, account_id)
+                )
 
         m = _INTEGRATION_RESPONSE_PATH.match(path)
         if m:
             api_id, integ_id, ir_id = m.group(1), m.group(2), m.group(3)
             if method == "GET":
-                return _json_response(_get_integration_response(api_id, integ_id, ir_id, region, account_id))
+                return _json_response(
+                    _get_integration_response(api_id, integ_id, ir_id, region, account_id)
+                )
             if method == "PATCH":
                 return _json_response(
-                    _update_integration_response(api_id, integ_id, ir_id, params, region, account_id)
+                    _update_integration_response(
+                        api_id, integ_id, ir_id, params, region, account_id
+                    )
                 )
             if method == "DELETE":
                 _delete_integration_response(api_id, integ_id, ir_id, region, account_id)
@@ -242,7 +252,9 @@ async def handle_apigatewayv2_request(
             if method == "GET":
                 return _json_response(_get_integration(api_id, integ_id, region, account_id))
             if method == "PATCH":
-                return _json_response(_update_integration(api_id, integ_id, params, region, account_id))
+                return _json_response(
+                    _update_integration(api_id, integ_id, params, region, account_id)
+                )
             if method == "DELETE":
                 _delete_integration(api_id, integ_id, region, account_id)
                 return Response(status_code=204)
@@ -282,7 +294,9 @@ async def handle_apigatewayv2_request(
             if method == "GET":
                 return _json_response(_get_authorizer(api_id, auth_id, region, account_id))
             if method == "PATCH":
-                return _json_response(_update_authorizer(api_id, auth_id, params, region, account_id))
+                return _json_response(
+                    _update_authorizer(api_id, auth_id, params, region, account_id)
+                )
             if method == "DELETE":
                 _delete_authorizer(api_id, auth_id, region, account_id)
                 return Response(status_code=204)
@@ -670,7 +684,9 @@ def _delete_integration(api_id: str, integ_id: str, region: str, account_id: str
 # ---------------------------------------------------------------------------
 
 
-def _create_integration_response(api_id: str, integ_id: str, params: dict, region: str, account_id: str) -> dict:
+def _create_integration_response(
+    api_id: str, integ_id: str, params: dict, region: str, account_id: str
+) -> dict:
     _require_api(api_id, region, account_id)
     _get_integration(api_id, integ_id, region, account_id)  # ensure integration exists
     irs = _store(_integration_responses, _acct_region(account_id, region), api_id, integ_id)
@@ -688,7 +704,9 @@ def _create_integration_response(api_id: str, integ_id: str, params: dict, regio
     return ir
 
 
-def _get_integration_response(api_id: str, integ_id: str, ir_id: str, region: str, account_id: str) -> dict:
+def _get_integration_response(
+    api_id: str, integ_id: str, ir_id: str, region: str, account_id: str
+) -> dict:
     _require_api(api_id, region, account_id)
     irs = _store(_integration_responses, _acct_region(account_id, region), api_id, integ_id)
     with _lock:
@@ -729,7 +747,9 @@ def _update_integration_response(
     return ir
 
 
-def _delete_integration_response(api_id: str, integ_id: str, ir_id: str, region: str, account_id: str) -> None:
+def _delete_integration_response(
+    api_id: str, integ_id: str, ir_id: str, region: str, account_id: str
+) -> None:
     _require_api(api_id, region, account_id)
     irs = _store(_integration_responses, _acct_region(account_id, region), api_id, integ_id)
     with _lock:
@@ -745,7 +765,9 @@ def _delete_integration_response(api_id: str, integ_id: str, ir_id: str, region:
 # ---------------------------------------------------------------------------
 
 
-def _create_route_response(api_id: str, route_id: str, params: dict, region: str, account_id: str) -> dict:
+def _create_route_response(
+    api_id: str, route_id: str, params: dict, region: str, account_id: str
+) -> dict:
     _require_api(api_id, region, account_id)
     _get_route(api_id, route_id, region, account_id)  # ensure route exists
     rrs = _store(_route_responses, _acct_region(account_id, region), api_id, route_id)
@@ -762,7 +784,9 @@ def _create_route_response(api_id: str, route_id: str, params: dict, region: str
     return rr
 
 
-def _get_route_response(api_id: str, route_id: str, rr_id: str, region: str, account_id: str) -> dict:
+def _get_route_response(
+    api_id: str, route_id: str, rr_id: str, region: str, account_id: str
+) -> dict:
     _require_api(api_id, region, account_id)
     rrs = _store(_route_responses, _acct_region(account_id, region), api_id, route_id)
     with _lock:
@@ -800,7 +824,9 @@ def _update_route_response(
     return rr
 
 
-def _delete_route_response(api_id: str, route_id: str, rr_id: str, region: str, account_id: str) -> None:
+def _delete_route_response(
+    api_id: str, route_id: str, rr_id: str, region: str, account_id: str
+) -> None:
     _require_api(api_id, region, account_id)
     rrs = _store(_route_responses, _acct_region(account_id, region), api_id, route_id)
     with _lock:
@@ -1466,7 +1492,9 @@ def _tag_resource_v2(resource_arn: str, new_tags: dict, region: str, account_id:
         existing.update(new_tags)
 
 
-def _untag_resource_v2(resource_arn: str, tag_keys: list[str], region: str, account_id: str) -> None:
+def _untag_resource_v2(
+    resource_arn: str, tag_keys: list[str], region: str, account_id: str
+) -> None:
     resource = _find_resource_by_arn_v2(resource_arn, region, account_id)
     if resource is None:
         return

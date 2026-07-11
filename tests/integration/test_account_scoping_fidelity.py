@@ -17,9 +17,6 @@ AWS scoping reference:
 import json
 import uuid
 
-import pytest
-
-
 ACCT_A = "111111111111"
 ACCT_B = "222222222222"
 
@@ -61,23 +58,27 @@ class TestApiGatewayV2AccountIsolation:
             assert api_a_id in ids_a, "Account A should see its own API"
 
             # Account A must NOT see account B's API
-            assert api_b_id not in ids_a, "Account A must not see account B's API (cross-account leak)"
+            assert api_b_id not in ids_a, (
+                "Account A must not see account B's API (cross-account leak)"
+            )
 
             # Account B should see its own API but not A's
             apis_b = gw_b.get_apis()["Items"]
             ids_b = [a["ApiId"] for a in apis_b]
             assert api_b_id in ids_b, "Account B should see its own API"
-            assert api_a_id not in ids_b, "Account B must not see account A's API (cross-account leak)"
+            assert api_a_id not in ids_b, (
+                "Account B must not see account A's API (cross-account leak)"
+            )
 
         finally:
             try:
                 gw_a.delete_api(ApiId=api_a_id)
             except Exception:
-                pass
+                pass  # best-effort cleanup
             try:
                 gw_b.delete_api(ApiId=api_b_id)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
 
 # ---------------------------------------------------------------------------
@@ -147,12 +148,16 @@ class TestCloudWatchCompositeAlarmIsolation:
                 "Account B must not see account A's composite alarm (cross-account leak)"
             )
         finally:
-            for cw, name in [(cw_a, alarm_name_a), (cw_b, alarm_name_b),
-                              (cw_a, base_a), (cw_b, base_b)]:
+            for cw, name in [
+                (cw_a, alarm_name_a),
+                (cw_b, alarm_name_b),
+                (cw_a, base_a),
+                (cw_b, base_b),
+            ]:
                 try:
                     cw.delete_alarms(AlarmNames=[name])
                 except Exception:
-                    pass
+                    pass  # best-effort cleanup
 
 
 # ---------------------------------------------------------------------------
@@ -201,7 +206,7 @@ class TestCloudWatchDashboardIsolation:
                 try:
                     cw.delete_dashboards(DashboardNames=[name])
                 except Exception:
-                    pass
+                    pass  # best-effort cleanup
 
 
 # ---------------------------------------------------------------------------
@@ -252,7 +257,7 @@ class TestCloudWatchMetricStreamIsolation:
                 try:
                     cw.delete_metric_stream(Name=name)
                 except Exception:
-                    pass
+                    pass  # best-effort cleanup
 
 
 # ---------------------------------------------------------------------------
@@ -273,12 +278,16 @@ class TestEventBridgeConnectionIsolation:
         eb_a.create_connection(
             Name=name,
             AuthorizationType="API_KEY",
-            AuthParameters={"ApiKeyAuthParameters": {"ApiKeyName": "X-Api-Key", "ApiKeyValue": "secret-a"}},
+            AuthParameters={
+                "ApiKeyAuthParameters": {"ApiKeyName": "X-Api-Key", "ApiKeyValue": "secret-a"}
+            },
         )
         eb_b.create_connection(
             Name=name,
             AuthorizationType="API_KEY",
-            AuthParameters={"ApiKeyAuthParameters": {"ApiKeyName": "X-Api-Key", "ApiKeyValue": "secret-b"}},
+            AuthParameters={
+                "ApiKeyAuthParameters": {"ApiKeyName": "X-Api-Key", "ApiKeyValue": "secret-b"}
+            },
         )
 
         try:
@@ -307,7 +316,7 @@ class TestEventBridgeConnectionIsolation:
                 try:
                     eb.delete_connection(Name=n)
                 except Exception:
-                    pass
+                    pass  # best-effort cleanup
 
 
 # ---------------------------------------------------------------------------
@@ -323,7 +332,9 @@ class TestEventBridgeApiDestinationIsolation:
         resp = eb_client.create_connection(
             Name=name,
             AuthorizationType="API_KEY",
-            AuthParameters={"ApiKeyAuthParameters": {"ApiKeyName": "X-Api-Key", "ApiKeyValue": "v"}},
+            AuthParameters={
+                "ApiKeyAuthParameters": {"ApiKeyName": "X-Api-Key", "ApiKeyValue": "v"}
+            },
         )
         return resp["ConnectionArn"]
 
@@ -361,11 +372,19 @@ class TestEventBridgeApiDestinationIsolation:
 
             count_a = names_a.count(dest_name)
             count_b = names_b.count(dest_name)
-            assert count_a == 1, f"Account A sees {count_a} destinations named {dest_name!r}, expected 1"
-            assert count_b == 1, f"Account B sees {count_b} destinations named {dest_name!r}, expected 1"
+            assert count_a == 1, (
+                f"Account A sees {count_a} destinations named {dest_name!r}, expected 1"
+            )
+            assert count_b == 1, (
+                f"Account B sees {count_b} destinations named {dest_name!r}, expected 1"
+            )
 
-            arn_a = next(d["ApiDestinationArn"] for d in resp_a["ApiDestinations"] if d["Name"] == dest_name)
-            arn_b = next(d["ApiDestinationArn"] for d in resp_b["ApiDestinations"] if d["Name"] == dest_name)
+            arn_a = next(
+                d["ApiDestinationArn"] for d in resp_a["ApiDestinations"] if d["Name"] == dest_name
+            )
+            arn_b = next(
+                d["ApiDestinationArn"] for d in resp_b["ApiDestinations"] if d["Name"] == dest_name
+            )
             assert arn_a != arn_b, (
                 "Same-name API destinations in different accounts must have different ARNs"
             )
@@ -374,14 +393,14 @@ class TestEventBridgeApiDestinationIsolation:
                 try:
                     eb.delete_api_destination(Name=n)
                 except Exception:
-                    pass
+                    pass  # best-effort cleanup
             conn_name_a = f"conn-dest-{ACCT_A[-4:]}-{suffix}"
             conn_name_b = f"conn-dest-{ACCT_B[-4:]}-{suffix}"
             for eb, n in [(eb_a, conn_name_a), (eb_b, conn_name_b)]:
                 try:
                     eb.delete_connection(Name=n)
                 except Exception:
-                    pass
+                    pass  # best-effort cleanup
 
 
 # ---------------------------------------------------------------------------
@@ -430,8 +449,16 @@ class TestEventBridgeEndpointIsolation:
             assert count_a == 1, f"Account A sees {count_a} endpoints named {ep_name!r}, expected 1"
             assert count_b == 1, f"Account B sees {count_b} endpoints named {ep_name!r}, expected 1"
 
-            arn_a = next((e.get("EndpointArn") or e.get("Arn", "")) for e in resp_a["Endpoints"] if e["Name"] == ep_name)
-            arn_b = next((e.get("EndpointArn") or e.get("Arn", "")) for e in resp_b["Endpoints"] if e["Name"] == ep_name)
+            arn_a = next(
+                (e.get("EndpointArn") or e.get("Arn", ""))
+                for e in resp_a["Endpoints"]
+                if e["Name"] == ep_name
+            )
+            arn_b = next(
+                (e.get("EndpointArn") or e.get("Arn", ""))
+                for e in resp_b["Endpoints"]
+                if e["Name"] == ep_name
+            )
             assert arn_a != arn_b, (
                 "Same-name endpoints in different accounts must have different ARNs"
             )
@@ -440,4 +467,4 @@ class TestEventBridgeEndpointIsolation:
                 try:
                     eb.delete_endpoint(Name=ep_name)
                 except Exception:
-                    pass
+                    pass  # best-effort cleanup

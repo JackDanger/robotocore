@@ -1135,7 +1135,7 @@ def _json(status_code: int, data) -> Response:
 
 # --- Connections ---
 
-_connections: dict[str, dict] = {}
+_connections: dict[tuple[str, str], dict] = {}
 
 
 def _create_connection(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
@@ -1178,7 +1178,7 @@ def _delete_connection(store: EventsStore, params: dict, region: str, account_id
 
 # --- API Destinations ---
 
-_api_destinations: dict[str, dict] = {}
+_api_destinations: dict[tuple[str, str], dict] = {}
 
 
 def _create_api_destination(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
@@ -1338,7 +1338,7 @@ def _deauthorize_connection(store: EventsStore, params: dict, region: str, accou
 
 # --- Endpoints ---
 
-_endpoints: dict[str, dict] = {}
+_endpoints: dict[tuple[str, str], dict] = {}
 
 
 def _create_endpoint(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
@@ -1396,13 +1396,12 @@ def _update_endpoint(store: EventsStore, params: dict, region: str, account_id: 
     }
 
 
-
-
 def _list_connections(store, params: dict, region: str, account_id: str) -> dict:
     """ListConnections — return connections for this account."""
     with_prefix = params.get("NamePrefix", "")
     results = [
-        conn for (acct, name), conn in _connections.items()
+        conn
+        for (acct, name), conn in _connections.items()
         if acct == account_id and name.startswith(with_prefix)
     ]
     return {"Connections": results}
@@ -1412,7 +1411,8 @@ def _list_api_destinations(store, params: dict, region: str, account_id: str) ->
     """ListApiDestinations — return API destinations for this account."""
     with_prefix = params.get("NamePrefix", "")
     results = [
-        dest for (acct, name), dest in _api_destinations.items()
+        dest
+        for (acct, name), dest in _api_destinations.items()
         if acct == account_id and name.startswith(with_prefix)
     ]
     return {"ApiDestinations": results}
@@ -1437,7 +1437,21 @@ def _describe_endpoint(store, params: dict, region: str, account_id: str) -> dic
     endpoint = _endpoints.get((account_id, name))
     if not endpoint:
         raise EventsError("ResourceNotFoundException", f"Endpoint '{name}' does not exist.", 400)
-    return endpoint
+    return {
+        "Name": endpoint["Name"],
+        "Arn": endpoint["EndpointArn"],
+        "RoutingConfig": endpoint["RoutingConfig"],
+        "ReplicationConfig": endpoint["ReplicationConfig"],
+        "EventBuses": endpoint["EventBuses"],
+        "RoleArn": endpoint["RoleArn"],
+        "Description": endpoint["Description"],
+        "State": endpoint["State"],
+        "StateReason": endpoint["StateReason"],
+        "CreationTime": endpoint["CreationTime"],
+        "LastModifiedTime": endpoint["LastModifiedTime"],
+        "EndpointUrl": endpoint["EndpointUrl"],
+    }
+
 
 def _matches_pattern(pattern: dict, event: dict) -> bool:
     """Check if an event matches an EventBridge event pattern.
@@ -1518,11 +1532,16 @@ def export_state() -> dict:
     return {
         "schema_version": 1,
         "stores": stores,
-        "connections": {f"{acct}:{name}": dict(conn) for (acct, name), conn in _connections.items()},
-        "api_destinations": {
-            f"{acct}:{name}": dict(destination) for (acct, name), destination in _api_destinations.items()
+        "connections": {
+            f"{acct}:{name}": dict(conn) for (acct, name), conn in _connections.items()
         },
-        "endpoints": {f"{acct}:{name}": dict(endpoint) for (acct, name), endpoint in _endpoints.items()},
+        "api_destinations": {
+            f"{acct}:{name}": dict(destination)
+            for (acct, name), destination in _api_destinations.items()
+        },
+        "endpoints": {
+            f"{acct}:{name}": dict(endpoint) for (acct, name), endpoint in _endpoints.items()
+        },
     }
 
 
