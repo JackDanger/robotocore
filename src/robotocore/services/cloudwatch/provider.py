@@ -13,6 +13,7 @@ import time
 from collections.abc import Callable
 from urllib.parse import parse_qs
 
+import cbor2
 from starlette.requests import Request
 from starlette.responses import Response
 
@@ -687,6 +688,43 @@ def _dispatch_ec2_action(
 # ---------------------------------------------------------------------------
 
 
+def _success_response(
+    result: dict, action: str, use_json_protocol: bool, use_cbor_protocol: bool
+) -> Response:
+    """Shape a 200 response for whichever protocol the client sent."""
+    if use_cbor_protocol:
+        return Response(
+            content=cbor2.dumps(result),
+            status_code=200,
+            media_type="application/cbor",
+            headers={"smithy-protocol": "rpc-v2-cbor"},
+        )
+    if use_json_protocol:
+        return Response(
+            content=json.dumps(result), status_code=200, media_type="application/x-amz-json-1.0"
+        )
+    return _xml_response(action + "Response", result)
+
+
+def _error_body_response(
+    code: str, message: str, status: int, use_json_protocol: bool, use_cbor_protocol: bool
+) -> Response:
+    """Shape an error response for whichever protocol the client sent."""
+    if use_cbor_protocol:
+        return Response(
+            content=cbor2.dumps({"__type": code, "message": message}),
+            status_code=status,
+            media_type="application/cbor",
+            headers={"smithy-protocol": "rpc-v2-cbor"},
+        )
+    if use_json_protocol:
+        err_body = json.dumps({"__type": code, "message": message})
+        return Response(
+            content=err_body, status_code=status, media_type="application/x-amz-json-1.0"
+        )
+    return _error_response(code, message, status)
+
+
 async def handle_cloudwatch_request(request: Request, region: str, account_id: str) -> Response:
     """Handle CloudWatch API requests.
 
@@ -696,9 +734,19 @@ async def handle_cloudwatch_request(request: Request, region: str, account_id: s
     body = await request.body()
     content_type = request.headers.get("content-type", "")
     amz_target = request.headers.get("x-amz-target", "")
-    use_json_protocol = "x-amz-json" in content_type and amz_target
+    use_json_protocol = bool("x-amz-json" in content_type and amz_target)
+    # Smithy RPC v2 CBOR: newer AWS SDKs (aws-sdk-go-v2) send a CBOR-encoded body with no
+    # X-Amz-Target, routed by path (/service/{ServiceId}/operation/{OperationName}) instead —
+    # this protocol has no query-string/form-encoded fallback, so it must be decoded before
+    # falling through to the query-protocol branch below (which would try to UTF-8-decode the
+    # binary CBOR body, or hand it to Moto's query-protocol parser, which does the same).
+    use_cbor_protocol = request.headers.get("smithy-protocol", "") == "rpc-v2-cbor"
 
-    if use_json_protocol:
+    if use_cbor_protocol:
+        params = cbor2.loads(body) if body else {}
+        action = request.url.path.rsplit("/operation/", 1)[-1]
+        params["Action"] = action
+    elif use_json_protocol:
         # Modern boto3 sends JSON with X-Amz-Target header
         # e.g. "GraniteServiceVersion20100801.DisableAlarmActions"
         action = amz_target.rsplit(".", 1)[-1] if "." in amz_target else amz_target
@@ -721,13 +769,7 @@ async def handle_cloudwatch_request(request: Request, region: str, account_id: s
         if "CompositeAlarm" in alarm_types:
             composites = describe_composite_alarms(params, region, account_id)
             result = {"CompositeAlarms": composites, "MetricAlarms": []}
-            if use_json_protocol:
-                return Response(
-                    content=json.dumps(result),
-                    status_code=200,
-                    media_type="application/x-amz-json-1.0",
-                )
-            return _xml_response("DescribeAlarmsResponse", result)
+            return _success_response(result, action, use_json_protocol, use_cbor_protocol)
 
     # GetMetricStatistics: intercept when ExtendedStatistics requested (Moto doesn't compute them)
     if action == "GetMetricStatistics":
@@ -749,13 +791,7 @@ async def handle_cloudwatch_request(request: Request, region: str, account_id: s
             params["ExtendedStatistics"] = ext_stats
             try:
                 result = _handle_get_metric_statistics(params, region, account_id)
-                if use_json_protocol:
-                    return Response(
-                        content=json.dumps(result),
-                        status_code=200,
-                        media_type="application/x-amz-json-1.0",
-                    )
-                return _xml_response("GetMetricStatisticsResponse", result)
+                return _success_response(result, action, use_json_protocol, use_cbor_protocol)
             except Exception as e:  # noqa: BLE001
                 logger.error("ExtendedStatistics error: %s", e)
 
@@ -763,27 +799,22 @@ async def handle_cloudwatch_request(request: Request, region: str, account_id: s
     if handler is not None:
         try:
             result = handler(params, region, account_id)
-            if use_json_protocol:
-                return Response(
-                    content=json.dumps(result),
-                    status_code=200,
-                    media_type="application/x-amz-json-1.0",
-                )
-            return _xml_response(action + "Response", result)
+            return _success_response(result, action, use_json_protocol, use_cbor_protocol)
         except CloudWatchError as e:
-            if use_json_protocol:
-                err_body = json.dumps({"__type": e.code, "message": e.message})
-                return Response(
-                    content=err_body, status_code=e.status, media_type="application/x-amz-json-1.0"
-                )
-            return _error_response(e.code, e.message, e.status)
+            return _error_body_response(
+                e.code, e.message, e.status, use_json_protocol, use_cbor_protocol
+            )
         except Exception as e:  # noqa: BLE001
-            if use_json_protocol:
-                err_body = json.dumps({"__type": "InternalError", "message": str(e)})
-                return Response(
-                    content=err_body, status_code=500, media_type="application/x-amz-json-1.0"
-                )
-            return _error_response("InternalError", str(e), 500)
+            return _error_body_response(
+                "InternalError", str(e), 500, use_json_protocol, use_cbor_protocol
+            )
+
+    if use_cbor_protocol:
+        # Moto has no CBOR support at all — forwarding would hit the same UTF-8-decode crash
+        # this protocol exists to avoid. Fail closed and honestly rather than 500 on garbage.
+        return _error_body_response(
+            "NotImplemented", f"CloudWatch {action} is not implemented", 501, False, True
+        )
 
     # Fall back to Moto for everything else
     return await forward_to_moto(request, "cloudwatch", account_id=account_id)

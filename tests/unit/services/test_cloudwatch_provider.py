@@ -891,6 +891,83 @@ class TestCloudWatchJsonProtocol:
             mock_moto.assert_called_once()
 
 
+class TestCloudWatchCborProtocol:
+    """Smithy RPC v2 CBOR: newer AWS SDKs (aws-sdk-go-v2, e.g. terraform-provider-aws)
+    send a CBOR-encoded body with no X-Amz-Target, routed by path instead of header.
+    Before this protocol was decoded, the request fell through to Moto's query-protocol
+    parser, which tried to UTF-8-decode the binary CBOR body and raised UnicodeDecodeError
+    on every call — a 500 the AWS SDK retries ~25 times with backoff, which looks
+    indistinguishable from a hang."""
+
+    @pytest.fixture
+    def app(self):
+        from robotocore.services.cloudwatch.provider import handle_cloudwatch_request
+
+        return handle_cloudwatch_request
+
+    def _make_cbor_request(self, action, params=None):
+        import cbor2
+
+        req = MagicMock()
+        req.headers = {
+            "content-type": "application/cbor",
+            "smithy-protocol": "rpc-v2-cbor",
+        }
+        req.url = MagicMock()
+        req.url.query = ""
+        req.url.path = f"/service/GraniteServiceVersion20100801/operation/{action}"
+
+        body_bytes = cbor2.dumps(params or {})
+
+        async def mock_body():
+            return body_bytes
+
+        req.body = mock_body
+        return req
+
+    @pytest.mark.asyncio
+    async def test_put_dashboard_cbor_round_trip(self, app):
+        """The exact bug: PutDashboard via CBOR must decode the request and respond
+        with a CBOR body the client can parse, not a UTF-8 decode crash."""
+        import cbor2
+
+        req = self._make_cbor_request(
+            "PutDashboard",
+            {"DashboardName": "my-dash", "DashboardBody": '{"widgets": [{"type": "text"}]}'},
+        )
+        resp = await app(req, "us-east-1", "123456789012")
+        assert resp.status_code == 200
+        assert resp.media_type == "application/cbor"
+        assert resp.headers["smithy-protocol"] == "rpc-v2-cbor"
+        decoded = cbor2.loads(resp.body)
+        assert decoded == {"DashboardValidationMessages": []}
+
+    @pytest.mark.asyncio
+    async def test_put_dashboard_cbor_invalid_json_returns_cbor_error(self, app):
+        """A CloudWatchError raised by a handler must still come back as CBOR, not JSON —
+        a JSON error body is exactly what the AWS SDK's CBOR deserializer can't parse."""
+        import cbor2
+
+        req = self._make_cbor_request(
+            "PutDashboard", {"DashboardName": "my-dash", "DashboardBody": "not json"}
+        )
+        resp = await app(req, "us-east-1", "123456789012")
+        assert resp.status_code == 400
+        assert resp.media_type == "application/cbor"
+        decoded = cbor2.loads(resp.body)
+        assert decoded["__type"] == "InvalidParameterInput"
+
+    @pytest.mark.asyncio
+    async def test_unmapped_cbor_action_fails_closed_not_to_moto(self, app):
+        """Moto has no CBOR support — forwarding a CBOR request to it would hit the
+        exact same UTF-8-decode crash this protocol handling exists to avoid."""
+        with patch("robotocore.services.cloudwatch.provider.forward_to_moto") as mock_moto:
+            req = self._make_cbor_request("SomeFutureOperationNotYetMapped", {})
+            resp = await app(req, "us-east-1", "123456789012")
+            mock_moto.assert_not_called()
+            assert resp.status_code == 501
+
+
 # ===================================================================
 # CATEGORICAL BUG TESTS
 # These test patterns that likely exist across many providers.
