@@ -68,27 +68,21 @@ class TestSamplingRulesAccountIsolation:
                 },
             },
         )
-        resp = await handle_xray_request(
-            create_req, "us-east-1", "111111111111"
-        )
+        resp = await handle_xray_request(create_req, "us-east-1", "111111111111")
         assert resp.status_code == 200
 
         # Get rules from account 111111111111 - should find the rule
         get_req = _make_request("POST", "/GetSamplingRules")
         resp1 = await handle_xray_request(get_req, "us-east-1", "111111111111")
         body1 = json.loads(resp1.body)
-        rule_names_1 = [
-            r["SamplingRule"]["RuleName"] for r in body1["SamplingRuleRecords"]
-        ]
+        rule_names_1 = [r["SamplingRule"]["RuleName"] for r in body1["SamplingRuleRecords"]]
         assert "test-rule" in rule_names_1
 
         # Get rules from account 222222222222 - should NOT find the rule
         # Bug: Currently this returns the rule from account 111111111111
         resp2 = await handle_xray_request(get_req, "us-east-1", "222222222222")
         body2 = json.loads(resp2.body)
-        rule_names_2 = [
-            r["SamplingRule"]["RuleName"] for r in body2["SamplingRuleRecords"]
-        ]
+        rule_names_2 = [r["SamplingRule"]["RuleName"] for r in body2["SamplingRuleRecords"]]
         assert "test-rule" not in rule_names_2, (
             "Sampling rules should be isolated by account, "
             "but rule from account 111111111111 is visible in account 222222222222"
@@ -114,9 +108,7 @@ class TestGroupsAccountIsolation:
                 "FilterExpression": 'service("test")',
             },
         )
-        resp = await handle_xray_request(
-            create_req, "us-east-1", "111111111111"
-        )
+        resp = await handle_xray_request(create_req, "us-east-1", "111111111111")
         assert resp.status_code == 200
 
         # Get groups from account 111111111111 - should find the group

@@ -61,9 +61,7 @@ class TestDeleteConfigRuleCleanup:
         assert "test-rule" in _evaluation_statuses[key]
 
         # Delete the rule
-        _delete_config_rule(
-            {"ConfigRuleName": "test-rule"}, "us-east-1", "123456789012"
-        )
+        _delete_config_rule({"ConfigRuleName": "test-rule"}, "us-east-1", "123456789012")
 
         # Evaluation status should be cleaned up
         assert "test-rule" not in _evaluation_statuses.get(key, {}), (
@@ -104,9 +102,7 @@ class TestDeleteConfigRuleCleanup:
 
         # Delete the rule - should not crash
         # Bug was: this would try to pop using rule_name as key, which doesn't exist
-        _delete_config_rule(
-            {"ConfigRuleName": "test-rule"}, "us-east-1", "123456789012"
-        )
+        _delete_config_rule({"ConfigRuleName": "test-rule"}, "us-east-1", "123456789012")
 
         # Evaluations remain (they're per-resource, not per-rule)
         # The important thing is we didn't crash
