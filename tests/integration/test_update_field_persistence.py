@@ -81,7 +81,7 @@ class TestSchedulerUpdateFieldPersistence:
             try:
                 scheduler.delete_schedule(Name=schedule_name)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
     def test_update_schedule_start_date(self, make_boto_client):
         """UpdateSchedule should persist StartDate changes."""
@@ -130,7 +130,7 @@ class TestSchedulerUpdateFieldPersistence:
             try:
                 scheduler.delete_schedule(Name=schedule_name)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
     def test_update_schedule_end_date(self, make_boto_client):
         """UpdateSchedule should persist EndDate changes."""
@@ -179,7 +179,7 @@ class TestSchedulerUpdateFieldPersistence:
             try:
                 scheduler.delete_schedule(Name=schedule_name)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
     def test_update_schedule_kms_key_arn(self, make_boto_client):
         """UpdateSchedule should persist KmsKeyArn changes."""
@@ -223,7 +223,7 @@ class TestSchedulerUpdateFieldPersistence:
             try:
                 scheduler.delete_schedule(Name=schedule_name)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
 
 # ---------------------------------------------------------------------------
@@ -287,7 +287,7 @@ class TestAppSyncUpdateFieldPersistence:
                 appsync.delete_data_source(apiId=api_id, name=ds_name)
                 appsync.delete_graphql_api(apiId=api_id)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
 
 # ---------------------------------------------------------------------------
@@ -345,7 +345,7 @@ class TestApiGatewayV2UpdateFieldPersistence:
                 apigw.delete_stage(ApiId=api_id, StageName=stage_name)
                 apigw.delete_api(ApiId=api_id)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
 
 # ---------------------------------------------------------------------------
@@ -402,7 +402,7 @@ class TestCognitoCreateUserPoolClientFieldPersistence:
             try:
                 cognito.delete_user_pool(UserPoolId=pool_id)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
     def test_create_user_pool_client_default_redirect_uri(self, make_boto_client):
         """CreateUserPoolClient should persist DefaultRedirectURI."""
@@ -435,7 +435,7 @@ class TestCognitoCreateUserPoolClientFieldPersistence:
             try:
                 cognito.delete_user_pool(UserPoolId=pool_id)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
     def test_create_user_pool_client_read_write_attributes(self, make_boto_client):
         """CreateUserPoolClient should persist ReadAttributes and WriteAttributes."""
@@ -477,7 +477,7 @@ class TestCognitoCreateUserPoolClientFieldPersistence:
             try:
                 cognito.delete_user_pool(UserPoolId=pool_id)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
     def test_create_user_pool_client_supported_identity_providers(self, make_boto_client):
         """CreateUserPoolClient should persist SupportedIdentityProviders."""
@@ -510,7 +510,7 @@ class TestCognitoCreateUserPoolClientFieldPersistence:
             try:
                 cognito.delete_user_pool(UserPoolId=pool_id)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
     def test_create_user_pool_client_token_validity_units(self, make_boto_client):
         """CreateUserPoolClient should persist TokenValidityUnits."""
@@ -547,7 +547,7 @@ class TestCognitoCreateUserPoolClientFieldPersistence:
             try:
                 cognito.delete_user_pool(UserPoolId=pool_id)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
     def test_create_user_pool_client_token_validity_values(self, make_boto_client):
         """CreateUserPoolClient should persist AccessTokenValidity, IdTokenValidity,
@@ -596,7 +596,7 @@ class TestCognitoCreateUserPoolClientFieldPersistence:
             try:
                 cognito.delete_user_pool(UserPoolId=pool_id)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
     def test_create_user_pool_client_allowed_oauth_flows_user_pool_client(self, make_boto_client):
         """CreateUserPoolClient should persist AllowedOAuthFlowsUserPoolClient."""
@@ -628,4 +628,4 @@ class TestCognitoCreateUserPoolClientFieldPersistence:
             try:
                 cognito.delete_user_pool(UserPoolId=pool_id)
             except Exception:
-                pass
+                pass  # best-effort cleanup
