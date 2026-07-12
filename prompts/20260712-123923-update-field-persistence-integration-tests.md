@@ -1,8 +1,7 @@
 ---
-session: "20260712-123923"
+session: 20260712
 slug: "update-field-persistence-integration-tests"
 type: test
-timestamp: "2026-07-12T12:39:23Z"
 ---
 
 # Integration Tests for Update Field Persistence Bug Class
