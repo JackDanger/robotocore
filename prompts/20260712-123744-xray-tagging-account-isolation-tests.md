@@ -1,7 +1,8 @@
-# Integration Tests for X-Ray and ResourceGroupsTaggingAPI Account Isolation
-
+---
+session: 20260712
+slug: xray-tagging-account-isolation-tests
 type: test
-date: 2026-07-12
+---
 
 ## Summary
 
