@@ -1,6 +1,8 @@
-# Smithy RPC v2 CBOR Protocol Integration Test
-
+---
+session: 20260712
+slug: smithy-cbor-protocol-integration-test
 type: test
+---
 
 ## Summary
 
