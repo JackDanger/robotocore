@@ -179,7 +179,7 @@ class TestECRDescribeRepositoriesPagination:
                 try:
                     ecr.delete_repository(repositoryName=name, force=True)
                 except Exception:
-                    pass
+                    pass  # best-effort cleanup
 
 
 class TestKinesisATTimestampIterator:
@@ -372,15 +372,15 @@ def handler(event, context):
             try:
                 secrets.delete_secret(SecretId=secret_name, ForceDeleteWithoutRecovery=True)
             except Exception:
-                pass
+                pass  # best-effort cleanup
             try:
                 lambda_client.delete_function(FunctionName=func_name)
             except Exception:
-                pass
+                pass  # best-effort cleanup
             try:
                 iam.delete_role(RoleName=role_name)
             except Exception:
-                pass
+                pass  # best-effort cleanup
 
 
 class TestDynamoDBGlobalTableReplicaStreams:
@@ -464,8 +464,8 @@ class TestDynamoDBGlobalTableReplicaStreams:
             try:
                 ddb_source.delete_table(TableName=table_name)
             except Exception:
-                pass
+                pass  # best-effort cleanup
             try:
                 ddb_replica.delete_table(TableName=table_name)
             except Exception:
-                pass
+                pass  # best-effort cleanup
