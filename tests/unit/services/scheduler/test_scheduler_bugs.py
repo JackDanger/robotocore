@@ -9,7 +9,6 @@ from robotocore.services.scheduler.provider import (
     _create_schedule,
     _get_schedules,
     _update_schedule,
-    handle_scheduler_request,
 )
 
 REGION = "us-east-1"

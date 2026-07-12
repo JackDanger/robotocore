@@ -1,7 +1,6 @@
 """Tests for correctness bugs in the Support provider."""
 
-import json
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -9,7 +8,6 @@ from robotocore.services.support import provider as support_module
 from robotocore.services.support.provider import (
     _add_communication_to_case,
     _describe_communications,
-    handle_support_request,
 )
 
 ACCOUNT_ID = "123456789012"
