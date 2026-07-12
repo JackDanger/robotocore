@@ -1,9 +1,12 @@
 """CloudWatch Logs Insights query engine.
 
-Supports: fields, filter, stats (with group-by), sort, limit, parse (regex extraction).
+Supports: fields, filter, stats (with group-by), sort, limit, parse (glob or regex
+extraction). JSON log messages have their fields auto-discovered as dotted-path row
+fields (e.g. `identity.arn`, `input.inputTokenCount`), matching real Logs Insights.
 Pipeline executor against in-memory log data.
 """
 
+import json
 import logging
 import re
 import threading
@@ -195,12 +198,17 @@ def _parse_command(text: str) -> dict | None:
     if limit_match:
         return {"type": "limit", "count": int(limit_match.group(1))}
 
-    # parse @message /regex/ as @field1, @field2
-    parse_match = re.match(r'parse\s+(@?\w+)\s+[/"](.+?)[/"]\s+as\s+(.+)', text, re.IGNORECASE)
+    # parse @message /regex/ as @field1, @field2   (real regex, explicit capture groups)
+    # parse identity.arn "*literal*" as @field1, @field2   (AWS glob syntax, bare `*` wildcards)
+    parse_match = re.match(
+        r'parse\s+(@?[\w.\[\]-]+)\s+([/"])(.+?)\2\s+as\s+(.+)', text, re.IGNORECASE
+    )
     if parse_match:
         source = parse_match.group(1).lstrip("@")
-        pattern = parse_match.group(2)
-        field_names = [f.strip().lstrip("@") for f in parse_match.group(3).split(",")]
+        delimiter = parse_match.group(2)
+        raw_pattern = parse_match.group(3)
+        field_names = [f.strip().lstrip("@") for f in parse_match.group(4).split(",")]
+        pattern = raw_pattern if delimiter == "/" else _glob_to_regex(raw_pattern)
         return {
             "type": "parse",
             "source": source,
@@ -211,6 +219,18 @@ def _parse_command(text: str) -> dict | None:
     return None
 
 
+def _glob_to_regex(glob_pattern: str) -> str:
+    """Convert a Logs Insights glob-style parse pattern (bare `*` wildcards, one
+    capture per `*`) into an anchored regex with one capture group per wildcard."""
+    literal_parts = glob_pattern.split("*")
+    body = re.escape(literal_parts[0])
+    for i, literal in enumerate(literal_parts[1:], start=1):
+        is_last = i == len(literal_parts) - 1
+        body += "(.*)" if is_last else "(.*?)"
+        body += re.escape(literal)
+    return f"^{body}$"
+
+
 def _parse_aggregations(text: str) -> list[dict]:
     """Parse aggregation expressions like 'count(*)', 'avg(field)', 'sum(@duration)'."""
     result: list[dict] = []
@@ -218,11 +238,16 @@ def _parse_aggregations(text: str) -> list[dict]:
     parts = _split_aggregations(text)
     for part in parts:
         part = part.strip()
-        agg_match = re.match(r"(\w+)\s*\(\s*(@?\w*\*?)\s*\)", part)
+        agg_match = re.match(
+            r"(\w+)\s*\(\s*(@?[\w.\[\]-]*\*?)\s*\)(?:\s+as\s+(\w+))?", part, re.IGNORECASE
+        )
         if agg_match:
             func = agg_match.group(1).lower()
             field = agg_match.group(2).lstrip("@") or "*"
-            result.append({"func": func, "field": field})
+            entry = {"func": func, "field": field}
+            if agg_match.group(3):
+                entry["alias"] = agg_match.group(3)
+            result.append(entry)
         else:
             result.append({"func": "count", "field": "*"})
     return result
@@ -248,6 +273,32 @@ def _split_aggregations(text: str) -> list[str]:
     if current:
         parts.append("".join(current))
     return parts
+
+
+def _flatten_json_message(message: str) -> dict[str, object]:
+    """Auto-discover fields from a JSON log message as dotted-path row fields,
+    e.g. `{"input": {"inputTokenCount": 5}}` -> `{"input.inputTokenCount": 5}`.
+    Real Logs Insights does this for any JSON-formatted log event; non-JSON
+    messages (or non-dict top level) contribute no extra fields.
+    """
+    try:
+        data = json.loads(message)
+    except (json.JSONDecodeError, TypeError):
+        return {}
+    if not isinstance(data, dict):
+        return {}
+
+    flat: dict[str, object] = {}
+
+    def _walk(obj: object, prefix: str) -> None:
+        if isinstance(obj, dict):
+            for key, value in obj.items():
+                _walk(value, f"{prefix}.{key}" if prefix else str(key))
+        else:
+            flat[prefix] = obj
+
+    _walk(data, "")
+    return flat
 
 
 # ---------------------------------------------------------------------------
@@ -276,12 +327,14 @@ def execute_pipeline(
     # Convert events to row dicts
     rows: list[dict] = []
     for event in log_events:
+        message = event.get("message", "")
         row = {
             "timestamp": str(event.get("timestamp", "")),
-            "message": event.get("message", ""),
+            "message": message,
             "logStream": event.get("logStreamName", ""),
             "ptr": event.get("eventId", ""),
         }
+        row.update(_flatten_json_message(message))
         rows.append(row)
 
     for cmd in commands:
@@ -343,37 +396,37 @@ def _evaluate_filter(row: dict, expression: str) -> bool:
     expression = expression.strip()
 
     # like with regex: @field like /pattern/
-    like_regex = re.match(r"(@?\w+)\s+like\s+/(.+)/", expression, re.IGNORECASE)
+    like_regex = re.match(r"(@?[\w.\[\]-]+)\s+like\s+/(.+)/", expression, re.IGNORECASE)
     if like_regex:
         field = like_regex.group(1).lstrip("@")
         pattern = like_regex.group(2)
         val = str(row.get(field, ""))
         return bool(re.search(pattern, val))
 
-    # like with string: @field like "text"
-    like_str = re.match(r'(@?\w+)\s+like\s+"([^"]*)"', expression, re.IGNORECASE)
+    # like with string: @field like "text" (single or double quoted)
+    like_str = re.match(r'(@?[\w.\[\]-]+)\s+like\s+([\'"])(.*?)\2', expression, re.IGNORECASE)
     if like_str:
         field = like_str.group(1).lstrip("@")
-        text = like_str.group(2)
+        text = like_str.group(3)
         val = str(row.get(field, ""))
         return text in val
 
-    # Exact match: @field = "value"
-    eq_match = re.match(r'(@?\w+)\s*=\s*"([^"]*)"', expression)
+    # Exact match: @field = "value" or @field = 'value'
+    eq_match = re.match(r'(@?[\w.\[\]-]+)\s*=\s*([\'"])(.*?)\2', expression)
     if eq_match:
         field = eq_match.group(1).lstrip("@")
-        value = eq_match.group(2)
+        value = eq_match.group(3)
         return str(row.get(field, "")) == value
 
-    # Not equal: @field != "value"
-    neq_match = re.match(r'(@?\w+)\s*!=\s*"([^"]*)"', expression)
+    # Not equal: @field != "value" or @field != 'value'
+    neq_match = re.match(r'(@?[\w.\[\]-]+)\s*!=\s*([\'"])(.*?)\2', expression)
     if neq_match:
         field = neq_match.group(1).lstrip("@")
-        value = neq_match.group(2)
+        value = neq_match.group(3)
         return str(row.get(field, "")) != value
 
     # Numeric comparisons: @field > N, @field >= N, @field < N, @field <= N, @field = N
-    num_match = re.match(r"(@?\w+)\s*(>=|<=|!=|>|<|=)\s*(-?\d+\.?\d*)", expression)
+    num_match = re.match(r"(@?[\w.\[\]-]+)\s*(>=|<=|!=|>|<|=)\s*(-?\d+\.?\d*)", expression)
     if num_match:
         field = num_match.group(1).lstrip("@")
         op = num_match.group(2)
@@ -417,7 +470,7 @@ def _exec_stats(rows: list[dict], cmd: dict) -> list[dict]:
                 out_row[g] = str(key[i])
             for agg in aggregations:
                 agg_val = _compute_aggregation(agg, group_rows)
-                label = f"{agg['func']}({agg['field']})"
+                label = agg.get("alias") or f"{agg['func']}({agg['field']})"
                 out_row[label] = str(agg_val)
             result.append(out_row)
         return result
