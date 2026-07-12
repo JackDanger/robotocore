@@ -193,8 +193,10 @@ class TestKinesisATTimestampIterator:
     The actual filtering is verified in unit tests.
     """
 
-    def test_at_timestamp_iterator_includes_timestamp(self, make_boto_client):
-        """Verify that AT_TIMESTAMP iterator includes the timestamp in the token."""
+    def test_at_timestamp_iterator_filters_records(self, make_boto_client):
+        """AT_TIMESTAMP must actually filter GetRecords, not just accept the param."""
+        import time
+
         suffix = uuid.uuid4().hex[:8]
         kinesis = make_boto_client("kinesis", region_name="us-east-1")
 
@@ -202,35 +204,32 @@ class TestKinesisATTimestampIterator:
         kinesis.create_stream(StreamName=stream_name, ShardCount=1)
 
         try:
-            # Get the shard ID
             desc = kinesis.describe_stream(StreamName=stream_name)
             shard_id = desc["StreamDescription"]["Shards"][0]["ShardId"]
 
-            # Get shard iterator with AT_TIMESTAMP
-            cutoff_timestamp = datetime.now(UTC)
+            # Put an "early" record, wait, capture a cutoff, then put a "late" record.
+            kinesis.put_record(StreamName=stream_name, Data=b"early-record", PartitionKey="k")
+            time.sleep(1.5)
+            cutoff = datetime.now(UTC)
+            time.sleep(1.5)
+            kinesis.put_record(StreamName=stream_name, Data=b"late-record", PartitionKey="k")
+
+            # AT_TIMESTAMP from the cutoff should only return the late record.
             iter_response = kinesis.get_shard_iterator(
                 StreamName=stream_name,
                 ShardId=shard_id,
                 ShardIteratorType="AT_TIMESTAMP",
-                Timestamp=cutoff_timestamp,
+                Timestamp=cutoff,
             )
-            shard_iterator = iter_response["ShardIterator"]
+            records_response = kinesis.get_records(ShardIterator=iter_response["ShardIterator"])
+            records = records_response["Records"]
 
-            # Decode the iterator token to verify timestamp is included
-            import base64
-            import json
-
-            decoded = json.loads(base64.b64decode(shard_iterator))
-
-            # The key fix: the timestamp should be stored in the iterator
-            assert "timestamp" in decoded, (
-                f"Bug: AT_TIMESTAMP iterator doesn't store the timestamp parameter. "
-                f"Decoded iterator: {decoded}"
+            assert len(records) == 1, (
+                f"Bug: AT_TIMESTAMP should return only the record after the cutoff, "
+                f"got {len(records)} records: {[r['Data'] for r in records]}"
             )
-
-            # The timestamp should be a number (Unix timestamp)
-            assert isinstance(decoded["timestamp"], (int, float)), (
-                f"Bug: Timestamp should be a number, got {type(decoded['timestamp'])}"
+            assert records[0]["Data"] == b"late-record", (
+                f"Bug: expected only 'late-record', got {records[0]['Data']!r}"
             )
         finally:
             kinesis.delete_stream(StreamName=stream_name, EnforceConsumerDeletion=True)
