@@ -690,6 +690,8 @@ def _update_data_source(
             ds["dynamodbConfig"] = params["dynamodbConfig"]
         if "lambdaConfig" in params:
             ds["lambdaConfig"] = params["lambdaConfig"]
+        if "httpConfig" in params:
+            ds["httpConfig"] = params["httpConfig"]
     return {"dataSource": ds}
 
 
