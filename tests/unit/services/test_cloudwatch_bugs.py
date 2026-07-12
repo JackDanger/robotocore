@@ -248,3 +248,60 @@ class TestMetricFilterExtraction:
         cw_backend = get_backend("cloudwatch")[account][region]
         matching = [d for d in cw_backend.metric_data if d.name == "Whatever"]
         assert matching == []
+
+
+# ===================================================================
+# Bug 10: Logs Insights never auto-discovers JSON message fields, `parse`
+# rejects dotted source names and glob wildcards, and filter/stats field
+# regexes reject dotted paths and single-quoted string literals — found
+# alongside Bug 9, reviewing the same Bedrock invocation-logging module.
+# ===================================================================
+
+
+class TestInsightsJsonAutoDiscovery:
+    def test_nested_json_fields_are_queryable_without_parse(self):
+        """A JSON log message's nested fields are auto-discovered as dotted-path
+        fields, matching real Logs Insights — no `parse` needed for JSON bodies."""
+        msg = json.dumps({"input": {"inputTokenCount": 1500}, "modelId": "kimi"})
+        cmds = parse_query(
+            "stats sum(input.inputTokenCount) as input_tokens, count(*) as calls by modelId"
+        )
+        result = execute_pipeline(cmds, [{"message": msg}])
+        assert result == [{"modelId": "kimi", "input_tokens": "1500.0", "calls": "1.0"}]
+
+    def test_parse_with_dotted_source_and_glob_wildcards(self):
+        """`parse identity.arn "*literal*" as a, b` — the real AWS glob idiom for ARN
+        extraction — must resolve dotted source fields and treat `*` as a wildcard,
+        not a literal regex quantifier."""
+        msg = json.dumps(
+            {
+                "identity": {
+                    "arn": "arn:aws:sts::222222222222:assumed-role/"
+                    "AWSReservedSSO_BedrockEngineer_abc123/jack@ld.com"
+                }
+            }
+        )
+        cmds = parse_query(
+            'parse identity.arn "*assumed-role/AWSReservedSSO_*_*/*" '
+            "as arn_prefix, permission_set, sso_id, engineer"
+        )
+        result = execute_pipeline(cmds, [{"message": msg}])
+        assert result[0]["permission_set"] == "BedrockEngineer"
+        assert result[0]["engineer"] == "jack@ld.com"
+
+    def test_regex_mode_parse_still_supported(self):
+        """Slash-delimited `parse` patterns remain real regexes with explicit groups."""
+        cmds = parse_query("parse @message /user=(\\w+)/ as @user")
+        result = execute_pipeline(cmds, [{"message": "user=alice"}])
+        assert result[0]["user"] == "alice"
+
+    def test_filter_supports_single_quoted_string_literal(self):
+        """`filter field = 'value'` (single quotes) must work, not just double quotes."""
+        cmds = parse_query("filter permission_set = 'Administrator'")
+        rows = [
+            {"message": json.dumps({"permission_set": "Administrator"})},
+            {"message": json.dumps({"permission_set": "BedrockEngineer"})},
+        ]
+        result = execute_pipeline(cmds, rows)
+        assert len(result) == 1
+        assert result[0]["permission_set"] == "Administrator"
