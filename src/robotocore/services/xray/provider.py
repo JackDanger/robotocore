@@ -19,9 +19,9 @@ from robotocore.services.xray.trace_correlation import get_engine
 
 logger = logging.getLogger(__name__)
 
-# In-memory stores (per-account not needed for local dev)
-_sampling_rules: dict[str, dict[str, Any]] = {}
-_groups: dict[str, dict[str, Any]] = {}
+# In-memory stores scoped by (account_id, region)
+_sampling_rules: dict[tuple[str, str], dict[str, Any]] = {}  # (account_id, region) -> {rule_name: record}
+_groups: dict[tuple[str, str], dict[str, Any]] = {}  # (account_id, region) -> {group_name: group}
 _encryption_config: dict[str, dict[str, Any]] = {}  # region -> config
 _tags: dict[str, list[dict[str, str]]] = {}  # ARN -> tags
 
@@ -84,7 +84,10 @@ def _create_sampling_rule(params: dict, region: str, account_id: str) -> dict:
         "CreatedAt": 0.0,
         "ModifiedAt": 0.0,
     }
-    _sampling_rules[rule_name] = record
+    key = (account_id, region)
+    if key not in _sampling_rules:
+        _sampling_rules[key] = {}
+    _sampling_rules[key][rule_name] = record
 
     if tags:
         _tags[rule_arn] = list(tags)
@@ -93,8 +96,8 @@ def _create_sampling_rule(params: dict, region: str, account_id: str) -> dict:
 
 
 def _get_sampling_rules(params: dict, region: str, account_id: str) -> dict:
-    # Always include the default rule
-    records = list(_sampling_rules.values())
+    key = (account_id, region)
+    records = list(_sampling_rules.get(key, {}).values())
     return {"SamplingRuleRecords": records, "NextToken": None}
 
 
@@ -102,16 +105,19 @@ def _delete_sampling_rule(params: dict, region: str, account_id: str) -> dict:
     rule_name = params.get("RuleName", "")
     rule_arn = params.get("RuleARN", "")
 
+    key = (account_id, region)
+    account_rules = _sampling_rules.get(key, {})
+
     record = None
-    if rule_name and rule_name in _sampling_rules:
-        record = _sampling_rules.pop(rule_name)
+    if rule_name and rule_name in account_rules:
+        record = account_rules.pop(rule_name)
         # Clean up tags for the deleted rule
         deleted_arn = record["SamplingRule"].get("RuleARN", "")
         _tags.pop(deleted_arn, None)
     elif rule_arn:
-        for name, rec in list(_sampling_rules.items()):
+        for name, rec in list(account_rules.items()):
             if rec["SamplingRule"].get("RuleARN") == rule_arn:
-                record = _sampling_rules.pop(name)
+                record = account_rules.pop(name)
                 _tags.pop(rule_arn, None)
                 break
 
@@ -126,11 +132,14 @@ def _update_sampling_rule(params: dict, region: str, account_id: str) -> dict:
     rule_name = update.get("RuleName", "")
     rule_arn = update.get("RuleARN", "")
 
+    key = (account_id, region)
+    account_rules = _sampling_rules.get(key, {})
+
     record = None
-    if rule_name and rule_name in _sampling_rules:
-        record = _sampling_rules[rule_name]
+    if rule_name and rule_name in account_rules:
+        record = account_rules[rule_name]
     elif rule_arn:
-        for rec in _sampling_rules.values():
+        for rec in account_rules.values():
             if rec["SamplingRule"].get("RuleARN") == rule_arn:
                 record = rec
                 break
@@ -181,7 +190,10 @@ def _create_group(params: dict, region: str, account_id: str) -> dict:
             },
         ),
     }
-    _groups[group_name] = group
+    key = (account_id, region)
+    if key not in _groups:
+        _groups[key] = {}
+    _groups[key][group_name] = group
 
     if tags:
         _tags[group_arn] = list(tags)
@@ -193,10 +205,13 @@ def _get_group(params: dict, region: str, account_id: str) -> dict:
     group_name = params.get("GroupName", "")
     group_arn = params.get("GroupARN", "")
 
-    if group_name and group_name in _groups:
-        return {"Group": _groups[group_name]}
+    key = (account_id, region)
+    account_groups = _groups.get(key, {})
+
+    if group_name and group_name in account_groups:
+        return {"Group": account_groups[group_name]}
     if group_arn:
-        for g in _groups.values():
+        for g in account_groups.values():
             if g["GroupARN"] == group_arn:
                 return {"Group": g}
 
@@ -204,7 +219,8 @@ def _get_group(params: dict, region: str, account_id: str) -> dict:
 
 
 def _get_groups(params: dict, region: str, account_id: str) -> dict:
-    groups = list(_groups.values())
+    key = (account_id, region)
+    groups = list(_groups.get(key, {}).values())
     return {"Groups": groups, "NextToken": None}
 
 
@@ -212,13 +228,16 @@ def _delete_group(params: dict, region: str, account_id: str) -> dict:
     group_name = params.get("GroupName", "")
     group_arn = params.get("GroupARN", "")
 
-    if group_name and group_name in _groups:
-        deleted = _groups.pop(group_name)
+    key = (account_id, region)
+    account_groups = _groups.get(key, {})
+
+    if group_name and group_name in account_groups:
+        deleted = account_groups.pop(group_name)
         _tags.pop(deleted["GroupARN"], None)
     elif group_arn:
-        for name, g in list(_groups.items()):
+        for name, g in list(account_groups.items()):
             if g["GroupARN"] == group_arn:
-                _groups.pop(name)
+                account_groups.pop(name)
                 _tags.pop(group_arn, None)
                 break
 
@@ -229,11 +248,14 @@ def _update_group(params: dict, region: str, account_id: str) -> dict:
     group_name = params.get("GroupName", "")
     group_arn = params.get("GroupARN", "")
 
+    key = (account_id, region)
+    account_groups = _groups.get(key, {})
+
     group = None
-    if group_name and group_name in _groups:
-        group = _groups[group_name]
+    if group_name and group_name in account_groups:
+        group = account_groups[group_name]
     elif group_arn:
-        for g in _groups.values():
+        for g in account_groups.values():
             if g["GroupARN"] == group_arn:
                 group = g
                 break
