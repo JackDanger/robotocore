@@ -24,7 +24,7 @@ def _cleanup_log_group(logs, log_group_name):
         try:
             logs.delete_log_group(logGroupName=log_group_name)
         except Exception:
-            pass
+            pass  # best-effort cleanup
 
 
 class TestMetricFilterWithExtraction:
