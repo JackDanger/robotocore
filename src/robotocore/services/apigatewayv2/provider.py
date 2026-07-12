@@ -961,6 +961,8 @@ def _update_stage(
             "DeploymentId",
             "DefaultRouteSettings",
             "RouteSettings",
+            "AccessLogSettings",
+            "Tags",
         ):
             if key in params:
                 stage[key] = params[key]
