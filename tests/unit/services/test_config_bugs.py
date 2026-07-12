@@ -3,15 +3,12 @@
 Each test targets a specific bug that has been fixed.
 """
 
-import copy
 from unittest.mock import MagicMock, patch
-
-import pytest
 
 from robotocore.services.config.provider import (
     _delete_config_rule,
-    _evaluations,
     _evaluation_statuses,
+    _evaluations,
     _put_config_rule,
     _put_evaluations,
 )
@@ -34,7 +31,9 @@ class TestDeleteConfigRuleCleanup:
         """Deleting a rule should remove its evaluation status from the global store."""
         mock_backend = MagicMock()
         mock_backend.config_rules = {"test-rule": MagicMock()}
-        mock_backend.put_config_rule.return_value = "arn:aws:config:us-east-1:123:config-rule/test-rule"
+        mock_backend.put_config_rule.return_value = (
+            "arn:aws:config:us-east-1:123:config-rule/test-rule"
+        )
         mock_backend.delete_config_rule = MagicMock()
         mock_backend_fn.return_value = mock_backend
 

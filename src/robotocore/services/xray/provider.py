@@ -20,8 +20,12 @@ from robotocore.services.xray.trace_correlation import get_engine
 logger = logging.getLogger(__name__)
 
 # In-memory stores scoped by (account_id, region)
-_sampling_rules: dict[tuple[str, str], dict[str, Any]] = {}  # (account_id, region) -> {rule_name: record}
-_groups: dict[tuple[str, str], dict[str, Any]] = {}  # (account_id, region) -> {group_name: group}
+_sampling_rules: dict[tuple[str, str], dict[str, Any]] = (
+    {}
+)  # (account_id, region) -> {rule_name: record}
+_groups: dict[tuple[str, str], dict[str, Any]] = (
+    {}
+)  # (account_id, region) -> {group_name: group}
 _encryption_config: dict[str, dict[str, Any]] = {}  # region -> config
 _tags: dict[str, list[dict[str, str]]] = {}  # ARN -> tags
 

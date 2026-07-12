@@ -91,7 +91,7 @@ class TestSamplingRulesAccountIsolation:
         ]
         assert "test-rule" not in rule_names_2, (
             "Sampling rules should be isolated by account, "
-            f"but rule from account 111111111111 is visible in account 222222222222"
+            "but rule from account 111111111111 is visible in account 222222222222"
         )
 
 
@@ -133,5 +133,5 @@ class TestGroupsAccountIsolation:
         group_names_2 = [g["GroupName"] for g in body2["Groups"]]
         assert "test-group" not in group_names_2, (
             "Groups should be isolated by account, "
-            f"but group from account 111111111111 is visible in account 222222222222"
+            "but group from account 111111111111 is visible in account 222222222222"
         )
