@@ -111,6 +111,8 @@ def _rotate_secret(params: dict, region: str, account_id: str) -> dict:
     }
     if hasattr(secret, "secret_string") and secret.secret_string is not None:
         secret_version["secret_string"] = secret.secret_string
+    if hasattr(secret, "secret_binary") and secret.secret_binary is not None:
+        secret_version["secret_binary"] = secret.secret_binary
 
     # Remove AWSPENDING from old versions
     if hasattr(secret, "remove_version_stages_from_old_versions"):
