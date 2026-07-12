@@ -12,6 +12,9 @@ AWS scoping reference:
 - EventBridge connections — per-account + per-region
 - EventBridge API destinations — per-account + per-region
 - EventBridge endpoints — per-account + per-region
+- Resource Groups Tagging API — per-account + per-region
+- X-Ray sampling rules — per-account + per-region
+- X-Ray groups — per-account + per-region
 """
 
 import json
@@ -466,5 +469,268 @@ class TestEventBridgeEndpointIsolation:
             for eb in [eb_a, eb_b]:
                 try:
                     eb.delete_endpoint(Name=ep_name)
+                except Exception:
+                    pass  # best-effort cleanup
+
+
+# ---------------------------------------------------------------------------
+# X-Ray — sampling rules and groups
+# ---------------------------------------------------------------------------
+
+
+class TestXRayAccountIsolation:
+    """X-Ray sampling rules and groups are per-account + per-region in AWS."""
+
+    def test_sampling_rules_isolated_by_account(self, make_boto_client):
+        """Create same-named sampling rule in both accounts; verify isolation."""
+        suffix = uuid.uuid4().hex[:8]
+        rule_name = f"rule-{suffix}"
+
+        xray_a = _client(make_boto_client, "xray", ACCT_A)
+        xray_b = _client(make_boto_client, "xray", ACCT_B)
+
+        xray_a.create_sampling_rule(
+            SamplingRule={
+                "RuleName": rule_name,
+                "ResourceARN": "*",
+                "Priority": 1000,
+                "FixedRate": 0.05,
+                "ReservoirSize": 1,
+                "ServiceName": "*",
+                "ServiceType": "*",
+                "Host": "*",
+                "HTTPMethod": "*",
+                "URLPath": "*",
+                "Version": 1,
+            }
+        )
+        xray_b.create_sampling_rule(
+            SamplingRule={
+                "RuleName": rule_name,
+                "ResourceARN": "*",
+                "Priority": 1000,
+                "FixedRate": 0.05,
+                "ReservoirSize": 1,
+                "ServiceName": "*",
+                "ServiceType": "*",
+                "Host": "*",
+                "HTTPMethod": "*",
+                "URLPath": "*",
+                "Version": 1,
+            }
+        )
+
+        try:
+            # Account A should see only its own rule
+            rules_a = xray_a.get_sampling_rules()["SamplingRuleRecords"]
+            names_a = [r["SamplingRule"]["RuleName"] for r in rules_a]
+            assert rule_name in names_a, "Account A should see its sampling rule"
+            assert names_a.count(rule_name) == 1, (
+                f"Account A sees {names_a.count(rule_name)} rules named {rule_name!r}"
+            )
+
+            # Account B should see only its own rule
+            rules_b = xray_b.get_sampling_rules()["SamplingRuleRecords"]
+            names_b = [r["SamplingRule"]["RuleName"] for r in rules_b]
+            assert rule_name in names_b, "Account B should see its sampling rule"
+            assert names_b.count(rule_name) == 1, (
+                f"Account B sees {names_b.count(rule_name)} rules named {rule_name!r}"
+            )
+
+            # ARNs must differ (account-specific)
+            arn_a = next(
+                r["SamplingRule"]["RuleARN"]
+                for r in rules_a
+                if r["SamplingRule"]["RuleName"] == rule_name
+            )
+            arn_b = next(
+                r["SamplingRule"]["RuleARN"]
+                for r in rules_b
+                if r["SamplingRule"]["RuleName"] == rule_name
+            )
+            assert arn_a != arn_b, (
+                "Same-name sampling rules in different accounts must have different ARNs"
+            )
+
+        finally:
+            for xray in [xray_a, xray_b]:
+                try:
+                    xray.delete_sampling_rule(RuleName=rule_name)
+                except Exception:
+                    pass  # best-effort cleanup
+
+    def test_groups_isolated_by_account(self, make_boto_client):
+        """Create same-named group in both accounts; verify isolation."""
+        suffix = uuid.uuid4().hex[:8]
+        group_name = f"group-{suffix}"
+
+        xray_a = _client(make_boto_client, "xray", ACCT_A)
+        xray_b = _client(make_boto_client, "xray", ACCT_B)
+
+        xray_a.create_group(GroupName=group_name, FilterExpression="service(a)")
+        xray_b.create_group(GroupName=group_name, FilterExpression="service(b)")
+
+        try:
+            # Account A should see only its own group
+            groups_a = xray_a.get_groups()["Groups"]
+            names_a = [g["GroupName"] for g in groups_a]
+            assert group_name in names_a, "Account A should see its group"
+            assert names_a.count(group_name) == 1, (
+                f"Account A sees {names_a.count(group_name)} groups named {group_name!r}"
+            )
+
+            # Account B should see only its own group
+            groups_b = xray_b.get_groups()["Groups"]
+            names_b = [g["GroupName"] for g in groups_b]
+            assert group_name in names_b, "Account B should see its group"
+            assert names_b.count(group_name) == 1, (
+                f"Account B sees {names_b.count(group_name)} groups named {group_name!r}"
+            )
+
+            # ARNs must differ (account-specific)
+            arn_a = next(g["GroupARN"] for g in groups_a if g["GroupName"] == group_name)
+            arn_b = next(g["GroupARN"] for g in groups_b if g["GroupName"] == group_name)
+            assert arn_a != arn_b, "Same-name groups in different accounts must have different ARNs"
+
+            # Verify GetGroup returns only the account's own group
+            group_a = xray_a.get_group(GroupName=group_name)["Group"]
+            assert ACCT_A in group_a["GroupARN"]
+
+            group_b = xray_b.get_group(GroupName=group_name)["Group"]
+            assert ACCT_B in group_b["GroupARN"]
+
+        finally:
+            for xray in [xray_a, xray_b]:
+                try:
+                    xray.delete_group(GroupName=group_name)
+                except Exception:
+                    pass  # best-effort cleanup
+
+
+# ---------------------------------------------------------------------------
+# Resource Groups Tagging API
+# ---------------------------------------------------------------------------
+
+
+class TestTaggingApiAccountIsolation:
+    """Resource Groups Tagging API get_resources is per-account + per-region in AWS."""
+
+    def test_sqs_resources_isolated_by_account(self, make_boto_client):
+        """Create tagged SQS queues in both accounts; verify tagging API isolation."""
+        suffix = uuid.uuid4().hex[:8]
+        queue_name = f"queue-{suffix}"
+        tag_key = "TestTag"
+
+        sqs_a = _client(make_boto_client, "sqs", ACCT_A)
+        sqs_b = _client(make_boto_client, "sqs", ACCT_B)
+        tagging_a = _client(make_boto_client, "resourcegroupstaggingapi", ACCT_A)
+        tagging_b = _client(make_boto_client, "resourcegroupstaggingapi", ACCT_B)
+
+        # Create queues with distinctive tags
+        resp_a = sqs_a.create_queue(QueueName=queue_name, tags={tag_key: "account-a"})
+        resp_b = sqs_b.create_queue(QueueName=queue_name, tags={tag_key: "account-b"})
+        url_a = resp_a["QueueUrl"]
+        url_b = resp_b["QueueUrl"]
+
+        try:
+            # Account A's tagging API should only see its own queue
+            resources_a = tagging_a.get_resources(
+                ResourceTypeFilters=["sqs"],
+                TagFilters=[{"Key": tag_key}],
+            )["ResourceTagMappingList"]
+            arns_a = [r["ResourceARN"] for r in resources_a]
+            assert any(ACCT_A in arn for arn in arns_a), "Account A should see its SQS queue"
+            assert not any(ACCT_B in arn for arn in arns_a), (
+                "Account A must not see account B's SQS queue (cross-account leak)"
+            )
+
+            # Account B's tagging API should only see its own queue
+            resources_b = tagging_b.get_resources(
+                ResourceTypeFilters=["sqs"],
+                TagFilters=[{"Key": tag_key}],
+            )["ResourceTagMappingList"]
+            arns_b = [r["ResourceARN"] for r in resources_b]
+            assert any(ACCT_B in arn for arn in arns_b), "Account B should see its SQS queue"
+            assert not any(ACCT_A in arn for arn in arns_b), (
+                "Account B must not see account A's SQS queue (cross-account leak)"
+            )
+
+            # Verify tag values are correct per account
+            for r in resources_a:
+                tags = {t["Key"]: t["Value"] for t in r.get("Tags", [])}
+                assert tags.get(tag_key) == "account-a", (
+                    "Account A's queue should have account-a tag"
+                )
+
+            for r in resources_b:
+                tags = {t["Key"]: t["Value"] for t in r.get("Tags", [])}
+                assert tags.get(tag_key) == "account-b", (
+                    "Account B's queue should have account-b tag"
+                )
+
+        finally:
+            for sqs, url in [(sqs_a, url_a), (sqs_b, url_b)]:
+                try:
+                    sqs.delete_queue(QueueUrl=url)
+                except Exception:
+                    pass  # best-effort cleanup
+
+    def test_sns_resources_isolated_by_account(self, make_boto_client):
+        """Create tagged SNS topics in both accounts; verify tagging API isolation."""
+        suffix = uuid.uuid4().hex[:8]
+        topic_name = f"topic-{suffix}"
+        tag_key = "TestTag"
+
+        sns_a = _client(make_boto_client, "sns", ACCT_A)
+        sns_b = _client(make_boto_client, "sns", ACCT_B)
+        tagging_a = _client(make_boto_client, "resourcegroupstaggingapi", ACCT_A)
+        tagging_b = _client(make_boto_client, "resourcegroupstaggingapi", ACCT_B)
+
+        # Create topics with distinctive tags
+        resp_a = sns_a.create_topic(Name=topic_name, Tags=[{"Key": tag_key, "Value": "account-a"}])
+        resp_b = sns_b.create_topic(Name=topic_name, Tags=[{"Key": tag_key, "Value": "account-b"}])
+        arn_a = resp_a["TopicArn"]
+        arn_b = resp_b["TopicArn"]
+
+        try:
+            # Account A's tagging API should only see its own topic
+            resources_a = tagging_a.get_resources(
+                ResourceTypeFilters=["sns"],
+                TagFilters=[{"Key": tag_key}],
+            )["ResourceTagMappingList"]
+            arns_a = [r["ResourceARN"] for r in resources_a]
+            assert any(ACCT_A in arn for arn in arns_a), "Account A should see its SNS topic"
+            assert not any(ACCT_B in arn for arn in arns_a), (
+                "Account A must not see account B's SNS topic (cross-account leak)"
+            )
+
+            # Account B's tagging API should only see its own topic
+            resources_b = tagging_b.get_resources(
+                ResourceTypeFilters=["sns"],
+                TagFilters=[{"Key": tag_key}],
+            )["ResourceTagMappingList"]
+            arns_b = [r["ResourceARN"] for r in resources_b]
+            assert any(ACCT_B in arn for arn in arns_b), "Account B should see its SNS topic"
+            assert not any(ACCT_A in arn for arn in arns_b), (
+                "Account B must not see account A's SNS topic (cross-account leak)"
+            )
+
+            # Verify tag values are correct per account
+            for r in resources_a:
+                tags = {t["Key"]: t["Value"] for t in r.get("Tags", [])}
+                assert tags.get(tag_key) == "account-a", (
+                    "Account A's topic should have account-a tag"
+                )
+
+            for r in resources_b:
+                tags = {t["Key"]: t["Value"] for t in r.get("Tags", [])}
+                assert tags.get(tag_key) == "account-b", (
+                    "Account B's topic should have account-b tag"
+                )
+
+        finally:
+            for sns, arn in [(sns_a, arn_a), (sns_b, arn_b)]:
+                try:
+                    sns.delete_topic(TopicArn=arn)
                 except Exception:
                     pass  # best-effort cleanup
