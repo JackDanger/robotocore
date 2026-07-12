@@ -7,7 +7,11 @@ import json
 
 import pytest
 
-from robotocore.services.cloudwatch.filters import matches_filter_pattern
+from robotocore.services.cloudwatch.filters import (
+    get_filter_store,
+    matches_filter_pattern,
+    process_log_events,
+)
 from robotocore.services.cloudwatch.insights import (
     execute_pipeline,
     parse_query,
@@ -149,3 +153,98 @@ class TestInsightsSortMixedTypes:
         cmds = parse_query("sort @timestamp asc")
         result = execute_pipeline(cmds, events)
         assert len(result) == 3
+
+
+# ===================================================================
+# Bug 9: Metric filters silently drop wildcard matches, dimensions,
+# and extracted metric values (found reviewing the Bedrock invocation-
+# logging terraform module, which relies on all three).
+# ===================================================================
+
+
+class TestMetricFilterExtraction:
+    def test_wildcard_json_pattern_matches_present_field(self):
+        """`{ $.field = * }` means "field is present", not the literal string "*"."""
+        msg = json.dumps({"input": {"inputTokenCount": 1500}})
+        assert matches_filter_pattern("{ $.input.inputTokenCount = * }", msg) is True
+
+    def test_wildcard_json_pattern_does_not_match_missing_field(self):
+        msg = json.dumps({"output": {"outputTokenCount": 400}})
+        assert matches_filter_pattern("{ $.input.inputTokenCount = * }", msg) is False
+
+    def test_metric_value_extracted_from_message_not_hardcoded_to_one(self):
+        """metricValue may be a `$.field.path` extractor, not just a literal."""
+        region, account = "us-east-1", "999999999999"
+        store = get_filter_store(region)
+        store.put_metric_filter(
+            "/aws/bedrock/engineer-inference",
+            "BedrockInputTokensByModel",
+            "{ $.input.inputTokenCount = * }",
+            [
+                {
+                    "metricName": "InputTokens",
+                    "metricNamespace": "BedrockEngineerUsage",
+                    "metricValue": "$.input.inputTokenCount",
+                    "dimensions": {"ModelId": "$.modelId"},
+                }
+            ],
+        )
+        msg = json.dumps({"modelId": "moonshotai.kimi-k2.5", "input": {"inputTokenCount": 1500}})
+        process_log_events(
+            "/aws/bedrock/engineer-inference", "stream1", [{"message": msg}], region, account
+        )
+
+        from moto.backends import get_backend
+
+        cw_backend = get_backend("cloudwatch")[account][region]
+        matching = [d for d in cw_backend.metric_data if d.name == "InputTokens"]
+        assert len(matching) == 1
+        assert matching[0].value == 1500.0
+        dim_pairs = {(d.name, d.value) for d in matching[0].dimensions}
+        assert ("ModelId", "moonshotai.kimi-k2.5") in dim_pairs
+
+    def test_metric_filter_without_dimensions_still_works(self):
+        """A metric filter with no `dimensions` key (the common case) is unaffected."""
+        region, account = "us-east-1", "999999999998"
+        store = get_filter_store(region)
+        store.put_metric_filter(
+            "/some/group",
+            "PlainCount",
+            '{ $.status = "ERROR" }',
+            [{"metricName": "Errors", "metricNamespace": "MyApp", "metricValue": "1"}],
+        )
+        msg = json.dumps({"status": "ERROR"})
+        process_log_events("/some/group", "stream1", [{"message": msg}], region, account)
+
+        from moto.backends import get_backend
+
+        cw_backend = get_backend("cloudwatch")[account][region]
+        matching = [d for d in cw_backend.metric_data if d.name == "Errors"]
+        assert len(matching) == 1
+        assert matching[0].value == 1.0
+        assert list(matching[0].dimensions) == []
+
+    def test_metric_not_emitted_when_extracted_value_missing(self):
+        """If metricValue references a field the message doesn't have, skip cleanly."""
+        region, account = "us-east-1", "999999999997"
+        store = get_filter_store(region)
+        store.put_metric_filter(
+            "/some/group",
+            "MissingField",
+            "",
+            [
+                {
+                    "metricName": "Whatever",
+                    "metricNamespace": "MyApp",
+                    "metricValue": "$.does.not.exist",
+                }
+            ],
+        )
+        msg = json.dumps({"other": "field"})
+        process_log_events("/some/group", "stream1", [{"message": msg}], region, account)
+
+        from moto.backends import get_backend
+
+        cw_backend = get_backend("cloudwatch")[account][region]
+        matching = [d for d in cw_backend.metric_data if d.name == "Whatever"]
+        assert matching == []
