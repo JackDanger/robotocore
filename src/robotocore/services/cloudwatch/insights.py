@@ -478,7 +478,7 @@ def _exec_stats(rows: list[dict], cmd: dict) -> list[dict]:
         out_row = {}
         for agg in aggregations:
             agg_val = _compute_aggregation(agg, rows)
-            label = f"{agg['func']}({agg['field']})"
+            label = agg.get("alias") or f"{agg['func']}({agg['field']})"
             out_row[label] = str(agg_val)
         return [out_row]
 

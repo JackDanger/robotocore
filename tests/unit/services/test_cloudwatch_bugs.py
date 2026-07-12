@@ -305,3 +305,10 @@ class TestInsightsJsonAutoDiscovery:
         result = execute_pipeline(cmds, rows)
         assert len(result) == 1
         assert result[0]["permission_set"] == "Administrator"
+
+    def test_stats_alias_honored_without_group_by(self):
+        """`stats count(*) as alias` must use the alias even with no `by` clause —
+        the grouped branch honored it, the non-grouped branch previously didn't."""
+        cmds = parse_query("stats count(*) as error_count")
+        result = execute_pipeline(cmds, [{"message": "x"}, {"message": "y"}])
+        assert result == [{"error_count": "2.0"}]
