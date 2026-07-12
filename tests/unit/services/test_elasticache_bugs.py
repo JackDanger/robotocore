@@ -1,6 +1,7 @@
 """Tests for ElastiCache provider bugs found during review.
 
-Bug 1 (FIXED): SET with NX flag doesn't check expiry before checking key existence.
+Regression guard: SET with NX must succeed once a previously-set key has expired
+(lazy expiry is already correctly checked before the NX existence check).
 
 Bug 2: Action parameter in query string is ignored when content-type is form-urlencoded.
 When the Action parameter is in the query string but other parameters are in the body,
@@ -16,7 +17,9 @@ from robotocore.services.elasticache.provider import handle_elasticache_request
 from robotocore.services.elasticache.redis_compat import RedisCompatStore
 
 
-def _make_request(method: str, query_string: str = "", body: bytes = b"", content_type: str = "") -> MagicMock:
+def _make_request(
+    method: str, query_string: str = "", body: bytes = b"", content_type: str = ""
+) -> MagicMock:
     """Create a mock request for ElastiCache."""
     req = MagicMock()
     req.method = method
@@ -30,7 +33,7 @@ def _make_request(method: str, query_string: str = "", body: bytes = b"", conten
 
 
 class TestSetNxExpiryBug:
-    """Bug 1 (FIXED): SET with NX doesn't check expiry before checking existence."""
+    """Regression guard (not a bug fix): lazy expiry is checked before NX existence."""
 
     def test_set_nx_on_expired_key_should_succeed(self):
         """SET with NX should succeed if the key has expired."""
@@ -74,7 +77,7 @@ class TestActionParameterParsing:
         with patch(
             "robotocore.services.elasticache.provider.forward_to_moto",
             return_value=mock_response,
-        ) as mock_forward:
+        ):
             # Also patch _create_store_for_cluster to verify it's called
             with patch(
                 "robotocore.services.elasticache.provider._create_store_for_cluster",

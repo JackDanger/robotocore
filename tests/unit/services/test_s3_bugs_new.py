@@ -5,8 +5,6 @@ When a user PUTs a notification configuration with an <Id> element,
 the Id is parsed but not stored, and is missing from the GET response.
 """
 
-import pytest
-
 from robotocore.services.s3.notifications import NotificationConfig
 from robotocore.services.s3.provider import (
     _notification_config_to_xml,
@@ -63,10 +61,12 @@ class TestNotificationConfigId:
     def test_id_is_included_in_xml_output(self):
         """The Id should be included when serializing to XML."""
         config = NotificationConfig()
-        config.queue_configs.append({
-            "QueueArn": "arn:aws:sqs:us-east-1:123456789012:my-queue",
-            "Events": ["s3:ObjectCreated:Put"],
-            "Id": "my-config-id",
-        })
+        config.queue_configs.append(
+            {
+                "QueueArn": "arn:aws:sqs:us-east-1:123456789012:my-queue",
+                "Events": ["s3:ObjectCreated:Put"],
+                "Id": "my-config-id",
+            }
+        )
         xml = _notification_config_to_xml(config)
         assert "<Id>my-config-id</Id>" in xml

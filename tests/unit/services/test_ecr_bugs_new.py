@@ -42,9 +42,9 @@ class TestDescribeRepositoriesPagination:
         # Mock Moto returning 10 repositories
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.body = json.dumps({
-            "repositories": [{"repositoryName": f"repo-{i}"} for i in range(10)]
-        }).encode()
+        mock_response.body = json.dumps(
+            {"repositories": [{"repositoryName": f"repo-{i}"} for i in range(10)]}
+        ).encode()
 
         with patch(
             "robotocore.services.ecr.provider.forward_to_moto",
@@ -75,9 +75,9 @@ class TestDescribeRepositoriesPagination:
         # Mock Moto returning 10 repositories
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.body = json.dumps({
-            "repositories": [{"repositoryName": f"repo-{i}"} for i in range(10)]
-        }).encode()
+        mock_response.body = json.dumps(
+            {"repositories": [{"repositoryName": f"repo-{i}"} for i in range(10)]}
+        ).encode()
 
         with patch(
             "robotocore.services.ecr.provider.forward_to_moto",
