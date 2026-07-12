@@ -1,5 +1,5 @@
 ---
-session: 20250711
+session: 20260711
 slug: tagging-account-isolation
 type: fix
 ---
