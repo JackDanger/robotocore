@@ -1,6 +1,7 @@
 ---
+session: 20260712
+slug: cloudwatch-logs-metric-filters-integration
 type: test
-description: Integration tests for CloudWatch Logs metric filters and Insights queries
 ---
 
 # CloudWatch Logs Metric Filters and Insights Integration Tests
@@ -85,3 +86,13 @@ Per the task description, these tests lock in fixes for:
 5. Insights `parse` with dotted source and glob wildcards
 6. Insights `filter field = 'value'` (single-quoted)
 7. `stats func(x) as alias` alias preservation
+
+## Additional fix made during review
+
+While writing `test_insights_full_dashboard_query`, found that the earlier `stats ... as
+alias` fix only applied to the grouped branch of `_exec_stats` (`insights.py` line 473)
+— the non-grouped branch (line 481) still ignored the alias and always used the raw
+`func(field)` label. Fixed the non-grouped branch to match, corrected the test that had
+been written to assert the (wrong) unaliased behavior instead of exposing the gap, and
+added a dedicated unit regression test
+(`test_stats_alias_honored_without_group_by` in `test_cloudwatch_bugs.py`).

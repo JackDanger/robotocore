@@ -490,13 +490,14 @@ class TestLogsInsightsQueries:
             assert result["status"] == "Complete"
             assert len(result["results"]) == 1
 
-            # When there's no group by, the field name is the function call (e.g., "count(*)")
-            # The alias is only applied when there's a group by clause
+            # The alias should be honored even without a group by clause.
             count_val = next(
-                (f["value"] for f in result["results"][0] if f["field"] == "count(*)"),
+                (f["value"] for f in result["results"][0] if f["field"] == "error_count"),
                 None,
             )
-            assert count_val is not None
+            assert count_val is not None, (
+                f"Expected field 'error_count' (the query's alias), got: {result['results'][0]}"
+            )
             assert float(count_val) == 2.0
 
     def test_insights_full_dashboard_query(self, make_boto_client):
