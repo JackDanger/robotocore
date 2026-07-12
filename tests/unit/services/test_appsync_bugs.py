@@ -47,9 +47,9 @@ class TestUpdateDataSourceHttpConfig:
 
         # Bug: httpConfig was silently ignored in _update_data_source
         # After fix, the httpConfig should be updated
-        assert (
-            result["dataSource"]["httpConfig"]["endpoint"] == "https://newdomain.com/api"
-        ), f"Expected updated endpoint, got: {result['dataSource'].get('httpConfig')}"
+        assert result["dataSource"]["httpConfig"]["endpoint"] == "https://newdomain.com/api", (
+            f"Expected updated endpoint, got: {result['dataSource'].get('httpConfig')}"
+        )
 
     def test_update_data_source_preserves_other_fields(self):
         """Updating httpConfig should not affect other fields."""

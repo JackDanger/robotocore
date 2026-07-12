@@ -25,9 +25,7 @@ class TestUpdateStageMissingFields:
     def test_update_stage_access_log_settings(self):
         """AccessLogSettings field should be updated when provided in params."""
         # Create an API first
-        api_result = _create_api(
-            {"Name": "test-api", "ProtocolType": "HTTP"}, REGION, ACCOUNT
-        )
+        api_result = _create_api({"Name": "test-api", "ProtocolType": "HTTP"}, REGION, ACCOUNT)
         api_id = api_result["ApiId"]
 
         # Create a stage with AccessLogSettings
@@ -35,7 +33,7 @@ class TestUpdateStageMissingFields:
             "StageName": "prod",
             "AccessLogSettings": {
                 "DestinationArn": "arn:aws:logs:us-east-1:123456789012:log-group:old-group",
-                "Format": "{\"requestId\": \"$context.requestId\"}",
+                "Format": '{"requestId": "$context.requestId"}',
             },
         }
         result = _create_stage(api_id, create_params, REGION, ACCOUNT)
@@ -45,26 +43,24 @@ class TestUpdateStageMissingFields:
         update_params = {
             "AccessLogSettings": {
                 "DestinationArn": "arn:aws:logs:us-east-1:123456789012:log-group:new-group",
-                "Format": "{\"updated\": true}",
+                "Format": '{"updated": true}',
             }
         }
         result = _update_stage(api_id, "prod", update_params, REGION, ACCOUNT)
 
         # Bug: AccessLogSettings was silently ignored in _update_stage
         # After fix, the AccessLogSettings should be updated
-        assert (
-            result["AccessLogSettings"]["DestinationArn"].endswith("new-group")
-        ), f"Expected updated DestinationArn, got: {result.get('AccessLogSettings')}"
-        assert (
-            result["AccessLogSettings"]["Format"] == '{"updated": true}'
-        ), f"Expected updated Format, got: {result.get('AccessLogSettings')}"
+        assert result["AccessLogSettings"]["DestinationArn"].endswith("new-group"), (
+            f"Expected updated DestinationArn, got: {result.get('AccessLogSettings')}"
+        )
+        assert result["AccessLogSettings"]["Format"] == '{"updated": true}', (
+            f"Expected updated Format, got: {result.get('AccessLogSettings')}"
+        )
 
     def test_update_stage_tags(self):
         """Tags field should be updated when provided in params."""
         # Create an API first
-        api_result = _create_api(
-            {"Name": "test-api", "ProtocolType": "HTTP"}, REGION, ACCOUNT
-        )
+        api_result = _create_api({"Name": "test-api", "ProtocolType": "HTTP"}, REGION, ACCOUNT)
         api_id = api_result["ApiId"]
 
         # Create a stage with Tags
@@ -78,18 +74,16 @@ class TestUpdateStageMissingFields:
 
         # Bug: Tags was silently ignored in _update_stage
         # After fix, the Tags should be updated
-        assert (
-            result["Tags"]["env"] == "new-env"
-        ), f"Expected updated tag, got: {result.get('Tags')}"
+        assert result["Tags"]["env"] == "new-env", (
+            f"Expected updated tag, got: {result.get('Tags')}"
+        )
         # Other tags should be preserved
         assert result["Tags"]["team"] == "backend"
 
     def test_update_stage_preserves_other_fields(self):
         """Updating AccessLogSettings should not affect other fields."""
         # Create an API first
-        api_result = _create_api(
-            {"Name": "test-api", "ProtocolType": "HTTP"}, REGION, ACCOUNT
-        )
+        api_result = _create_api({"Name": "test-api", "ProtocolType": "HTTP"}, REGION, ACCOUNT)
         api_id = api_result["ApiId"]
 
         # Create a stage with multiple fields
@@ -99,7 +93,7 @@ class TestUpdateStageMissingFields:
             "StageVariables": {"key": "value"},
             "AccessLogSettings": {
                 "DestinationArn": "arn:aws:logs:us-east-1:123456789012:log-group:old-group",
-                "Format": "{\"requestId\": \"$context.requestId\"}",
+                "Format": '{"requestId": "$context.requestId"}',
             },
         }
         _create_stage(api_id, create_params, REGION, ACCOUNT)
@@ -108,7 +102,7 @@ class TestUpdateStageMissingFields:
         update_params = {
             "AccessLogSettings": {
                 "DestinationArn": "arn:aws:logs:us-east-1:123456789012:log-group:new-group",
-                "Format": "{\"updated\": true}",
+                "Format": '{"updated": true}',
             }
         }
         result = _update_stage(api_id, "prod", update_params, REGION, ACCOUNT)
