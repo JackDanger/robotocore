@@ -5150,6 +5150,59 @@ class TestEC2InstanceImageOperations:
         finally:
             ec2.terminate_instances(InstanceIds=[instance_id])
 
+    def test_created_image_is_ebs_backed(self, ec2):
+        """An image made from an EBS-backed instance reports RootDeviceType 'ebs'.
+
+        Packer's amazon-ebs builder rejects a source AMI reporting 'standard'
+        with "The provided source AMI has an invalid root device type", so a
+        created image cannot feed a subsequent build.
+        """
+        instances = ec2.run_instances(
+            ImageId="ami-12345678",
+            InstanceType="t2.micro",
+            MinCount=1,
+            MaxCount=1,
+        )
+        instance_id = instances["Instances"][0]["InstanceId"]
+        try:
+            ami_id = ec2.create_image(InstanceId=instance_id, Name=_unique("ebs-backed"))["ImageId"]
+            try:
+                image = ec2.describe_images(ImageIds=[ami_id])["Images"][0]
+                assert image["RootDeviceType"] == "ebs"
+                assert image["RootDeviceName"]
+                assert any("Ebs" in m for m in image["BlockDeviceMappings"])
+            finally:
+                ec2.deregister_image(ImageId=ami_id)
+        finally:
+            ec2.terminate_instances(InstanceIds=[instance_id])
+
+    def test_registered_and_copied_images_are_ebs_backed(self, ec2):
+        """RegisterImage and CopyImage report 'ebs' too, matching their mappings."""
+        registered = ec2.register_image(
+            Name=_unique("registered"),
+            RootDeviceName="/dev/sda1",
+            BlockDeviceMappings=[
+                {"DeviceName": "/dev/sda1", "Ebs": {"VolumeSize": 8}},
+            ],
+        )["ImageId"]
+        try:
+            image = ec2.describe_images(ImageIds=[registered])["Images"][0]
+            assert image["RootDeviceType"] == "ebs"
+        finally:
+            ec2.deregister_image(ImageId=registered)
+
+        source = ec2.describe_images(Owners=["amazon"])["Images"][0]
+        copied = ec2.copy_image(
+            SourceImageId=source["ImageId"],
+            SourceRegion="us-east-1",
+            Name=_unique("copied"),
+        )["ImageId"]
+        try:
+            image = ec2.describe_images(ImageIds=[copied])["Images"][0]
+            assert image["RootDeviceType"] == "ebs"
+        finally:
+            ec2.deregister_image(ImageId=copied)
+
     def test_get_launch_template_data(self, ec2):
         instances = ec2.run_instances(
             ImageId="ami-12345678",
