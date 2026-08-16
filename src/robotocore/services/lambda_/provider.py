@@ -83,7 +83,7 @@ def get_event_source_mappings() -> list[dict]:
 
 
 def _get_moto_backend(account_id: str, region: str):
-    from moto.backends import get_backend  # noqa: I001
+    from moto.backends import get_backend
     from moto.core import DEFAULT_ACCOUNT_ID
 
     acct = account_id if account_id != "123456789012" else DEFAULT_ACCOUNT_ID
@@ -123,22 +123,10 @@ async def handle_lambda_request(request: Request, region: str, account_id: str) 
         # /account-settings
         elif parts[0] == "account-settings":
             return _handle_account_settings(region, account_id)
-        # /code-signing-configs
-        elif parts[0] == "code-signing-configs":
-            return _handle_code_signing_configs(parts, method, body, region, account_id)
-        # /capacity-providers (2025-11-30 API)
-        elif parts[0] == "capacity-providers":
-            return _handle_capacity_providers(parts, method, body, region, account_id)
-        # /durable-executions (2025-12-01 API)
-        elif parts[0] == "durable-executions":
-            return _handle_durable_executions(parts, method, body, region, account_id)
-        # /durable-execution-callbacks (2025-12-01 API)
-        elif parts[0] == "durable-execution-callbacks":
-            return _json(200, {})
         else:
             return _error("InvalidRequest", f"Unknown path: {path}", 400)
 
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         error_type = type(e).__name__
         error_msg = str(e)
 
@@ -164,8 +152,6 @@ async def handle_lambda_request(request: Request, region: str, account_id: str) 
         if "UnknownEventConfig" in error_type:
             return _error("ResourceNotFoundException", error_msg, 404)
         if "GenericResourcNotFound" in error_type:
-            return _error("ResourceNotFoundException", error_msg, 404)
-        if "UnknownCodeSigningConfig" in error_type:
             return _error("ResourceNotFoundException", error_msg, 404)
         if "ValidationException" in error_type:
             return _error("ValidationException", error_msg, 400)
@@ -428,13 +414,13 @@ def _handle_recursion_config(
     func_name: str, method: str, body: bytes, region: str, account_id: str
 ) -> Response:
     """Handle GET/PUT for function recursion config."""
-    from moto.backends import get_backend  # noqa: I001
+    from moto.backends import get_backend
 
     backend = get_backend("lambda")[account_id][region]
     # Verify function exists
     try:
         backend.get_function(func_name)
-    except Exception:  # noqa: BLE001
+    except Exception:
         return _error(
             "ResourceNotFoundException",
             f"Function not found: arn:aws:lambda:{region}:{account_id}:function:{func_name}",
@@ -473,7 +459,7 @@ def _handle_scaling_config(
     backend = _get_moto_backend(account_id, region)
     try:
         backend.get_function(func_name)
-    except Exception:  # noqa: BLE001
+    except Exception:
         return _error(
             "ResourceNotFoundException",
             f"Function not found: arn:aws:lambda:{region}:{account_id}:function:{func_name}",
@@ -516,7 +502,7 @@ def _handle_code_signing_config(
     backend = _get_moto_backend(account_id, region)
     try:
         backend.get_function(func_name)
-    except Exception:  # noqa: BLE001
+    except Exception:
         return _error(
             "ResourceNotFoundException",
             f"Function not found: arn:aws:lambda:{region}:{account_id}:function:{func_name}",
@@ -561,7 +547,7 @@ def _handle_runtime_management_config(
     backend = _get_moto_backend(account_id, region)
     try:
         backend.get_function(func_name)
-    except Exception:  # noqa: BLE001
+    except Exception:
         return _error(
             "ResourceNotFoundException",
             f"Function not found: arn:aws:lambda:{region}:{account_id}:function:{func_name}",
@@ -783,13 +769,6 @@ def _put_provisioned_concurrency(
     }
     with _provisioned_lock:
         _provisioned_concurrency[key] = config
-
-    # Register with concurrency tracker so invocations route through provisioned pool
-    function_key = f"{account_id}:{region}:{func_name}"
-    prov_key = f"{function_key}:{qualifier}"
-    tracker = get_concurrency_tracker()
-    tracker.set_provisioned(prov_key, count)
-
     return config
 
 
@@ -798,20 +777,7 @@ def _get_provisioned_concurrency(
 ) -> dict | None:
     key = (account_id, region, func_name, qualifier)
     with _provisioned_lock:
-        config = _provisioned_concurrency.get(key)
-        if config is None:
-            return None
-        # Enrich with live utilization data from the tracker
-        config = dict(config)  # copy to avoid mutating the store
-        function_key = f"{account_id}:{region}:{func_name}"
-        prov_key = f"{function_key}:{qualifier}"
-        tracker = get_concurrency_tracker()
-        utilization = tracker.get_provisioned_utilization(prov_key)
-        in_use = tracker.get_provisioned_in_use(prov_key)
-        allocated = config.get("AllocatedProvisionedConcurrentExecutions", 0)
-        config["ProvisionedConcurrencyUtilization"] = round(utilization, 4)
-        config["AvailableProvisionedConcurrentExecutions"] = max(0, allocated - in_use)
-        return config
+        return _provisioned_concurrency.get(key)
 
 
 def _delete_provisioned_concurrency(
@@ -821,11 +787,6 @@ def _delete_provisioned_concurrency(
     with _provisioned_lock:
         if key in _provisioned_concurrency:
             del _provisioned_concurrency[key]
-            # Deregister from concurrency tracker
-            function_key = f"{account_id}:{region}:{func_name}"
-            prov_key = f"{function_key}:{qualifier}"
-            tracker = get_concurrency_tracker()
-            tracker.delete_provisioned(prov_key)
             return True
         return False
 
@@ -941,193 +902,6 @@ def _handle_account_settings(region: str, account_id: str) -> Response:
             },
         },
     )
-
-
-def _handle_code_signing_configs(
-    parts: list[str], method: str, body: bytes, region: str, account_id: str
-) -> Response:
-    """Handle /code-signing-configs endpoints (standalone CSC management)."""
-    backend = _get_moto_backend(account_id, region)
-
-    if len(parts) == 1:
-        if method == "POST":
-            spec = json.loads(body) if body else {}
-            csc = backend.create_code_signing_config(
-                spec.get("AllowedPublishers", {}),
-                spec.get("Description", ""),
-                spec.get("CodeSigningPolicies"),
-            )
-            return _json(201, {"CodeSigningConfig": csc.to_dict()})
-        if method == "GET":
-            configs = backend.list_code_signing_configs()
-            return _json(
-                200,
-                {
-                    "CodeSigningConfigs": [c.to_dict() for c in configs],
-                    "NextMarker": None,
-                },
-            )
-        return _error("InvalidRequest", "Method not allowed", 405)
-
-    config_arn = parts[1]
-    if len(parts) == 2:
-        if method == "GET":
-            csc = backend.get_code_signing_config(config_arn)
-            return _json(200, {"CodeSigningConfig": csc.to_dict()})
-        if method == "DELETE":
-            backend.delete_code_signing_config(config_arn)
-            return _json(204, None)
-        if method == "PUT":
-            spec = json.loads(body) if body else {}
-            csc = backend.get_code_signing_config(config_arn)
-            if "Description" in spec:
-                csc.description = spec["Description"]
-            if "AllowedPublishers" in spec:
-                csc.allowed_publishers = spec["AllowedPublishers"]
-            if "CodeSigningPolicies" in spec:
-                csc.policies = spec["CodeSigningPolicies"]
-            return _json(200, {"CodeSigningConfig": csc.to_dict()})
-        return _error("InvalidRequest", "Method not allowed", 405)
-
-    if len(parts) == 3 and parts[2] == "functions":
-        if method == "GET":
-            func_arns = backend.list_functions_by_code_signing_config(config_arn)
-            return _json(200, {"FunctionArns": func_arns, "NextMarker": None})
-        return _error("InvalidRequest", "Method not allowed", 405)
-
-    return _error("InvalidRequest", "Unknown code-signing-configs path", 400)
-
-
-# In-memory store for capacity providers (stub implementation)
-_capacity_providers: dict[tuple[str, str, str], dict] = {}
-_capacity_providers_lock = __import__("threading").Lock()
-
-
-def _handle_capacity_providers(
-    parts: list[str], method: str, body: bytes, region: str, account_id: str
-) -> Response:
-    """Handle /capacity-providers endpoints (2025-11-30 API stub)."""
-    if len(parts) == 1:
-        # POST /capacity-providers → CreateCapacityProvider
-        if method == "POST":
-            spec = json.loads(body) if body else {}
-            name = spec.get("CapacityProviderName", "")
-            provider = {
-                "CapacityProviderName": name,
-                "CapacityProviderArn": (
-                    f"arn:aws:lambda:{region}:{account_id}:capacity-provider:{name}"
-                ),
-                "VpcConfig": spec.get("VpcConfig", {}),
-                "PermissionsConfig": spec.get("PermissionsConfig", {}),
-                "Status": "ACTIVE",
-                "Tags": spec.get("Tags", {}),
-            }
-            with _capacity_providers_lock:
-                _capacity_providers[(account_id, region, name)] = provider
-            return _json(201, {"CapacityProvider": provider})
-        # GET /capacity-providers → ListCapacityProviders
-        if method == "GET":
-            with _capacity_providers_lock:
-                providers = [
-                    v
-                    for (aid, reg, _), v in _capacity_providers.items()
-                    if aid == account_id and reg == region
-                ]
-            return _json(200, {"CapacityProviders": providers, "NextMarker": None})
-        return _error("InvalidRequest", "Method not allowed", 405)
-
-    cp_name = parts[1]
-    key = (account_id, region, cp_name)
-
-    if len(parts) == 2:
-        # GET /capacity-providers/{name} → GetCapacityProvider
-        if method == "GET":
-            with _capacity_providers_lock:
-                provider = _capacity_providers.get(key)
-            if provider is None:
-                return _error(
-                    "ResourceNotFoundException",
-                    f"Capacity provider not found: {cp_name}",
-                    404,
-                )
-            return _json(200, {"CapacityProvider": provider})
-        # DELETE /capacity-providers/{name} → DeleteCapacityProvider
-        if method == "DELETE":
-            with _capacity_providers_lock:
-                provider = _capacity_providers.pop(key, None)
-            if provider is None:
-                return _error(
-                    "ResourceNotFoundException",
-                    f"Capacity provider not found: {cp_name}",
-                    404,
-                )
-            return _json(200, {"CapacityProvider": provider})
-        # PUT /capacity-providers/{name} → UpdateCapacityProvider
-        if method == "PUT":
-            spec = json.loads(body) if body else {}
-            with _capacity_providers_lock:
-                provider = _capacity_providers.get(key)
-            if provider is None:
-                return _error(
-                    "ResourceNotFoundException",
-                    f"Capacity provider not found: {cp_name}",
-                    404,
-                )
-            updated = {**provider, **spec, "CapacityProviderName": cp_name}
-            with _capacity_providers_lock:
-                _capacity_providers[key] = updated
-            return _json(200, {"CapacityProvider": updated})
-        return _error("InvalidRequest", "Method not allowed", 405)
-
-    if len(parts) == 3 and parts[2] == "function-versions":
-        # GET /capacity-providers/{name}/function-versions → ListFunctionVersionsByCapacityProvider
-        if method == "GET":
-            cp_arn = f"arn:aws:lambda:{region}:{account_id}:capacity-provider:{cp_name}"
-            return _json(
-                200, {"CapacityProviderArn": cp_arn, "FunctionVersions": [], "NextMarker": None}
-            )
-        return _error("InvalidRequest", "Method not allowed", 405)
-
-    return _error("InvalidRequest", "Unknown capacity-providers path", 400)
-
-
-def _handle_durable_executions(
-    parts: list[str], method: str, body: bytes, region: str, account_id: str
-) -> Response:
-    """Handle /durable-executions endpoints (2025-12-01 API stub)."""
-    if len(parts) == 1:
-        return _json(200, {"DurableExecutions": [], "NextMarker": None})
-
-    exec_arn = parts[1]
-
-    if len(parts) == 2:
-        # GET /durable-executions/{arn} → GetDurableExecution
-        if method == "GET":
-            return _json(
-                200,
-                {
-                    "DurableExecutionArn": exec_arn,
-                    "DurableExecutionName": None,
-                    "Status": "RUNNING",
-                    "FunctionArn": None,
-                },
-            )
-        # DELETE /durable-executions/{arn} → StopDurableExecution
-        if method == "DELETE":
-            return _json(200, {})
-        return _error("InvalidRequest", "Method not allowed", 405)
-
-    sub = parts[2] if len(parts) > 2 else ""
-    if sub == "history":
-        return _json(200, {"Events": [], "NextToken": None})
-    if sub == "state":
-        return _json(200, {"State": None})
-    if sub == "checkpoint":
-        return _json(200, {})
-    if sub == "stop":
-        return _json(200, {})
-
-    return _error("InvalidRequest", "Unknown durable-executions path", 400)
 
 
 def _cascade_delete_function(func_name: str, region: str, account_id: str) -> None:
@@ -1416,13 +1190,10 @@ async def _invoke(
     # Track recursion depth for this invocation
     increment_depth(account_id, region, func_name)
 
-    # Determine qualifier for provisioned concurrency routing
-    qualifier = request.query_params.get("Qualifier", "$LATEST")
-
-    # Acquire concurrency slot — returns True if provisioned concurrency was used
+    # Acquire concurrency slot
     function_key = f"{account_id}:{region}:{func_name}"
     tracker = get_concurrency_tracker()
-    used_provisioned = tracker.acquire(function_key, qualifier)
+    tracker.acquire(function_key)
     try:
         if code_dir or code_zip:
             from robotocore.services.lambda_.docker_executor import get_executor_mode
@@ -1477,7 +1248,7 @@ async def _invoke(
             # No code — return a simple success (like Moto's simple mode)
             result, error_type, logs = "Simple Lambda happy path OK", None, ""
     finally:
-        tracker.release(function_key, qualifier)
+        tracker.release(function_key)
         decrement_depth(account_id, region, func_name)
 
     # Handle async invocation with destinations and DLQ
@@ -1489,16 +1260,10 @@ async def _invoke(
             daemon=True,
         ).start()
 
-    # Resolve executed version: use qualifier if it's a numeric version, else $LATEST
-    executed_version = qualifier if qualifier.isdigit() else "$LATEST"
-
     headers = {
         "x-amz-request-id": str(uuid.uuid4()),
-        "x-amz-executed-version": executed_version,
+        "x-amz-executed-version": "$LATEST",
     }
-
-    if used_provisioned:
-        headers["x-amz-log-type"] = "ProvisionedConcurrencyInvocation"
 
     if error_type:
         headers["x-amz-function-error"] = error_type
@@ -1598,12 +1363,9 @@ async def _invoke_with_response_stream(
     else:
         payload = str(result).encode()
 
-    qualifier = request.query_params.get("Qualifier", "$LATEST")
-    executed_version = qualifier if qualifier.isdigit() else "$LATEST"
-
     headers = {
         "x-amz-request-id": str(uuid.uuid4()),
-        "x-amz-executed-version": executed_version,
+        "x-amz-executed-version": "$LATEST",
         "content-type": "application/json",
     }
     return Response(
@@ -1717,7 +1479,7 @@ def _dispatch_async_result(
     try:
         backend = _get_moto_backend(account_id, region)
         invoke_config = backend.get_function_event_invoke_config(func_name)
-    except Exception:  # noqa: BLE001
+    except Exception:
         invoke_config = None
 
     # Get max retry attempts and max event age (AWS defaults)
