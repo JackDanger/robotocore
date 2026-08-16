@@ -1361,6 +1361,7 @@ class TestIAMChangePassword:
     def test_change_password(self, iam):
         """ChangePassword."""
         resp = iam.change_password(OldPassword="oldpass", NewPassword="newpass123!")
+        assert "ResponseMetadata" in resp
         assert resp["ResponseMetadata"]["HTTPStatusCode"] == 200
 
 
@@ -2400,6 +2401,7 @@ class TestIamAutoCoverage:
     def test_disable_outbound_web_identity_federation(self, client):
         """DisableOutboundWebIdentityFederation returns a response."""
         resp = client.disable_outbound_web_identity_federation()
+        assert "ResponseMetadata" in resp
         assert resp["ResponseMetadata"]["HTTPStatusCode"] == 200
 
     def test_enable_organizations_root_credentials_management(self, client):
@@ -2417,11 +2419,13 @@ class TestIamAutoCoverage:
     def test_enable_outbound_web_identity_federation(self, client):
         """EnableOutboundWebIdentityFederation returns a response."""
         resp = client.enable_outbound_web_identity_federation()
+        assert "ResponseMetadata" in resp
         assert resp["ResponseMetadata"]["HTTPStatusCode"] == 200
 
     def test_get_outbound_web_identity_federation_info(self, client):
         """GetOutboundWebIdentityFederationInfo returns a response."""
         resp = client.get_outbound_web_identity_federation_info()
+        assert "ResponseMetadata" in resp
         assert resp["ResponseMetadata"]["HTTPStatusCode"] == 200
 
     def test_list_delegation_requests(self, client):
@@ -3055,6 +3059,7 @@ class TestIAMCreateSAMLProvider:
         # Pad to meet 1000 char minimum
         saml_doc = saml_doc + " " * max(0, 1000 - len(saml_doc))
         resp = iam.create_saml_provider(SAMLMetadataDocument=saml_doc, Name=name)
+        arn = resp["SAMLProviderArn"]
         assert "SAMLProviderArn" in resp
         arn = resp["SAMLProviderArn"]
         try:
@@ -4827,6 +4832,7 @@ class TestIAMSshPublicKeys:
         try:
             resp = iam.list_ssh_public_keys(UserName=user_name)
             assert "SSHPublicKeys" in resp
+            assert isinstance(resp["SSHPublicKeys"], list)
             assert len(resp["SSHPublicKeys"]) == 0
         finally:
             iam.delete_user(UserName=user_name)
@@ -4999,8 +5005,6 @@ class TestIAMOIDCProviderExplicit:
         arn = resp["OpenIDConnectProviderArn"]
         try:
             list_resp = iam.list_open_id_connect_providers()
-            assert "OpenIDConnectProviderList" in list_resp
-            assert isinstance(list_resp["OpenIDConnectProviderList"], list)
             arns = [p["Arn"] for p in list_resp["OpenIDConnectProviderList"]]
             assert arn in arns
         finally:
@@ -5095,7 +5099,7 @@ class TestIAMSAMLProviderExplicit:
             get_resp = iam.get_saml_provider(SAMLProviderArn=arn)
             assert "SAMLMetadataDocument" in get_resp
             assert isinstance(get_resp["SAMLMetadataDocument"], str)
-            assert len(get_resp["SAMLMetadataDocument"]) > 0
+            assert "EntityDescriptor" in get_resp["SAMLMetadataDocument"]
         finally:
             iam.delete_saml_provider(SAMLProviderArn=arn)
 
@@ -5593,7 +5597,6 @@ class TestIAMSAMLProviderOperations:
     def test_create_and_get_saml_provider(self, iam):
         name = _unique("saml")
         resp = iam.create_saml_provider(SAMLMetadataDocument=SAML_METADATA_DOC, Name=name)
-        assert "SAMLProviderArn" in resp
         arn = resp["SAMLProviderArn"]
         assert "arn:aws:iam::" in arn
         try:
@@ -5725,6 +5728,7 @@ class TestIAMSSHPublicKeyOperations:
         try:
             resp = iam.list_ssh_public_keys(UserName=user)
             assert "SSHPublicKeys" in resp
+            assert isinstance(resp["SSHPublicKeys"], list)
             assert len(resp["SSHPublicKeys"]) == 0
         finally:
             iam.delete_user(UserName=user)
