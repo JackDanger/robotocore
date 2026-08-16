@@ -1,11 +1,9 @@
 """Enhanced S3 provider — wraps Moto's S3 with event notifications, CORS,
 versioning, lifecycle, object lock, multipart support, and presigned URLs."""
 
-import calendar
 import logging
 import re
 import threading
-import time
 import xml.etree.ElementTree as ET
 from urllib.parse import urlencode
 
@@ -20,8 +18,6 @@ from robotocore.services.s3.notifications import (
     get_notification_config,
     set_notification_config,
 )
-
-logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Monkey-patch Moto's FakeBucket.get_permission to handle policy as str or bytes.
@@ -40,8 +36,8 @@ try:
         return _orig_get_permission(self, action, resource)
 
     FakeBucket.get_permission = _patched_get_permission  # type: ignore[assignment]
-except Exception as exc:  # noqa: BLE001
-    logger.debug("<module>: _orig_get_permission failed (non-fatal): %s", exc)
+except Exception:
+    pass
 
 # Patterns to detect bucket and key from S3 paths
 # Path style: /<bucket>/<key>
@@ -68,15 +64,6 @@ _SIGV2_PARAMS = {
 # All signature-related parameters to strip
 _ALL_SIG_PARAMS = _SIGV4_PARAMS | _SIGV2_PARAMS
 
-_RESPONSE_HEADER_OVERRIDES = {
-    "response-cache-control": "Cache-Control",
-    "response-content-disposition": "Content-Disposition",
-    "response-content-encoding": "Content-Encoding",
-    "response-content-language": "Content-Language",
-    "response-content-type": "Content-Type",
-    "response-expires": "Expires",
-}
-
 # ---------------------------------------------------------------------------
 # In-memory stores for CORS, lifecycle, and object lock
 # ---------------------------------------------------------------------------
@@ -100,49 +87,6 @@ S3_NS = "http://s3.amazonaws.com/doc/2006-03-01/"
 def _is_presigned_url(query_params: QueryParams) -> bool:
     """Check if the request is a presigned URL request."""
     return "X-Amz-Signature" in query_params or "Signature" in query_params
-
-
-def _check_presigned_expiration(query_params: QueryParams) -> Response | None:
-    """Return a 403 response if the presigned URL has expired, else None."""
-    if "X-Amz-Signature" in query_params:
-        # SigV4: expiration = X-Amz-Date + X-Amz-Expires seconds
-        date_str = query_params.get("X-Amz-Date", "")
-        expires_str = query_params.get("X-Amz-Expires", "")
-        if date_str and expires_str:
-            try:
-                sign_time = calendar.timegm(time.strptime(date_str, "%Y%m%dT%H%M%SZ"))
-                expires_seconds = int(expires_str)
-                if time.time() > sign_time + expires_seconds:
-                    return _expired_presigned_response()
-            except (ValueError, OverflowError):
-                pass  # malformed date/expires — let Moto reject it
-    elif "Signature" in query_params:
-        # SigV2: Expires is a unix timestamp
-        expires_str = query_params.get("Expires", "")
-        if expires_str:
-            try:
-                if time.time() > int(expires_str):
-                    return _expired_presigned_response()
-            except (ValueError, OverflowError):
-                pass  # malformed Expires — let Moto reject it
-    return None
-
-
-def _expired_presigned_response() -> Response:
-    """Return an S3-style AccessDenied XML response for expired presigned URLs."""
-    body = (
-        '<?xml version="1.0" encoding="UTF-8"?>'
-        "<Error>"
-        "<Code>AccessDenied</Code>"
-        "<Message>Request has expired</Message>"
-        "<RequestId>00000000-0000-0000-0000-000000000000</RequestId>"
-        "</Error>"
-    )
-    return Response(
-        content=body,
-        status_code=403,
-        media_type="application/xml",
-    )
 
 
 def _strip_presigned_params(request: Request, body: bytes | None = None) -> Request:
@@ -212,24 +156,6 @@ def _strip_presigned_params(request: Request, body: bytes | None = None) -> Requ
         return new_req
 
     return Request(scope, request.receive)
-
-
-def _apply_response_header_overrides(request: Request, response: Response, path: str) -> Response:
-    """Apply S3 response header override query params to object GET/HEAD responses."""
-    if response.status_code not in (200, 206):
-        return response
-
-    match = _PATH_RE.match(path)
-    if not match or not match.group(2):
-        return response
-
-    for query_param, header_name in _RESPONSE_HEADER_OVERRIDES.items():
-        value = request.query_params.get(query_param)
-        if value is None:
-            continue
-        response.headers[header_name] = value
-
-    return response
 
 
 # ---------------------------------------------------------------------------
@@ -324,8 +250,8 @@ def _parse_cors_xml(xml_str: str) -> list[dict]:
             elif tag == "MaxAgeSeconds":
                 try:
                     rule["MaxAgeSeconds"] = int(text)
-                except ValueError as exc:
-                    logger.debug("_parse_cors_xml: int failed (non-fatal): %s", exc)
+                except ValueError:
+                    pass
         rules.append(rule)
     return rules
 
@@ -650,11 +576,8 @@ async def handle_s3_request(request: Request, region: str, account_id: str) -> R
     if path.endswith("/WriteGetObjectResponse") and method == "POST":
         return Response(status_code=200)
 
-    # Handle presigned URL requests: check expiration, then strip signature params
+    # Handle presigned URL requests by stripping signature params
     if _is_presigned_url(request.query_params):
-        expired = _check_presigned_expiration(request.query_params)
-        if expired is not None:
-            return expired
         body = await request.body()
         request = _strip_presigned_params(request, body)
 
@@ -708,7 +631,6 @@ async def handle_s3_request(request: Request, region: str, account_id: str) -> R
 
     # Forward to Moto for actual S3 operation
     response = await forward_to_moto(request, "s3", account_id=account_id)
-    response = _apply_response_header_overrides(request, response, path)
 
     # Post-response cleanup and event firing
     if response.status_code in (200, 202, 204):
@@ -732,7 +654,7 @@ async def handle_s3_request(request: Request, region: str, account_id: str) -> R
                                 "type": "Directory",
                                 "location_type": "AvailabilityZone",
                             }
-                except Exception:  # noqa: BLE001
+                except Exception:
                     # Best-effort tracking — body may already be consumed
                     logging.debug("Failed to detect directory bucket type from request body")
 
@@ -743,8 +665,8 @@ async def handle_s3_request(request: Request, region: str, account_id: str) -> R
                     if hname.lower() == "content-length":
                         try:
                             content_length = int(v)
-                        except (ValueError, TypeError) as exc:
-                            logger.debug("handle_s3_request: int failed (non-fatal): %s", exc)
+                        except (ValueError, TypeError):
+                            pass
                 etag = ""
                 for h, v in response.raw_headers:
                     hname = h.decode() if isinstance(h, bytes) else h
@@ -1098,7 +1020,6 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
         queue_arn = ""
         events: list[str] = []
         filter_rules: list[dict] = []
-        config_id = ""
 
         for child in qc:
             tag = child.tag.split("}")[-1] if "}" in child.tag else child.tag
@@ -1108,12 +1029,8 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
                 events.append(child.text or "")
             elif tag == "Filter":
                 filter_rules = _parse_filter_rules(child)
-            elif tag == "Id":
-                config_id = child.text or ""
 
         entry: dict = {"QueueArn": queue_arn, "Events": events}
-        if config_id:
-            entry["Id"] = config_id
         if filter_rules:
             entry["Filter"] = {"Key": {"FilterRules": filter_rules}}
         config.queue_configs.append(entry)
@@ -1122,7 +1039,6 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
         topic_arn = ""
         events = []
         filter_rules = []
-        config_id = ""
 
         for child in tc:
             tag = child.tag.split("}")[-1] if "}" in child.tag else child.tag
@@ -1132,12 +1048,8 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
                 events.append(child.text or "")
             elif tag == "Filter":
                 filter_rules = _parse_filter_rules(child)
-            elif tag == "Id":
-                config_id = child.text or ""
 
         entry = {"TopicArn": topic_arn, "Events": events}
-        if config_id:
-            entry["Id"] = config_id
         if filter_rules:
             entry["Filter"] = {"Key": {"FilterRules": filter_rules}}
         config.topic_configs.append(entry)
@@ -1152,7 +1064,6 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
         lambda_arn = ""
         events = []
         filter_rules = []
-        config_id = ""
 
         for child in lc:
             tag = child.tag.split("}")[-1] if "}" in child.tag else child.tag
@@ -1162,12 +1073,8 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
                 events.append(child.text or "")
             elif tag == "Filter":
                 filter_rules = _parse_filter_rules(child)
-            elif tag == "Id":
-                config_id = child.text or ""
 
         entry = {"LambdaFunctionArn": lambda_arn, "Events": events}
-        if config_id:
-            entry["Id"] = config_id
         if filter_rules:
             entry["Filter"] = {"Key": {"FilterRules": filter_rules}}
         config.lambda_configs.append(entry)
@@ -1207,8 +1114,6 @@ def _notification_config_to_xml(config: NotificationConfig) -> str:
 
     for qc in config.queue_configs:
         parts.append("<QueueConfiguration>")
-        if "Id" in qc:
-            parts.append(f"<Id>{qc['Id']}</Id>")
         parts.append(f"<Queue>{qc['QueueArn']}</Queue>")
         for evt in qc.get("Events", []):
             parts.append(f"<Event>{evt}</Event>")
@@ -1217,8 +1122,6 @@ def _notification_config_to_xml(config: NotificationConfig) -> str:
 
     for tc in config.topic_configs:
         parts.append("<TopicConfiguration>")
-        if "Id" in tc:
-            parts.append(f"<Id>{tc['Id']}</Id>")
         parts.append(f"<Topic>{tc['TopicArn']}</Topic>")
         for evt in tc.get("Events", []):
             parts.append(f"<Event>{evt}</Event>")
@@ -1227,8 +1130,6 @@ def _notification_config_to_xml(config: NotificationConfig) -> str:
 
     for lc in config.lambda_configs:
         parts.append("<LambdaFunctionConfiguration>")
-        if "Id" in lc:
-            parts.append(f"<Id>{lc['Id']}</Id>")
         parts.append(f"<LambdaFunctionArn>{lc['LambdaFunctionArn']}</LambdaFunctionArn>")
         for evt in lc.get("Events", []):
             parts.append(f"<Event>{evt}</Event>")

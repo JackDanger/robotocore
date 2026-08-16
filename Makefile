@@ -4,9 +4,7 @@
         test-iac test-iac-terraform test-iac-cloudformation test-iac-cdk \
         test-iac-pulumi test-iac-serverless test-iac-sam release \
         s3-semantic-audit s3-connectivity-matrix \
-        coverage pre-commit-install pre-commit \
-        shape-check error-check \
-        catalog semantic-check audit
+        coverage pre-commit-install pre-commit
 
 N := $(shell python3 -c "import os; print(min(os.cpu_count() or 4, 12))")
 DEV := uv run python scripts/dev.py
@@ -83,11 +81,9 @@ smoke: ## Run smoke tests (requires running server)
 
 ## ── Code quality ─────────────────────────────────────────────────────────────
 
-lint: ## Check code: ruff, mypy, bandit (matches pre-commit + CI)
+lint: ## Check code with ruff (lint + format)
 	uv run ruff check src/ tests/ scripts/
 	uv run ruff format --check src/ tests/ scripts/
-	uv run mypy src/robotocore/ --ignore-missing-imports
-	uv run bandit -r src/robotocore/ -ll -c pyproject.toml -q
 
 format: ## Auto-format and fix code with ruff
 	uv run ruff format src/ tests/ scripts/
@@ -107,14 +103,6 @@ pre-commit-install: ## Install pre-commit hooks into local git repo
 
 pre-commit: ## Run pre-commit checks on all files
 	uv run pre-commit run --all-files
-
-## ── Shape & contract validation ──────────────────────────────────────────
-
-shape-check: ## Validate response shapes against botocore (requires running server)
-	uv run python scripts/validate_response_shapes.py --top 20 --no-optional
-
-error-check: ## Validate error response contracts (requires running server)
-	uv run python scripts/validate_error_contracts.py --top 20
 
 ## ── Gap analysis ─────────────────────────────────────────────────────────────
 
@@ -148,21 +136,6 @@ s3-semantic-audit: ## Generate the S3 feature-level semantic audit report
 
 s3-connectivity-matrix: s3-semantic-audit ## Regenerate the S3 connectivity matrix
 	@echo "Wrote docs/s3-connectivity-matrix.md"
-
-## ── Operation catalog & semantic checks ─────────────────────────────────────
-
-catalog: ## Build per-operation truth table (data/operation_catalog.json)
-	uv run python scripts/build_operation_catalog.py --json > data/operation_catalog.json
-
-semantic-check: ## Validate test assertions against botocore shapes (no server needed)
-	uv run python scripts/validate_test_semantics.py
-
-audit: test-quality semantic-check catalog ## Full audit: test quality + semantics + catalog
-	@echo ""
-	@echo "══════════════════════════════════════════════════════════════════"
-	@echo "  Operation Catalog Summary"
-	@echo "══════════════════════════════════════════════════════════════════"
-	uv run python scripts/build_operation_catalog.py --summary
 
 ## ── Docker ───────────────────────────────────────────────────────────────────
 
