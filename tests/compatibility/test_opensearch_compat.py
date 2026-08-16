@@ -1357,7 +1357,7 @@ class TestOpenSearchNewOps2:
         try:
             opensearch.delete_domain(DomainName=name)
         except Exception:
-            pass
+            pass  # best-effort cleanup
 
     def test_authorize_vpc_endpoint_access(self, opensearch, domain):
         """AuthorizeVpcEndpointAccess with a fake account on a real domain."""
@@ -1477,22 +1477,62 @@ class TestOpenSearchNewOps2:
         except opensearch.exceptions.ClientError as e:
             assert e.response["ResponseMetadata"]["HTTPStatusCode"] in (400, 404, 409)
 
+    def test_purchase_reserved_instance_offering_nonexistent(self, opensearch):
+        """PurchaseReservedInstanceOffering with fake offering raises ResourceNotFoundException."""
+        with pytest.raises(opensearch.exceptions.ResourceNotFoundException):
+            opensearch.purchase_reserved_instance_offering(
+                ReservedInstanceOfferingId="12345678-1234-1234-1234-123456789012",
+                ReservationName="test-reservation",
+                InstanceCount=1,
+            )
 
-class TestOpenSearchReservedInstances:
-    """Tests for OpenSearch reserved instance operations."""
+
+class TestOpenSearchDataSourceOps:
+    """Tests for DataSource operations on OpenSearch domains."""
 
     @pytest.fixture
     def opensearch(self):
         return make_client("opensearch")
 
-    def test_purchase_reserved_instance_offering_nonexistent(self, opensearch):
-        """PurchaseReservedInstanceOffering with fake ID raises error."""
-        import botocore.exceptions
-
-        with pytest.raises(botocore.exceptions.ClientError) as exc:
-            opensearch.purchase_reserved_instance_offering(
-                ReservedInstanceOfferingId=str(uuid.uuid4()),
-                ReservationName="test-reservation",
+    def test_add_data_source_nonexistent_domain(self, opensearch):
+        """AddDataSource with non-existent domain raises ResourceNotFoundException."""
+        with pytest.raises(opensearch.exceptions.ResourceNotFoundException):
+            opensearch.add_data_source(
+                DomainName="fake-domain-ds-test",
+                Name="my-data-source",
+                DataSourceType={
+                    "S3GlueDataCatalog": {"RoleArn": "arn:aws:iam::123456789012:role/test-role"}
+                },
             )
-        err = exc.value.response["Error"]
-        assert err["Code"] == "ResourceNotFoundException"
+
+    def test_delete_data_source_nonexistent_domain(self, opensearch):
+        """DeleteDataSource with non-existent domain raises ResourceNotFoundException."""
+        with pytest.raises(opensearch.exceptions.ResourceNotFoundException):
+            opensearch.delete_data_source(
+                DomainName="fake-domain-ds-test",
+                Name="my-data-source",
+            )
+
+    def test_get_data_source_nonexistent_domain(self, opensearch):
+        """GetDataSource with non-existent domain raises ResourceNotFoundException."""
+        with pytest.raises(opensearch.exceptions.ResourceNotFoundException):
+            opensearch.get_data_source(
+                DomainName="fake-domain-ds-test",
+                Name="my-data-source",
+            )
+
+    def test_list_data_sources_nonexistent_domain(self, opensearch):
+        """ListDataSources with non-existent domain raises ResourceNotFoundException."""
+        with pytest.raises(opensearch.exceptions.ResourceNotFoundException):
+            opensearch.list_data_sources(DomainName="fake-domain-ds-test")
+
+    def test_update_data_source_nonexistent_domain(self, opensearch):
+        """UpdateDataSource with non-existent domain raises ResourceNotFoundException."""
+        with pytest.raises(opensearch.exceptions.ResourceNotFoundException):
+            opensearch.update_data_source(
+                DomainName="fake-domain-ds-test",
+                Name="my-data-source",
+                DataSourceType={
+                    "S3GlueDataCatalog": {"RoleArn": "arn:aws:iam::123456789012:role/test-role"}
+                },
+            )
