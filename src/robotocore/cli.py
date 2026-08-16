@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import logging
 import os
 import subprocess
 import sys
@@ -13,7 +12,7 @@ import urllib.error
 import urllib.request
 
 DEFAULT_CONTAINER_NAME = "robotocore-main"
-DEFAULT_IMAGE = "jackdanger/robotocore:latest"
+DEFAULT_IMAGE = "robotocore/robotocore:latest"
 DEFAULT_PORT = 4566
 DEFAULT_WAIT_TIMEOUT = 30
 
@@ -234,8 +233,8 @@ def cmd_status(args: argparse.Namespace) -> int:
             version = data.get("version", "?")
             print(f"Version:    {version}")
             print(f"Services:   {svc_count}")
-        except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError) as e:
-            logging.debug("Container running but not yet healthy: %s", e)
+        except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError):
+            pass  # Container running but not yet healthy
 
     return 0
 
@@ -296,8 +295,8 @@ def cmd_wait(args: argparse.Namespace) -> int:
             if data.get("status") == "ok":
                 print("Robotocore is ready.")
                 return 0
-        except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError) as e:
-            logging.debug("Server not ready yet, retry after sleep: %s", e)
+        except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError):
+            pass  # Server not ready yet, retry after sleep
         time.sleep(1)
 
     print(f"Timed out after {timeout}s waiting for robotocore to become healthy.", file=sys.stderr)
