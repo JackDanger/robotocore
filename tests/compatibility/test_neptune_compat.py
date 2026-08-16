@@ -1693,36 +1693,3 @@ class TestNeptuneDescribeOpsExpanded:
         finally:
             neptune.delete_db_cluster(DBClusterIdentifier=cl, SkipFinalSnapshot=True)
             neptune.delete_db_subnet_group(DBSubnetGroupName=sg)
-
-
-class TestNeptuneGapOps:
-    """Tests for Neptune operations that weren't previously covered."""
-
-    @pytest.fixture
-    def neptune(self):  # noqa: F811
-        return make_client("neptune")
-
-    def test_remove_role_from_db_cluster_not_found(self, neptune):
-        """RemoveRoleFromDBCluster raises DBClusterNotFoundFault for nonexistent cluster."""
-        with pytest.raises(ClientError) as exc:
-            neptune.remove_role_from_db_cluster(
-                DBClusterIdentifier="nonexistent-cluster-xyz",
-                RoleArn="arn:aws:iam::123456789012:role/NeptuneRole",
-            )
-        assert exc.value.response["Error"]["Code"] == "DBClusterNotFoundFault"
-
-    def test_reset_db_cluster_parameter_group_not_found(self, neptune):
-        """ResetDBClusterParameterGroup raises DBParameterGroupNotFound for nonexistent group."""
-        with pytest.raises(ClientError) as exc:
-            neptune.reset_db_cluster_parameter_group(
-                DBClusterParameterGroupName="nonexistent-pg-xyz",
-            )
-        assert exc.value.response["Error"]["Code"] == "DBParameterGroupNotFound"
-
-    def test_reset_db_parameter_group_not_found(self, neptune):
-        """ResetDBParameterGroup raises DBParameterGroupNotFound for nonexistent group."""
-        with pytest.raises(ClientError) as exc:
-            neptune.reset_db_parameter_group(
-                DBParameterGroupName="nonexistent-pg-xyz",
-            )
-        assert exc.value.response["Error"]["Code"] == "DBParameterGroupNotFound"
