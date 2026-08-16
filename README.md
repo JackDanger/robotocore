@@ -32,8 +32,7 @@
 ## Quick Start
 
 ```bash
-docker run -d -p 4566:4566 jackdanger/robotocore:latest
-# also available: ghcr.io/robotocore/robotocore:latest
+docker run -d -p 4566:4566 ghcr.io/robotocore/robotocore:latest
 ```
 
 Verify it's running:
@@ -81,7 +80,7 @@ aws dynamodb list-tables
 ```yaml
 services:
   aws:
-    image: jackdanger/robotocore:latest
+    image: ghcr.io/robotocore/robotocore:latest
     ports:
       - "4566:4566"
 
@@ -102,7 +101,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       robotocore:
-        image: jackdanger/robotocore:latest
+        image: ghcr.io/robotocore/robotocore:latest
         ports:
           - 4566:4566
         options: >-
@@ -167,7 +166,7 @@ Built by [Jack Danger](https://github.com/jackdanger), a maintainer of [Moto](ht
 | Firehose | Buffered delivery to S3 |
 | IAM | Full policy engine, permission boundaries, resource policies |
 | Kinesis | Streams and shard management |
-| Lambda | Python (3.8–3.13), Node.js 18.x/20.x/22.x (each on its own binary), versions, aliases, layers, function URLs, destinations |
+| Lambda | Versions, aliases, layers, function URLs, ESM, destinations |
 | OpenSearch | Domain management |
 | Rekognition | Image analysis stubs |
 | Resource Groups | Group management |
@@ -248,23 +247,15 @@ def client(service, account_id, region="us-east-1"):
     )
 
 # Two completely isolated AWS accounts
-prod = client("dynamodb", "111111111111")
-dev  = client("dynamodb", "222222222222")
+prod  = client("s3", "111111111111")
+dev   = client("s3", "222222222222")
 
-prod.create_table(
-    TableName="orders",
-    KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
-    AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
-    BillingMode="PAY_PER_REQUEST",
-)
+prod.create_bucket(Bucket="assets")   # exists only in account 111111111111
+dev.create_bucket(Bucket="assets")    # separate bucket in account 222222222222
 
 # Resources in one account are invisible to the other
-print(prod.list_tables()["TableNames"])  # ["orders"]
-print(dev.list_tables()["TableNames"])   # []  — completely separate
-
-# Note: S3 bucket names are globally unique in AWS (like real AWS).
-# Creating the same bucket name in two accounts raises BucketAlreadyExists.
-# Use a per-account resource (DynamoDB, SNS, SQS, IAM, etc.) to demonstrate isolation.
+print(prod.list_buckets()["Buckets"])  # [{"Name": "assets", ...}]
+print(dev.list_buckets()["Buckets"])   # [{"Name": "assets", ...}]  — separate state
 ```
 
 ### Multi-region
@@ -368,13 +359,13 @@ topic = sns.create_topic(Name="notifications")
 sns.subscribe(TopicArn=topic["TopicArn"], Protocol="sqs", Endpoint=queue_arn)
 sns.publish(TopicArn=topic["TopicArn"], Message="hello")
 
-# Lambda invocation — Python
+# Lambda invocation
 import json, zipfile, io
 
-def make_zip(code: str, filename: str = "index.py") -> bytes:
+def make_zip(code: str) -> bytes:
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w") as z:
-        z.writestr(filename, code)
+        z.writestr("index.py", code)
     return buf.getvalue()
 
 lam.create_function(
@@ -386,21 +377,6 @@ lam.create_function(
 )
 result = lam.invoke(FunctionName="my-fn", Payload=json.dumps({"key": "val"}))
 print(json.loads(result["Payload"].read()))  # {"status": "ok"}
-
-# Lambda invocation — Node.js
-# Each runtime identifier routes to its matching Node.js binary (18, 20, or 22).
-lam.create_function(
-    FunctionName="my-node-fn",
-    Runtime="nodejs20.x",
-    Role="arn:aws:iam::123456789012:role/lambda-role",
-    Handler="index.handler",
-    Code={"ZipFile": make_zip(
-        'exports.handler = async (event) => ({ statusCode: 200, body: "hello from node" });',
-        filename="index.js",
-    )},
-)
-result = lam.invoke(FunctionName="my-node-fn", Payload=json.dumps({}))
-print(json.loads(result["Payload"].read()))  # {"statusCode": 200, "body": "hello from node"}
 ```
 
 ---

@@ -31,7 +31,7 @@ curl -sf http://localhost:4566/_robotocore/health > /dev/null && echo "already r
 
 ```bash
 docker rm -f robotocore 2>/dev/null || true
-docker run -d -p 4566:4566 --name robotocore jackdanger/robotocore:latest
+docker run -d -p 4566:4566 --name robotocore ghcr.io/robotocore/robotocore:latest
 ```
 
 Also available from GHCR:
@@ -148,24 +148,15 @@ The `aws_access_key_id` you provide (when 12 digits) is your account ID. Resourc
 
 ```python
 # Two completely isolated AWS accounts in the same robotocore instance
-prod = boto3.client("dynamodb", endpoint_url="http://localhost:4566",
+prod = boto3.client("s3", endpoint_url="http://localhost:4566",
                     aws_access_key_id="111111111111", aws_secret_access_key="test",
                     region_name="us-east-1")
-dev  = boto3.client("dynamodb", endpoint_url="http://localhost:4566",
+dev  = boto3.client("s3", endpoint_url="http://localhost:4566",
                     aws_access_key_id="222222222222", aws_secret_access_key="test",
                     region_name="us-east-1")
 
-prod.create_table(
-    TableName="orders",
-    KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
-    AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
-    BillingMode="PAY_PER_REQUEST",
-)
-print(prod.list_tables()["TableNames"])  # ["orders"]
-print(dev.list_tables()["TableNames"])   # []  — completely separate
-
-# Note: S3 bucket names are globally unique in AWS — the same bucket name cannot
-# exist in two accounts simultaneously, just like real AWS.
+prod.create_bucket(Bucket="assets")  # account 111111111111
+dev.create_bucket(Bucket="assets")   # account 222222222222 — completely separate
 ```
 
 For per-test isolation, generate a unique account ID per test:
@@ -391,7 +382,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       robotocore:
-        image: jackdanger/robotocore:latest
+        image: ghcr.io/robotocore/robotocore:latest
         ports:
           - 4566:4566
         options: >-
@@ -413,7 +404,7 @@ jobs:
 # docker-compose
 services:
   aws:
-    image: jackdanger/robotocore:latest
+    image: ghcr.io/robotocore/robotocore:latest
     ports:
       - "4566:4566"
     healthcheck:
