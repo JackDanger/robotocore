@@ -124,7 +124,16 @@ jobs:
 
 ## Infrastructure as Code
 
-IaC tools do not read `AWS_ENDPOINT_URL`. Each tool needs an explicit per-service endpoint override in its own config. Fake credentials alone change nothing about routing — the tool still talks to real AWS.
+Export `AWS_ENDPOINT_URL` and both Terraform and Packer route to the twin with no endpoint settings in their config at all. Credentials change nothing about routing — the twin accepts any credentials, so fake ones only stop a real API call from succeeding.
+
+```bash
+export AWS_ENDPOINT_URL=http://localhost:4566
+export AWS_ACCESS_KEY_ID=123456789012
+export AWS_SECRET_ACCESS_KEY=test
+export AWS_DEFAULT_REGION=us-east-1
+```
+
+In-config overrides — Terraform's `endpoints {}`, Packer's `custom_endpoint_ec2` — are the alternative when only some services should reach the twin. Reach for them second: `custom_endpoint_ec2` does not cover every call path (below).
 
 ### The one error to recognize
 
@@ -132,14 +141,15 @@ IaC tools do not read `AWS_ENDPOINT_URL`. Each tool needs an explicit per-servic
 Build 'amazon-ebs.twin' errored after 365ms: error validating regions: operation error EC2: DescribeRegions, https response error StatusCode: 401, RequestID: 037d389c-..., api error AuthFailure: AWS was not able to validate the provided access credentials
 ```
 
+That build set the twin's credentials and skip flags but named no endpoint anywhere.
+
 - Reads as a credentials problem; it is a routing problem.
-- robotocore accepts any credentials, so `AuthFailure` cannot come from the twin.
-- **Rule:** `AuthFailure` against a twin-pointed build means the endpoint override is missing or misspelled.
-- The fake credentials were the only thing that stopped a real API call from succeeding.
+- robotocore accepts any credentials, so `AuthFailure` can never come from the twin — it proves the request reached real AWS.
+- **Rule:** `AuthFailure` from a build you believe is twin-pointed means nothing is routing it there. Check `AWS_ENDPOINT_URL` is exported in the shell that runs the tool.
 
 ### Terraform
 
-The AWS provider needs an `endpoints {}` block, one entry per service used, plus three skip flags.
+With `AWS_ENDPOINT_URL` exported, the provider needs only the three skip flags — they stop it reaching for real STS and IMDS metadata.
 
 ```hcl
 terraform {
@@ -158,12 +168,6 @@ provider "aws" {
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
-
-  endpoints {
-    ec2 = "http://localhost:4566"
-    s3  = "http://localhost:4566"
-    sqs = "http://localhost:4566"
-  }
 }
 
 resource "aws_s3_bucket" "demo" {
@@ -192,12 +196,44 @@ terraform apply -auto-approve
 ```
 
 A second `terraform plan` reports "No changes", so the twin reads back what it wrote.
-A service with no `endpoints` entry goes to real AWS — add one entry per service the config touches.
-Verified with Terraform v1.14.8 and `hashicorp/aws` v6.
+
+To send only some services to the twin, drop the env var and add an `endpoints {}` block instead — one entry per service. A service with no entry goes to real AWS.
+
+```hcl
+  endpoints {
+    ec2 = "http://localhost:4566"
+    s3  = "http://localhost:4566"
+    sqs = "http://localhost:4566"
+  }
+```
+
+Verified with Terraform v1.14.8 and `hashicorp/aws` v6, both ways.
 
 ### Packer
 
-The amazon plugin's key is `custom_endpoint_ec2`; the skip flag is `skip_credential_validation` (singular "credential") — different from Terraform's `skip_credentials_validation`.
+The exported `AWS_ENDPOINT_URL` is enough — the template below names no endpoint. `AWS_ENDPOINT_URL_EC2` works too if you want to scope the override to EC2. Either env var covers every call the build makes; the plugin's own `custom_endpoint_ec2` field does not.
+
+#### `custom_endpoint_ec2` alone leaks to real AWS
+
+With only that field set, a build proceeds through **DescribeImages**, **RunInstances**, **StopInstances** and **CreateImage**, then fails at **ModifyImageAttribute** because that call uses a client that does not inherit the field. `ami_description` in the template triggers **ModifyImageAttribute**.
+
+```
+Error modify AMI attributes: operation error EC2: ModifyImageAttribute, https response error StatusCode: 401, api error AuthFailure: AWS was not able to validate the provided access credentials
+```
+
+An AuthFailure this late in a build means one call path escaped — use the env var rather than adding more plugin fields.
+
+#### Pin the source AMI to EBS-backed
+
+`source_ami_filter` with `most_recent = true` can match an AMI that an earlier test created with **CreateImage**. Packer then hard-fails:
+
+```
+The provided source AMI has an invalid root device type.
+```
+
+Add `root-device-type` and `virtualization-type` to the filter. Verified — unfiltered, `most_recent` selected a created AMI and the build failed; with the filters it selected the stock image `ami-1e749f67` and the build succeeded. This filter is correct against real AWS too, so it is good practice regardless.
+
+Created images reporting `standard` is a bug in the twin, fixed separately; the filter is the defense that does not depend on the fix.
 
 ```hcl
 packer {
@@ -207,7 +243,6 @@ packer {
 }
 
 source "amazon-ebs" "twin" {
-  custom_endpoint_ec2        = "http://localhost:4566"
   region                     = "us-east-1"
   access_key                 = "123456789012"
   secret_key                 = "test"
@@ -215,9 +250,14 @@ source "amazon-ebs" "twin" {
   skip_metadata_api_check    = true
   instance_type              = "t3.micro"
   ami_name                   = "robotocore-demo"
+  ami_description            = "built against the twin"
   communicator               = "none"
   source_ami_filter {
-    filters     = { name = "ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*" }
+    filters = {
+      name                = "ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*"
+      root-device-type    = "ebs"
+      virtualization-type = "hvm"
+    }
     owners      = ["099720109477"]
     most_recent = true
   }
@@ -226,21 +266,22 @@ source "amazon-ebs" "twin" {
 build { sources = ["source.amazon-ebs.twin"] }
 ```
 
+`skip_credential_validation` is singular "credential" here, unlike Terraform's `skip_credentials_validation`.
+
 ```bash
-packer init . && packer build twin.pkr.hcl
+packer init .
+packer build twin.pkr.hcl
 # ==> amazon-ebs.twin: Found Image ID: ami-1e749f67
-# ==> amazon-ebs.twin: Instance ID: i-63309d3e2d75b8ce0
-# ==> amazon-ebs.twin: Creating AMI robotocore-demo from instance i-63309d3e2d75b8ce0
-# Build 'amazon-ebs.twin' finished after 114 milliseconds.
+# Build 'amazon-ebs.twin' finished after 277 milliseconds.
 # --> amazon-ebs.twin: AMIs were created:
-# us-east-1: ami-6bf113f8491f59456
+# us-east-1: ami-7ba05032dac5585f7
 ```
 
-The AMI persists and is queryable — `aws ec2 describe-images --image-ids ami-...` returns state `available`.
+The AMI persists — `aws ec2 describe-images --image-ids ami-...` returns state `available`.
 
 **Limits:** `communicator = "none"` is required. Provisioners need a real SSH session to a booted instance; the twin returns instance metadata but runs no guest OS. Use the twin to exercise the build's AWS API path — keypair, security group, run, stop, snapshot, tag, share, terminate — not to test shell provisioning.
 
-The twin ships a catalog of 1174 stock AMIs, so `source_ami_filter` resolves against real-looking AMI names and owner IDs. The catalog includes owner `099720109477` (Canonical) Ubuntu images.
+The twin ships 1174 stock AMIs, including Canonical's (owner `099720109477`), so `source_ami_filter` resolves against real-looking names and owner IDs.
 
 ---
 
