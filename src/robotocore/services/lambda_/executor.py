@@ -701,38 +701,49 @@ def execute_python_handler(
         # Route prints from module-level code (exec_module) to logs_output too
         _invocation_output.buffer = logs_output
         try:
-            # Reuse cached module when hot_reload is off (matches real Lambda behavior:
-            # modules persist across invocations within the same execution environment).
-            # Also verify the cached module came from the current tmpdir — a new code
-            # deployment produces a new tmpdir, and we must not reuse the stale module.
-            cached = sys.modules.get(modules_key) if not hot_reload else None
-            if cached is not None and (getattr(cached, "__file__", "") or "").startswith(tmpdir):
-                module = cached
-            else:
-                spec = importlib.util.spec_from_file_location(module_path, module_file)
-                module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(module)
-                sys.modules[modules_key] = module
-            handler_func = getattr(module, func_name, None)
-            if handler_func is None:
-                msg = f"Handler function '{func_name}' not found in {module_path}"
-                return (
-                    {"errorMessage": msg, "errorType": "Runtime.HandlerNotFound"},
-                    "Runtime.HandlerNotFound",
-                    msg,
-                )
-
-            # Execute handler with timeout enforcement and env var isolation
+            # Execute handler with timeout enforcement and env var isolation.
+            # Module import/exec happens inside this worker thread too, after
+            # _thread_local.env is set below — matching real Lambda, where
+            # configured env vars are present in the execution environment
+            # before any code runs, including module-level top-level
+            # statements (a common pattern: reading config at import time so
+            # it's resolved once and reused across warm invocations). Doing
+            # the import in the dispatcher thread instead — the thread that
+            # never gets invocation_env installed — is what used to make
+            # module-level os.environ[...] reads raise KeyError even though
+            # the function's Environment.Variables were configured correctly.
             handler_result = [None]
             handler_error = [None]
+            load_error = [None]
 
             def _run_handler():
                 # Route print() in this thread to the invocation's log buffer
                 _invocation_output.buffer = logs_output
                 # Set thread-local environment so os.environ reads in
-                # this thread see invocation-specific values
+                # this thread — including at module-import time below —
+                # see invocation-specific values
                 _thread_local.env = dict(invocation_env)
                 try:
+                    # Reuse cached module when hot_reload is off (matches real
+                    # Lambda behavior: modules persist across invocations
+                    # within the same execution environment). Also verify the
+                    # cached module came from the current tmpdir — a new code
+                    # deployment produces a new tmpdir, and we must not reuse
+                    # the stale module.
+                    cached = sys.modules.get(modules_key) if not hot_reload else None
+                    if cached is not None and (getattr(cached, "__file__", "") or "").startswith(
+                        tmpdir
+                    ):
+                        module = cached
+                    else:
+                        spec = importlib.util.spec_from_file_location(module_path, module_file)
+                        module = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(module)
+                        sys.modules[modules_key] = module
+                    handler_func = getattr(module, func_name, None)
+                    if handler_func is None:
+                        load_error[0] = f"Handler function '{func_name}' not found in {module_path}"
+                        return
                     handler_result[0] = handler_func(event, context)
                 except Exception as exc:  # noqa: BLE001
                     handler_error[0] = exc
@@ -743,6 +754,13 @@ def execute_python_handler(
             worker = threading.Thread(target=_run_handler, daemon=True)
             worker.start()
             worker.join(timeout=timeout)
+
+            if load_error[0] is not None:
+                return (
+                    {"errorMessage": load_error[0], "errorType": "Runtime.HandlerNotFound"},
+                    "Runtime.HandlerNotFound",
+                    load_error[0],
+                )
 
             if worker.is_alive():
                 # Timeout: try to kill the thread
