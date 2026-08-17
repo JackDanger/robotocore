@@ -411,6 +411,13 @@ class CodeCache:
                 path = self._cache.pop(key)
                 self._refcounts.pop(path, None)
                 self._pending_cleanup.discard(path)
+                # Plain-named helper modules (e.g. a shared "import shared")
+                # aren't under the _lambda_{fn}. prefix cleared below, and the
+                # next invocation's own _clear_plain_modules_for_dir only scans
+                # its *new* tmpdir — so without this, a multi-file function's
+                # helper modules (and whatever they resolved at import time)
+                # survive invalidation and keep serving stale state forever.
+                _clear_plain_modules_for_dir(path)
                 shutil.rmtree(path, ignore_errors=True)
             # Also clear function-scoped module cache in sys.modules
             # (inside lock to prevent concurrent imports from re-adding)
@@ -426,6 +433,7 @@ class CodeCache:
         """
         with self._lock:
             for path in self._cache.values():
+                _clear_plain_modules_for_dir(path)
                 shutil.rmtree(path, ignore_errors=True)
             self._cache.clear()
             self._refcounts.clear()
@@ -855,8 +863,6 @@ def execute_python_handler(
             }
             return error_result, "Handled", logs_output.getvalue()
     finally:
-        # Stop routing this thread's prints to logs_output
-        _invocation_output.buffer = None
         # Remove only the paths we added (thread-safe: doesn't affect other threads)
         with _path_lock:
             for p in added_paths:

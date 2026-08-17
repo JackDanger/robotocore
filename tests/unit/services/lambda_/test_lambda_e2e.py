@@ -798,11 +798,15 @@ class TestConcurrency:
     def test_concurrent_invocations_read_module_scope_env_vars(self):
         """10 concurrent cold-start invocations of the same function, each
         reading a configured env var at *module scope* (`X = os.environ["X"]`
-        above the handler def, not inside it). Whichever invocation's thread
-        wins the sys.modules race, the value it captured — and that every
-        other invocation then reads off the cached module — must be the
-        configured one, not a KeyError or a value read from the wrong
-        thread's environment."""
+        above the handler def, not inside it). Pins that the sys.modules
+        cold-start race (many threads simultaneously finding `cached is
+        None`) can't crash or KeyError, and that whichever thread's import
+        wins the race captured the configured value — not cross-thread
+        contamination, which this test can't detect on its own since every
+        thread configures the *same* value (see
+        test_concurrent_invocations_have_isolated_env_vars in
+        test_lambda_executor_review.py for that: two functions, different
+        values, concurrent)."""
         code = make_zip(
             {
                 "handler.py": (
