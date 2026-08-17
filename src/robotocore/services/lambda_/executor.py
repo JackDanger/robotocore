@@ -698,8 +698,6 @@ def execute_python_handler(
         # Use a function-scoped key so different Lambda functions don't collide
         modules_key = f"_lambda_{function_name}.{module_path}"
 
-        # Route prints from module-level code (exec_module) to logs_output too
-        _invocation_output.buffer = logs_output
         try:
             # Execute handler with timeout enforcement and env var isolation.
             # Module import/exec happens inside this worker thread too, after
@@ -745,7 +743,11 @@ def execute_python_handler(
                         load_error[0] = f"Handler function '{func_name}' not found in {module_path}"
                         return
                     handler_result[0] = handler_func(event, context)
-                except Exception as exc:  # noqa: BLE001
+                except BaseException as exc:  # noqa: BLE001
+                    # BaseException, not Exception: a module doing sys.exit()
+                    # at import time raises SystemExit, which must still be
+                    # reported as a failed invocation rather than falling
+                    # through to the success branch below with a bare None.
                     handler_error[0] = exc
                 finally:
                     _invocation_output.buffer = None
@@ -755,15 +757,10 @@ def execute_python_handler(
             worker.start()
             worker.join(timeout=timeout)
 
-            if load_error[0] is not None:
-                return (
-                    {"errorMessage": load_error[0], "errorType": "Runtime.HandlerNotFound"},
-                    "Runtime.HandlerNotFound",
-                    load_error[0],
-                )
-
             if worker.is_alive():
-                # Timeout: try to kill the thread
+                # Timeout: try to kill the thread. Checked before load_error/
+                # handler_error so a timeout is always authoritative over
+                # whatever partial state the worker left behind.
                 try:
                     tid = worker.ident
                     if tid is not None:
@@ -792,6 +789,24 @@ def execute_python_handler(
                     "errorType": "Task.TimedOut",
                 }
                 return error_result, "Task.TimedOut", logs_output.getvalue()
+
+            if load_error[0] is not None:
+                logs_output.write(load_error[0] + "\n")
+                logs_output.write(f"END RequestId: {request_id}\n")
+                elapsed_s = time.time() - context._start_time
+                elapsed_ms = elapsed_s * 1000
+                logs_output.write(
+                    f"REPORT RequestId: {request_id}"
+                    f"\tDuration: {elapsed_ms:.2f} ms"
+                    f"\tBilled Duration: {int(elapsed_ms) + 1} ms"
+                    f"\tMemory Size: {memory_size} MB"
+                    f"\tMax Memory Used: {memory_size} MB\n"
+                )
+                return (
+                    {"errorMessage": load_error[0], "errorType": "Runtime.HandlerNotFound"},
+                    "Runtime.HandlerNotFound",
+                    logs_output.getvalue(),
+                )
 
             if handler_error[0] is not None:
                 e = handler_error[0]
@@ -828,7 +843,9 @@ def execute_python_handler(
             )
             return handler_result[0], None, logs_output.getvalue()
         except Exception as e:  # noqa: BLE001
-            # Catch module-level errors (SyntaxError, ImportError, etc.)
+            # Last-resort guard for executor-internal failures (e.g. thread
+            # start). Module-level SyntaxError/ImportError surface through
+            # handler_error inside _run_handler, not here.
             tb = traceback.format_exc()
             logs_output.write(tb)
             error_result = {
