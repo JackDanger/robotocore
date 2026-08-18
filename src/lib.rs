@@ -1,7 +1,7 @@
-//! S3 virtual-hosted-style routing for robotocore.
+//! Robotocore Rust - High-performance AWS API mock server
 //!
-//! Parses Host headers to detect S3 virtual-hosted-style requests and rewrites
-//! them to path-style for downstream handling.
+//! This module provides Rust implementations of robotocore components,
+//! gradually replacing Python implementations for better performance.
 
 use once_cell::sync::Lazy;
 use parking_lot::RwLock;
@@ -17,7 +17,6 @@ const DEFAULT_S3_HOSTNAME: &str = "s3.localhost.robotocore.cloud";
 const S3_LOCALSTACK_HOSTNAME: &str = "s3.localhost.localstack.cloud";
 
 /// Pre-compiled pattern for standard AWS S3 virtual-hosted requests
-/// Matches: mybucket.s3[.region].amazonaws.com
 static VHOST_RE: Lazy<Regex> = Lazy::new(|| {
     Regex::new(
         r"^(?P<bucket>[a-zA-Z0-9][a-zA-Z0-9.\-]{1,61}[a-zA-Z0-9])\.s3(?:\.(?P<region>[a-z]{2}-[a-z]+-\d+))?\.(?P<rest>.+?)(?::\d+)?$"
@@ -58,14 +57,12 @@ fn get_custom_pattern() -> (Regex, String) {
         }
     }
 
-    // Build new pattern
     let escaped = regex::escape(&hostname);
     let pattern = Regex::new(&format!(
         r"^(?P<bucket>[a-zA-Z0-9][a-zA-Z0-9.\-{{1,61}}][a-zA-Z0-9])\.{}(?::\d+)?$",
         escaped
     )).unwrap();
 
-    // Update cache
     {
         let mut write_guard = CUSTOM_PATTERN_CACHE.write();
         *write_guard = Some(CustomPatternCache {
@@ -85,18 +82,13 @@ pub struct S3VhostInfo {
 }
 
 /// Parse an S3 virtual-hosted-style Host header.
-///
-/// Returns `Some(S3VhostInfo)` if the host matches an S3 pattern,
-/// or `None` if it does not.
 pub fn parse_s3_vhost(host: Option<&str>) -> Option<S3VhostInfo> {
     let host = host?;
     if host.is_empty() {
         return None;
     }
 
-    // Strip port if present for matching
     let host_no_port = if let Some(idx) = host.rfind(':') {
-        // Check if it's actually a port (all digits after last colon)
         let after_colon = &host[idx + 1..];
         if after_colon.chars().all(|c| c.is_ascii_digit()) {
             &host[..idx]
@@ -107,7 +99,6 @@ pub fn parse_s3_vhost(host: Option<&str>) -> Option<S3VhostInfo> {
         host
     };
 
-    // Check custom hostname pattern first (most specific)
     let (custom_re, _) = get_custom_pattern();
     if let Some(m) = custom_re.captures(host) {
         return Some(S3VhostInfo {
@@ -116,7 +107,6 @@ pub fn parse_s3_vhost(host: Option<&str>) -> Option<S3VhostInfo> {
         });
     }
 
-    // Check localstack.cloud backwards-compatible alias
     if let Some(m) = VHOST_LOCALSTACK_RE.captures(host) {
         return Some(S3VhostInfo {
             bucket: m.name("bucket")?.as_str().to_string(),
@@ -124,7 +114,6 @@ pub fn parse_s3_vhost(host: Option<&str>) -> Option<S3VhostInfo> {
         });
     }
 
-    // Check standard AWS patterns
     if let Some(m) = VHOST_RE.captures(host) {
         let mut result = S3VhostInfo {
             bucket: m.name("bucket")?.as_str().to_string(),
@@ -134,7 +123,6 @@ pub fn parse_s3_vhost(host: Option<&str>) -> Option<S3VhostInfo> {
         if let Some(region) = m.name("region") {
             result.region = Some(region.as_str().to_string());
         } else {
-            // Try to extract region from the rest part
             let rest = m.name("rest")?.as_str();
             if let Some(region_match) = Regex::new(r"(?:^|\.)((?:us|eu|ap|sa|ca|me|af|il)-[a-z]+-\d+)")
                 .unwrap()
@@ -146,7 +134,6 @@ pub fn parse_s3_vhost(host: Option<&str>) -> Option<S3VhostInfo> {
         return Some(result);
     }
 
-    // Check bare s3 pattern: <bucket>.s3.<anything>
     if host_no_port.contains(".s3.") {
         let parts: Vec<&str> = host_no_port.splitn(2, ".s3.").collect();
         if !parts[0].is_empty() && !parts[0].starts_with('.') {
@@ -170,8 +157,6 @@ pub fn parse_s3_vhost(host: Option<&str>) -> Option<S3VhostInfo> {
         }
     }
 
-    // S3 Express directory buckets: <bucket>.localhost[:port]
-    // S3 Object Lambda: <route-token>.localhost[:port]
     if host_no_port.ends_with(".localhost") || host_no_port.contains(".localhost:") {
         let label = if let Some(idx) = host_no_port.find(".localhost") {
             &host_no_port[..idx]
@@ -190,9 +175,17 @@ pub fn parse_s3_vhost(host: Option<&str>) -> Option<S3VhostInfo> {
     None
 }
 
+/// ASGI scope structure
+#[derive(Debug, Clone)]
+pub struct Scope {
+    pub r#type: String,
+    pub method: Option<String>,
+    pub path: String,
+    pub query_string: String,
+    pub headers: Vec<(String, String)>,
+}
+
 /// Check if an ASGI scope represents an S3 virtual-hosted-style request.
-///
-/// This is a simplified version that works with a mock scope structure.
 pub fn is_s3_vhost_request(scope: &Scope) -> bool {
     if scope.r#type != "http" {
         return false;
@@ -206,23 +199,8 @@ pub fn is_s3_vhost_request(scope: &Scope) -> bool {
     false
 }
 
-/// ASGI scope mock structure for testing
-#[derive(Debug, Clone)]
-pub struct Scope {
-    pub r#type: String,
-    pub method: Option<String>,
-    pub path: String,
-    pub query_string: String,
-    pub headers: Vec<(String, String)>,
-}
-
 /// Rewrite a virtual-hosted-style S3 request scope to path-style.
-///
-/// Returns a new Scope with the path rewritten to include the bucket,
-/// or `None` if the Host header does not match.
 pub fn rewrite_vhost_to_path(scope: &Scope) -> Option<Scope> {
-    let mut new_scope = scope.clone();
-    
     let mut host = String::new();
     for header in &scope.headers {
         if header.0 == "host" {
@@ -239,21 +217,19 @@ pub fn rewrite_vhost_to_path(scope: &Scope) -> Option<Scope> {
     let bucket = parsed.bucket;
     let original_path = &scope.path;
 
-    // Rewrite path: / -> /bucket, /key -> /bucket/key
     let new_path = if original_path == "/" {
         format!("/{}", bucket)
     } else {
         format!("/{}{}", bucket, original_path)
     };
 
-    // Strip the bucket prefix from the Host header
     let new_host = if host.len() > bucket.len() + 1 {
         host[bucket.len() + 1..].to_string()
     } else {
         host.clone()
     };
 
-    // Update headers
+    let mut new_scope = scope.clone();
     new_scope.headers = scope
         .headers
         .iter()
@@ -268,7 +244,6 @@ pub fn rewrite_vhost_to_path(scope: &Scope) -> Option<Scope> {
 
     new_scope.path = new_path;
 
-    // Set raw_path
     if !scope.query_string.is_empty() {
         new_scope.query_string = scope.query_string.clone();
     }
@@ -300,7 +275,174 @@ pub fn get_s3_routing_config() -> S3RoutingConfig {
     }
 }
 
-#[cfg(test)]
+// PyO3 FFI bindings
+#[cfg(feature = "python")]
+use pyo3::prelude::*;
+#[cfg(feature = "python")]
+use pyo3::types::PyDict;
+
+#[cfg(feature = "python")]
+#[pyfunction]
+#[pyo3(name = "parse_s3_vhost")]
+fn parse_s3_vhost_py(py: Python<'_>, host: Option<&str>) -> Option<Py<PyDict>> {
+    let result = parse_s3_vhost(host);
+    result.map(|info| {
+        let dict = PyDict::new_bound(py);
+        dict.set_item("bucket", info.bucket).unwrap();
+        if let Some(region) = info.region {
+            dict.set_item("region", region).unwrap();
+        }
+        dict.unbind()
+    })
+}
+
+#[cfg(feature = "python")]
+#[pyfunction]
+#[pyo3(name = "is_s3_vhost_request")]
+fn is_s3_vhost_request_py(scope: &Bound<'_, PyAny>) -> PyResult<bool> {
+    let scope_type: String = if let Ok(t) = scope.getattr("type") {
+        t.extract()?
+    } else {
+        scope.get_item("type")?.extract()?
+    };
+    if scope_type != "http" {
+        return Ok(false);
+    }
+    
+    let headers: Vec<(Vec<u8>, Vec<u8>)> = if let Ok(h) = scope.getattr("headers") {
+        h.extract()?
+    } else {
+        scope.get_item("headers")?.extract()?
+    };
+    
+    for (key, value) in headers {
+        if key.as_slice() == b"host" {
+            let host_str = String::from_utf8_lossy(&value);
+            return Ok(parse_s3_vhost(Some(&host_str)).is_some());
+        }
+    }
+    Ok(false)
+}
+
+#[cfg(feature = "python")]
+#[pyfunction]
+#[pyo3(name = "rewrite_vhost_to_path")]
+fn rewrite_vhost_to_path_py<'a>(scope: &'a Bound<'_, PyAny>) -> PyResult<Option<Py<PyAny>>> {
+    let headers_raw = if let Ok(h) = scope.getattr("headers") {
+        h
+    } else {
+        scope.get_item("headers")?
+    };
+    let headers: Vec<(Vec<u8>, Vec<u8>)> = headers_raw.extract()?;
+    
+    let mut host = String::new();
+    for (key, value) in &headers {
+        if key.as_slice() == b"host" {
+            host = String::from_utf8_lossy(value).to_string();
+            break;
+        }
+    }
+    
+    if host.is_empty() {
+        return Ok(None);
+    }
+    
+    let parsed = match parse_s3_vhost(Some(&host)) {
+        Some(p) => p,
+        None => return Ok(None),
+    };
+    
+    let bucket = parsed.bucket;
+    let path_value = if let Ok(p) = scope.getattr("path") {
+        p
+    } else {
+        scope.get_item("path")?
+    };
+    let original_path: String = path_value.extract()?;
+    
+    let new_path = if original_path == "/" {
+        format!("/{}", bucket)
+    } else {
+        format!("/{}{}", bucket, original_path)
+    };
+    
+    let new_host = if host.len() > bucket.len() + 1 {
+        host[bucket.len() + 1..].to_string()
+    } else {
+        host.clone()
+    };
+    
+    let new_headers: Vec<(Vec<u8>, Vec<u8>)> = headers
+        .iter()
+        .map(|(k, v)| {
+            if k.as_slice() == b"host" {
+                (b"host".to_vec(), new_host.as_bytes().to_vec())
+            } else {
+                (k.clone(), v.clone())
+            }
+        })
+        .collect();
+    
+    let py = scope.py();
+    let new_scope = PyDict::new_bound(py);
+    
+    let type_value = if let Ok(t) = scope.getattr("type") {
+        t
+    } else {
+        scope.get_item("type")?
+    };
+    new_scope.set_item("type", type_value)?;
+    
+    if let Ok(method) = scope.getattr("method") {
+        new_scope.set_item("method", method)?;
+    } else if let Ok(method) = scope.get_item("method") {
+        new_scope.set_item("method", method)?;
+    }
+    
+    new_scope.set_item("path", &new_path)?;
+    
+    let qs_value = if let Ok(qs) = scope.getattr("query_string") {
+        qs
+    } else {
+        scope.get_item("query_string")?
+    };
+    new_scope.set_item("query_string", &qs_value)?;
+    
+    new_scope.set_item("headers", new_headers)?;
+    
+    let qs: Vec<u8> = qs_value.extract()?;
+    if !qs.is_empty() {
+        let raw_path = format!("{}?{}", new_path, String::from_utf8_lossy(&qs));
+        new_scope.set_item("raw_path", raw_path)?;
+    } else {
+        new_scope.set_item("raw_path", &new_path)?;
+    }
+    
+    Ok(Some(new_scope.as_any().clone().unbind()))
+}
+
+#[cfg(feature = "python")]
+#[pyfunction]
+#[pyo3(name = "get_s3_routing_config")]
+fn get_s3_routing_config_py(py: Python<'_>) -> Py<PyDict> {
+    let config = get_s3_routing_config();
+    let dict = PyDict::new_bound(py);
+    dict.set_item("s3_hostname", config.s3_hostname).unwrap();
+    dict.set_item("virtual_hosted_style", config.virtual_hosted_style).unwrap();
+    dict.set_item("website_hostname", config.website_hostname).unwrap();
+    dict.set_item("supported_patterns", config.supported_patterns).unwrap();
+    dict.unbind()
+}
+
+#[cfg(feature = "python")]
+#[pymodule]
+fn robotocore_rust(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(parse_s3_vhost_py, m)?)?;
+    m.add_function(wrap_pyfunction!(is_s3_vhost_request_py, m)?)?;
+    m.add_function(wrap_pyfunction!(rewrite_vhost_to_path_py, m)?)?;
+    m.add_function(wrap_pyfunction!(get_s3_routing_config_py, m)?)?;
+    Ok(())
+}
 
 #[cfg(test)]
 mod tests {
@@ -315,14 +457,6 @@ mod tests {
     fn test_default_hostname() {
         reset_cache();
         let result = parse_s3_vhost(Some("mybucket.s3.localhost.robotocore.cloud"));
-        assert!(result.is_some());
-        assert_eq!(result.unwrap().bucket, "mybucket");
-    }
-
-    #[test]
-    fn test_localstack_hostname_alias() {
-        reset_cache();
-        let result = parse_s3_vhost(Some("mybucket.s3.localhost.localstack.cloud"));
         assert!(result.is_some());
         assert_eq!(result.unwrap().bucket, "mybucket");
     }
@@ -389,6 +523,14 @@ mod tests {
         let result = parse_s3_vhost(Some("my-route-token.localhost:4566"));
         assert!(result.is_some());
         assert_eq!(result.unwrap().bucket, "my-route-token");
+    }
+
+    #[test]
+    fn test_localstack_hostname_alias() {
+        reset_cache();
+        let result = parse_s3_vhost(Some("mybucket.s3.localhost.localstack.cloud"));
+        assert!(result.is_some());
+        assert_eq!(result.unwrap().bucket, "mybucket");
     }
 
     #[test]
@@ -622,6 +764,16 @@ mod tests {
     }
 
     #[test]
+    fn test_config_default() {
+        reset_cache();
+        env::remove_var("S3_HOSTNAME");
+        let config = get_s3_routing_config();
+        assert_eq!(config.s3_hostname, "s3.localhost.robotocore.cloud");
+        assert!(config.virtual_hosted_style);
+        assert_eq!(config.website_hostname, "s3-website.s3.localhost.robotocore.cloud");
+    }
+
+    #[test]
     fn test_config_custom_hostname() {
         reset_cache();
         env::set_var("S3_HOSTNAME", "s3.mycompany.dev");
@@ -630,17 +782,6 @@ mod tests {
         assert_eq!(config.website_hostname, "s3-website.s3.mycompany.dev");
         env::remove_var("S3_HOSTNAME");
         reset_cache();
-    }
-
-    #[test]
-    fn test_config_default() {
-        reset_cache();
-        // Ensure no S3_HOSTNAME env var is set
-        env::remove_var("S3_HOSTNAME");
-        let config = get_s3_routing_config();
-        assert_eq!(config.s3_hostname, "s3.localhost.robotocore.cloud");
-        assert!(config.virtual_hosted_style);
-        assert_eq!(config.website_hostname, "s3-website.s3.localhost.robotocore.cloud");
     }
 
     #[test]
@@ -672,186 +813,4 @@ mod tests {
         assert!(result.is_some());
         assert_eq!(result.unwrap().path, "/mybucket/path%20with%20spaces/file.txt");
     }
-}
-
-// PyO3 FFI bindings for Python integration
-use pyo3::prelude::*;
-use pyo3::types::PyDict;
-
-/// Parse an S3 virtual-hosted-style Host header.
-///
-/// Returns a Python dict with keys `bucket` and optionally `region`,
-/// or `None` if the host does not match any S3 pattern.
-#[pyfunction]
-#[pyo3(name = "parse_s3_vhost")]
-fn parse_s3_vhost_py(py: Python<'_>, host: Option<&str>) -> Option<Py<PyDict>> {
-    let result = parse_s3_vhost(host);
-    result.map(|info| {
-        let dict = PyDict::new_bound(py);
-        dict.set_item("bucket", info.bucket).unwrap();
-        if let Some(region) = info.region {
-            dict.set_item("region", region).unwrap();
-        }
-        dict.unbind()
-    })
-}
-
-/// Check if an ASGI scope represents an S3 virtual-hosted-style request.
-#[pyfunction]
-#[pyo3(name = "is_s3_vhost_request")]
-fn is_s3_vhost_request_py(scope: &Bound<'_, PyAny>) -> PyResult<bool> {
-    // Extract scope type - try getattr first (for object), then get_item (for dict)
-    let scope_type: String = if let Ok(t) = scope.getattr("type") {
-        t.extract()?
-    } else {
-        scope.get_item("type")?.extract()?
-    };
-    if scope_type != "http" {
-        return Ok(false);
-    }
-    
-    // Extract headers
-    let headers: Vec<(Vec<u8>, Vec<u8>)> = if let Ok(h) = scope.getattr("headers") {
-        h.extract()?
-    } else {
-        scope.get_item("headers")?.extract()?
-    };
-    
-    // Look for host header (bytes in ASGI)
-    for (key, value) in headers {
-        if key.as_slice() == b"host" {
-            let host_str = String::from_utf8_lossy(&value);
-            return Ok(parse_s3_vhost(Some(&host_str)).is_some());
-        }
-    }
-    Ok(false)
-}
-
-/// Rewrite a virtual-hosted-style S3 request scope to path-style.
-#[pyfunction]
-#[pyo3(name = "rewrite_vhost_to_path")]
-fn rewrite_vhost_to_path_py<'a>(scope: &'a Bound<'_, PyAny>) -> PyResult<Option<Py<PyAny>>> {
-    // Extract host header - handle both dict and object access
-    let headers_raw = if let Ok(h) = scope.getattr("headers") {
-        h
-    } else {
-        scope.get_item("headers")?
-    };
-    let headers: Vec<(Vec<u8>, Vec<u8>)> = headers_raw.extract()?;
-    
-    let mut host = String::new();
-    for (key, value) in &headers {
-        if key.as_slice() == b"host" {
-            host = String::from_utf8_lossy(value).to_string();
-            break;
-        }
-    }
-    
-    if host.is_empty() {
-        return Ok(None);
-    }
-    
-    let parsed = match parse_s3_vhost(Some(&host)) {
-        Some(p) => p,
-        None => return Ok(None),
-    };
-    
-    let bucket = parsed.bucket;
-    let path_value = if let Ok(p) = scope.getattr("path") {
-        p
-    } else {
-        scope.get_item("path")?
-    };
-    let original_path: String = path_value.extract()?;
-    
-    // Rewrite path
-    let new_path = if original_path == "/" {
-        format!("/{}", bucket)
-    } else {
-        format!("/{}{}", bucket, original_path)
-    };
-    
-    // Strip bucket from host
-    let new_host = if host.len() > bucket.len() + 1 {
-        host[bucket.len() + 1..].to_string()
-    } else {
-        host.clone()
-    };
-    
-    // Build new headers (keep original byte format)
-    let new_headers: Vec<(Vec<u8>, Vec<u8>)> = headers
-        .iter()
-        .map(|(k, v)| {
-            if k.as_slice() == b"host" {
-                (b"host".to_vec(), new_host.as_bytes().to_vec())
-            } else {
-                (k.clone(), v.clone())
-            }
-        })
-        .collect();
-    
-    // Create new scope dict
-    let py = scope.py();
-    let new_scope = PyDict::new_bound(py);
-    
-    // Copy type
-    let type_value = if let Ok(t) = scope.getattr("type") {
-        t
-    } else {
-        scope.get_item("type")?
-    };
-    new_scope.set_item("type", type_value)?;
-    
-    // Copy method if present
-    if let Ok(method) = scope.getattr("method") {
-        new_scope.set_item("method", method)?;
-    } else if let Ok(method) = scope.get_item("method") {
-        new_scope.set_item("method", method)?;
-    }
-    
-    new_scope.set_item("path", &new_path)?;
-    
-    // Copy query_string
-    let qs_value = if let Ok(qs) = scope.getattr("query_string") {
-        qs
-    } else {
-        scope.get_item("query_string")?
-    };
-    new_scope.set_item("query_string", &qs_value)?;
-    
-    new_scope.set_item("headers", new_headers)?;
-    
-    // Set raw_path if query_string exists
-    let qs: Vec<u8> = qs_value.extract()?;
-    if !qs.is_empty() {
-        let raw_path = format!("{}?{}", new_path, String::from_utf8_lossy(&qs));
-        new_scope.set_item("raw_path", raw_path)?;
-    } else {
-        new_scope.set_item("raw_path", &new_path)?;
-    }
-    
-    Ok(Some(new_scope.as_any().clone().unbind()))
-}
-
-/// Return the current S3 routing configuration.
-#[pyfunction]
-#[pyo3(name = "get_s3_routing_config")]
-fn get_s3_routing_config_py(py: Python<'_>) -> Py<PyDict> {
-    let config = get_s3_routing_config();
-    let dict = PyDict::new_bound(py);
-    dict.set_item("s3_hostname", config.s3_hostname).unwrap();
-    dict.set_item("virtual_hosted_style", config.virtual_hosted_style).unwrap();
-    dict.set_item("website_hostname", config.website_hostname).unwrap();
-    dict.set_item("supported_patterns", config.supported_patterns).unwrap();
-    dict.unbind()
-}
-
-/// Python module definition
-#[pymodule]
-fn robotocore_rust(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(parse_s3_vhost_py, m)?)?;
-    m.add_function(wrap_pyfunction!(is_s3_vhost_request_py, m)?)?;
-    m.add_function(wrap_pyfunction!(rewrite_vhost_to_path_py, m)?)?;
-    m.add_function(wrap_pyfunction!(get_s3_routing_config_py, m)?)?;
-    Ok(())
 }
