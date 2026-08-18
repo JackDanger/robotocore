@@ -4,10 +4,15 @@ version = "0.1.0"
 edition = "2021"
 description = "Rust port of robotocore S3 routing logic"
 
+[lib]
+name = "robotocore_rust"
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
 regex = "1.10"
 once_cell = "1.19"
 parking_lot = "0.12"
 serde = { version = "1.0", features = ["derive"] }
+pyo3 = { version = "0.22", features = ["extension-module"] }
 
 [dev-dependencies]

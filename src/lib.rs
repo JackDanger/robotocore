@@ -622,15 +622,6 @@ mod tests {
     }
 
     #[test]
-    fn test_config_default() {
-        reset_cache();
-        let config = get_s3_routing_config();
-        assert_eq!(config.s3_hostname, "s3.localhost.robotocore.cloud");
-        assert!(config.virtual_hosted_style);
-        assert_eq!(config.website_hostname, "s3-website.s3.localhost.robotocore.cloud");
-    }
-
-    #[test]
     fn test_config_custom_hostname() {
         reset_cache();
         env::set_var("S3_HOSTNAME", "s3.mycompany.dev");
@@ -639,6 +630,17 @@ mod tests {
         assert_eq!(config.website_hostname, "s3-website.s3.mycompany.dev");
         env::remove_var("S3_HOSTNAME");
         reset_cache();
+    }
+
+    #[test]
+    fn test_config_default() {
+        reset_cache();
+        // Ensure no S3_HOSTNAME env var is set
+        env::remove_var("S3_HOSTNAME");
+        let config = get_s3_routing_config();
+        assert_eq!(config.s3_hostname, "s3.localhost.robotocore.cloud");
+        assert!(config.virtual_hosted_style);
+        assert_eq!(config.website_hostname, "s3-website.s3.localhost.robotocore.cloud");
     }
 
     #[test]
@@ -670,4 +672,186 @@ mod tests {
         assert!(result.is_some());
         assert_eq!(result.unwrap().path, "/mybucket/path%20with%20spaces/file.txt");
     }
+}
+
+// PyO3 FFI bindings for Python integration
+use pyo3::prelude::*;
+use pyo3::types::PyDict;
+
+/// Parse an S3 virtual-hosted-style Host header.
+///
+/// Returns a Python dict with keys `bucket` and optionally `region`,
+/// or `None` if the host does not match any S3 pattern.
+#[pyfunction]
+#[pyo3(name = "parse_s3_vhost")]
+fn parse_s3_vhost_py(py: Python<'_>, host: Option<&str>) -> Option<Py<PyDict>> {
+    let result = parse_s3_vhost(host);
+    result.map(|info| {
+        let dict = PyDict::new_bound(py);
+        dict.set_item("bucket", info.bucket).unwrap();
+        if let Some(region) = info.region {
+            dict.set_item("region", region).unwrap();
+        }
+        dict.unbind()
+    })
+}
+
+/// Check if an ASGI scope represents an S3 virtual-hosted-style request.
+#[pyfunction]
+#[pyo3(name = "is_s3_vhost_request")]
+fn is_s3_vhost_request_py(scope: &Bound<'_, PyAny>) -> PyResult<bool> {
+    // Extract scope type - try getattr first (for object), then get_item (for dict)
+    let scope_type: String = if let Ok(t) = scope.getattr("type") {
+        t.extract()?
+    } else {
+        scope.get_item("type")?.extract()?
+    };
+    if scope_type != "http" {
+        return Ok(false);
+    }
+    
+    // Extract headers
+    let headers: Vec<(Vec<u8>, Vec<u8>)> = if let Ok(h) = scope.getattr("headers") {
+        h.extract()?
+    } else {
+        scope.get_item("headers")?.extract()?
+    };
+    
+    // Look for host header (bytes in ASGI)
+    for (key, value) in headers {
+        if key.as_slice() == b"host" {
+            let host_str = String::from_utf8_lossy(&value);
+            return Ok(parse_s3_vhost(Some(&host_str)).is_some());
+        }
+    }
+    Ok(false)
+}
+
+/// Rewrite a virtual-hosted-style S3 request scope to path-style.
+#[pyfunction]
+#[pyo3(name = "rewrite_vhost_to_path")]
+fn rewrite_vhost_to_path_py<'a>(scope: &'a Bound<'_, PyAny>) -> PyResult<Option<Py<PyAny>>> {
+    // Extract host header - handle both dict and object access
+    let headers_raw = if let Ok(h) = scope.getattr("headers") {
+        h
+    } else {
+        scope.get_item("headers")?
+    };
+    let headers: Vec<(Vec<u8>, Vec<u8>)> = headers_raw.extract()?;
+    
+    let mut host = String::new();
+    for (key, value) in &headers {
+        if key.as_slice() == b"host" {
+            host = String::from_utf8_lossy(value).to_string();
+            break;
+        }
+    }
+    
+    if host.is_empty() {
+        return Ok(None);
+    }
+    
+    let parsed = match parse_s3_vhost(Some(&host)) {
+        Some(p) => p,
+        None => return Ok(None),
+    };
+    
+    let bucket = parsed.bucket;
+    let path_value = if let Ok(p) = scope.getattr("path") {
+        p
+    } else {
+        scope.get_item("path")?
+    };
+    let original_path: String = path_value.extract()?;
+    
+    // Rewrite path
+    let new_path = if original_path == "/" {
+        format!("/{}", bucket)
+    } else {
+        format!("/{}{}", bucket, original_path)
+    };
+    
+    // Strip bucket from host
+    let new_host = if host.len() > bucket.len() + 1 {
+        host[bucket.len() + 1..].to_string()
+    } else {
+        host.clone()
+    };
+    
+    // Build new headers (keep original byte format)
+    let new_headers: Vec<(Vec<u8>, Vec<u8>)> = headers
+        .iter()
+        .map(|(k, v)| {
+            if k.as_slice() == b"host" {
+                (b"host".to_vec(), new_host.as_bytes().to_vec())
+            } else {
+                (k.clone(), v.clone())
+            }
+        })
+        .collect();
+    
+    // Create new scope dict
+    let py = scope.py();
+    let new_scope = PyDict::new_bound(py);
+    
+    // Copy type
+    let type_value = if let Ok(t) = scope.getattr("type") {
+        t
+    } else {
+        scope.get_item("type")?
+    };
+    new_scope.set_item("type", type_value)?;
+    
+    // Copy method if present
+    if let Ok(method) = scope.getattr("method") {
+        new_scope.set_item("method", method)?;
+    } else if let Ok(method) = scope.get_item("method") {
+        new_scope.set_item("method", method)?;
+    }
+    
+    new_scope.set_item("path", &new_path)?;
+    
+    // Copy query_string
+    let qs_value = if let Ok(qs) = scope.getattr("query_string") {
+        qs
+    } else {
+        scope.get_item("query_string")?
+    };
+    new_scope.set_item("query_string", &qs_value)?;
+    
+    new_scope.set_item("headers", new_headers)?;
+    
+    // Set raw_path if query_string exists
+    let qs: Vec<u8> = qs_value.extract()?;
+    if !qs.is_empty() {
+        let raw_path = format!("{}?{}", new_path, String::from_utf8_lossy(&qs));
+        new_scope.set_item("raw_path", raw_path)?;
+    } else {
+        new_scope.set_item("raw_path", &new_path)?;
+    }
+    
+    Ok(Some(new_scope.as_any().clone().unbind()))
+}
+
+/// Return the current S3 routing configuration.
+#[pyfunction]
+#[pyo3(name = "get_s3_routing_config")]
+fn get_s3_routing_config_py(py: Python<'_>) -> Py<PyDict> {
+    let config = get_s3_routing_config();
+    let dict = PyDict::new_bound(py);
+    dict.set_item("s3_hostname", config.s3_hostname).unwrap();
+    dict.set_item("virtual_hosted_style", config.virtual_hosted_style).unwrap();
+    dict.set_item("website_hostname", config.website_hostname).unwrap();
+    dict.set_item("supported_patterns", config.supported_patterns).unwrap();
+    dict.unbind()
+}
+
+/// Python module definition
+#[pymodule]
+fn robotocore_rust(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(parse_s3_vhost_py, m)?)?;
+    m.add_function(wrap_pyfunction!(is_s3_vhost_request_py, m)?)?;
+    m.add_function(wrap_pyfunction!(rewrite_vhost_to_path_py, m)?)?;
+    m.add_function(wrap_pyfunction!(get_s3_routing_config_py, m)?)?;
+    Ok(())
 }
