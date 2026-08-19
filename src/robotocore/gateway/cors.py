@@ -20,6 +20,11 @@ from dataclasses import dataclass, field
 
 from starlette.responses import Response
 
+try:  # Optional Rust accelerator (maturin-built `robotocore_rust` extension)
+    import robotocore_rust as _rust
+except ImportError:  # pragma: no cover - pure-Python environments
+    _rust = None
+
 # Standard AWS request headers that should always be allowed
 DEFAULT_ALLOWED_HEADERS = [
     "Authorization",
@@ -69,6 +74,11 @@ class CORSConfig:
     @classmethod
     def from_environment(cls) -> CORSConfig:
         """Build config from environment variables."""
+        if _rust is not None:
+            try:
+                return cls(**_rust.cors_from_env())
+            except Exception:  # routing/config must never break on the fast path
+                pass
         extra_headers = _parse_csv(os.environ.get("EXTRA_CORS_ALLOWED_HEADERS", ""))
         extra_expose = _parse_csv(os.environ.get("EXTRA_CORS_EXPOSE_HEADERS", ""))
         extra_origins = _parse_csv(os.environ.get("EXTRA_CORS_ALLOWED_ORIGINS", ""))
@@ -113,6 +123,12 @@ def build_cors_headers(
 
     Returns an empty dict if CORS headers are disabled.
     """
+    if _rust is not None:
+        try:
+            return _rust.cors_build_cors_headers(_config_to_dict(config), request_origin)
+        except Exception:  # fallback to pure-Python implementation
+            pass
+
     if config.disable_cors_headers:
         return {}
 
@@ -167,6 +183,14 @@ def build_s3_cors_headers(
     Returns:
         CORS headers dict if a matching rule is found, empty dict otherwise.
     """
+    if _rust is not None:
+        try:
+            return _rust.cors_build_s3_cors_headers(
+                cors_rules, request_origin, request_method, request_headers
+            )
+        except Exception:  # fallback to pure-Python implementation
+            pass
+
     if not request_origin:
         return {}
 
@@ -207,8 +231,28 @@ def build_s3_cors_headers(
 # ---------------------------------------------------------------------------
 
 
+def _config_to_dict(config: CORSConfig) -> dict:
+    """Convert a CORSConfig to the dict shape consumed by the Rust binding."""
+    return {
+        "disable_cors_headers": config.disable_cors_headers,
+        "disable_cors_checks": config.disable_cors_checks,
+        "disable_custom_cors_s3": config.disable_custom_cors_s3,
+        "disable_custom_cors_apigateway": config.disable_custom_cors_apigateway,
+        "disable_preflight_processing": config.disable_preflight_processing,
+        "allowed_headers": list(config.allowed_headers),
+        "expose_headers": list(config.expose_headers),
+        "allowed_origins": list(config.allowed_origins),
+        "allowed_methods": list(config.allowed_methods),
+    }
+
+
 def _parse_csv(value: str) -> list[str]:
     """Parse a comma-separated string into a list of trimmed, non-empty strings."""
+    if _rust is not None:
+        try:
+            return _rust.cors_parse_csv(value)
+        except Exception:  # fallback to pure-Python implementation
+            pass
     if not value:
         return []
     return [item.strip() for item in value.split(",") if item.strip()]
@@ -250,6 +294,11 @@ def _resolve_origin(config: CORSConfig, request_origin: str | None) -> str | Non
 
 def _origin_matches(origin: str, patterns: list[str]) -> bool:
     """Check if an origin matches any of the allowed origin patterns."""
+    if _rust is not None:
+        try:
+            return _rust.cors_origin_matches(origin, patterns)
+        except Exception:  # fallback to pure-Python implementation
+            pass
     for pattern in patterns:
         if pattern == "*":
             return True
@@ -263,6 +312,11 @@ def _origin_matches(origin: str, patterns: list[str]) -> bool:
 
 def _method_matches(method: str, allowed_methods: list[str]) -> bool:
     """Check if a method matches any of the allowed methods."""
+    if _rust is not None:
+        try:
+            return _rust.cors_method_matches(method, allowed_methods)
+        except Exception:  # fallback to pure-Python implementation
+            pass
     method_upper = method.upper()
     for m in allowed_methods:
         if m == "*" or m.upper() == method_upper:

@@ -124,11 +124,9 @@ def parse_s3_vhost(host):
 ### Rust Tests
 ```bash
 $ cargo test
-running 32 tests
-test tests::test_default_hostname ... ok
-test tests::test_aws_region_hostname ... ok
+running 109 tests
 ...
-test result: ok. 32 passed; 0 failed
+test result: ok. 109 passed; 0 failed
 ```
 
 ### Python Integration Tests
@@ -152,9 +150,14 @@ print('Python integration works!')
 
 | File | Status | Description |
 |------|--------|-------------|
-| `src/lib.rs` | ✅ | S3 routing + PyO3 bindings |
+| `src/lib.rs` | ✅ | PyO3 FFI bindings (S3 routing, router, CORS) |
+| `src/s3_routing.rs` | ✅ | S3 vhost routing |
+| `src/router.rs` | ✅ | AWS service detection |
+| `src/cors.rs` | ✅ | CORS header handling |
 | `Cargo.toml` | ✅ | Optional PyO3 feature |
 | `src/robotocore/gateway/s3_routing.py` | ✅ | Uses Rust when available |
+| `src/robotocore/gateway/router.py` | ✅ | Uses Rust when available |
+| `src/robotocore/gateway/cors.py` | ✅ | Uses Rust when available |
 | `PORT_SUMMARY.md` | ✅ | This documentation |
 
 ## Architecture

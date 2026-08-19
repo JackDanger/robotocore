@@ -174,14 +174,20 @@ static TARGET_PREFIX_MAP: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(
         // route_to_service().
         ("Timestream_20181101", "timestreamwrite"),
         ("TransferService", "transfer"),
-        ("com.amazonaws.cloudtrail.v20131101.CloudTrail_20131101", "cloudtrail"),
+        (
+            "com.amazonaws.cloudtrail.v20131101.CloudTrail_20131101",
+            "cloudtrail",
+        ),
         ("AmazonSQS", "sqs"),
         ("AWSEvents", "events"),
         ("GraniteServiceVersion20100801", "cloudwatch"),
         ("SimpleWorkflowService", "swf"),
         ("Route53Resolver", "route53resolver"),
         ("Transcribe", "transcribe"),
-        ("ResourceGroupsTaggingAPI_20170126", "resourcegroupstaggingapi"),
+        (
+            "ResourceGroupsTaggingAPI_20170126",
+            "resourcegroupstaggingapi",
+        ),
     ];
     entries.iter().map(|(k, v)| (*k, *v)).collect()
 });
@@ -191,7 +197,10 @@ fn path_patterns() -> Vec<(Regex, &'static str)> {
     vec![
         (Regex::new(r"^/2014-11-13/functions").unwrap(), "lambda"),
         (Regex::new(r"^/2015-03-31/functions").unwrap(), "lambda"),
-        (Regex::new(r"^/2021-\d{2}-\d{2}/functions/").unwrap(), "lambda"),
+        (
+            Regex::new(r"^/2021-\d{2}-\d{2}/functions/").unwrap(),
+            "lambda",
+        ),
         (Regex::new(r"^/2025-11-30/").unwrap(), "lambda"),
         (Regex::new(r"^/2025-12-01/").unwrap(), "lambda"),
         (Regex::new(r"^/2021-01-01/").unwrap(), "opensearch"),
@@ -221,7 +230,10 @@ fn path_patterns() -> Vec<(Regex, &'static str)> {
         (Regex::new(r"^/v1/untag").unwrap(), "batch"),
         // Endpoint strategy path-style routes
         (Regex::new(r"^/queue/[a-z0-9-]+/\d+/").unwrap(), "sqs"),
-        (Regex::new(r"^/opensearch/[a-z0-9-]+/[A-Za-z0-9-]+").unwrap(), "opensearch"),
+        (
+            Regex::new(r"^/opensearch/[a-z0-9-]+/[A-Za-z0-9-]+").unwrap(),
+            "opensearch",
+        ),
     ]
 }
 
@@ -347,8 +359,10 @@ pub fn route_to_service(request: &AwsRequest) -> Option<String> {
             {
                 let auth = request.header("authorization").unwrap_or("");
                 if let Some(auth_service) = auth_service(auth) {
-                    let resolved =
-                        SERVICE_NAME_ALIASES.get(auth_service).copied().unwrap_or(auth_service);
+                    let resolved = SERVICE_NAME_ALIASES
+                        .get(auth_service)
+                        .copied()
+                        .unwrap_or(auth_service);
                     if matches!(resolved, "appsync" | "kafka" | "mq" | "pinpoint") {
                         return Some(resolved.to_string());
                     }
@@ -361,7 +375,10 @@ pub fn route_to_service(request: &AwsRequest) -> Option<String> {
     // 3. Check Authorization header for service name in credential scope
     let auth = request.header("authorization").unwrap_or("");
     if let Some(service) = auth_service(auth) {
-        let resolved = SERVICE_NAME_ALIASES.get(service).copied().unwrap_or(service);
+        let resolved = SERVICE_NAME_ALIASES
+            .get(service)
+            .copied()
+            .unwrap_or(service);
         // ELB Classic and ELBv2 share the signing name 'elasticloadbalancing'.
         // Disambiguate by the API Version query parameter.
         if resolved == "elbv2" {
@@ -416,13 +433,13 @@ pub fn route_to_service(request: &AwsRequest) -> Option<String> {
     // auth header (e.g. Bearer) should not silently route to S3.
     let host_no_port = host.split(':').next().unwrap_or(host);
     let (host_subdomain, host_rest) = match host_no_port.find('.') {
-        Some(i) => (host_no_port[..i].to_string(), host_no_port[i + 1..].to_string()),
+        Some(i) => (
+            host_no_port[..i].to_string(),
+            host_no_port[i + 1..].to_string(),
+        ),
         None => (host_no_port.to_string(), String::new()),
     };
-    if auth.is_empty()
-        && host_rest == "localhost"
-        && S3_BUCKET_RE.is_match(&host_subdomain)
-    {
+    if auth.is_empty() && host_rest == "localhost" && S3_BUCKET_RE.is_match(&host_subdomain) {
         return Some("s3".to_string());
     }
     // SQS endpoint strategy host patterns (robotocore.cloud primary, localstack.cloud alias)
@@ -516,37 +533,67 @@ mod tests {
 
     #[test]
     fn target_dynamodb() {
-        let r = req("POST", "/", "", &[("X-Amz-Target", "DynamoDB_20120810.GetItem")]);
+        let r = req(
+            "POST",
+            "/",
+            "",
+            &[("X-Amz-Target", "DynamoDB_20120810.GetItem")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("dynamodb"));
     }
 
     #[test]
     fn target_dynamodb_streams() {
-        let r = req("POST", "/", "", &[("X-Amz-Target", "DynamoDBStreams_20120810.GetShardIterator")]);
+        let r = req(
+            "POST",
+            "/",
+            "",
+            &[("X-Amz-Target", "DynamoDBStreams_20120810.GetShardIterator")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("dynamodbstreams"));
     }
 
     #[test]
     fn target_kms() {
-        let r = req("POST", "/", "", &[("X-Amz-Target", "TrentService.CreateKey")]);
+        let r = req(
+            "POST",
+            "/",
+            "",
+            &[("X-Amz-Target", "TrentService.CreateKey")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("kms"));
     }
 
     #[test]
     fn target_cognito() {
-        let r = req("POST", "/", "", &[("X-Amz-Target", "AWSCognitoIdentityProviderService.SignUp")]);
+        let r = req(
+            "POST",
+            "/",
+            "",
+            &[("X-Amz-Target", "AWSCognitoIdentityProviderService.SignUp")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("cognito-idp"));
     }
 
     #[test]
     fn target_timestream_query_op() {
-        let r = req("POST", "/", "", &[("X-Amz-Target", "Timestream_20181101.Query")]);
+        let r = req(
+            "POST",
+            "/",
+            "",
+            &[("X-Amz-Target", "Timestream_20181101.Query")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("timestreamquery"));
     }
 
     #[test]
     fn target_timestream_write_op() {
-        let r = req("POST", "/", "", &[("X-Amz-Target", "Timestream_20181101.WriteRecords")]);
+        let r = req(
+            "POST",
+            "/",
+            "",
+            &[("X-Amz-Target", "Timestream_20181101.WriteRecords")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("timestreamwrite"));
     }
 
@@ -569,7 +616,10 @@ mod tests {
             "POST",
             "/",
             "",
-            &[("X-Amz-Target", "com.amazonaws.cloudtrail.v20131101.CloudTrail_20131101.LookupEvents")],
+            &[(
+                "X-Amz-Target",
+                "com.amazonaws.cloudtrail.v20131101.CloudTrail_20131101.LookupEvents",
+            )],
         );
         assert_eq!(route_to_service(&r).as_deref(), Some("cloudtrail"));
     }
@@ -577,7 +627,12 @@ mod tests {
     #[test]
     fn target_base_prefix_fallback() {
         // Versioned prefix not in map, but base prefix is
-        let r = req("POST", "/", "", &[("X-Amz-Target", "DynamoDB_20120810.PutItem")]);
+        let r = req(
+            "POST",
+            "/",
+            "",
+            &[("X-Amz-Target", "DynamoDB_20120810.PutItem")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("dynamodb"));
     }
 
@@ -640,7 +695,10 @@ mod tests {
     #[test]
     fn path_tags_tagging_api() {
         let r = req("GET", "/tags", "", &[]);
-        assert_eq!(route_to_service(&r).as_deref(), Some("resourcegroupstaggingapi"));
+        assert_eq!(
+            route_to_service(&r).as_deref(),
+            Some("resourcegroupstaggingapi")
+        );
     }
 
     #[test]
@@ -720,16 +778,14 @@ mod tests {
 
     #[test]
     fn auth_alias_monitoring_cloudwatch() {
-        let auth =
-            "AWS4-HMAC-SHA256 Credential=AKIA/20240101/us-east-1/monitoring/aws4_request";
+        let auth = "AWS4-HMAC-SHA256 Credential=AKIA/20240101/us-east-1/monitoring/aws4_request";
         let r = req("POST", "/", "", &[("authorization", auth)]);
         assert_eq!(route_to_service(&r).as_deref(), Some("cloudwatch"));
     }
 
     #[test]
     fn auth_alias_states_stepfunctions() {
-        let auth =
-            "AWS4-HMAC-SHA256 Credential=AKIA/20240101/us-east-1/states/aws4_request";
+        let auth = "AWS4-HMAC-SHA256 Credential=AKIA/20240101/us-east-1/states/aws4_request";
         let r = req("POST", "/", "", &[("authorization", auth)]);
         assert_eq!(route_to_service(&r).as_deref(), Some("stepfunctions"));
     }
@@ -738,7 +794,12 @@ mod tests {
     fn auth_elbv2_default() {
         let auth =
             "AWS4-HMAC-SHA256 Credential=AKIA/20240101/us-east-1/elasticloadbalancing/aws4_request";
-        let r = req("POST", "/", "Action=DescribeLoadBalancers", &[("authorization", auth)]);
+        let r = req(
+            "POST",
+            "/",
+            "Action=DescribeLoadBalancers",
+            &[("authorization", auth)],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("elbv2"));
     }
 
@@ -759,36 +820,61 @@ mod tests {
 
     #[test]
     fn host_s3_virtual() {
-        let r = req("GET", "/key.txt", "", &[("host", "my-bucket.s3.us-east-1.amazonaws.com")]);
+        let r = req(
+            "GET",
+            "/key.txt",
+            "",
+            &[("host", "my-bucket.s3.us-east-1.amazonaws.com")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("s3"));
     }
 
     #[test]
     fn host_s3_prefix() {
-        let r = req("GET", "/key.txt", "", &[("host", "s3.us-east-1.amazonaws.com")]);
+        let r = req(
+            "GET",
+            "/key.txt",
+            "",
+            &[("host", "s3.us-east-1.amazonaws.com")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("s3"));
     }
 
     #[test]
     fn host_s3_website() {
-        let r = req("GET", "/key.txt", "", &[("host", "s3-website.us-east-1.amazonaws.com")]);
+        let r = req(
+            "GET",
+            "/key.txt",
+            "",
+            &[("host", "s3-website.us-east-1.amazonaws.com")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("s3"));
     }
 
     #[test]
     fn host_localhost_bucket_s3() {
         // mybucket.localhost:4566 with no auth -> S3
-        let r = req("GET", "/key.txt", "", &[("host", "my-bucket.localhost:4566")]);
+        let r = req(
+            "GET",
+            "/key.txt",
+            "",
+            &[("host", "my-bucket.localhost:4566")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("s3"));
     }
 
     #[test]
     fn host_localhost_bucket_with_auth_not_s3() {
         // Has auth -> caught by other checks (none match) -> not silently S3
-        let r = req("GET", "/key.txt", "", &[
-            ("host", "my-bucket.localhost:4566"),
-            ("authorization", SIGV4),
-        ]);
+        let r = req(
+            "GET",
+            "/key.txt",
+            "",
+            &[
+                ("host", "my-bucket.localhost:4566"),
+                ("authorization", SIGV4),
+            ],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("sqs"));
     }
 
@@ -807,7 +893,12 @@ mod tests {
 
     #[test]
     fn host_opensearch_endpoint() {
-        let r = req("GET", "/", "", &[("host", "my-domain.opensearch.localhost.robotocore.cloud")]);
+        let r = req(
+            "GET",
+            "/",
+            "",
+            &[("host", "my-domain.opensearch.localhost.robotocore.cloud")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("opensearch"));
     }
 
@@ -850,7 +941,12 @@ mod tests {
 
     #[test]
     fn sigv2_header_s3() {
-        let r = req("GET", "/key.txt", "", &[("authorization", "AWS AKIA:abcdef")]);
+        let r = req(
+            "GET",
+            "/key.txt",
+            "",
+            &[("authorization", "AWS AKIA:abcdef")],
+        );
         assert_eq!(route_to_service(&r).as_deref(), Some("s3"));
     }
 

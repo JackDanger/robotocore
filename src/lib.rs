@@ -6,10 +6,16 @@
 //! Currently ported components:
 //! - S3 virtual-hosted routing (`s3_routing`)
 //! - AWS service detection / request routing (`router`)
+//! - CORS header handling (`cors`)
 
+pub mod cors;
 pub mod router;
 pub mod s3_routing;
 
+pub use cors::{
+    build_cors_headers, build_s3_cors_headers, fnmatch, method_matches, origin_matches, parse_csv,
+    resolve_origin, CorsConfig, S3CorsRule,
+};
 pub use router::{route_to_service, AwsRequest};
 pub use s3_routing::{
     get_s3_routing_config, is_s3_vhost_request, parse_s3_vhost, rewrite_vhost_to_path,
@@ -125,13 +131,20 @@ fn rewrite_vhost_to_path_py<'a>(scope: &'a Bound<'_, PyAny>) -> PyResult<Option<
     let new_headers: Vec<Py<PyTuple>> = headers
         .iter()
         .map(|(k, v)| {
-            let key: &[u8] = if k.as_slice() == b"host" { b"host" } else { k.as_slice() };
+            let key: &[u8] = if k.as_slice() == b"host" {
+                b"host"
+            } else {
+                k.as_slice()
+            };
             let val: &[u8] = if k.as_slice() == b"host" {
                 new_host.as_bytes()
             } else {
                 v.as_slice()
             };
-            let tup = PyTuple::new_bound(py, &[PyBytes::new_bound(py, key), PyBytes::new_bound(py, val)]);
+            let tup = PyTuple::new_bound(
+                py,
+                &[PyBytes::new_bound(py, key), PyBytes::new_bound(py, val)],
+            );
             Ok::<_, PyErr>(tup.unbind())
         })
         .collect::<PyResult<Vec<Py<PyTuple>>>>()?;
@@ -164,9 +177,12 @@ fn get_s3_routing_config_py(py: Python<'_>) -> Py<PyDict> {
     let config = s3_routing::get_s3_routing_config();
     let dict = PyDict::new_bound(py);
     dict.set_item("s3_hostname", config.s3_hostname).unwrap();
-    dict.set_item("virtual_hosted_style", config.virtual_hosted_style).unwrap();
-    dict.set_item("website_hostname", config.website_hostname).unwrap();
-    dict.set_item("supported_patterns", config.supported_patterns).unwrap();
+    dict.set_item("virtual_hosted_style", config.virtual_hosted_style)
+        .unwrap();
+    dict.set_item("website_hostname", config.website_hostname)
+        .unwrap();
+    dict.set_item("supported_patterns", config.supported_patterns)
+        .unwrap();
     dict.unbind()
 }
 
@@ -201,23 +217,22 @@ fn route_to_service_py(req: &Bound<'_, PyAny>) -> PyResult<Option<String>> {
     } else {
         req.get_item("headers")?
     };
-    let headers: Vec<(String, String)> = if let Ok(list) =
-        headers_raw.extract::<Vec<(Vec<u8>, Vec<u8>)>>()
-    {
-        list.into_iter()
-            .map(|(k, v)| {
-                (
-                    String::from_utf8_lossy(&k).into_owned(),
-                    String::from_utf8_lossy(&v).into_owned(),
-                )
-            })
-            .collect()
-    } else if let Ok(list) = headers_raw.extract::<Vec<(String, String)>>() {
-        list
-    } else {
-        let dict: std::collections::HashMap<String, String> = headers_raw.extract()?;
-        dict.into_iter().collect()
-    };
+    let headers: Vec<(String, String)> =
+        if let Ok(list) = headers_raw.extract::<Vec<(Vec<u8>, Vec<u8>)>>() {
+            list.into_iter()
+                .map(|(k, v)| {
+                    (
+                        String::from_utf8_lossy(&k).into_owned(),
+                        String::from_utf8_lossy(&v).into_owned(),
+                    )
+                })
+                .collect()
+        } else if let Ok(list) = headers_raw.extract::<Vec<(String, String)>>() {
+            list
+        } else {
+            let dict: std::collections::HashMap<String, String> = headers_raw.extract()?;
+            dict.into_iter().collect()
+        };
 
     let request = AwsRequest {
         method,
@@ -229,6 +244,159 @@ fn route_to_service_py(req: &Bound<'_, PyAny>) -> PyResult<Option<String>> {
 }
 
 #[cfg(feature = "python")]
+#[pyfunction]
+#[pyo3(name = "cors_from_env")]
+fn cors_from_env_py(py: Python<'_>) -> Py<PyDict> {
+    let config = CorsConfig::from_env();
+    let dict = PyDict::new_bound(py);
+    dict.set_item("disable_cors_headers", config.disable_cors_headers)
+        .unwrap();
+    dict.set_item("disable_cors_checks", config.disable_cors_checks)
+        .unwrap();
+    dict.set_item("disable_custom_cors_s3", config.disable_custom_cors_s3)
+        .unwrap();
+    dict.set_item(
+        "disable_custom_cors_apigateway",
+        config.disable_custom_cors_apigateway,
+    )
+    .unwrap();
+    dict.set_item(
+        "disable_preflight_processing",
+        config.disable_preflight_processing,
+    )
+    .unwrap();
+    dict.set_item("allowed_headers", config.allowed_headers)
+        .unwrap();
+    dict.set_item("expose_headers", config.expose_headers)
+        .unwrap();
+    dict.set_item("allowed_origins", config.allowed_origins)
+        .unwrap();
+    dict.set_item("allowed_methods", config.allowed_methods)
+        .unwrap();
+    dict.unbind()
+}
+
+#[cfg(feature = "python")]
+#[pyfunction]
+#[pyo3(name = "cors_parse_csv")]
+fn cors_parse_csv_py(value: &str) -> Vec<String> {
+    parse_csv(value)
+}
+
+#[cfg(feature = "python")]
+#[pyfunction]
+#[pyo3(name = "cors_fnmatch")]
+fn cors_fnmatch_py(pattern: &str, text: &str) -> bool {
+    fnmatch(pattern, text)
+}
+
+#[cfg(feature = "python")]
+#[pyfunction]
+#[pyo3(name = "cors_origin_matches")]
+fn cors_origin_matches_py(origin: &str, patterns: Vec<String>) -> bool {
+    origin_matches(origin, &patterns)
+}
+
+#[cfg(feature = "python")]
+#[pyfunction]
+#[pyo3(name = "cors_method_matches")]
+fn cors_method_matches_py(method: &str, allowed_methods: Vec<String>) -> bool {
+    method_matches(method, &allowed_methods)
+}
+
+#[cfg(feature = "python")]
+#[pyfunction]
+#[pyo3(name = "cors_build_cors_headers")]
+fn cors_build_cors_headers_py(
+    py: Python<'_>,
+    config: &Bound<'_, PyAny>,
+    request_origin: Option<String>,
+) -> PyResult<Py<PyDict>> {
+    let bool_field = |key: &str| -> PyResult<bool> {
+        match config.get_item(key) {
+            Ok(v) => v.extract(),
+            Err(_) => Ok(false),
+        }
+    };
+    let list_field = |key: &str| -> PyResult<Vec<String>> {
+        match config.get_item(key) {
+            Ok(v) => v.extract(),
+            Err(_) => Ok(Vec::new()),
+        }
+    };
+
+    let cors_config = CorsConfig {
+        disable_cors_headers: bool_field("disable_cors_headers")?,
+        disable_cors_checks: bool_field("disable_cors_checks")?,
+        disable_custom_cors_s3: bool_field("disable_custom_cors_s3")?,
+        disable_custom_cors_apigateway: bool_field("disable_custom_cors_apigateway")?,
+        disable_preflight_processing: bool_field("disable_preflight_processing")?,
+        allowed_headers: list_field("allowed_headers")?,
+        expose_headers: list_field("expose_headers")?,
+        allowed_origins: list_field("allowed_origins")?,
+        allowed_methods: list_field("allowed_methods")?,
+    };
+
+    let headers = build_cors_headers(&cors_config, request_origin.as_deref());
+    let dict = PyDict::new_bound(py);
+    for (k, v) in headers {
+        dict.set_item(k, v)?;
+    }
+    Ok(dict.unbind())
+}
+
+/// Extract a string list (or None) from a rule dict value.
+#[cfg(feature = "python")]
+fn rule_str_list(value: Option<&Bound<'_, PyAny>>) -> Vec<String> {
+    match value {
+        Some(v) => v.extract::<Vec<String>>().unwrap_or_default(),
+        None => Vec::new(),
+    }
+}
+
+#[cfg(feature = "python")]
+#[pyfunction]
+#[pyo3(name = "cors_build_s3_cors_headers")]
+fn cors_build_s3_cors_headers_py(
+    py: Python<'_>,
+    rules: &Bound<'_, PyAny>,
+    request_origin: Option<String>,
+    request_method: Option<String>,
+    request_headers: Option<String>,
+) -> PyResult<Py<PyDict>> {
+    let mut cors_rules: Vec<S3CorsRule> = Vec::new();
+    for rule in rules.iter()? {
+        let rule = rule?;
+        let item = |key: &str| rule.get_item(key).ok();
+        cors_rules.push(S3CorsRule {
+            allowed_origins: rule_str_list(item("AllowedOrigins").as_ref()),
+            allowed_methods: rule_str_list(item("AllowedMethods").as_ref()),
+            allowed_headers: rule_str_list(item("AllowedHeaders").as_ref()),
+            expose_headers: rule_str_list(item("ExposeHeaders").as_ref()),
+            max_age_seconds: match item("MaxAgeSeconds") {
+                Some(v) => v
+                    .extract::<i64>()
+                    .ok()
+                    .or_else(|| v.extract::<String>().ok().and_then(|s| s.parse().ok())),
+                None => None,
+            },
+        });
+    }
+
+    let headers = build_s3_cors_headers(
+        &cors_rules,
+        request_origin.as_deref(),
+        request_method.as_deref(),
+        request_headers.as_deref(),
+    );
+    let dict = PyDict::new_bound(py);
+    for (k, v) in headers {
+        dict.set_item(k, v)?;
+    }
+    Ok(dict.unbind())
+}
+
+#[cfg(feature = "python")]
 #[pymodule]
 fn robotocore_rust(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(parse_s3_vhost_py, m)?)?;
@@ -236,6 +404,13 @@ fn robotocore_rust(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(rewrite_vhost_to_path_py, m)?)?;
     m.add_function(wrap_pyfunction!(get_s3_routing_config_py, m)?)?;
     m.add_function(wrap_pyfunction!(route_to_service_py, m)?)?;
+    m.add_function(wrap_pyfunction!(cors_from_env_py, m)?)?;
+    m.add_function(wrap_pyfunction!(cors_parse_csv_py, m)?)?;
+    m.add_function(wrap_pyfunction!(cors_fnmatch_py, m)?)?;
+    m.add_function(wrap_pyfunction!(cors_origin_matches_py, m)?)?;
+    m.add_function(wrap_pyfunction!(cors_method_matches_py, m)?)?;
+    m.add_function(wrap_pyfunction!(cors_build_cors_headers_py, m)?)?;
+    m.add_function(wrap_pyfunction!(cors_build_s3_cors_headers_py, m)?)?;
     Ok(())
 }
 

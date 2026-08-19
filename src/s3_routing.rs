@@ -49,7 +49,7 @@ fn get_s3_hostname() -> String {
 /// Get or build the custom hostname pattern, caching it
 fn get_custom_pattern() -> (Regex, String) {
     let hostname = get_s3_hostname();
-    
+
     {
         let read_guard = CUSTOM_PATTERN_CACHE.read();
         if let Some(cache) = read_guard.as_ref() {
@@ -63,7 +63,8 @@ fn get_custom_pattern() -> (Regex, String) {
     let pattern = Regex::new(&format!(
         r"^(?P<bucket>[a-zA-Z0-9][a-zA-Z0-9.\-{{1,61}}][a-zA-Z0-9])\.{}(?::\d+)?$",
         escaped
-    )).unwrap();
+    ))
+    .unwrap();
 
     {
         let mut write_guard = CUSTOM_PATTERN_CACHE.write();
@@ -126,9 +127,10 @@ pub fn parse_s3_vhost(host: Option<&str>) -> Option<S3VhostInfo> {
             result.region = Some(region.as_str().to_string());
         } else {
             let rest = m.name("rest")?.as_str();
-            if let Some(region_match) = Regex::new(r"(?:^|\.)((?:us|eu|ap|sa|ca|me|af|il)-[a-z]+-\d+)")
-                .unwrap()
-                .captures(rest)
+            if let Some(region_match) =
+                Regex::new(r"(?:^|\.)((?:us|eu|ap|sa|ca|me|af|il)-[a-z]+-\d+)")
+                    .unwrap()
+                    .captures(rest)
             {
                 result.region = Some(region_match.get(1)?.as_str().to_string());
             }
@@ -141,19 +143,22 @@ pub fn parse_s3_vhost(host: Option<&str>) -> Option<S3VhostInfo> {
         if !parts[0].is_empty() && !parts[0].starts_with('.') {
             let bucket = parts[0].to_string();
             let remainder = parts[1];
-            
+
             let mut result = S3VhostInfo {
                 bucket,
                 region: None,
             };
-            
-            if let Some(region_match) = Regex::new(r"(?:^|\.)(us|eu|ap|sa|ca|me|af|il)(-[a-z]+-\d+)")
-                .unwrap()
-                .captures(remainder)
+
+            if let Some(region_match) =
+                Regex::new(r"(?:^|\.)(us|eu|ap|sa|ca|me|af|il)(-[a-z]+-\d+)")
+                    .unwrap()
+                    .captures(remainder)
             {
-                result.region = Some(
-                    format!("{}{}", region_match.get(1)?.as_str(), region_match.get(2)?.as_str())
-                );
+                result.region = Some(format!(
+                    "{}{}",
+                    region_match.get(1)?.as_str(),
+                    region_match.get(2)?.as_str()
+                ));
             }
             return Some(result);
         }
@@ -165,7 +170,7 @@ pub fn parse_s3_vhost(host: Option<&str>) -> Option<S3VhostInfo> {
         } else {
             return None;
         };
-        
+
         if !label.is_empty() && !label.contains('.') {
             return Some(S3VhostInfo {
                 bucket: label.to_string(),
@@ -192,7 +197,7 @@ pub fn is_s3_vhost_request(scope: &Scope) -> bool {
     if scope.r#type != "http" {
         return false;
     }
-    
+
     for header in &scope.headers {
         if header.0 == "host" {
             return parse_s3_vhost(Some(&header.1)).is_some();
@@ -210,7 +215,7 @@ pub fn rewrite_vhost_to_path(scope: &Scope) -> Option<Scope> {
             break;
         }
     }
-    
+
     if host.is_empty() {
         return None;
     }
@@ -468,7 +473,10 @@ mod tests {
             path: "/".to_string(),
             query_string: "".to_string(),
             headers: vec![
-                ("host".to_string(), "mybucket.s3.localhost.robotocore.cloud".to_string()),
+                (
+                    "host".to_string(),
+                    "mybucket.s3.localhost.robotocore.cloud".to_string(),
+                ),
                 ("content-type".to_string(), "text/plain".to_string()),
             ],
         };
@@ -486,7 +494,10 @@ mod tests {
             path: "/key.txt".to_string(),
             query_string: "".to_string(),
             headers: vec![
-                ("host".to_string(), "mybucket.s3.localhost.robotocore.cloud".to_string()),
+                (
+                    "host".to_string(),
+                    "mybucket.s3.localhost.robotocore.cloud".to_string(),
+                ),
                 ("content-type".to_string(), "text/plain".to_string()),
             ],
         };
@@ -504,7 +515,10 @@ mod tests {
             path: "/key.txt".to_string(),
             query_string: "versionId=123".to_string(),
             headers: vec![
-                ("host".to_string(), "mybucket.s3.localhost.robotocore.cloud".to_string()),
+                (
+                    "host".to_string(),
+                    "mybucket.s3.localhost.robotocore.cloud".to_string(),
+                ),
                 ("content-type".to_string(), "text/plain".to_string()),
             ],
         };
@@ -539,9 +553,10 @@ mod tests {
             method: Some("GET".to_string()),
             path: "/".to_string(),
             query_string: "".to_string(),
-            headers: vec![
-                ("host".to_string(), "mybucket.s3.localhost.robotocore.cloud".to_string()),
-            ],
+            headers: vec![(
+                "host".to_string(),
+                "mybucket.s3.localhost.robotocore.cloud".to_string(),
+            )],
         };
         assert!(is_s3_vhost_request(&scope));
     }
@@ -568,7 +583,10 @@ mod tests {
             path: "/key.txt".to_string(),
             query_string: "".to_string(),
             headers: vec![
-                ("host".to_string(), "mybucket.s3.localhost.robotocore.cloud".to_string()),
+                (
+                    "host".to_string(),
+                    "mybucket.s3.localhost.robotocore.cloud".to_string(),
+                ),
                 ("content-type".to_string(), "text/plain".to_string()),
             ],
         };
@@ -578,7 +596,10 @@ mod tests {
         assert_eq!(res.path, "/mybucket/key.txt");
         let host_header = res.headers.iter().find(|h| h.0 == "host").unwrap();
         assert_eq!(host_header.1, "s3.localhost.robotocore.cloud");
-        assert!(res.headers.iter().any(|h| h.0 == "content-type" && h.1 == "text/plain"));
+        assert!(res
+            .headers
+            .iter()
+            .any(|h| h.0 == "content-type" && h.1 == "text/plain"));
     }
 
     #[test]
@@ -589,7 +610,10 @@ mod tests {
             method: Some("GET".to_string()),
             path: "/data.csv".to_string(),
             query_string: "".to_string(),
-            headers: vec![("host".to_string(), "mybucket.s3.eu-west-1.amazonaws.com".to_string())],
+            headers: vec![(
+                "host".to_string(),
+                "mybucket.s3.eu-west-1.amazonaws.com".to_string(),
+            )],
         };
         let result = rewrite_vhost_to_path(&scope);
         assert!(result.is_some());
@@ -603,7 +627,10 @@ mod tests {
         let config = get_s3_routing_config();
         assert_eq!(config.s3_hostname, "s3.localhost.robotocore.cloud");
         assert!(config.virtual_hosted_style);
-        assert_eq!(config.website_hostname, "s3-website.s3.localhost.robotocore.cloud");
+        assert_eq!(
+            config.website_hostname,
+            "s3-website.s3.localhost.robotocore.cloud"
+        );
     }
 
     #[test]
@@ -625,7 +652,10 @@ mod tests {
             method: Some("GET".to_string()),
             path: "/a/b/c/d/e/file.json".to_string(),
             query_string: "".to_string(),
-            headers: vec![("host".to_string(), "mybucket.s3.localhost.robotocore.cloud".to_string())],
+            headers: vec![(
+                "host".to_string(),
+                "mybucket.s3.localhost.robotocore.cloud".to_string(),
+            )],
         };
         let result = rewrite_vhost_to_path(&scope);
         assert!(result.is_some());
@@ -640,10 +670,16 @@ mod tests {
             method: Some("GET".to_string()),
             path: "/path%20with%20spaces/file.txt".to_string(),
             query_string: "".to_string(),
-            headers: vec![("host".to_string(), "mybucket.s3.localhost.robotocore.cloud".to_string())],
+            headers: vec![(
+                "host".to_string(),
+                "mybucket.s3.localhost.robotocore.cloud".to_string(),
+            )],
         };
         let result = rewrite_vhost_to_path(&scope);
         assert!(result.is_some());
-        assert_eq!(result.unwrap().path, "/mybucket/path%20with%20spaces/file.txt");
+        assert_eq!(
+            result.unwrap().path,
+            "/mybucket/path%20with%20spaces/file.txt"
+        );
     }
 }
