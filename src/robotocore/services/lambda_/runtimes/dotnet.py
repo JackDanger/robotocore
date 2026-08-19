@@ -202,6 +202,9 @@ USER_LIB_CSPROJ = """\
 
 
 class DotnetExecutor:
+    def __init__(self, runtime: str = "") -> None:
+        self._runtime = runtime
+
     def execute(
         self,
         code_zip: bytes,
