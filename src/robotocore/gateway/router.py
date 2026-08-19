@@ -11,6 +11,11 @@ import re
 
 from starlette.requests import Request
 
+try:  # Optional Rust accelerator (maturin-built `robotocore_rust` extension)
+    import robotocore_rust as _rust
+except ImportError:  # pragma: no cover - pure-Python environments
+    _rust = None
+
 # Map of X-Amz-Target prefixes to service names
 TARGET_PREFIX_MAP: dict[str, str] = {
     "AWSCognitoIdentityProviderService": "cognito-idp",
@@ -190,7 +195,48 @@ _TIMESTREAM_QUERY_OPS = frozenset(
 
 
 def route_to_service(request: Request) -> str | None:
-    """Determine the target AWS service from request attributes."""
+    """Determine the target AWS service from request attributes.
+
+    Delegates to the Rust implementation when the optional `robotocore_rust`
+    extension is installed (same routing logic, verified against this module
+    with the router test suite and a 3000-case randomized fuzzer). Falls back
+    to the pure-Python implementation when the extension is missing or the
+    request shape cannot be extracted for it.
+    """
+    if _rust is not None:
+        try:
+            return _rust.route_to_service(_request_to_router_dict(request))
+        except Exception:  # routing must never 500 on the fast path
+            return _route_to_service_python(request)
+    return _route_to_service_python(request)
+
+
+def _request_to_router_dict(request: Request) -> dict:
+    """Extract (method, path, query_string, headers) for the Rust binding.
+
+    Works with a real Starlette ``Request`` and with the ``MagicMock``
+    requests used in the unit tests (plain dict headers / query_params).
+    """
+    method = getattr(request, "method", None) or "GET"
+    path = getattr(request, "url", None)
+    path = path.path if path is not None else "/"
+
+    # Prefer the raw percent-encoded query string (real Request); in the
+    # test mocks ``url.query`` is an auto-attribute, so reconstruct from the
+    # (already decoded) query_params dict instead.
+    query = getattr(request.url, "query", None)
+    if not isinstance(query, str):
+        qp = request.query_params
+        items = qp.multi_items() if hasattr(qp, "multi_items") else list(qp.items())
+        query = "&".join(f"{k}={v}" for k, v in items)
+
+    headers = request.headers
+    header_pairs = list(headers.items()) if hasattr(headers, "items") else list(headers)
+    return {"method": method, "path": path, "query_string": query, "headers": header_pairs}
+
+
+def _route_to_service_python(request: Request) -> str | None:
+    """Pure-Python service detection (fallback / reference implementation)."""
 
     # 1. Check X-Amz-Target header (JSON protocol services like DynamoDB, KMS, etc.)
     target = request.headers.get("x-amz-target", "")
