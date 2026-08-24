@@ -6,7 +6,7 @@ auto-tags and publishes a versioned + `:latest` Docker image. Each release
 gets a top-level section here; the project source of truth for the
 maintenance policy is [`CLAUDE.md`](CLAUDE.md) under *Changelog discipline*.
 
-## YYYY.M.D (Unreleased)
+## 2026.8.24
 
 ### Added
 
@@ -35,6 +35,17 @@ New opt-in feature that executes EC2 instance user-data (cloud-init scripts) ins
 - Guest execution is opt-in per environment
 - Containers are torn down when instances are terminated
 - Thread-safe execution tracking
+
+- **Packer-compatible virtual instance transport** (`src/robotocore/services/ec2/packer/`):
+  - New opt-in container-backed EC2 instance transport for Packer's `amazon-ebs` builder
+  - SSH and SSM transport support for provisioner connectivity
+  - File upload with proper destination path semantics (file vs directory validation)
+  - Shell provisioner execution with environment variables and working directory
+  - AMI creation with identity clearing (machine-id, hostname, SSH host keys)
+  - Filesystem state persistence to `/opt/ami-state` for AMI contents
+  - Fresh identity for instances launched from AMIs (covers "identity cleared too early/late" failure mode)
+  - Enable with `ROBOTOCORE_PACKER_TRANSPORT=1` environment variable
+  - **Out of scope**: GPU/driver fidelity remains a real-AWS test
 
 ## 2026.5.13 (2026-05-13)
 
