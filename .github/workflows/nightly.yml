@@ -69,6 +69,7 @@ jobs:
         with:
           name: nightly-server-log-iac
           path: .robotocore.log
+          include-hidden-files: true
 
   full-parity:
     name: "nightly: parity + compatibility"
@@ -119,6 +120,7 @@ jobs:
         with:
           name: nightly-server-log-parity
           path: .robotocore.log
+          include-hidden-files: true
 
   full-coverage:
     name: "nightly: full coverage report"
@@ -230,6 +232,7 @@ jobs:
         with:
           name: nightly-server-log-shapes
           path: .robotocore.log
+          include-hidden-files: true
 
   test-timing:
     name: "nightly: test timing analysis"
@@ -282,6 +285,8 @@ jobs:
     runs-on: ubuntu-latest
     if: failure()
     needs: [full-iac, full-parity, full-coverage, full-shape-validation, test-timing]
+    permissions:
+      issues: write
     steps:
       - name: Create failure issue
         uses: actions/github-script@v9

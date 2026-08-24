@@ -2,10 +2,10 @@
 """Probe a service to discover which operations actually work.
 
 Usage:
-    uv run python scripts/probe_service.py --service sqs
-    uv run python scripts/probe_service.py --service ec2 --all
-    uv run python scripts/probe_service.py --service s3 --json
-    uv run python scripts/probe_service.py --service sns --all --json
+    uv run python -m scripts.probe_service --service sqs
+    uv run python -m scripts.probe_service --service ec2 --all
+    uv run python -m scripts.probe_service --service s3 --json
+    uv run python -m scripts.probe_service --service sns --all --json
 
 Calls each operation with auto-filled parameters from botocore shapes.
 Classifies operations as:
