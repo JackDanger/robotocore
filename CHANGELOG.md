@@ -6,32 +6,72 @@ auto-tags and publishes a versioned + `:latest` Docker image. Each release
 gets a top-level section here; the project source of truth for the
 maintenance policy is [`CLAUDE.md`](CLAUDE.md) under *Changelog discipline*.
 
-## 2026.5.15 (2026-05-15)
+## 2026.8.24
 
 ### Added
 
-- **EC2 Capacity Profiles**: Deterministic EC2 capacity management for testing
-  launch workflows, spot fallback, and `InsufficientInstanceCapacity` handling.
-  - New admin endpoints under `/_robotocore/ec2/capacity`:
-    - `GET /_robotocore/ec2/capacity` — List capacity profiles
-    - `POST /_robotocore/ec2/capacity` — Set capacity profile
-    - `DELETE /_robotocore/ec2/capacity` — Delete capacity profile
-    - `POST /_robotocore/ec2/capacity/reset` — Reset all capacity profiles
-    - `POST /_robotocore/ec2/capacity/chaos` — Set chaos override for capacity
-  - Capacity model per (instance-type, availability-zone):
-    - `total_capacity` — Maximum instances that can be launched
-    - `available_capacity` — Current available capacity
-    - `spot_available` — Whether spot instances are available
-    - `spot_price` — Spot price when available
-    - `enabled` — Whether the offering exists (for unsupported errors)
-  - `RunInstances` now checks capacity and returns proper AWS error codes:
-    - `InsufficientInstanceCapacity` (HTTP 500) when capacity exhausted
-    - `Unsupported` (HTTP 400) for disabled offerings
-  - `RequestSpotInstances` with deterministic spot fulfillment:
-    - Returns `capacity-not-available` status when spot unavailable
-    - Returns `fulfilled` status with instance ID when spot available
-  - Chaos integration: Capacity rules can be overridden via chaos endpoint
-  - State snapshot integration: Capacity profiles round-trip with save/load
+#### EC2 Capacity Profiles - Deterministic capacity management
+
+Configurable EC2 capacity model for testing launch workflows, spot fallback, and `InsufficientInstanceCapacity` handling.
+
+- New admin endpoints under `/_robotocore/ec2/capacity`:
+  - `GET /_robotocore/ec2/capacity` — List capacity profiles
+  - `POST /_robotocore/ec2/capacity` — Set capacity profile
+  - `DELETE /_robotocore/ec2/capacity` — Delete capacity profile
+  - `POST /_robotocore/ec2/capacity/reset` — Reset all capacity profiles
+  - `POST /_robotocore/ec2/capacity/chaos` — Set chaos override for capacity
+- Capacity model per (instance-type, availability-zone):
+  - `total_capacity` — Maximum instances that can be launched
+  - `available_capacity` — Current available capacity
+  - `spot_available` — Whether spot instances are available
+  - `spot_price` — Spot price when available
+  - `enabled` — Whether the offering exists (for unsupported errors)
+- `RunInstances` now checks capacity and returns proper AWS error codes:
+  - `InsufficientInstanceCapacity` (HTTP 500) when capacity exhausted
+  - `Unsupported` (HTTP 400) for disabled offerings
+- `RequestSpotInstances` with deterministic spot fulfillment:
+  - Returns `capacity-not-available` status when spot unavailable
+  - Returns `fulfilled` status with instance ID when spot available
+- Chaos integration: Capacity rules can be overridden via chaos endpoint
+- State snapshot integration: Capacity profiles round-trip with save/load
+
+#### EC2 Guest Executor - Pluggable user-data execution
+
+New opt-in feature that executes EC2 instance user-data (cloud-init scripts) inside real containers. When enabled via `ROBOTOCORE_EC2_GUEST_EXECUTOR=1`, `RunInstances` launches a guest container for each instance and executes the user-data payload, capturing stdout/stderr/exit-code for each command.
+
+**Features:**
+- **User-data parsing**: Supports plain shell scripts (`#!`), MIME multi-part messages (cloud-init format), and base64-encoded data
+- **Container execution**: Spins up containers using a configurable image (default: `jrei/systemd-ubuntu:22.04`) to execute user-data
+- **Block device support**: Instance `BlockDeviceMappings` are exposed as volumes inside the guest container
+- **IMDS support**: Instance metadata service endpoints available inside the guest (instance-id, instance-type, IAM credentials)
+- **Systemd compatibility**: Guest containers run systemd for service management (`systemctl start/enable`)
+- **Execution evidence**: Structured capture of stdout/stderr/exit-code per command, retrievable via `/_robotocore/ec2/guest/executions/{instance_id}`
+
+**Configuration:**
+- `ROBOTOCORE_EC2_GUEST_EXECUTOR=1` - Enable guest execution (default: disabled)
+- `ROBOTOCORE_EC2_GUEST_IMAGE` - Container image for guests (default: `jrei/systemd-ubuntu:22.04`)
+
+**API Endpoints:**
+- `GET /_robotocore/ec2/guest/executions` - List all executions
+- `GET /_robotocore/ec2/guest/executions/{instance_id}` - Get execution details for an instance
+
+**Design:**
+- Zero overhead when disabled - default EC2 behavior unchanged
+- Guest execution is opt-in per environment
+- Containers are torn down when instances are terminated
+- Thread-safe execution tracking
+
+#### Packer-compatible virtual instance transport
+
+New opt-in container-backed EC2 instance transport for Packer's `amazon-ebs` builder.
+
+- SSH and SSM transport support for provisioner connectivity
+- File upload with proper destination path semantics (file vs directory validation)
+- Shell provisioner execution with environment variables and working directory
+- AMI creation with identity clearing (machine-id, hostname, SSH host keys)
+- Filesystem state persistence to `/opt/ami-state` for AMI contents
+- Fresh identity for instances launched from AMIs
+- Enable with `ROBOTOCORE_PACKER_TRANSPORT=1` environment variable
 
 ## 2026.5.13 (2026-05-13)
 
