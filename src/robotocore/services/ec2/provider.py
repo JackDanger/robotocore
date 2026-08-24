@@ -470,52 +470,15 @@ async def _run_instances(request: Request, params: dict, region: str, account_id
     market_type = _get_param(params, "InstanceMarketOptions.MarketType")
     is_spot = market_type == "spot"
 
-    # Check capacity
+    # Check capacity only if an explicit profile exists
     store = get_capacity_store()
-
-    # Check if profile exists and is enabled
     profile = store.get_profile(account_id, region, instance_type, az)
-    if profile and not profile.enabled:
-        return _ec2_error(
-            "Unsupported",
-            "The requested configuration is currently not supported. "
-            "Please check the documentation for supported configurations.",
-            status_code=400,
-        )
+    capacity_consumed = 0
 
-    # Check chaos override
+    # Always check chaos override (even without explicit profile)
     chaos_override = store.get_chaos_override()
     if chaos_override:
         error_code = chaos_override.get("error_code")
-        if error_code == "InsufficientInstanceCapacity":
-            return _ec2_error(
-                "InsufficientInstanceCapacity",
-                f"We currently do not have sufficient {instance_type} capacity "
-                f"in the Availability Zone you requested ({az}). "
-                f"Our system will be working on provisioning additional capacity. "
-                f"You can currently get {instance_type} capacity by not specifying "
-                f"an Availability Zone in your request or choosing "
-                f"{region}b, {region}c.",
-                status_code=500,
-            )
-
-    if is_spot:
-        spot_available, _ = store.check_spot_capacity(account_id, region, instance_type, az)
-        if not spot_available:
-            return _ec2_error(
-                "InsufficientInstanceCapacity",
-                f"We currently do not have sufficient {instance_type} capacity "
-                f"in the Availability Zone you requested ({az}). "
-                f"Our system will be working on provisioning additional capacity. "
-                f"You can currently get {instance_type} capacity by not specifying "
-                f"an Availability Zone in your request or choosing "
-                f"{region}b, {region}c.",
-                status_code=500,
-            )
-
-    # Check on-demand capacity
-    success, error_code = store.check_capacity(account_id, region, instance_type, az, max_count)
-    if not success:
         if error_code == "InsufficientInstanceCapacity":
             return _ec2_error(
                 "InsufficientInstanceCapacity",
@@ -535,18 +498,65 @@ async def _run_instances(request: Request, params: dict, region: str, account_id
                 status_code=400,
             )
 
-    # Consume capacity
-    if not store.consume_capacity(account_id, region, instance_type, az, max_count):
-        return _ec2_error(
-            "InsufficientInstanceCapacity",
-            f"We currently do not have sufficient {instance_type} capacity "
-            f"in the Availability Zone you requested ({az}). "
-            f"Our system will be working on provisioning additional capacity. "
-            f"You can currently get {instance_type} capacity by not specifying "
-            f"an Availability Zone in your request or choosing "
-            f"{region}b, {region}c.",
-            status_code=500,
-        )
+    if profile is not None:
+        # An explicit capacity profile exists - enforce it
+        if not profile.enabled:
+            return _ec2_error(
+                "Unsupported",
+                "The requested configuration is currently not supported. "
+                "Please check the documentation for supported configurations.",
+                status_code=400,
+            )
+
+        if is_spot:
+            spot_available, _ = store.check_spot_capacity(account_id, region, instance_type, az)
+            if not spot_available:
+                return _ec2_error(
+                    "InsufficientInstanceCapacity",
+                    f"We currently do not have sufficient {instance_type} capacity "
+                    f"in the Availability Zone you requested ({az}). "
+                    f"Our system will be working on provisioning additional capacity. "
+                    f"You can currently get {instance_type} capacity by not specifying "
+                    f"an Availability Zone in your request or choosing "
+                    f"{region}b, {region}c.",
+                    status_code=500,
+                )
+
+        # Check on-demand capacity
+        success, error_code = store.check_capacity(account_id, region, instance_type, az, max_count)
+        if not success:
+            if error_code == "InsufficientInstanceCapacity":
+                return _ec2_error(
+                    "InsufficientInstanceCapacity",
+                    f"We currently do not have sufficient {instance_type} capacity "
+                    f"in the Availability Zone you requested ({az}). "
+                    f"Our system will be working on provisioning additional capacity. "
+                    f"You can currently get {instance_type} capacity by not specifying "
+                    f"an Availability Zone in your request or choosing "
+                    f"{region}b, {region}c.",
+                    status_code=500,
+                )
+            elif error_code == "Unsupported":
+                return _ec2_error(
+                    "Unsupported",
+                    "The requested configuration is currently not supported. "
+                    "Please check the documentation for supported configurations.",
+                    status_code=400,
+                )
+
+        # Consume capacity
+        if not store.consume_capacity(account_id, region, instance_type, az, max_count):
+            return _ec2_error(
+                "InsufficientInstanceCapacity",
+                f"We currently do not have sufficient {instance_type} capacity "
+                f"in the Availability Zone you requested ({az}). "
+                f"Our system will be working on provisioning additional capacity. "
+                f"You can currently get {instance_type} capacity by not specifying "
+                f"an Availability Zone in your request or choosing "
+                f"{region}b, {region}c.",
+                status_code=500,
+            )
+        capacity_consumed = max_count
 
     # Forward to Moto for actual instance creation
     try:
@@ -554,7 +564,8 @@ async def _run_instances(request: Request, params: dict, region: str, account_id
     except Exception as e:  # noqa: BLE001
         logger.exception("Error in RunInstances")
         # Release capacity on failure
-        store.release_capacity(account_id, region, instance_type, az, max_count)
+        if capacity_consumed > 0:
+            store.release_capacity(account_id, region, instance_type, az, capacity_consumed)
         return _ec2_error(
             "InternalError",
             f"An internal error has occurred: {e}",
@@ -565,8 +576,10 @@ async def _run_instances(request: Request, params: dict, region: str, account_id
     if not is_guest_executor_enabled():
         return response
 
-    # If the response is not successful, return it as-is
+    # If the response is not successful, release capacity and return
     if response.status_code != 200:
+        if capacity_consumed > 0:
+            store.release_capacity(account_id, region, instance_type, az, capacity_consumed)
         return response
 
     # Parse the response to get instance IDs and launch guest containers
@@ -660,15 +673,10 @@ async def _run_instances(request: Request, params: dict, region: str, account_id
 async def _terminate_instances(
     request: Request, params: dict, region: str, account_id: str
 ) -> Response:
-    """TerminateInstances - forward to Moto, then clean up guest containers."""
-    # First, let Moto terminate the instances
-    response = await forward_to_moto(request, "ec2", account_id=account_id)
+    """TerminateInstances - forward to Moto, release capacity, clean up guest containers."""
+    from moto.backends import get_backend  # noqa: I001
 
-    # If guest execution is disabled, just return the response
-    if not is_guest_executor_enabled():
-        return response
-
-    # Parse the request to get instance IDs
+    # Parse the request to get instance IDs before termination
     instance_ids = []
     i = 1
     while True:
@@ -678,11 +686,53 @@ async def _terminate_instances(
         instance_ids.append(inst_id)
         i += 1
 
+    # Look up instance details before termination (to get type/AZ for capacity release)
+    backend = get_backend("ec2")[account_id][region]
+    instances_to_release = []
+    for inst_id in instance_ids:
+        try:
+            instance = backend.get_instance(inst_id)
+            # Only release capacity if instance was not already terminated
+            if instance.state != "terminated":
+                instances_to_release.append(
+                    {
+                        "id": inst_id,
+                        "type": instance.instance_type,
+                        "az": instance._placement.zone,
+                    }
+                )
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Could not get instance %s for capacity release: %s", inst_id, exc)
+
+    # Forward to Moto to terminate the instances
+    response = await forward_to_moto(request, "ec2", account_id=account_id)
+
+    # Release capacity for terminated instances
+    store = get_capacity_store()
+    for inst in instances_to_release:
+        try:
+            # Only release if an explicit profile exists
+            profile = store.get_profile(account_id, region, inst["type"], inst["az"])
+            if profile is not None:
+                store.release_capacity(account_id, region, inst["type"], inst["az"], 1)
+                logger.debug(
+                    "Released capacity for terminated instance %s (%s/%s)",
+                    inst["id"],
+                    inst["type"],
+                    inst["az"],
+                )
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Failed to release capacity for instance %s: %s", inst["id"], exc)
+
+    # If guest execution is disabled, just return the response
+    if not is_guest_executor_enabled():
+        return response
+
     # Clean up guest containers
     executor = get_guest_executor()
-    for instance_id in instance_ids:
-        logger.info("Terminating guest container for instance %s", instance_id)
-        executor.terminate_instance(instance_id)
+    for inst_id in instance_ids:
+        logger.info("Terminating guest container for instance %s", inst_id)
+        executor.terminate_instance(inst_id)
 
     return response
 
@@ -712,27 +762,30 @@ async def _request_spot_instances(
         az = f"{region}a"
 
     store = get_capacity_store()
-
-    # Check if profile exists and is enabled
     profile = store.get_profile(account_id, region, instance_type, az)
-    if profile and not profile.enabled:
-        return _build_spot_capacity_unavailable_response(params, count)
+    capacity_consumed = 0
 
-    # Check chaos override
-    chaos_override = store.get_chaos_override()
-    if chaos_override:
-        error_code = chaos_override.get("error_code")
-        if error_code == "InsufficientInstanceCapacity":
+    # Only enforce capacity if an explicit profile exists
+    if profile is not None:
+        if not profile.enabled:
             return _build_spot_capacity_unavailable_response(params, count)
 
-    # Check spot capacity
-    spot_available, _ = store.check_spot_capacity(account_id, region, instance_type, az)
-    if not spot_available:
-        return _build_spot_capacity_unavailable_response(params, count)
+        # Check chaos override
+        chaos_override = store.get_chaos_override()
+        if chaos_override:
+            error_code = chaos_override.get("error_code")
+            if error_code == "InsufficientInstanceCapacity":
+                return _build_spot_capacity_unavailable_response(params, count)
 
-    # Consume capacity
-    if not store.consume_capacity(account_id, region, instance_type, az, count):
-        return _build_spot_capacity_unavailable_response(params, count)
+        # Check spot capacity
+        spot_available, _ = store.check_spot_capacity(account_id, region, instance_type, az)
+        if not spot_available:
+            return _build_spot_capacity_unavailable_response(params, count)
+
+        # Consume capacity
+        if not store.consume_capacity(account_id, region, instance_type, az, count):
+            return _build_spot_capacity_unavailable_response(params, count)
+        capacity_consumed = count
 
     # Forward to Moto for actual spot request creation
     try:
@@ -740,7 +793,8 @@ async def _request_spot_instances(
     except Exception as e:  # noqa: BLE001
         logger.exception("Error in RequestSpotInstances")
         # Release capacity on failure
-        store.release_capacity(account_id, region, instance_type, az, count)
+        if capacity_consumed > 0:
+            store.release_capacity(account_id, region, instance_type, az, capacity_consumed)
         return _ec2_error(
             "InternalError",
             f"An internal error has occurred: {e}",
