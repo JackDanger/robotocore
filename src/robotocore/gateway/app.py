@@ -808,11 +808,13 @@ async def ec2_capacity_list(request: Request) -> JSONResponse:
     store = get_capacity_store()
     profiles = store.list_profiles(account_id, region)
 
-    return JSONResponse({
-        "profiles": [p.to_dict() for p in profiles],
-        "account_id": account_id,
-        "region": region,
-    })
+    return JSONResponse(
+        {
+            "profiles": [p.to_dict() for p in profiles],
+            "account_id": account_id,
+            "region": region,
+        }
+    )
 
 
 async def ec2_capacity_set(request: Request) -> JSONResponse:

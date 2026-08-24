@@ -63,14 +63,14 @@ def state_component() -> ServiceComponent:
     def start() -> None:
         nonlocal _ready
         if os.environ.get("ROBOTOCORE_STATE_DIR"):
+            from robotocore.services.ec2.provider import (
+                register_state_handler as register_ec2_state,
+            )
             from robotocore.services.events.provider import (
                 register_state_handler as register_events_state,
             )
             from robotocore.services.sqs.provider import (
                 register_state_handler as register_sqs_state,
-            )
-            from robotocore.services.ec2.provider import (
-                register_state_handler as register_ec2_state,
             )
             from robotocore.state.manager import get_state_manager
 

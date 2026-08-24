@@ -242,9 +242,7 @@ class TestCapacityStore:
         )
         self.store.set_profile("123456789012", "us-east-1", profile)
 
-        self.store.release_capacity(
-            "123456789012", "us-east-1", "g5.xlarge", "us-east-1a", 2
-        )
+        self.store.release_capacity("123456789012", "us-east-1", "g5.xlarge", "us-east-1a", 2)
 
         retrieved = self.store.get_profile("123456789012", "us-east-1", "g5.xlarge", "us-east-1a")
         assert retrieved.available_capacity == 7
@@ -259,9 +257,7 @@ class TestCapacityStore:
         )
         self.store.set_profile("123456789012", "us-east-1", profile)
 
-        self.store.release_capacity(
-            "123456789012", "us-east-1", "g5.xlarge", "us-east-1a", 5
-        )
+        self.store.release_capacity("123456789012", "us-east-1", "g5.xlarge", "us-east-1a", 5)
 
         retrieved = self.store.get_profile("123456789012", "us-east-1", "g5.xlarge", "us-east-1a")
         assert retrieved.available_capacity == 10
