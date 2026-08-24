@@ -1,11 +1,14 @@
 """EC2 Fast Snapshot Restore and volume hydration tests."""
 
+import logging
 import uuid
 
 import botocore.exceptions
 import pytest
 
 from tests.compatibility.conftest import make_client
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
@@ -67,12 +70,12 @@ class TestFastSnapshotRestores:
             # Cleanup
             try:
                 ec2.delete_snapshot(SnapshotId=snapshot_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
             try:
                 ec2.delete_volume(VolumeId=volume_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
 
     def test_enable_fast_snapshot_restores_invalid_snapshot(self, ec2):
         """EnableFastSnapshotRestores returns unsuccessful for invalid snapshot."""
@@ -125,12 +128,12 @@ class TestFastSnapshotRestores:
         finally:
             try:
                 ec2.delete_snapshot(SnapshotId=snapshot_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
             try:
                 ec2.delete_volume(VolumeId=volume_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
 
     def test_describe_fast_snapshot_restores_with_filters(self, ec2):
         """DescribeFastSnapshotRestores filters by snapshot and AZ."""
@@ -161,12 +164,12 @@ class TestFastSnapshotRestores:
         finally:
             try:
                 ec2.delete_snapshot(SnapshotId=snapshot_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
             try:
                 ec2.delete_volume(VolumeId=volume_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
 
     def test_disable_fast_snapshot_restores_success(self, ec2):
         """DisableFastSnapshotRestores disables FSR for snapshot/AZ pairs."""
@@ -202,12 +205,12 @@ class TestFastSnapshotRestores:
         finally:
             try:
                 ec2.delete_snapshot(SnapshotId=snapshot_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
             try:
                 ec2.delete_volume(VolumeId=volume_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
 
     def test_disable_fast_snapshot_restores_not_enabled(self, ec2):
         """DisableFastSnapshotRestores returns unsuccessful for non-enabled FSR."""
@@ -233,12 +236,12 @@ class TestFastSnapshotRestores:
         finally:
             try:
                 ec2.delete_snapshot(SnapshotId=snapshot_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
             try:
                 ec2.delete_volume(VolumeId=volume_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
 
 
 class TestVolumeInitializationRate:
@@ -270,13 +273,13 @@ class TestVolumeInitializationRate:
             finally:
                 try:
                     ec2.delete_snapshot(SnapshotId=snapshot_id)
-                except Exception:  # noqa: BLE001
-                    pass
+                except Exception as exc:  # noqa: BLE001
+                    logger.debug("cleanup failed: %s", exc)
         finally:
             try:
                 ec2.delete_volume(VolumeId=source_vol_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
 
     def test_create_volume_initialization_rate_without_snapshot_fails(self, ec2):
         """CreateVolume rejects VolumeInitializationRate without SnapshotId."""
@@ -325,13 +328,13 @@ class TestVolumeInitializationRate:
             finally:
                 try:
                     ec2.delete_snapshot(SnapshotId=snapshot_id)
-                except Exception:  # noqa: BLE001
-                    pass
+                except Exception as exc:  # noqa: BLE001
+                    logger.debug("cleanup failed: %s", exc)
         finally:
             try:
                 ec2.delete_volume(VolumeId=source_vol_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
 
 
 class TestVolumeHydrationState:
@@ -363,18 +366,18 @@ class TestVolumeHydrationState:
                 finally:
                     try:
                         ec2.delete_volume(VolumeId=volume_id)
-                    except Exception:  # noqa: BLE001
-                        pass
+                    except Exception as exc:  # noqa: BLE001
+                        logger.debug("cleanup failed: %s", exc)
             finally:
                 try:
                     ec2.delete_snapshot(SnapshotId=snapshot_id)
-                except Exception:  # noqa: BLE001
-                    pass
+                except Exception as exc:  # noqa: BLE001
+                    logger.debug("cleanup failed: %s", exc)
         finally:
             try:
                 ec2.delete_volume(VolumeId=source_vol_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
 
     def test_volume_from_snapshot_with_fsr_is_fsr_backed(self, ec2):
         """Volume created from FSR-enabled snapshot is fsr-backed."""
@@ -409,18 +412,18 @@ class TestVolumeHydrationState:
                 finally:
                     try:
                         ec2.delete_volume(VolumeId=volume_id)
-                    except Exception:  # noqa: BLE001
-                        pass
+                    except Exception as exc:  # noqa: BLE001
+                        logger.debug("cleanup failed: %s", exc)
             finally:
                 try:
                     ec2.delete_snapshot(SnapshotId=snapshot_id)
-                except Exception:  # noqa: BLE001
-                    pass
+                except Exception as exc:  # noqa: BLE001
+                    logger.debug("cleanup failed: %s", exc)
         finally:
             try:
                 ec2.delete_volume(VolumeId=source_vol_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
 
     def test_volume_from_snapshot_with_init_rate_is_initialized(self, ec2):
         """Volume created with VolumeInitializationRate is initialized."""
@@ -450,18 +453,18 @@ class TestVolumeHydrationState:
                 finally:
                     try:
                         ec2.delete_volume(VolumeId=volume_id)
-                    except Exception:  # noqa: BLE001
-                        pass
+                    except Exception as exc:  # noqa: BLE001
+                        logger.debug("cleanup failed: %s", exc)
             finally:
                 try:
                     ec2.delete_snapshot(SnapshotId=snapshot_id)
-                except Exception:  # noqa: BLE001
-                    pass
+                except Exception as exc:  # noqa: BLE001
+                    logger.debug("cleanup failed: %s", exc)
         finally:
             try:
                 ec2.delete_volume(VolumeId=source_vol_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
 
     def test_volume_not_from_snapshot_is_initialized(self, ec2):
         """Volume created without snapshot is immediately initialized."""
@@ -482,8 +485,8 @@ class TestVolumeHydrationState:
         finally:
             try:
                 ec2.delete_volume(VolumeId=volume_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
 
 
 class TestVolumePreservesSnapshotProperties:
@@ -526,18 +529,18 @@ class TestVolumePreservesSnapshotProperties:
                 finally:
                     try:
                         ec2.delete_volume(VolumeId=volume_id)
-                    except Exception:  # noqa: BLE001
-                        pass
+                    except Exception as exc:  # noqa: BLE001
+                        logger.debug("cleanup failed: %s", exc)
             finally:
                 try:
                     ec2.delete_snapshot(SnapshotId=snapshot_id)
-                except Exception:  # noqa: BLE001
-                    pass
+                except Exception as exc:  # noqa: BLE001
+                    logger.debug("cleanup failed: %s", exc)
         finally:
             try:
                 ec2.delete_volume(VolumeId=source_vol_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
 
     def test_volume_from_snapshot_preserves_size(self, ec2):
         """Volume from snapshot inherits size."""
@@ -566,15 +569,15 @@ class TestVolumePreservesSnapshotProperties:
                 finally:
                     try:
                         ec2.delete_volume(VolumeId=volume_id)
-                    except Exception:  # noqa: BLE001
-                        pass
+                    except Exception as exc:  # noqa: BLE001
+                        logger.debug("cleanup failed: %s", exc)
             finally:
                 try:
                     ec2.delete_snapshot(SnapshotId=snapshot_id)
-                except Exception:  # noqa: BLE001
-                    pass
+                except Exception as exc:  # noqa: BLE001
+                    logger.debug("cleanup failed: %s", exc)
         finally:
             try:
                 ec2.delete_volume(VolumeId=source_vol_id)
-            except Exception:  # noqa: BLE001
-                pass
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("cleanup failed: %s", exc)
