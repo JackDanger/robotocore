@@ -794,6 +794,124 @@ async def chaos_clear_rules(request: Request) -> JSONResponse:
 
 
 # ---------------------------------------------------------------------------
+# EC2 capacity profile endpoints
+# ---------------------------------------------------------------------------
+
+
+async def ec2_capacity_list(request: Request) -> JSONResponse:
+    """List EC2 capacity profiles for an account/region."""
+    from robotocore.services.ec2.capacity import get_capacity_store
+
+    account_id = request.query_params.get("account_id", DEFAULT_ACCOUNT_ID)
+    region = request.query_params.get("region", "us-east-1")
+
+    store = get_capacity_store()
+    profiles = store.list_profiles(account_id, region)
+
+    return JSONResponse({
+        "profiles": [p.to_dict() for p in profiles],
+        "account_id": account_id,
+        "region": region,
+    })
+
+
+async def ec2_capacity_set(request: Request) -> JSONResponse:
+    """Set an EC2 capacity profile."""
+    from robotocore.services.ec2.capacity import CapacityProfile, get_capacity_store
+
+    body = await request.body()
+    if not body:
+        return JSONResponse({"error": "No profile data provided"}, status_code=400)
+
+    try:
+        data = json.loads(body)
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JSONResponse({"error": "Invalid JSON"}, status_code=400)
+
+    required = ["instance_type", "availability_zone", "total_capacity"]
+    for field in required:
+        if field not in data:
+            return JSONResponse({"error": f"Missing required field: {field}"}, status_code=400)
+
+    profile = CapacityProfile(
+        instance_type=data["instance_type"],
+        availability_zone=data["availability_zone"],
+        total_capacity=data["total_capacity"],
+        available_capacity=data.get("available_capacity", data["total_capacity"]),
+        spot_available=data.get("spot_available", True),
+        spot_price=data.get("spot_price", 0.05),
+        enabled=data.get("enabled", True),
+    )
+
+    account_id = data.get("account_id", DEFAULT_ACCOUNT_ID)
+    region = data.get("region", "us-east-1")
+
+    store = get_capacity_store()
+    store.set_profile(account_id, region, profile)
+
+    return JSONResponse({"status": "created", "profile": profile.to_dict()})
+
+
+async def ec2_capacity_delete(request: Request) -> JSONResponse:
+    """Delete an EC2 capacity profile."""
+    from robotocore.services.ec2.capacity import get_capacity_store
+
+    instance_type = request.query_params.get("instance_type")
+    az = request.query_params.get("availability_zone")
+    account_id = request.query_params.get("account_id", DEFAULT_ACCOUNT_ID)
+    region = request.query_params.get("region", "us-east-1")
+
+    if not instance_type or not az:
+        return JSONResponse(
+            {"error": "Missing required query params: instance_type, availability_zone"},
+            status_code=400,
+        )
+
+    store = get_capacity_store()
+    deleted = store.delete_profile(account_id, region, instance_type, az)
+
+    if deleted:
+        return JSONResponse({"status": "deleted"})
+    return JSONResponse({"status": "not_found"}, status_code=404)
+
+
+async def ec2_capacity_reset(request: Request) -> JSONResponse:
+    """Reset EC2 capacity profiles for an account/region or all."""
+    from robotocore.services.ec2.capacity import get_capacity_store
+
+    account_id = request.query_params.get("account_id")
+    region = request.query_params.get("region")
+
+    store = get_capacity_store()
+    store.reset(account_id, region)
+
+    return JSONResponse({"status": "reset", "account_id": account_id, "region": region})
+
+
+async def ec2_capacity_chaos(request: Request) -> JSONResponse:
+    """Set chaos override for EC2 capacity."""
+    from robotocore.services.ec2.capacity import get_capacity_store
+
+    body = await request.body()
+    if not body:
+        return JSONResponse({"error": "No chaos data provided"}, status_code=400)
+
+    try:
+        data = json.loads(body)
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JSONResponse({"error": "Invalid JSON"}, status_code=400)
+
+    store = get_capacity_store()
+
+    if data.get("clear"):
+        store.set_chaos_override(None)
+        return JSONResponse({"status": "cleared"})
+
+    store.set_chaos_override(data)
+    return JSONResponse({"status": "set", "override": data})
+
+
+# ---------------------------------------------------------------------------
 # Resource browser endpoints
 # ---------------------------------------------------------------------------
 
@@ -1488,6 +1606,12 @@ management_routes = [
     Route("/_robotocore/chaos/rules", chaos_add_rule, methods=["POST"]),
     Route("/_robotocore/chaos/rules/clear", chaos_clear_rules, methods=["POST"]),
     Route("/_robotocore/chaos/rules/{rule_id}", chaos_delete_rule, methods=["DELETE"]),
+    # EC2 capacity profiles
+    Route("/_robotocore/ec2/capacity", ec2_capacity_list, methods=["GET"]),
+    Route("/_robotocore/ec2/capacity", ec2_capacity_set, methods=["POST"]),
+    Route("/_robotocore/ec2/capacity", ec2_capacity_delete, methods=["DELETE"]),
+    Route("/_robotocore/ec2/capacity/reset", ec2_capacity_reset, methods=["POST"]),
+    Route("/_robotocore/ec2/capacity/chaos", ec2_capacity_chaos, methods=["POST"]),
     # Resource browser
     Route("/_robotocore/resources", resources_overview, methods=["GET"]),
     Route("/_robotocore/resources/{service}", resources_for_service, methods=["GET"]),
