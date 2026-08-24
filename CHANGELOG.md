@@ -6,6 +6,25 @@ auto-tags and publishes a versioned + `:latest` Docker image. Each release
 gets a top-level section here; the project source of truth for the
 maintenance policy is [`CLAUDE.md`](CLAUDE.md) under *Changelog discipline*.
 
+## 2026.8.24
+
+### Added
+
+- **EC2 Fast Snapshot Restore (FSR) support**: Implemented `EnableFastSnapshotRestores`,
+  `DisableFastSnapshotRestores`, and `DescribeFastSnapshotRestores` operations with
+  proper state machine modeling (`enabling` → `optimizing` → `enabled`; `disabling` → `disabled`).
+  FSR state is tracked per (snapshot-id, availability-zone) pair.
+- **VolumeInitializationRate support**: `CreateVolume` now accepts `VolumeInitializationRate`
+  parameter when creating volumes from snapshots, with validation (100-300 range) and
+  proper error responses.
+- **Volume hydration state modeling**: Volumes created from snapshots now track a
+  deterministic hydration profile — `cold` (lazy-loaded), `initialized` (fully hydrated),
+  or `fsr-backed` (instant-ready via FSR). This state is exposed via the provider's
+  `get_volume_hydration_state()` function for testing/inspection.
+- **Chaos and audit integration**: FSR state transitions and CreateVolume operations
+  are wired through the existing chaos-engineering (`POST /_robotocore/chaos/rules`)
+  and audit-log (`GET /_robotocore/audit`) interfaces.
+
 ## 2026.5.13 (2026-05-13)
 
 ### Breaking: Docker Hub image renamed to `jackdanger/robotocore`
