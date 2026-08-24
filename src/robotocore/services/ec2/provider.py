@@ -10,6 +10,7 @@ Intercepts operations that Moto doesn't implement or has bugs in:
 """
 
 import logging
+import os
 import threading
 import uuid
 from datetime import UTC, datetime
@@ -22,7 +23,15 @@ from starlette.responses import Response
 
 from robotocore.providers.moto_bridge import forward_to_moto
 
+# Optional packer transport - only loaded when enabled
 logger = logging.getLogger(__name__)
+_packer_transport_available = False
+try:
+    from .packer.ami_builder import get_ami_builder
+
+    _packer_transport_available = True
+except ImportError as e:
+    logger.debug("Packer transport not available: %s", e)
 
 # In-memory placement group store: {account_id: {region: {name: group}}}
 _placement_groups: dict[str, dict[str, dict[str, dict]]] = {}
@@ -55,6 +64,18 @@ HYDRATION_FSR_BACKED = "fsr-backed"
 # AWS-valid VolumeInitializationRate range
 MIN_VOLUME_INIT_RATE = 100
 MAX_VOLUME_INIT_RATE = 300
+
+# Packer transport configuration
+PACKER_TRANSPORT_ENABLED = os.environ.get("ROBOTOCORE_PACKER_TRANSPORT", "").lower() in (
+    "1",
+    "true",
+    "yes",
+    "enabled",
+)
+
+# Track instances with active transport: {instance_id: transport}
+_instance_transports: dict[str, Any] = {}
+_instance_transports_lock = threading.Lock()
 
 
 def _utc_timestamp() -> str:
@@ -909,6 +930,97 @@ def get_fsr_state(snapshot_id: str, az: str, account_id: str, region: str) -> di
     return _get_fsr_state(account_id, region, snapshot_id, az)
 
 
+def _create_image(params: dict, region: str, account_id: str) -> Response:
+    """CreateImage — support Packer-compatible AMI creation with identity clearing.
+
+    When ROBOTOCORE_PACKER_TRANSPORT is enabled, this creates an AMI
+    from a container-backed instance with proper identity clearing.
+    """
+    instance_id = _get_param(params, "InstanceId")
+    ami_name = _get_param(params, "Name")
+    description = _get_param(params, "Description")
+    no_reboot = _get_param(params, "NoReboot") == "true"
+
+    if not instance_id:
+        return _ec2_error(
+            "MissingParameter",
+            "The request must contain the parameter InstanceId.",
+        )
+
+    if not ami_name:
+        return _ec2_error(
+            "MissingParameter",
+            "The request must contain the parameter Name.",
+        )
+
+    # Check if packer transport is enabled and this instance has a transport
+    if PACKER_TRANSPORT_ENABLED and _packer_transport_available:
+        try:
+            with _instance_transports_lock:
+                transport = _instance_transports.get(instance_id)
+
+            if transport and transport.is_running():
+                # Use the AMI builder to create the AMI
+                builder = get_ami_builder()
+                result = builder.create_ami(
+                    instance_id=instance_id,
+                    ami_name=ami_name,
+                    description=description,
+                    no_reboot=no_reboot,
+                    transport=transport,
+                )
+
+                # Return the response with the new AMI ID
+                xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<CreateImageResponse xmlns="http://ec2.amazonaws.com/doc/2016-11-15/">
+    <requestId>{uuid.uuid4()}</requestId>
+    <imageId>{result.ami_id}</imageId>
+</CreateImageResponse>"""
+                return Response(content=xml, status_code=200, media_type="text/xml")
+        except Exception as e:  # noqa: BLE001
+            logger.warning("Packer transport CreateImage failed, falling back to Moto: %s", e)
+
+    # Fall back to Moto's CreateImage
+    from moto.backends import get_backend  # noqa: I001
+
+    backend = get_backend("ec2")[account_id][region]
+
+    # Parse tag specifications from request
+    tag_specifications: list[dict[str, Any]] = []
+    i = 1
+    while True:
+        resource_type = _get_param(params, f"TagSpecification.{i}.ResourceType")
+        if not resource_type:
+            break
+        tags = []
+        j = 1
+        while True:
+            key = _get_param(params, f"TagSpecification.{i}.Tag.{j}.Key")
+            if not key:
+                break
+            value = _get_param(params, f"TagSpecification.{i}.Tag.{j}.Value")
+            tags.append({"Key": key, "Value": value})
+            j += 1
+        if tags:
+            tag_specifications.append({"ResourceType": resource_type, "Tags": tags})
+        i += 1
+
+    # Create the image using Moto's backend
+    ami = backend.create_image(
+        instance_id=instance_id,
+        name=ami_name,
+        description=description,
+        tag_specifications=tag_specifications,
+    )
+
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<CreateImageResponse xmlns="http://ec2.amazonaws.com/doc/2016-11-15/">
+    <requestId>{uuid.uuid4()}</requestId>
+    <imageId>{ami.id}</imageId>
+</CreateImageResponse>"""
+    return Response(content=xml, status_code=200, media_type="text/xml")
+
+
 _ACTION_MAP = {
     "CreatePlacementGroup": _create_placement_group,
     "DescribePlacementGroups": _describe_placement_groups,
@@ -919,4 +1031,5 @@ _ACTION_MAP = {
     "DisableFastSnapshotRestores": _disable_fast_snapshot_restores,
     "DescribeFastSnapshotRestores": _describe_fast_snapshot_restores,
     "CreateVolume": _create_volume,
+    "CreateImage": _create_image,
 }

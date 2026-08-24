@@ -25,6 +25,19 @@ maintenance policy is [`CLAUDE.md`](CLAUDE.md) under *Changelog discipline*.
   are wired through the existing chaos-engineering (`POST /_robotocore/chaos/rules`)
   and audit-log (`GET /_robotocore/audit`) interfaces.
 
+### Added
+
+- **Packer-compatible virtual instance transport** (`src/robotocore/services/ec2/packer/`):
+  - New opt-in container-backed EC2 instance transport for Packer's `amazon-ebs` builder
+  - SSH and SSM transport support for provisioner connectivity
+  - File upload with proper destination path semantics (file vs directory validation)
+  - Shell provisioner execution with environment variables and working directory
+  - AMI creation with identity clearing (machine-id, hostname, SSH host keys)
+  - Filesystem state persistence to `/opt/ami-state` for AMI contents
+  - Fresh identity for instances launched from AMIs (covers "identity cleared too early/late" failure mode)
+  - Enable with `ROBOTOCORE_PACKER_TRANSPORT=1` environment variable
+  - **Out of scope**: GPU/driver fidelity remains a real-AWS test
+
 ## 2026.5.13 (2026-05-13)
 
 ### Breaking: Docker Hub image renamed to `jackdanger/robotocore`
