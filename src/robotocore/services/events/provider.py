@@ -1135,7 +1135,7 @@ def _json(status_code: int, data) -> Response:
 
 # --- Connections ---
 
-_connections: dict[str, dict] = {}
+_connections: dict[tuple[str, str], dict] = {}
 
 
 def _create_connection(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
@@ -1152,7 +1152,7 @@ def _create_connection(store: EventsStore, params: dict, region: str, account_id
         "CreationTime": time.time(),
         "LastModifiedTime": time.time(),
     }
-    _connections[name] = conn
+    _connections[(account_id, name)] = conn
     return {
         "ConnectionArn": conn_arn,
         "ConnectionState": "AUTHORIZED",
@@ -1162,7 +1162,7 @@ def _create_connection(store: EventsStore, params: dict, region: str, account_id
 
 def _describe_connection(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
     name = params.get("Name", "")
-    conn = _connections.get(name)
+    conn = _connections.get((account_id, name))
     if not conn:
         raise EventsError("ResourceNotFoundException", f"Connection {name} not found", 400)
     return conn
@@ -1170,7 +1170,7 @@ def _describe_connection(store: EventsStore, params: dict, region: str, account_
 
 def _delete_connection(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
     name = params.get("Name", "")
-    conn = _connections.pop(name, None)
+    conn = _connections.pop((account_id, name), None)
     if not conn:
         raise EventsError("ResourceNotFoundException", f"Connection {name} not found", 400)
     return {"ConnectionArn": conn["ConnectionArn"], "ConnectionState": "DELETING"}
@@ -1178,7 +1178,7 @@ def _delete_connection(store: EventsStore, params: dict, region: str, account_id
 
 # --- API Destinations ---
 
-_api_destinations: dict[str, dict] = {}
+_api_destinations: dict[tuple[str, str], dict] = {}
 
 
 def _create_api_destination(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
@@ -1199,7 +1199,7 @@ def _create_api_destination(store: EventsStore, params: dict, region: str, accou
         "CreationTime": time.time(),
         "LastModifiedTime": time.time(),
     }
-    _api_destinations[name] = dest
+    _api_destinations[(account_id, name)] = dest
     return {
         "ApiDestinationArn": dest_arn,
         "ApiDestinationState": "ACTIVE",
@@ -1211,7 +1211,7 @@ def _describe_api_destination(
     store: EventsStore, params: dict, region: str, account_id: str
 ) -> dict:
     name = params.get("Name", "")
-    dest = _api_destinations.get(name)
+    dest = _api_destinations.get((account_id, name))
     if not dest:
         raise EventsError("ResourceNotFoundException", f"ApiDestination {name} not found", 400)
     return dest
@@ -1219,7 +1219,7 @@ def _describe_api_destination(
 
 def _delete_api_destination(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
     name = params.get("Name", "")
-    _api_destinations.pop(name, None)
+    _api_destinations.pop((account_id, name), None)
     return {}
 
 
@@ -1255,7 +1255,7 @@ def _update_archive(store: EventsStore, params: dict, region: str, account_id: s
 
 def _update_connection(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
     name = params.get("Name", "")
-    conn = _connections.get(name)
+    conn = _connections.get((account_id, name))
     if not conn:
         raise EventsError("ResourceNotFoundException", f"Connection '{name}' does not exist.", 400)
     if "Description" in params:
@@ -1274,7 +1274,7 @@ def _update_connection(store: EventsStore, params: dict, region: str, account_id
 
 def _update_api_destination(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
     name = params.get("Name", "")
-    dest = _api_destinations.get(name)
+    dest = _api_destinations.get((account_id, name))
     if not dest:
         raise EventsError(
             "ResourceNotFoundException", f"An api-destination '{name}' does not exist.", 400
@@ -1324,7 +1324,7 @@ def _test_event_pattern(store: EventsStore, params: dict, region: str, account_i
 
 def _deauthorize_connection(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
     name = params.get("Name", "")
-    conn = _connections.get(name)
+    conn = _connections.get((account_id, name))
     if not conn:
         raise EventsError("ResourceNotFoundException", f"Connection '{name}' does not exist.", 400)
     conn["ConnectionState"] = "DEAUTHORIZED"
@@ -1338,7 +1338,7 @@ def _deauthorize_connection(store: EventsStore, params: dict, region: str, accou
 
 # --- Endpoints ---
 
-_endpoints: dict[str, dict] = {}
+_endpoints: dict[tuple[str, str], dict] = {}
 
 
 def _create_endpoint(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
@@ -1358,7 +1358,7 @@ def _create_endpoint(store: EventsStore, params: dict, region: str, account_id: 
         "CreationTime": time.time(),
         "LastModifiedTime": time.time(),
     }
-    _endpoints[name] = endpoint
+    _endpoints[(account_id, name)] = endpoint
     return {
         "Name": endpoint["Name"],
         "Arn": endpoint_arn,
@@ -1372,13 +1372,13 @@ def _create_endpoint(store: EventsStore, params: dict, region: str, account_id: 
 
 def _delete_endpoint(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
     name = params.get("Name", "")
-    _endpoints.pop(name, None)
+    _endpoints.pop((account_id, name), None)
     return {}
 
 
 def _update_endpoint(store: EventsStore, params: dict, region: str, account_id: str) -> dict:
     name = params.get("Name", "")
-    endpoint = _endpoints.get(name)
+    endpoint = _endpoints.get((account_id, name))
     if not endpoint:
         raise EventsError("ResourceNotFoundException", f"Endpoint '{name}' does not exist.", 400)
     for field in ("RoutingConfig", "ReplicationConfig", "EventBuses", "RoleArn", "Description"):
@@ -1393,6 +1393,63 @@ def _update_endpoint(store: EventsStore, params: dict, region: str, account_id: 
         "EventBuses": endpoint["EventBuses"],
         "RoleArn": endpoint["RoleArn"],
         "State": endpoint["State"],
+    }
+
+
+def _list_connections(store, params: dict, region: str, account_id: str) -> dict:
+    """ListConnections — return connections for this account."""
+    with_prefix = params.get("NamePrefix", "")
+    results = [
+        conn
+        for (acct, name), conn in _connections.items()
+        if acct == account_id and name.startswith(with_prefix)
+    ]
+    return {"Connections": results}
+
+
+def _list_api_destinations(store, params: dict, region: str, account_id: str) -> dict:
+    """ListApiDestinations — return API destinations for this account."""
+    with_prefix = params.get("NamePrefix", "")
+    results = [
+        dest
+        for (acct, name), dest in _api_destinations.items()
+        if acct == account_id and name.startswith(with_prefix)
+    ]
+    return {"ApiDestinations": results}
+
+
+def _list_endpoints(store, params: dict, region: str, account_id: str) -> dict:
+    """ListEndpoints — return endpoints for this account."""
+    with_prefix = params.get("NamePrefix", "")
+    results = []
+    for (acct, name), ep in _endpoints.items():
+        if acct == account_id and name.startswith(with_prefix):
+            # AWS ListEndpoints uses "Arn" not "EndpointArn" in summary objects
+            entry = dict(ep)
+            entry["Arn"] = entry.get("EndpointArn", "")
+            results.append(entry)
+    return {"Endpoints": results}
+
+
+def _describe_endpoint(store, params: dict, region: str, account_id: str) -> dict:
+    """DescribeEndpoint."""
+    name = params.get("Name", "")
+    endpoint = _endpoints.get((account_id, name))
+    if not endpoint:
+        raise EventsError("ResourceNotFoundException", f"Endpoint '{name}' does not exist.", 400)
+    return {
+        "Name": endpoint["Name"],
+        "Arn": endpoint["EndpointArn"],
+        "RoutingConfig": endpoint["RoutingConfig"],
+        "ReplicationConfig": endpoint["ReplicationConfig"],
+        "EventBuses": endpoint["EventBuses"],
+        "RoleArn": endpoint["RoleArn"],
+        "Description": endpoint["Description"],
+        "State": endpoint["State"],
+        "StateReason": endpoint["StateReason"],
+        "CreationTime": endpoint["CreationTime"],
+        "LastModifiedTime": endpoint["LastModifiedTime"],
+        "EndpointUrl": endpoint["EndpointUrl"],
     }
 
 
@@ -1455,7 +1512,11 @@ _ACTION_MAP = {
     "DeauthorizeConnection": _deauthorize_connection,
     "CreateEndpoint": _create_endpoint,
     "DeleteEndpoint": _delete_endpoint,
+    "DescribeEndpoint": _describe_endpoint,
     "UpdateEndpoint": _update_endpoint,
+    "ListConnections": _list_connections,
+    "ListApiDestinations": _list_api_destinations,
+    "ListEndpoints": _list_endpoints,
 }
 
 
@@ -1471,11 +1532,16 @@ def export_state() -> dict:
     return {
         "schema_version": 1,
         "stores": stores,
-        "connections": {name: dict(conn) for name, conn in _connections.items()},
-        "api_destinations": {
-            name: dict(destination) for name, destination in _api_destinations.items()
+        "connections": {
+            f"{acct}:{name}": dict(conn) for (acct, name), conn in _connections.items()
         },
-        "endpoints": {name: dict(endpoint) for name, endpoint in _endpoints.items()},
+        "api_destinations": {
+            f"{acct}:{name}": dict(destination)
+            for (acct, name), destination in _api_destinations.items()
+        },
+        "endpoints": {
+            f"{acct}:{name}": dict(endpoint) for (acct, name), endpoint in _endpoints.items()
+        },
     }
 
 
@@ -1502,15 +1568,17 @@ def load_state(data: dict) -> None:
                 )
 
     _connections.clear()
-    _connections.update({name: dict(conn) for name, conn in data.get("connections", {}).items()})
+    for key, conn in data.get("connections", {}).items():
+        acct, name = key.split(":", 1) if ":" in key else ("", key)
+        _connections[(acct, name)] = dict(conn)
     _api_destinations.clear()
-    _api_destinations.update(
-        {name: dict(destination) for name, destination in data.get("api_destinations", {}).items()}
-    )
+    for key, dest in data.get("api_destinations", {}).items():
+        acct, name = key.split(":", 1) if ":" in key else ("", key)
+        _api_destinations[(acct, name)] = dict(dest)
     _endpoints.clear()
-    _endpoints.update(
-        {name: dict(endpoint) for name, endpoint in data.get("endpoints", {}).items()}
-    )
+    for key, ep in data.get("endpoints", {}).items():
+        acct, name = key.split(":", 1) if ":" in key else ("", key)
+        _endpoints[(acct, name)] = dict(ep)
     # Invocation log is ephemeral debug state; restored service state should start clean.
     clear_invocation_log()
 

@@ -359,7 +359,7 @@ class TestDiskRoundTripViaStateManager:
         assert restored_connection["AuthorizationType"] == "API_KEY"
         assert restored_destination["ApiDestinationArn"] == api_destination["ApiDestinationArn"]
         assert restored_destination["InvocationRateLimitPerSecond"] == 42
-        assert _endpoints["replica-endpoint"]["EndpointArn"] == endpoint["Arn"]
+        assert _endpoints[("333333333333", "replica-endpoint")]["EndpointArn"] == endpoint["Arn"]
 
     def test_future_snapshot_fields_on_dataclasses_are_ignored(self):
         store = _get_store("us-east-1", "111111111111")

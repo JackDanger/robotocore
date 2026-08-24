@@ -333,6 +333,17 @@ def _create_user_pool_client(
         "AllowedOAuthFlows": params.get("AllowedOAuthFlows", []),
         "AllowedOAuthScopes": params.get("AllowedOAuthScopes", []),
         "CallbackURLs": params.get("CallbackURLs", []),
+        # Initialize all updatable fields to empty values
+        "LogoutURLs": params.get("LogoutURLs", []),
+        "DefaultRedirectURI": params.get("DefaultRedirectURI", ""),
+        "ReadAttributes": params.get("ReadAttributes", []),
+        "WriteAttributes": params.get("WriteAttributes", []),
+        "SupportedIdentityProviders": params.get("SupportedIdentityProviders", []),
+        "AllowedOAuthFlowsUserPoolClient": params.get("AllowedOAuthFlowsUserPoolClient", False),
+        "TokenValidityUnits": params.get("TokenValidityUnits", {}),
+        "AccessTokenValidity": params.get("AccessTokenValidity", 0),
+        "IdTokenValidity": params.get("IdTokenValidity", 0),
+        "RefreshTokenValidity": params.get("RefreshTokenValidity", 0),
     }
     if generate_secret:
         client["ClientSecret"] = _new_id()

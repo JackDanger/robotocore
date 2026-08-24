@@ -46,7 +46,7 @@ async def _get_resources(request: Request, body: bytes, region: str, account_id:
         or "sqs" in resource_type_filters
         or "sqs:queue" in resource_type_filters
     ):
-        results.extend(_get_native_sqs_resources(region, tag_filters))
+        results.extend(_get_native_sqs_resources(region, account_id, tag_filters))
 
     # Augment with native SNS topics
     if (
@@ -54,7 +54,7 @@ async def _get_resources(request: Request, body: bytes, region: str, account_id:
         or "sns" in resource_type_filters
         or "sns:topic" in resource_type_filters
     ):
-        results.extend(_get_native_sns_resources(region, tag_filters))
+        results.extend(_get_native_sns_resources(region, account_id, tag_filters))
 
     response = {
         "ResourceTagMappingList": results,
@@ -77,7 +77,7 @@ async def _get_tag_keys(request: Request, body: bytes, region: str, account_id: 
     try:
         from robotocore.services.sqs.provider import _get_store as get_sqs_store
 
-        sqs_store = get_sqs_store(region)
+        sqs_store = get_sqs_store(region, account_id)
         for queue in sqs_store.list_queues():
             tag_keys.update(queue.tags.keys())
     except Exception as exc:  # noqa: BLE001
@@ -87,7 +87,7 @@ async def _get_tag_keys(request: Request, body: bytes, region: str, account_id: 
     try:
         from robotocore.services.sns.provider import _get_store as get_sns_store
 
-        sns_store = get_sns_store(region)
+        sns_store = get_sns_store(region, account_id)
         for topic in sns_store.topics.values():
             if hasattr(topic, "tags") and topic.tags:
                 tag_keys.update(topic.tags.keys())
@@ -105,12 +105,12 @@ async def _get_tag_keys(request: Request, body: bytes, region: str, account_id: 
     )
 
 
-def _get_native_sqs_resources(region: str, tag_filters: list) -> list:
+def _get_native_sqs_resources(region: str, account_id: str, tag_filters: list) -> list:
     results = []
     try:
         from robotocore.services.sqs.provider import _get_store as get_sqs_store
 
-        sqs_store = get_sqs_store(region)
+        sqs_store = get_sqs_store(region, account_id)
         for queue in sqs_store.list_queues():
             if not queue.tags:
                 continue
@@ -123,12 +123,12 @@ def _get_native_sqs_resources(region: str, tag_filters: list) -> list:
     return results
 
 
-def _get_native_sns_resources(region: str, tag_filters: list) -> list:
+def _get_native_sns_resources(region: str, account_id: str, tag_filters: list) -> list:
     results = []
     try:
         from robotocore.services.sns.provider import _get_store as get_sns_store
 
-        sns_store = get_sns_store(region)
+        sns_store = get_sns_store(region, account_id)
         for topic in sns_store.topics.values():
             if not hasattr(topic, "tags") or not topic.tags:
                 continue

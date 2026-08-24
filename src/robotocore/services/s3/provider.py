@@ -1098,6 +1098,7 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
         queue_arn = ""
         events: list[str] = []
         filter_rules: list[dict] = []
+        config_id = ""
 
         for child in qc:
             tag = child.tag.split("}")[-1] if "}" in child.tag else child.tag
@@ -1107,8 +1108,12 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
                 events.append(child.text or "")
             elif tag == "Filter":
                 filter_rules = _parse_filter_rules(child)
+            elif tag == "Id":
+                config_id = child.text or ""
 
         entry: dict = {"QueueArn": queue_arn, "Events": events}
+        if config_id:
+            entry["Id"] = config_id
         if filter_rules:
             entry["Filter"] = {"Key": {"FilterRules": filter_rules}}
         config.queue_configs.append(entry)
@@ -1117,6 +1122,7 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
         topic_arn = ""
         events = []
         filter_rules = []
+        config_id = ""
 
         for child in tc:
             tag = child.tag.split("}")[-1] if "}" in child.tag else child.tag
@@ -1126,8 +1132,12 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
                 events.append(child.text or "")
             elif tag == "Filter":
                 filter_rules = _parse_filter_rules(child)
+            elif tag == "Id":
+                config_id = child.text or ""
 
         entry = {"TopicArn": topic_arn, "Events": events}
+        if config_id:
+            entry["Id"] = config_id
         if filter_rules:
             entry["Filter"] = {"Key": {"FilterRules": filter_rules}}
         config.topic_configs.append(entry)
@@ -1142,6 +1152,7 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
         lambda_arn = ""
         events = []
         filter_rules = []
+        config_id = ""
 
         for child in lc:
             tag = child.tag.split("}")[-1] if "}" in child.tag else child.tag
@@ -1151,8 +1162,12 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
                 events.append(child.text or "")
             elif tag == "Filter":
                 filter_rules = _parse_filter_rules(child)
+            elif tag == "Id":
+                config_id = child.text or ""
 
         entry = {"LambdaFunctionArn": lambda_arn, "Events": events}
+        if config_id:
+            entry["Id"] = config_id
         if filter_rules:
             entry["Filter"] = {"Key": {"FilterRules": filter_rules}}
         config.lambda_configs.append(entry)
@@ -1192,6 +1207,8 @@ def _notification_config_to_xml(config: NotificationConfig) -> str:
 
     for qc in config.queue_configs:
         parts.append("<QueueConfiguration>")
+        if "Id" in qc:
+            parts.append(f"<Id>{qc['Id']}</Id>")
         parts.append(f"<Queue>{qc['QueueArn']}</Queue>")
         for evt in qc.get("Events", []):
             parts.append(f"<Event>{evt}</Event>")
@@ -1200,6 +1217,8 @@ def _notification_config_to_xml(config: NotificationConfig) -> str:
 
     for tc in config.topic_configs:
         parts.append("<TopicConfiguration>")
+        if "Id" in tc:
+            parts.append(f"<Id>{tc['Id']}</Id>")
         parts.append(f"<Topic>{tc['TopicArn']}</Topic>")
         for evt in tc.get("Events", []):
             parts.append(f"<Event>{evt}</Event>")
@@ -1208,6 +1227,8 @@ def _notification_config_to_xml(config: NotificationConfig) -> str:
 
     for lc in config.lambda_configs:
         parts.append("<LambdaFunctionConfiguration>")
+        if "Id" in lc:
+            parts.append(f"<Id>{lc['Id']}</Id>")
         parts.append(f"<LambdaFunctionArn>{lc['LambdaFunctionArn']}</LambdaFunctionArn>")
         for evt in lc.get("Events", []):
             parts.append(f"<Event>{evt}</Event>")
