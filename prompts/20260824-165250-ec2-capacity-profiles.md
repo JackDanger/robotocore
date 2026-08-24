@@ -1,7 +1,7 @@
 ---
 session: "feat-ec2-capacity-profiles"
 timestamp: "2026-08-24T16:52:50Z"
-model: claude-sonnet-4-5
+model: moonshotai.kimi-k2.5
 sequence: 1
 ---
 
@@ -38,6 +38,7 @@ Constraints:
 - `src/robotocore/services/ec2/capacity.py` — Core capacity model (CapacityProfile, CapacityStore, SpotRequestState)
 - `src/robotocore/services/ec2/provider.py` — Extended with RunInstances and RequestSpotInstances handlers
 - `src/robotocore/gateway/app.py` — Added admin endpoints for capacity management
+- `src/robotocore/boot/components.py` — Added EC2 state handler registration in state_component()
 - `tests/unit/services/ec2/test_capacity.py` — Unit tests for capacity store
 - `tests/compatibility/test_ec2_capacity_profiles.py` — Integration tests against running server
 
@@ -57,9 +58,14 @@ Constraints:
 - `POST /_robotocore/ec2/capacity/reset` — Reset profiles
 - `POST /_robotocore/ec2/capacity/chaos` — Set chaos override
 
-**State snapshot integration**: Registered via `register_state_handler()` which calls `manager.register_native_handler("ec2_capacity", store.export_state, store.load_state)`
+**State snapshot integration**: Registered via `register_state_handler()` in `state_component()` which calls `manager.register_native_handler("ec2_capacity", store.export_state, store.load_state)`. The state handler is now properly wired into the boot sequence alongside SQS and Events.
 
-**Chaos integration**: CapacityStore has a `_chaos_override` field that can be set via the chaos endpoint to force specific error codes regardless of actual capacity.
+**Chaos integration limitation**: The generic chaos rules system (`POST /_robotocore/chaos/rules`) matches on service/operation/region but cannot express "force capacity failure for specific (instance-type, AZ) pair" because:
+1. The chaos middleware intercepts requests BEFORE they reach service handlers
+2. It doesn't have access to the request body to extract instance-type and AZ
+3. Extending it would require significant refactoring of the chaos rule matching engine
+
+Instead, a service-specific endpoint `POST /_robotocore/ec2/capacity/chaos` provides the required granularity. This is a deliberate design choice documented as a service-specific extension point.
 
 **Multi-account/region isolation**: Capacity profiles are stored per (account_id, region) tuple, consistent with how other robotocore services handle isolation.
 
