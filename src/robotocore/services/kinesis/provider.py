@@ -31,7 +31,12 @@ _iterator_lock = threading.Lock()
 
 
 def _encode_iterator(
-    stream_name: str, shard_id: str, iterator_type: str, sequence: str, region: str
+    stream_name: str,
+    shard_id: str,
+    iterator_type: str,
+    sequence: str,
+    region: str,
+    timestamp: float | None = None,
 ) -> str:
     """Encode shard iterator as a base64 JSON blob."""
     payload = json.dumps(
@@ -42,6 +47,7 @@ def _encode_iterator(
             "seq": sequence,
             "region": region,
             "ts": time.time(),
+            "timestamp": timestamp,  # Store timestamp for AT_TIMESTAMP iterators
         }
     )
     return base64.b64encode(payload.encode()).decode()
@@ -298,6 +304,10 @@ def _get_shard_iterator(store: KinesisStore, params: dict, region: str, account_
     elif iterator_type == "AT_TIMESTAMP":
         # AT_TIMESTAMP starts from the beginning and filters by timestamp
         seq = "00000000000000000000"
+        # Store the timestamp for filtering in GetRecords
+        timestamp = params.get("Timestamp")
+        token = _encode_iterator(name, shard_id, iterator_type, seq, region, timestamp=timestamp)
+        return {"ShardIterator": token}
     else:
         raise KinesisError(
             "InvalidArgumentException", f"Invalid ShardIteratorType: {iterator_type}"
@@ -331,6 +341,12 @@ def _get_records(store: KinesisStore, params: dict, region: str, account_id: str
         raise KinesisError("ResourceNotFoundException", f"Shard {shard_id} not found.")
 
     records, next_seq = shard.get_records(seq, limit)
+
+    # Filter by timestamp for AT_TIMESTAMP iterators
+    iterator_type = iterator_info.get("type", "AT_SEQUENCE_NUMBER")
+    timestamp = iterator_info.get("timestamp")
+    if iterator_type == "AT_TIMESTAMP" and timestamp is not None:
+        records = [r for r in records if r.timestamp >= timestamp]
 
     # Build the next iterator
     new_seq = next_seq if next_seq else seq

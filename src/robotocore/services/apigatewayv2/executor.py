@@ -40,7 +40,7 @@ def execute_v2_request(
         get_stage_store,
     )
 
-    apis = get_api_store(region)
+    apis = get_api_store(region, account_id)
     api = apis.get(api_id)
     if not api:
         return 404, {}, json.dumps({"message": f"API {api_id} not found"})
@@ -48,7 +48,7 @@ def execute_v2_request(
     protocol = api.get("ProtocolType", "HTTP")
 
     # Verify stage exists
-    stages = get_stage_store(region, api_id)
+    stages = get_stage_store(region, api_id, account_id)
     stage_obj = stages.get(stage)
     if not stage_obj and stage != "$default":
         return 404, {}, json.dumps({"message": f"Stage {stage} not found"})
@@ -56,8 +56,8 @@ def execute_v2_request(
     stage_vars = (stage_obj or {}).get("StageVariables", {})
 
     # Get routes and integrations
-    routes = get_route_store(region, api_id)
-    integrations = get_integration_store(region, api_id)
+    routes = get_route_store(region, api_id, account_id)
+    integrations = get_integration_store(region, api_id, account_id)
 
     # Match route
     route_key = f"{method.upper()} {path}"
@@ -123,13 +123,13 @@ def execute_websocket_message(
         get_route_store,
     )
 
-    apis = get_api_store(region)
+    apis = get_api_store(region, account_id)
     api = apis.get(api_id)
     if not api:
         return 404, {}, json.dumps({"message": "API not found"})
 
-    routes = get_route_store(region, api_id)
-    integrations = get_integration_store(region, api_id)
+    routes = get_route_store(region, api_id, account_id)
+    integrations = get_integration_store(region, api_id, account_id)
 
     # Parse message to determine route
     route_sel_expr = api.get("RouteSelectionExpression", "$request.body.action")
@@ -195,8 +195,8 @@ def execute_websocket_connect(
         get_route_store,
     )
 
-    routes = get_route_store(region, api_id)
-    integrations = get_integration_store(region, api_id)
+    routes = get_route_store(region, api_id, account_id)
+    integrations = get_integration_store(region, api_id, account_id)
 
     # Find $connect route
     route = None
@@ -246,8 +246,8 @@ def execute_websocket_disconnect(
         get_route_store,
     )
 
-    routes = get_route_store(region, api_id)
-    integrations = get_integration_store(region, api_id)
+    routes = get_route_store(region, api_id, account_id)
+    integrations = get_integration_store(region, api_id, account_id)
 
     route = None
     for r in routes.values():
@@ -399,7 +399,7 @@ def _check_v2_authorizer(
 
     from robotocore.services.apigatewayv2.provider import get_authorizer_store
 
-    authorizers = get_authorizer_store(region, api_id)
+    authorizers = get_authorizer_store(region, api_id, account_id)
     authorizer = authorizers.get(auth_id)
     if not authorizer:
         return None

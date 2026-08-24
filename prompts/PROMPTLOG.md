@@ -1,6 +1,6 @@
 # Prompt Log
 
-When you make a git commit, also commit a sanitized log of the prompts that led to it. Both the human's and yours.
+Optional, but encouraged: when you make a git commit, consider also committing a sanitized log of the prompts that led to it — both the human's and yours, when there was a human. This is no longer enforced in CI, and a prompt log entry doesn't require a human prompt to exist; log whatever provenance is useful for a future reader, autonomous sessions included.
 
 ## Why
 

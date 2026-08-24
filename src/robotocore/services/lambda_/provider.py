@@ -261,6 +261,21 @@ async def _handle_functions(
                     _store_dlq_config(account_id, region, func_name, spec["DeadLetterConfig"])
                 qualifier = request.query_params.get("Qualifier")
                 fn = backend.update_function_configuration(func_name, qualifier, spec)
+                if "Environment" in spec or "Handler" in spec or "Layers" in spec:
+                    # Module-scope code (`X = os.environ["X"]` above any def)
+                    # only re-runs on the next cold import, so without this a
+                    # changed env var — or a changed handler entry point —
+                    # would silently keep using whatever a prior invocation
+                    # already imported. Real Lambda spins a fresh execution
+                    # environment and reruns init on a config update; the
+                    # cheapest equivalent here is dropping the cached module.
+                    # Layers is included for the same reason but a different
+                    # mechanism: the extraction cache key is (function_name,
+                    # sha256(code_zip)) — layer bytes aren't in it — while
+                    # layer contents are physically baked into the cached
+                    # extraction dir, so a layers-only update would otherwise
+                    # keep serving the old layer code indefinitely too.
+                    get_code_cache().invalidate(func_name)
                 result = fn if isinstance(fn, dict) else _fn_config(fn)
                 # Merge DLQ config into response
                 dlq = _get_dlq_config(account_id, region, func_name)
