@@ -305,12 +305,12 @@ def _delete_config_rule(params: dict, region: str, account_id: str) -> dict:
     # Delete from Moto
     backend.delete_config_rule(rule_name)
 
-    # Clean up our in-memory evaluation status and evaluations
+    # Clean up our in-memory evaluation status
     key = (account_id, region)
     if key in _evaluation_statuses:
         _evaluation_statuses[key].pop(rule_name, None)
-    if key in _evaluations:
-        _evaluations[key].pop(rule_name, None)
+    # Note: _evaluations is keyed by "{resource_type}:{resource_id}", not rule_name,
+    # so we can't clean it up here. Evaluations are stored per-resource, not per-rule.
 
     return {}
 

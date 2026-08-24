@@ -49,11 +49,17 @@ async def handle_elasticache_request(request: Request, region: str, account_id: 
     body = await request.body()
     content_type = request.headers.get("content-type", "")
 
+    # Parse query string parameters first
+    query_parsed = parse_qs(str(request.url.query), keep_blank_values=True)
+    params = {k: v[0] if len(v) == 1 else v for k, v in query_parsed.items()}
+
+    # Parse body parameters (form-urlencoded only)
     if "x-www-form-urlencoded" in content_type:
-        parsed = parse_qs(body.decode(), keep_blank_values=True)
-    else:
-        parsed = parse_qs(str(request.url.query), keep_blank_values=True)
-    params = {k: v[0] if len(v) == 1 else v for k, v in parsed.items()}
+        body_parsed = parse_qs(body.decode(), keep_blank_values=True)
+        body_params = {k: v[0] if len(v) == 1 else v for k, v in body_parsed.items()}
+        # Body parameters override query string parameters
+        params.update(body_params)
+
     action = params.get("Action", "")
 
     if action == "CreateCacheCluster":

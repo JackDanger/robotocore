@@ -176,7 +176,7 @@ def _describe_communications(params: dict, region: str, account_id: str) -> dict
     try:
         from moto.backends import get_backend  # noqa: I001
 
-        backend = get_backend("support")[account_id]["us-east-1"]
+        backend = get_backend("support")[account_id][region]
         if case_id in backend.cases:
             case = backend.cases[case_id]
             initial_comm = {

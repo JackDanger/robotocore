@@ -260,6 +260,11 @@ def create_replica_table(
                 }
             )
 
+        # Inherit stream configuration from source table
+        streams = None
+        if source_table.latest_stream_label:
+            streams = source_table.stream_specification
+
         target_backend.create_table(
             table_name,
             schema=key_schema,
@@ -267,7 +272,7 @@ def create_replica_table(
             attr=attr_defs,
             global_indexes=None,
             indexes=None,
-            streams=None,
+            streams=streams,
             billing_mode="PAY_PER_REQUEST",
             sse_specification=None,
             tags=[],
