@@ -6,6 +6,20 @@ auto-tags and publishes a versioned + `:latest` Docker image. Each release
 gets a top-level section here; the project source of truth for the
 maintenance policy is [`CLAUDE.md`](CLAUDE.md) under *Changelog discipline*.
 
+## 2026.5.14 (2026-05-14)
+
+### Added
+
+- **ECR OCI Registry v2 data plane** — Docker/ECR-compatible registry endpoints for pushing and pulling container images:
+  - `GET /v2/` — Registry availability check
+  - `GET/PUT/DELETE /v2/{name}/manifests/{reference}` — Manifest operations by tag or digest
+  - `GET/HEAD /v2/{name}/blobs/{digest}` — Blob (layer) operations
+  - `POST/PATCH/PUT/DELETE /v2/{name}/blobs/uploads/{uuid}` — Blob upload session flow
+  - `GET /v2/{name}/tags/list` — List all tags in a repository
+  - Bearer token and Basic auth support compatible with ECR's `GetAuthorizationToken` credential
+  - Image tag immutability enforcement (`imageTagMutability=IMMUTABLE`)
+  - Full integration with existing ECR control plane — images pushed via `/v2/` are visible to `BatchGetImage`, `ListImages`, etc.
+
 ## 2026.5.13 (2026-05-13)
 
 ### Breaking: Docker Hub image renamed to `jackdanger/robotocore`

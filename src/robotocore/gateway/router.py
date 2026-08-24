@@ -93,6 +93,9 @@ TARGET_PREFIX_MAP: dict[str, str] = {
 
 # URL path patterns to service names
 PATH_PATTERNS: list[tuple[re.Pattern, str]] = [
+    # OCI Registry v2 data plane (ECR) - must come before /v2/ for apigatewayv2
+    (re.compile(r"^/v2/$"), "ecr"),
+    (re.compile(r"^/v2/[^/]+/"), "ecr"),
     (re.compile(r"^/2014-11-13/functions"), "lambda"),
     (re.compile(r"^/2015-03-31/functions"), "lambda"),
     (re.compile(r"^/2021-\d{2}-\d{2}/functions/"), "lambda"),
