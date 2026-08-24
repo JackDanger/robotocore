@@ -10,6 +10,21 @@ maintenance policy is [`CLAUDE.md`](CLAUDE.md) under *Changelog discipline*.
 
 ### Added
 
+- **EC2 Fast Snapshot Restore (FSR) support**: Implemented `EnableFastSnapshotRestores`,
+  `DisableFastSnapshotRestores`, and `DescribeFastSnapshotRestores` operations with
+  proper state machine modeling (`enabling` → `optimizing` → `enabled`; `disabling` → `disabled`).
+  FSR state is tracked per (snapshot-id, availability-zone) pair.
+- **VolumeInitializationRate support**: `CreateVolume` now accepts `VolumeInitializationRate`
+  parameter when creating volumes from snapshots, with validation (100-300 range) and
+  proper error responses.
+- **Volume hydration state modeling**: Volumes created from snapshots now track a
+  deterministic hydration profile — `cold` (lazy-loaded), `initialized` (fully hydrated),
+  or `fsr-backed` (instant-ready via FSR). This state is exposed via the provider's
+  `get_volume_hydration_state()` function for testing/inspection.
+- **Chaos and audit integration**: FSR state transitions and CreateVolume operations
+  are wired through the existing chaos-engineering (`POST /_robotocore/chaos/rules`)
+  and audit-log (`GET /_robotocore/audit`) interfaces.
+
 - **ECR OCI Registry v2 data plane** — Docker/ECR-compatible registry endpoints for pushing and pulling container images:
   - `GET /v2/` — Registry availability check
   - `GET/PUT/DELETE /v2/{name}/manifests/{reference}` — Manifest operations by tag or digest
