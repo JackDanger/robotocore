@@ -131,25 +131,29 @@ class TestInsufficientInstanceCapacity:
 
     def test_run_instances_fails_when_capacity_exhausted(self, ec2):
         """Test RunInstances returns InsufficientInstanceCapacity when exhausted."""
+        # Use synthetic instance type and AZ to avoid collision with parallel tests
+        synthetic_type = _unique("cap-test")
+        synthetic_az = "us-east-1f"  # Real but less commonly used AZ
+
         # Set capacity to 1
         requests.post(
             f"{ENDPOINT_URL}/_robotocore/ec2/capacity",
             json={
-                "instance_type": "t2.micro",
-                "availability_zone": "us-east-1a",
+                "instance_type": synthetic_type,
+                "availability_zone": synthetic_az,
                 "total_capacity": 1,
                 "available_capacity": 1,
             },
             timeout=5,
         )
 
-        # Create VPC and subnet
+        # Create VPC and subnet in the synthetic AZ
         vpc = ec2.create_vpc(CidrBlock="10.0.0.0/16")
         vpc_id = vpc["Vpc"]["VpcId"]
         subnet = ec2.create_subnet(
             VpcId=vpc_id,
             CidrBlock="10.0.1.0/24",
-            AvailabilityZone="us-east-1a",
+            AvailabilityZone=synthetic_az,
         )
         subnet_id = subnet["Subnet"]["SubnetId"]
 
@@ -158,7 +162,7 @@ class TestInsufficientInstanceCapacity:
             ImageId="ami-12345678",
             MinCount=1,
             MaxCount=1,
-            InstanceType="t2.micro",
+            InstanceType=synthetic_type,
             SubnetId=subnet_id,
         )
         assert len(response["Instances"]) == 1
@@ -169,14 +173,14 @@ class TestInsufficientInstanceCapacity:
                 ImageId="ami-12345678",
                 MinCount=1,
                 MaxCount=1,
-                InstanceType="t2.micro",
+                InstanceType=synthetic_type,
                 SubnetId=subnet_id,
             )
 
         error = exc.value.response["Error"]
         assert error["Code"] == "InsufficientInstanceCapacity"
-        assert "t2.micro" in error["Message"]
-        assert "us-east-1a" in error["Message"]
+        assert synthetic_type in error["Message"]
+        assert synthetic_az in error["Message"]
 
         # Cleanup
         ec2.terminate_instances(InstanceIds=[response["Instances"][0]["InstanceId"]])
@@ -185,12 +189,16 @@ class TestInsufficientInstanceCapacity:
 
     def test_run_instances_succeeds_with_sufficient_capacity(self, ec2):
         """Test that RunInstances succeeds when capacity is available."""
+        # Use synthetic instance type and AZ to avoid collision with parallel tests
+        synthetic_type = _unique("cap-test")
+        synthetic_az = "us-east-1f"
+
         # Set capacity to 5
         requests.post(
             f"{ENDPOINT_URL}/_robotocore/ec2/capacity",
             json={
-                "instance_type": "t2.micro",
-                "availability_zone": "us-east-1a",
+                "instance_type": synthetic_type,
+                "availability_zone": synthetic_az,
                 "total_capacity": 5,
                 "available_capacity": 5,
             },
@@ -203,7 +211,7 @@ class TestInsufficientInstanceCapacity:
         subnet = ec2.create_subnet(
             VpcId=vpc_id,
             CidrBlock="10.0.1.0/24",
-            AvailabilityZone="us-east-1a",
+            AvailabilityZone=synthetic_az,
         )
         subnet_id = subnet["Subnet"]["SubnetId"]
 
@@ -212,7 +220,7 @@ class TestInsufficientInstanceCapacity:
             ImageId="ami-12345678",
             MinCount=1,
             MaxCount=3,
-            InstanceType="t2.micro",
+            InstanceType=synthetic_type,
             SubnetId=subnet_id,
         )
         # Note: Moto may return fewer instances than MaxCount, but should not fail
@@ -230,12 +238,16 @@ class TestUnsupportedInstanceType:
 
     def test_run_instances_fails_for_disabled_offering(self, ec2):
         """Test that RunInstances returns Unsupported for disabled instance type/AZ."""
+        # Use synthetic instance type and AZ to avoid collision with parallel tests
+        synthetic_type = _unique("cap-test-deny")
+        synthetic_az = "us-east-1f"
+
         # Set offering as disabled
         requests.post(
             f"{ENDPOINT_URL}/_robotocore/ec2/capacity",
             json={
-                "instance_type": "p4d.24xlarge",
-                "availability_zone": "us-east-1a",
+                "instance_type": synthetic_type,
+                "availability_zone": synthetic_az,
                 "total_capacity": 0,
                 "available_capacity": 0,
                 "enabled": False,
@@ -249,7 +261,7 @@ class TestUnsupportedInstanceType:
         subnet = ec2.create_subnet(
             VpcId=vpc_id,
             CidrBlock="10.0.1.0/24",
-            AvailabilityZone="us-east-1a",
+            AvailabilityZone=synthetic_az,
         )
         subnet_id = subnet["Subnet"]["SubnetId"]
 
@@ -259,7 +271,7 @@ class TestUnsupportedInstanceType:
                 ImageId="ami-12345678",
                 MinCount=1,
                 MaxCount=1,
-                InstanceType="p4d.24xlarge",
+                InstanceType=synthetic_type,
                 SubnetId=subnet_id,
             )
 
@@ -277,12 +289,16 @@ class TestSpotInstanceCapacity:
 
     def test_request_spot_instances_fails_when_no_spot_capacity(self, ec2):
         """Test that RequestSpotInstances returns capacity-not-available when spot is disabled."""
+        # Use synthetic instance type and AZ to avoid collision with parallel tests
+        synthetic_type = _unique("cap-test-spot")
+        synthetic_az = "us-east-1f"
+
         # Set spot as not available
         requests.post(
             f"{ENDPOINT_URL}/_robotocore/ec2/capacity",
             json={
-                "instance_type": "t2.micro",
-                "availability_zone": "us-east-1a",
+                "instance_type": synthetic_type,
+                "availability_zone": synthetic_az,
                 "total_capacity": 10,
                 "available_capacity": 10,
                 "spot_available": False,
@@ -296,8 +312,8 @@ class TestSpotInstanceCapacity:
             InstanceCount=1,
             LaunchSpecification={
                 "ImageId": "ami-12345678",
-                "InstanceType": "t2.micro",
-                "Placement": {"AvailabilityZone": "us-east-1a"},
+                "InstanceType": synthetic_type,
+                "Placement": {"AvailabilityZone": synthetic_az},
             },
         )
 
@@ -309,12 +325,16 @@ class TestSpotInstanceCapacity:
 
     def test_request_spot_instances_succeeds_with_capacity(self, ec2):
         """Test that RequestSpotInstances succeeds when spot capacity is available."""
+        # Use synthetic instance type and AZ to avoid collision with parallel tests
+        synthetic_type = _unique("cap-test-spot")
+        synthetic_az = "us-east-1f"
+
         # Set spot as available
         requests.post(
             f"{ENDPOINT_URL}/_robotocore/ec2/capacity",
             json={
-                "instance_type": "t2.micro",
-                "availability_zone": "us-east-1a",
+                "instance_type": synthetic_type,
+                "availability_zone": synthetic_az,
                 "total_capacity": 10,
                 "available_capacity": 10,
                 "spot_available": True,
@@ -329,8 +349,8 @@ class TestSpotInstanceCapacity:
             InstanceCount=1,
             LaunchSpecification={
                 "ImageId": "ami-12345678",
-                "InstanceType": "t2.micro",
-                "Placement": {"AvailabilityZone": "us-east-1a"},
+                "InstanceType": synthetic_type,
+                "Placement": {"AvailabilityZone": synthetic_az},
             },
         )
 
@@ -353,12 +373,16 @@ class TestChaosIntegration:
 
     def test_chaos_override_insufficient_capacity(self, ec2):
         """Test that chaos override can force InsufficientInstanceCapacity."""
+        # Use synthetic instance type and AZ to avoid collision with parallel tests
+        synthetic_type = _unique("cap-test-chaos")
+        synthetic_az = "us-east-1f"
+
         # Set capacity to plenty
         requests.post(
             f"{ENDPOINT_URL}/_robotocore/ec2/capacity",
             json={
-                "instance_type": "t2.micro",
-                "availability_zone": "us-east-1a",
+                "instance_type": synthetic_type,
+                "availability_zone": synthetic_az,
                 "total_capacity": 100,
                 "available_capacity": 100,
             },
@@ -378,7 +402,7 @@ class TestChaosIntegration:
         subnet = ec2.create_subnet(
             VpcId=vpc_id,
             CidrBlock="10.0.1.0/24",
-            AvailabilityZone="us-east-1a",
+            AvailabilityZone=synthetic_az,
         )
         subnet_id = subnet["Subnet"]["SubnetId"]
 
@@ -389,7 +413,7 @@ class TestChaosIntegration:
                     ImageId="ami-12345678",
                     MinCount=1,
                     MaxCount=1,
-                    InstanceType="t2.micro",
+                    InstanceType=synthetic_type,
                     SubnetId=subnet_id,
                 )
 
@@ -415,24 +439,27 @@ class TestChaosIntegration:
             timeout=5,
         )
 
-        # Create VPC and subnet
+        # Create VPC and subnet - use synthetic AZ to be safe
+        synthetic_az = "us-east-1f"
         vpc = ec2.create_vpc(CidrBlock="10.0.0.0/16")
         vpc_id = vpc["Vpc"]["VpcId"]
         subnet = ec2.create_subnet(
             VpcId=vpc_id,
             CidrBlock="10.0.1.0/24",
-            AvailabilityZone="us-east-1a",
+            AvailabilityZone=synthetic_az,
         )
         subnet_id = subnet["Subnet"]["SubnetId"]
 
         try:
             # Launch should fail due to chaos override
+            # Use a synthetic instance type to avoid collision
+            synthetic_type = _unique("cap-test-chaos")
             with pytest.raises(botocore.exceptions.ClientError) as exc:
                 ec2.run_instances(
                     ImageId="ami-12345678",
                     MinCount=1,
                     MaxCount=1,
-                    InstanceType="t2.micro",
+                    InstanceType=synthetic_type,
                     SubnetId=subnet_id,
                 )
 
