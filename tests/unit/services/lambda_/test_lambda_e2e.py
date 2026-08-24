@@ -795,6 +795,59 @@ class TestConcurrency:
 
         get_code_cache().invalidate("concurrent-fn")
 
+    def test_concurrent_invocations_read_module_scope_env_vars(self):
+        """10 concurrent cold-start invocations of the same function, each
+        reading a configured env var at *module scope* (`X = os.environ["X"]`
+        above the handler def, not inside it). Pins that the sys.modules
+        cold-start race (many threads simultaneously finding `cached is
+        None`) can't crash or KeyError, and that whichever thread's import
+        wins the race captured the configured value — not cross-thread
+        contamination, which this test can't detect on its own since every
+        thread configures the *same* value (see
+        test_concurrent_invocations_have_isolated_env_vars in
+        test_lambda_executor_review.py for that: two functions, different
+        values, concurrent)."""
+        code = make_zip(
+            {
+                "handler.py": (
+                    "import os\n"
+                    "CONFIGURED = os.environ['CONC_ENV_VAR']\n"
+                    "def handler(e, c):\n    return CONFIGURED\n"
+                ),
+            }
+        )
+        executor = PythonExecutor()
+        results = {}
+        errors = []
+
+        def invoke(thread_id):
+            try:
+                result, err, _ = executor.execute(
+                    code_zip=code,
+                    handler="handler.handler",
+                    event={},
+                    function_name="concurrent-env-fn",
+                    env_vars={"CONC_ENV_VAR": "expected-value"},
+                )
+                if err:
+                    errors.append((thread_id, err))
+                else:
+                    results[thread_id] = result
+            except Exception as exc:
+                errors.append((thread_id, str(exc)))
+
+        threads = [threading.Thread(target=invoke, args=(i,)) for i in range(10)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+
+        assert not errors, f"Errors: {errors}"
+        assert len(results) == 10
+        assert all(v == "expected-value" for v in results.values()), results
+
+        get_code_cache().invalidate("concurrent-env-fn")
+
     def test_concurrent_cache_get_or_extract(self):
         """Concurrent cache access should not corrupt state."""
         cache = CodeCache(max_size=50)
@@ -1018,6 +1071,105 @@ class TestEnvironmentVariables:
         assert result == "eu-west-1"
         get_code_cache().invalidate("region-fn")
 
+    def test_module_scope_env_var_read_at_import_time(self):
+        """Config read once at module scope — the pattern the KeyError bug
+        was about — must see the configured value, not just a read from
+        inside the handler body (test_env_vars_available_in_handler above)."""
+        code = make_zip(
+            {
+                "handler.py": (
+                    "import os\n"
+                    "CONFIGURED = os.environ['MODULE_SCOPE_VAR']\n"
+                    "def handler(e, c):\n    return CONFIGURED\n"
+                ),
+            }
+        )
+        result, err, _ = execute_python_handler(
+            code_zip=code,
+            handler="handler.handler",
+            event={},
+            function_name="module-scope-env-fn",
+            env_vars={"MODULE_SCOPE_VAR": "resolved-at-import"},
+        )
+        assert err is None
+        assert result == "resolved-at-import"
+        get_code_cache().invalidate("module-scope-env-fn")
+
+    def test_warm_second_invocation_sees_module_scope_env_var(self):
+        """A second, cached-module invocation must still resolve the value
+        captured at cold-start import — pins the `cached` branch (module
+        reuse when hot_reload is off) against the import-time env fix."""
+        code = make_zip(
+            {
+                "handler.py": (
+                    "import os\n"
+                    "CONFIGURED = os.environ['WARM_ENV_VAR']\n"
+                    "def handler(e, c):\n    return CONFIGURED\n"
+                ),
+            }
+        )
+        first, err1, _ = execute_python_handler(
+            code_zip=code,
+            handler="handler.handler",
+            event={},
+            function_name="warm-env-fn",
+            env_vars={"WARM_ENV_VAR": "warm-value"},
+        )
+        assert err1 is None
+        assert first == "warm-value"
+
+        second, err2, _ = execute_python_handler(
+            code_zip=code,
+            handler="handler.handler",
+            event={},
+            function_name="warm-env-fn",
+            env_vars={"WARM_ENV_VAR": "warm-value"},
+        )
+        assert err2 is None
+        assert second == "warm-value"
+        get_code_cache().invalidate("warm-env-fn")
+
+    def test_env_var_change_is_picked_up_after_cache_invalidation(self):
+        """UpdateFunctionConfiguration's PUT handler calls
+        get_code_cache().invalidate() when Environment changes, specifically
+        so a value already captured at module scope by a prior invocation
+        doesn't silently keep being served after reconfiguration. This pins
+        that the underlying mechanism actually does force a fresh read."""
+        code = make_zip(
+            {
+                "handler.py": (
+                    "import os\n"
+                    "CONFIGURED = os.environ['RECONFIG_VAR']\n"
+                    "def handler(e, c):\n    return CONFIGURED\n"
+                ),
+            }
+        )
+        first, err1, _ = execute_python_handler(
+            code_zip=code,
+            handler="handler.handler",
+            event={},
+            function_name="reconfig-fn",
+            env_vars={"RECONFIG_VAR": "old-value"},
+        )
+        assert err1 is None
+        assert first == "old-value"
+
+        # Simulates what the UpdateFunctionConfiguration PUT handler now does
+        # on an Environment change (src/robotocore/services/lambda_/provider.py).
+        # Without this, the second call below would still return "old-value".
+        get_code_cache().invalidate("reconfig-fn")
+
+        second, err2, _ = execute_python_handler(
+            code_zip=code,
+            handler="handler.handler",
+            event={},
+            function_name="reconfig-fn",
+            env_vars={"RECONFIG_VAR": "new-value"},
+        )
+        assert err2 is None
+        assert second == "new-value"
+        get_code_cache().invalidate("reconfig-fn")
+
 
 # ---------------------------------------------------------------------------
 # Handler error scenarios
@@ -1134,6 +1286,71 @@ class TestHandlerErrors:
         assert err is None
         assert "hello from lambda" in logs
         get_code_cache().invalidate("print-fn")
+
+    def test_module_scope_prints_to_stdout(self):
+        """print() at module scope (during exec_module, before the handler
+        runs) must land in this invocation's logs too — module import now
+        happens inside the same per-invocation worker thread as the handler
+        call, not in the dispatcher thread, so it shares the same stdout
+        capture setup."""
+        code = make_zip(
+            {
+                "handler.py": ("print('hello from module scope')\ndef handler(e,c): return 'ok'\n"),
+            }
+        )
+        result, err, logs = execute_python_handler(
+            code_zip=code,
+            handler="handler.handler",
+            event={},
+            function_name="module-print-fn",
+        )
+        assert err is None
+        assert "hello from module scope" in logs
+        get_code_cache().invalidate("module-print-fn")
+
+    def test_module_scope_sys_exit_reports_an_error(self):
+        """sys.exit() at module scope (SystemExit, a BaseException — not an
+        Exception) must be reported as a failed invocation, not fall through
+        to a silent (None, None, logs) success just because SystemExit isn't
+        caught by an `except Exception`."""
+        code = make_zip(
+            {
+                "handler.py": "import sys\nsys.exit(1)\ndef handler(e,c): return 'unreachable'\n",
+            }
+        )
+        result, err, _ = execute_python_handler(
+            code_zip=code,
+            handler="handler.handler",
+            event={},
+            function_name="module-exit-fn",
+        )
+        assert err is not None, "module-scope SystemExit must not report as a clean success"
+        assert result is not None
+        assert "SystemExit" in result.get("errorType", "")
+        get_code_cache().invalidate("module-exit-fn")
+
+    def test_slow_module_import_counts_against_timeout(self):
+        """Module import/exec now runs inside the same worker thread the
+        timeout's worker.join(timeout=...) governs, so a handler whose
+        *import* alone exceeds the configured timeout must time out —
+        distinct from TestTimeoutEnforcement in test_lambda_executor_review.py,
+        which only covers a slow handler body, not a slow import."""
+        code = make_zip(
+            {
+                "handler.py": (
+                    "import time\ntime.sleep(5)\ndef handler(e,c): return 'unreachable'\n"
+                ),
+            }
+        )
+        result, err, _ = execute_python_handler(
+            code_zip=code,
+            handler="handler.handler",
+            event={},
+            function_name="slow-import-fn",
+            timeout=1,
+        )
+        assert err == "Task.TimedOut"
+        get_code_cache().invalidate("slow-import-fn")
 
 
 # ---------------------------------------------------------------------------
