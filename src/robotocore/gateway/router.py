@@ -93,6 +93,11 @@ TARGET_PREFIX_MAP: dict[str, str] = {
 
 # URL path patterns to service names
 PATH_PATTERNS: list[tuple[re.Pattern, str]] = [
+    # OCI Registry v2 data plane (ECR) - specific patterns for manifests, blobs, tags
+    # Must match: /v2/, /v2/{name}/manifests/..., /v2/{name}/blobs/..., /v2/{name}/tags/list
+    # Must NOT match: /v2/email/... (SESv2), /v2/apis/... (apigatewayv2)
+    (re.compile(r"^/v2/$"), "ecr"),
+    (re.compile(r"^/v2/[^/]+/(manifests|blobs|tags/list)(/|$)"), "ecr"),
     (re.compile(r"^/2014-11-13/functions"), "lambda"),
     (re.compile(r"^/2015-03-31/functions"), "lambda"),
     (re.compile(r"^/2021-\d{2}-\d{2}/functions/"), "lambda"),

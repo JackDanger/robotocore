@@ -10,6 +10,16 @@ maintenance policy is [`CLAUDE.md`](CLAUDE.md) under *Changelog discipline*.
 
 ### Added
 
+- **ECR OCI Registry v2 data plane** — Docker/ECR-compatible registry endpoints for pushing and pulling container images:
+  - `GET /v2/` — Registry availability check
+  - `GET/PUT/DELETE /v2/{name}/manifests/{reference}` — Manifest operations by tag or digest
+  - `GET/HEAD /v2/{name}/blobs/{digest}` — Blob (layer) operations
+  - `POST/PATCH/PUT/DELETE /v2/{name}/blobs/uploads/{uuid}` — Blob upload session flow
+  - `GET /v2/{name}/tags/list` — List all tags in a repository
+  - Bearer token and Basic auth support compatible with ECR's `GetAuthorizationToken` credential
+  - Image tag immutability enforcement (`imageTagMutability=IMMUTABLE`)
+  - Full integration with existing ECR control plane — images pushed via `/v2/` are visible to `BatchGetImage`, `ListImages`, etc.
+
 #### EC2 Guest Executor - Pluggable user-data execution
 
 New opt-in feature that executes EC2 instance user-data (cloud-init scripts) inside real containers. When enabled via `ROBOTOCORE_EC2_GUEST_EXECUTOR=1`, `RunInstances` launches a guest container for each instance and executes the user-data payload, capturing stdout/stderr/exit-code for each command.
