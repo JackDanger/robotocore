@@ -4,8 +4,12 @@ Intercepts operations that Moto doesn't implement or has bugs in:
 - CreatePlacementGroup / DescribePlacementGroups / DeletePlacementGroup: Not implemented
 - DetachVolume: Moto crashes when InstanceId is omitted
 - DeleteVpcEndpoints: Moto crashes with NoneType.lower() error
+- RunInstances: Optionally launches guest containers when guest execution is enabled
+- TerminateInstances: Optionally cleans up guest containers
 """
 
+import base64
+import logging
 import threading
 import uuid
 from urllib.parse import parse_qs
@@ -15,6 +19,12 @@ from starlette.requests import Request
 from starlette.responses import Response
 
 from robotocore.providers.moto_bridge import forward_to_moto
+from robotocore.services.ec2.guest.executor import (
+    get_guest_executor,
+    is_guest_executor_enabled,
+)
+
+logger = logging.getLogger(__name__)
 
 # In-memory placement group store: {account_id: {region: {name: group}}}
 _placement_groups: dict[str, dict[str, dict[str, dict]]] = {}
@@ -33,6 +43,15 @@ async def handle_ec2_request(request: Request, region: str, account_id: str) -> 
             params[key] = [val]
 
     action = _get_param(params, "Action")
+
+    # Handle RunInstances with guest execution
+    if action == "RunInstances":
+        return await _run_instances(request, params, region, account_id)
+
+    # Handle TerminateInstances with guest cleanup
+    if action == "TerminateInstances":
+        return await _terminate_instances(request, params, region, account_id)
+
     handler = _ACTION_MAP.get(action)
     if handler:
         try:
@@ -272,3 +291,131 @@ _ACTION_MAP = {
     "DetachVolume": _detach_volume,
     "DeleteVpcEndpoints": _delete_vpc_endpoints,
 }
+
+
+async def _run_instances(request: Request, params: dict, region: str, account_id: str) -> Response:
+    """RunInstances - forward to Moto, then optionally launch guest container."""
+    # First, let Moto create the instances
+    response = await forward_to_moto(request, "ec2", account_id=account_id)
+
+    # If guest execution is disabled, just return the response
+    if not is_guest_executor_enabled():
+        return response
+
+    # If the response is not successful, return it as-is
+    if response.status_code != 200:
+        return response
+
+    # Parse the response to get instance IDs
+    try:
+        import xml.etree.ElementTree as ET
+
+        body = response.body if hasattr(response, "body") else b""
+        if not body:
+            return response
+
+        root = ET.fromstring(body)
+
+        # Find instance IDs
+        ns = {"ec2": "http://ec2.amazonaws.com/doc/2016-11-15/"}
+        instances = root.findall(".//ec2:instanceId", ns)
+        if not instances:
+            instances = root.findall(".//instanceId")
+
+        if not instances:
+            return response
+
+        # Extract parameters from the request
+        user_data = _get_param(params, "UserData")
+        instance_type = _get_param(params, "InstanceType") or "t2.micro"
+
+        # Parse block device mappings
+        block_device_mappings = []
+        i = 1
+        while True:
+            device_name = _get_param(params, f"BlockDeviceMapping.{i}.DeviceName")
+            if not device_name:
+                break
+            volume_size = _get_param(params, f"BlockDeviceMapping.{i}.Ebs.VolumeSize") or "8"
+            block_device_mappings.append(
+                {
+                    "DeviceName": device_name,
+                    "Ebs": {"VolumeSize": volume_size},
+                }
+            )
+            i += 1
+
+        # Parse IAM instance profile
+        iam_instance_profile = None
+        iam_profile_arn = _get_param(params, "IamInstanceProfile.Arn")
+        iam_profile_name = _get_param(params, "IamInstanceProfile.Name")
+        if iam_profile_arn or iam_profile_name:
+            iam_instance_profile = {
+                "Arn": iam_profile_arn,
+                "Name": iam_profile_name,
+            }
+
+        # Decode base64 user-data if present
+        if user_data:
+            try:
+                user_data = base64.b64decode(user_data).decode("utf-8")
+            except Exception:
+                pass  # Keep as-is if not valid base64
+
+        # Launch guest containers for each instance
+        executor = get_guest_executor()
+        for inst_elem in instances:
+            instance_id = inst_elem.text if hasattr(inst_elem, "text") else inst_elem
+            if instance_id:
+                logger.info(f"Launching guest container for instance {instance_id}")
+
+                # Run in background thread to not block response
+                import threading
+
+                def launch():
+                    executor.launch_instance(
+                        instance_id=instance_id,
+                        account_id=account_id,
+                        region=region,
+                        user_data=user_data,
+                        instance_type=instance_type,
+                        block_device_mappings=block_device_mappings,
+                        iam_instance_profile=iam_instance_profile,
+                    )
+
+                threading.Thread(target=launch, daemon=True).start()
+
+    except Exception as e:
+        logger.warning(f"Failed to launch guest container: {e}")
+
+    return response
+
+
+async def _terminate_instances(
+    request: Request, params: dict, region: str, account_id: str
+) -> Response:
+    """TerminateInstances - forward to Moto, then clean up guest containers."""
+    # First, let Moto terminate the instances
+    response = await forward_to_moto(request, "ec2", account_id=account_id)
+
+    # If guest execution is disabled, just return the response
+    if not is_guest_executor_enabled():
+        return response
+
+    # Parse the request to get instance IDs
+    instance_ids = []
+    i = 1
+    while True:
+        inst_id = _get_param(params, f"InstanceId.{i}")
+        if not inst_id:
+            break
+        instance_ids.append(inst_id)
+        i += 1
+
+    # Clean up guest containers
+    executor = get_guest_executor()
+    for instance_id in instance_ids:
+        logger.info(f"Terminating guest container for instance {instance_id}")
+        executor.terminate_instance(instance_id)
+
+    return response
