@@ -179,11 +179,22 @@ Non-numeric access keys (e.g. `"test"`) route to the default account `1234567890
 
 ---
 
-## Supported services (147)
+## Supported services
 
-**38 native providers** (full behavioral fidelity): ACM, API Gateway v1, API Gateway v2, AppSync, Batch, CloudFormation, CloudWatch, CloudWatch Logs, Cognito User Pools, Config, DynamoDB, DynamoDB Streams, EC2, ECR, ECS, Elasticsearch, EventBridge, Firehose, IAM, Kinesis, Lambda, OpenSearch, Rekognition, Resource Groups, Resource Groups Tagging, Route 53, S3, Scheduler, Secrets Manager, SES, SES v2, SNS, SQS, SSM, Step Functions, STS, Support, X-Ray.
+Ask the running twin rather than trusting the list below — it is authoritative and cannot drift:
 
-**109 Moto-backed services**: Account, ACM-PCA, AMP, AppConfig, Application Auto Scaling, App Mesh, Athena, Auto Scaling, Backup, Bedrock, Bedrock Agent, Budgets, CE, Cloud Directory, CloudFront, CloudHSM v2, CloudTrail, CodeBuild, CodeCommit, CodeDeploy, CodePipeline, Cognito Identity, Comprehend, Connect, DataBrew, Data Pipeline, DataSync, DAX, DMS, Directory Service, DSQL, EC2 Instance Connect, EFS, EKS, ElastiCache, Elastic Beanstalk, ELB, ELBv2, EMR, EMR Containers, EMR Serverless, FSx, Glacier, Glue, Greengrass, GuardDuty, Identity Store, Inspector2, IoT, IoT Data, IVS, Kafka, Kinesis Analytics v2, Kinesis Video, KMS, Lake Formation, Lex v2, Macie2, Managed Blockchain, MediaConnect, MediaLive, MediaPackage, MediaPackage v2, MediaStore, MemoryDB, MQ, Network Firewall, Network Manager, OpenSearch Serverless, Organizations, OSIS, Panorama, Pinpoint, Pipes, Polly, QuickSight, RAM, RDS, RDS Data, Redshift, Redshift Data, Resilience Hub, Route 53 Domains, Route 53 Resolver, S3 Control, S3 Tables, S3 Vectors, SageMaker, Security Hub, Service Catalog, Service Catalog App Registry, Service Discovery, Shield, Signer, SSO Admin, SWF, Synthetics, Textract, Timestream InfluxDB, Timestream Query, Timestream Write, Transfer, VPC Lattice, WAFv2, WorkSpaces, WorkSpaces Web.
+```bash
+curl -s http://localhost:4566/_robotocore/services | python3 -c "
+import json, sys, collections
+s = json.load(sys.stdin)['services']
+print(len(s), dict(collections.Counter(x['status'] for x in s)))
+for x in s: print(f\"{x['name']:32} {x['status']}\")
+"
+```
+
+**Native providers** (full behavioral fidelity): ACM, API Gateway v1, API Gateway v2, AppSync, Batch, CloudFormation, CloudWatch, CloudWatch Logs, Cognito User Pools, Config, DynamoDB, DynamoDB Streams, EC2, ECR, ECS, Elasticsearch, EventBridge, Firehose, IAM, Kinesis, Lambda, OpenSearch, Rekognition, Resource Groups, Resource Groups Tagging, Route 53, S3, Scheduler, Secrets Manager, SES, SES v2, SNS, SQS, SSM, Step Functions, STS, Support, X-Ray.
+
+**Moto-backed services**: Account, ACM-PCA, AMP, AppConfig, Application Auto Scaling, App Mesh, Athena, Auto Scaling, Backup, Bedrock, Bedrock Agent, Budgets, CE, Cloud Directory, CloudFront, CloudHSM v2, CloudTrail, CodeBuild, CodeCommit, CodeDeploy, CodePipeline, Cognito Identity, Comprehend, Connect, DataBrew, Data Pipeline, DataSync, DAX, DMS, Directory Service, DSQL, EC2 Instance Connect, EFS, EKS, ElastiCache, Elastic Beanstalk, ELB, ELBv2, EMR, EMR Containers, EMR Serverless, FSx, Glacier, Glue, Greengrass, GuardDuty, Identity Store, Inspector2, IoT, IoT Data, IVS, Kafka, Kinesis Analytics v2, Kinesis Video, KMS, Lake Formation, Lex v2, Macie2, Managed Blockchain, MediaConnect, MediaLive, MediaPackage, MediaPackage v2, MediaStore, MemoryDB, MQ, Network Firewall, Network Manager, OpenSearch Serverless, Organizations, OSIS, Panorama, Pinpoint, Pipes, Polly, QuickSight, RAM, RDS, RDS Data, Redshift, Redshift Data, Resilience Hub, Route 53 Domains, Route 53 Resolver, S3 Control, S3 Tables, S3 Vectors, SageMaker, Security Hub, Service Catalog, Service Catalog App Registry, Service Discovery, Shield, Signer, SSO Admin, SWF, Synthetics, Textract, Timestream InfluxDB, Timestream Query, Timestream Write, Transfer, VPC Lattice, WAFv2, WorkSpaces, WorkSpaces Web.
 
 ---
 
@@ -348,6 +359,86 @@ for svc, status in sorted(h.get('services', {}).items()):
 "
 ```
 
+| Endpoint | Returns |
+|---|---|
+| `GET /_robotocore/health` | Per-service status, native or moto, request counts, uptime, version |
+| `GET /_robotocore/services` | Per-service protocol (json, rest-json, query) and description |
+| `GET /_robotocore/audit?limit=N` | Recent calls with operation, status code, account, region |
+| `GET /_robotocore/usage/errors` | Error totals grouped by status code, plus recent errors |
+| `GET /_robotocore/resources[/<service>]` | What currently exists in the twin |
+| `GET /_robotocore/config` | Version and runtime config |
+| `GET /_robotocore/diagnose` | Full diagnostic bundle; returns 403 unless `DEBUG=1` or `ROBOTOCORE_DIAG=1` |
+
+`native` in the health output means a robotocore provider with added behavioral fidelity; `moto` means the operation is served by Moto's backend.
+
+---
+
+## Does robotocore implement operation X?
+
+No endpoint reports per-operation coverage; three routes answer the question.
+
+### 1. Read the checked-in probe results (no server needed)
+
+`probes/<service>.json` holds one entry per operation with a status.
+
+```bash
+python3 -c "
+import json
+d = json.load(open('probes/ec2.json'))
+print(d['counts'])
+m = {o['operation']: o['status'] for o in d['operations']}
+print(m['RunInstances'], m['CreateImage'])
+"
+# {'working': 449, 'needs_params': 6, 'not_implemented': 278, '500_error': 19}
+# working working
+```
+
+| Status | Meaning |
+|---|---|
+| `working` | Returned 200, or an error that proves the handler ran |
+| `needs_params` | Parameters could not be auto-filled; unknown, not absent |
+| `not_implemented` | Server returned 501 |
+| `500_error` | Server crashed — a bug worth filing |
+
+Destructive operations are excluded from probe runs, so absence from the file is not a gap. `TerminateInstances`, `DeleteBucket`, `DeleteVpc` and others are in the script's skip list and work fine. See `docs/coverage.html` for the browsable per-service view.
+
+### 2. Re-probe live
+
+```bash
+uv run python -m scripts.probe_service --service ec2 --all --json
+```
+
+Calls every operation with auto-filled parameters and classifies the result. Use when the checked-in file is older than the server you are running.
+
+### 3. Read the audit log after running an opaque tool
+
+Run the tool, then ask the twin what it received:
+
+```bash
+curl -s 'http://localhost:4566/_robotocore/audit?limit=100' | python3 -c "
+import json, sys
+for e in json.load(sys.stdin)['entries']:
+    if e['status_code'] == 501:
+        print('GAP', e['service'] + '.' + e['operation'])
+"
+```
+
+Every request is logged with service, operation, status code, account and region. `501` is the only status that means "not implemented". A full `packer build` produced 21 EC2 calls, all 200, zero 501.
+
+### Reading errors correctly
+
+The most common misread: treating a `ClientError` as a gap.
+
+| Response | Meaning |
+|---|---|
+| HTTP 501, `NotImplemented` — "The accept_address_transfer action has not been implemented" | Genuinely absent |
+| `InvalidAMIID.NotFound`, `InvalidInstanceID.NotFound` | Implemented; the ID does not exist |
+| `InvalidAMIID.Malformed` | Implemented; the ID is the wrong shape |
+| `MissingParameter`, `ValidationException` | Implemented; the request is incomplete |
+| HTTP 500 | Implemented and broken — file an issue |
+
+Only `501` is a gap.
+
 ---
 
 ## State is in-memory by default
@@ -378,7 +469,7 @@ Reset a single account's state without restarting: use a new account ID (new 12-
 | `InvalidClientTokenId` | Non-numeric access key | Use a 12-digit number: `"123456789012"` |
 | S3 `CreateBucket` fails in non-`us-east-1` region | Missing location constraint | Add `CreateBucketConfiguration={"LocationConstraint": region}` |
 | `ResourceNotFoundException` right after `create_table` | Table not ready | Call `table.wait_until_exists()` before use |
-| HTTP 501 `NotImplemented` | Operation not in Moto | Check [Moto coverage](https://github.com/getmoto/moto/blob/master/IMPLEMENTATION_COVERAGE.md) |
+| HTTP 501 `NotImplemented` | Operation genuinely absent | [Does robotocore implement operation X?](#does-robotocore-implement-operation-x) |
 
 ---
 
