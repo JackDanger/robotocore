@@ -10,6 +10,32 @@ maintenance policy is [`CLAUDE.md`](CLAUDE.md) under *Changelog discipline*.
 
 ### Added
 
+#### EC2 Guest Executor - Pluggable user-data execution
+
+New opt-in feature that executes EC2 instance user-data (cloud-init scripts) inside real containers. When enabled via `ROBOTOCORE_EC2_GUEST_EXECUTOR=1`, `RunInstances` launches a guest container for each instance and executes the user-data payload, capturing stdout/stderr/exit-code for each command.
+
+**Features:**
+- **User-data parsing**: Supports plain shell scripts (`#!`), MIME multi-part messages (cloud-init format), and base64-encoded data
+- **Container execution**: Spins up containers using a configurable image (default: `jrei/systemd-ubuntu:22.04`) to execute user-data
+- **Block device support**: Instance `BlockDeviceMappings` are exposed as volumes inside the guest container
+- **IMDS support**: Instance metadata service endpoints available inside the guest (instance-id, instance-type, IAM credentials)
+- **Systemd compatibility**: Guest containers run systemd for service management (`systemctl start/enable`)
+- **Execution evidence**: Structured capture of stdout/stderr/exit-code per command, retrievable via `/_robotocore/ec2/guest/executions/{instance_id}`
+
+**Configuration:**
+- `ROBOTOCORE_EC2_GUEST_EXECUTOR=1` - Enable guest execution (default: disabled)
+- `ROBOTOCORE_EC2_GUEST_IMAGE` - Container image for guests (default: `jrei/systemd-ubuntu:22.04`)
+
+**API Endpoints:**
+- `GET /_robotocore/ec2/guest/executions` - List all executions
+- `GET /_robotocore/ec2/guest/executions/{instance_id}` - Get execution details for an instance
+
+**Design:**
+- Zero overhead when disabled - default EC2 behavior unchanged
+- Guest execution is opt-in per environment
+- Containers are torn down when instances are terminated
+- Thread-safe execution tracking
+
 - **Packer-compatible virtual instance transport** (`src/robotocore/services/ec2/packer/`):
   - New opt-in container-backed EC2 instance transport for Packer's `amazon-ebs` builder
   - SSH and SSM transport support for provisioner connectivity
