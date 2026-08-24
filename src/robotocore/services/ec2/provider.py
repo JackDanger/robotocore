@@ -171,6 +171,49 @@ def _get_param(params: dict, key: str) -> str:
     return vals[0] if vals else ""
 
 
+def _parse_tag_specifications(params: dict, resource_type: str) -> dict[str, str]:
+    """Parse TagSpecifications from request params for a given resource type.
+
+    Returns a dict of {tag_key: tag_value} for the specified resource type.
+    """
+    tags: dict[str, str] = {}
+
+    # TagSpecifications are structured as:
+    # TagSpecification.1.ResourceType=volume
+    # TagSpecification.1.Tag.1.Key=Name
+    # TagSpecification.1.Tag.1.Value=MyVolume
+    # TagSpecification.1.Tag.2.Key=Environment
+    # TagSpecification.1.Tag.2.Value=Production
+
+    # Find all TagSpecification entries
+    spec_index = 1
+    while True:
+        resource_type_key = f"TagSpecification.{spec_index}.ResourceType"
+        if resource_type_key not in params:
+            break
+
+        spec_resource_type = _get_param(params, resource_type_key)
+        if spec_resource_type == resource_type:
+            # Parse tags for this resource type
+            tag_index = 1
+            while True:
+                tag_key = f"TagSpecification.{spec_index}.Tag.{tag_index}.Key"
+                tag_value_key = f"TagSpecification.{spec_index}.Tag.{tag_index}.Value"
+
+                if tag_key not in params:
+                    break
+
+                key = _get_param(params, tag_key)
+                value = _get_param(params, tag_value_key)
+                if key:
+                    tags[key] = value
+                tag_index += 1
+
+        spec_index += 1
+
+    return tags
+
+
 def _get_param_list(params: dict, prefix: str) -> list[str]:
     """Extract a list of parameters with numeric suffixes."""
     result = []
@@ -780,6 +823,11 @@ def _create_volume(params: dict, region: str, account_id: str) -> Response:
     except Exception as exc:  # noqa: BLE001
         return _ec2_error("InvalidParameterValue", str(exc))
 
+    # Parse and apply TagSpecifications for volumes
+    volume_tags = _parse_tag_specifications(params, "volume")
+    if volume_tags:
+        volume.add_tags(volume_tags)
+
     hydration_state = HYDRATION_COLD
     if snapshot_id:
         if _is_fsr_enabled(account_id, region, snapshot_id, availability_zone or f"{region}a"):
@@ -812,6 +860,24 @@ def _create_volume(params: dict, region: str, account_id: str) -> Response:
         else ""
     )
 
+    # Build tagSet XML
+    tags = volume.get_tags()
+    if tags:
+        tag_items = ""
+        for tag in tags:
+            tag_key = tag.get("key") or tag.get("Key", "")
+            tag_value = tag.get("value") or tag.get("Value", "")
+            tag_items += f"""            <item>
+                <key>{tag_key}</key>
+                <value>{tag_value}</value>
+            </item>
+"""
+        tag_set_xml = f"""    <tagSet>
+{tag_items}    </tagSet>
+"""
+    else:
+        tag_set_xml = ""
+
     xml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <CreateVolumeResponse xmlns="http://ec2.amazonaws.com/doc/2016-11-15/">
     <requestId>{uuid.uuid4()}</requestId>
@@ -823,7 +889,7 @@ def _create_volume(params: dict, region: str, account_id: str) -> Response:
     <availabilityZone>{volume.zone.name if volume.zone else availability_zone}</availabilityZone>
     <status>creating</status>
     <createTime>{volume.create_time}</createTime>
-    <volumeType>{volume.volume_type}</volumeType>
+{tag_set_xml}    <volumeType>{volume.volume_type}</volumeType>
     {iops_xml}
     {throughput_xml}
     {multi_attach_xml}
