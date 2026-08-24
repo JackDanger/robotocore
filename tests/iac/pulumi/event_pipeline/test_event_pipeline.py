@@ -20,12 +20,12 @@ pytestmark = pytest.mark.iac
 def pipeline_resources(sqs_client, sns_client, events_client):
     """Create SQS queue, SNS topic, EventBridge rule via boto3."""
     # SQS queue
-    q = sqs_client.create_queue(QueueName="event-pipeline-queue")
+    q = sqs_client.create_queue(QueueName="pulumi-event-pipeline-queue")
     queue_url = q["QueueUrl"]
-    queue_arn = f"arn:aws:sqs:{REGION}:{ACCOUNT_ID}:event-pipeline-queue"
+    queue_arn = f"arn:aws:sqs:{REGION}:{ACCOUNT_ID}:pulumi-event-pipeline-queue"
 
     # SNS topic
-    topic = sns_client.create_topic(Name="event-pipeline-topic")
+    topic = sns_client.create_topic(Name="pulumi-event-pipeline-topic")
     topic_arn = topic["TopicArn"]
 
     # SNS -> SQS subscription
@@ -37,7 +37,7 @@ def pipeline_resources(sqs_client, sns_client, events_client):
     subscription_arn = sub["SubscriptionArn"]
 
     # EventBridge rule
-    rule_name = "event-pipeline-rule"
+    rule_name = "pulumi-event-pipeline-rule"
     events_client.put_rule(
         Name=rule_name,
         Description="Captures custom app events",
