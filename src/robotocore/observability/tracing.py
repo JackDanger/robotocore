@@ -9,9 +9,7 @@ import os
 import time
 import uuid
 
-from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import Response
 
 from robotocore.observability.logging import log_request, log_response
 
@@ -58,19 +56,50 @@ def generate_request_id() -> str:
     return str(uuid.uuid4())
 
 
-class TracingMiddleware(BaseHTTPMiddleware):
-    """Middleware that adds request tracing and timing."""
+class TracingMiddleware:
+    """Adds request tracing and timing.
 
-    async def dispatch(self, request: Request, call_next) -> Response:
+    Pure ASGI, not `starlette.middleware.base.BaseHTTPMiddleware`: that base class
+    re-streams the wrapped response body through its own memory-channel, and for
+    response bodies past a certain size can emit more bytes than the Content-Length
+    it captured — h11 raises `LocalProtocolError: Too much data for declared
+    Content-Length` mid-write, which leaves the client (e.g. terraform's AWS
+    provider) hanging forever with no response and no closed connection, since the
+    error happens after the response has already started. A pure ASGI middleware
+    forwards `send()` unmodified, so it can't double the body.
+    """
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
         request_id = generate_request_id()
         start_time = time.monotonic()
+        scope.setdefault("state", {})
+        scope["state"]["request_id"] = request_id
+        scope["state"]["start_time"] = start_time
 
-        # Store request_id on request state for downstream use
-        request.state.request_id = request_id
-        request.state.start_time = start_time
+        # Drain the body once (to log its size) and cache the ASGI messages so the
+        # downstream app — which builds its own Request from `receive` — sees the
+        # same messages replayed, rather than an already-exhausted stream.
+        cached_messages = []
+        while True:
+            message = await receive()
+            cached_messages.append(message)
+            if message["type"] != "http.request" or not message.get("more_body", False):
+                break
+        body = b"".join(m.get("body", b"") for m in cached_messages if m["type"] == "http.request")
 
-        # Log request
-        body = await request.body()
+        async def replay_receive():
+            if cached_messages:
+                return cached_messages.pop(0)
+            return await receive()
+
+        request = Request(scope)
         log_request(
             logger,
             method=request.method,
@@ -80,7 +109,20 @@ class TracingMiddleware(BaseHTTPMiddleware):
             request_id=request_id,
         )
 
-        # Optional OTel span
+        response_state = {"status_code": 0, "content_length": 0}
+
+        async def send_wrapper(message):
+            if message["type"] == "http.response.start":
+                response_state["status_code"] = message["status"]
+                headers = list(message.get("headers", []))
+                headers.append((b"x-amz-request-id", request_id.encode()))
+                headers.append((b"x-robotocore-request-id", request_id.encode()))
+                for key, value in headers:
+                    if key.lower() == b"content-length":
+                        response_state["content_length"] = int(value)
+                message = {**message, "headers": headers}
+            await send(message)
+
         tracer = _get_tracer()
         if tracer:
             with tracer.start_as_current_span(
@@ -91,25 +133,15 @@ class TracingMiddleware(BaseHTTPMiddleware):
                     "robotocore.request_id": request_id,
                 },
             ):
-                response = await call_next(request)
+                await self.app(scope, replay_receive, send_wrapper)
         else:
-            response = await call_next(request)
+            await self.app(scope, replay_receive, send_wrapper)
 
         duration_ms = (time.monotonic() - start_time) * 1000
-
-        # Add standard headers
-        response.headers["X-Amz-Request-Id"] = request_id
-        response.headers["X-Robotocore-Request-Id"] = request_id
-
-        # Determine body size from content-length or 0
-        body_size = int(response.headers.get("content-length", "0"))
-
         log_response(
             logger,
-            status_code=response.status_code,
-            body_size=body_size,
+            status_code=response_state["status_code"],
+            body_size=response_state["content_length"],
             duration_ms=duration_ms,
             request_id=request_id,
         )
-
-        return response

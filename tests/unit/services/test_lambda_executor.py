@@ -197,6 +197,33 @@ class TestExecutePythonHandlerSuccess:
         assert result["fn"] == "env-fn"
         assert error_type is None
 
+    def test_env_vars_available_at_module_import_time(self):
+        """Config read at module scope — `X = os.environ["X"]` above any
+        function def — must see configured env vars too, not just reads from
+        inside the handler. Real Lambda sets env vars on the execution
+        environment before any code runs, and reading required config once at
+        import time (to reuse across warm invocations) is a common pattern;
+        a KeyError here previously happened because module exec ran in the
+        dispatcher thread, before the worker thread installed the
+        invocation's thread-local environment.
+        """
+        code = (
+            "import os\n"
+            "MY_VAR = os.environ['MY_VAR']\n"
+            "def handler(event, context):\n"
+            "    return {'custom': MY_VAR}\n"
+        )
+        code_zip = _make_zip({"lambda_function.py": code})
+        result, error_type, logs = execute_python_handler(
+            code_zip=code_zip,
+            handler="lambda_function.handler",
+            event={},
+            function_name="env-import-time-fn",
+            env_vars={"MY_VAR": "custom-value"},
+        )
+        assert error_type is None, logs
+        assert result["custom"] == "custom-value"
+
     def test_env_vars_cleaned_up(self):
         """Environment variables from one invocation must not leak."""
         sentinel = "LAMBDA_TEST_SENTINEL_XYZ"

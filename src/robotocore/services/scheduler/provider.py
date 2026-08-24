@@ -178,6 +178,8 @@ def _update_schedule(name: str, params: dict, region: str, account_id: str) -> d
 
         if "ScheduleExpression" in params:
             schedule["ScheduleExpression"] = params["ScheduleExpression"]
+        if "ScheduleExpressionTimezone" in params:
+            schedule["ScheduleExpressionTimezone"] = params["ScheduleExpressionTimezone"]
         if "Target" in params:
             schedule["Target"] = params["Target"]
         if "FlexibleTimeWindow" in params:
@@ -186,6 +188,12 @@ def _update_schedule(name: str, params: dict, region: str, account_id: str) -> d
             schedule["State"] = params["State"]
         if "Description" in params:
             schedule["Description"] = params["Description"]
+        if "StartDate" in params:
+            schedule["StartDate"] = params["StartDate"]
+        if "EndDate" in params:
+            schedule["EndDate"] = params["EndDate"]
+        if "KmsKeyArn" in params:
+            schedule["KmsKeyArn"] = params["KmsKeyArn"]
         schedule["LastModificationDate"] = time.time()
 
     return {"ScheduleArn": schedule["Arn"]}

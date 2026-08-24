@@ -160,7 +160,7 @@ class TestHandleWebsocket:
 
     def test_rejects_http_api(self):
         """An HTTP (not WEBSOCKET) API should be rejected."""
-        apis = get_api_store("us-east-1")
+        apis = get_api_store("us-east-1", "123456789012")
         apis["http-api"] = {
             "ApiId": "http-api",
             "ProtocolType": "HTTP",
@@ -183,7 +183,7 @@ class TestHandleWebsocket:
     def test_connect_message_disconnect_lifecycle(self):
         """Full lifecycle: connect, send message, disconnect."""
         # Register a WEBSOCKET API (no routes, so $connect returns 200 by default)
-        apis = get_api_store("us-east-1")
+        apis = get_api_store("us-east-1", "123456789012")
         apis["ws-test"] = {
             "ApiId": "ws-test",
             "ProtocolType": "WEBSOCKET",
@@ -217,7 +217,7 @@ class TestHandleWebsocket:
 
     def test_server_push_during_connection(self):
         """Verify that push_to_connection delivers messages through the WebSocket."""
-        apis = get_api_store("us-east-1")
+        apis = get_api_store("us-east-1", "123456789012")
         apis["ws-push"] = {
             "ApiId": "ws-push",
             "ProtocolType": "WEBSOCKET",

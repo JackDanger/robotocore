@@ -23,6 +23,8 @@ class MetricTransformation:
     metric_namespace: str
     metric_value: str
     default_value: float | None = None
+    dimensions: dict[str, str] = field(default_factory=dict)
+    # {dimension_name: "$.field.path"} template, resolved per-event against the log message
 
 
 @dataclass
@@ -77,6 +79,7 @@ class FilterStore:
                     metric_namespace=mt.get("metricNamespace", ""),
                     metric_value=mt.get("metricValue", "1"),
                     default_value=mt.get("defaultValue"),
+                    dimensions=mt.get("dimensions", {}),
                 )
                 for mt in metric_transformations
             ]
@@ -202,18 +205,9 @@ def matches_filter_pattern(pattern: str, message: str) -> bool:
     return _match_terms(pattern, message)
 
 
-def _match_json_pattern(match: re.Match, message: str) -> bool:
-    """Match a JSON extraction pattern against a log message."""
-    field_path = match.group(1)
-    operator = match.group(2)
-    expected = match.group(3)
-
-    try:
-        data = json.loads(message)
-    except (json.JSONDecodeError, TypeError):
-        return False
-
-    # Navigate the field path (supports hyphens and array indices like items[0])
+def _resolve_json_field(data: object, field_path: str) -> object | None:
+    """Navigate a `$.field.path` (supports hyphens and array indices like items[0])
+    against parsed JSON. Returns None if any segment is missing."""
     parts = field_path.split(".")
     current = data
     for part in parts:
@@ -225,17 +219,38 @@ def _match_json_pattern(match: re.Match, message: str) -> bool:
             if isinstance(current, dict):
                 current = current.get(field_name)
             else:
-                return False
+                return None
             if isinstance(current, list) and index < len(current):
                 current = current[index]
             else:
-                return False
+                return None
         elif isinstance(current, dict):
             current = current.get(part)
         else:
-            return False
+            return None
         if current is None:
-            return False
+            return None
+    return current
+
+
+def _match_json_pattern(match: re.Match, message: str) -> bool:
+    """Match a JSON extraction pattern against a log message."""
+    field_path = match.group(1)
+    operator = match.group(2)
+    expected = match.group(3)
+
+    try:
+        data = json.loads(message)
+    except (json.JSONDecodeError, TypeError):
+        return False
+
+    current = _resolve_json_field(data, field_path)
+    if current is None:
+        return False
+
+    # `*` is a wildcard meaning "field is present", regardless of value.
+    if expected == "*" and operator == "=":
+        return True
 
     actual = str(current)
 
@@ -332,7 +347,7 @@ def process_log_events(
         for event in events:
             message = event.get("message", "")
             if matches_filter_pattern(mf.filter_pattern, message):
-                _emit_metric_from_filter(mf, region, account_id)
+                _emit_metric_from_filter(mf, message, region, account_id)
 
     # Process subscription filters
     sub_filters = store.get_subscription_filters_for_group(log_group_name)
@@ -344,17 +359,49 @@ def process_log_events(
             _deliver_to_subscription(sf, log_group_name, log_stream_name, matching_events, region)
 
 
-def _emit_metric_from_filter(mf: MetricFilter, region: str, account_id: str) -> None:
-    """Emit metric data from a matching metric filter."""
+def _resolve_transform_field(raw: str, data: object) -> str | None:
+    """A metricValue/dimension value is either a literal or a `$.field.path` extractor."""
+    if not raw.startswith("$."):
+        return raw
+    resolved = _resolve_json_field(data, raw[2:])
+    return None if resolved is None else str(resolved)
+
+
+def _emit_metric_from_filter(mf: MetricFilter, message: str, region: str, account_id: str) -> None:
+    """Emit metric data from a matching metric filter, extracting the metric value and
+    any dimensions from the log message (both may be `$.field.path` extractors)."""
+    try:
+        data = json.loads(message)
+    except (json.JSONDecodeError, TypeError):
+        data = None
+
     try:
         from moto.backends import get_backend  # noqa: I001
 
         cw_backend = get_backend("cloudwatch")[account_id][region]
         for transform in mf.metric_transformations:
-            try:
-                value = float(transform.metric_value)
-            except (ValueError, TypeError):
-                value = 1.0
+            raw_value = _resolve_transform_field(transform.metric_value, data)
+            if raw_value is None:
+                if transform.default_value is None:
+                    continue
+                value = transform.default_value
+            else:
+                try:
+                    value = float(raw_value)
+                except (ValueError, TypeError):
+                    continue
+
+            dimensions = []
+            skip = False
+            for dim_name, dim_path in transform.dimensions.items():
+                dim_value = _resolve_transform_field(dim_path, data)
+                if dim_value is None:
+                    skip = True
+                    break
+                dimensions.append({"Name": dim_name, "Value": dim_value})
+            if skip:
+                continue
+
             cw_backend.put_metric_data(
                 namespace=transform.metric_namespace,
                 metric_data=[
@@ -362,6 +409,7 @@ def _emit_metric_from_filter(mf: MetricFilter, region: str, account_id: str) -> 
                         "MetricName": transform.metric_name,
                         "Value": value,
                         "Unit": "Count",
+                        "Dimensions": dimensions,
                     }
                 ],
             )

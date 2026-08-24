@@ -329,11 +329,13 @@ class TestV2PayloadFormat:
     def _setup_api(self, with_authorizer=False):
         """Set up a V2 API with route and integration in the stores."""
         from robotocore.services.apigatewayv2.provider import (
+            _acct_region,
             _store,
         )
 
         api_id = "test-api"
-        apis = _store(_apis, REGION)
+        ar = _acct_region(ACCOUNT_ID, REGION)
+        apis = _store(_apis, ar)
         apis[api_id] = {
             "ApiId": api_id,
             "Name": "test",
@@ -342,7 +344,7 @@ class TestV2PayloadFormat:
         }
 
         # Create integration
-        integrations = _store(_integrations, REGION, api_id)
+        integrations = _store(_integrations, ar, api_id)
         integrations["integ-1"] = {
             "IntegrationId": "integ-1",
             "IntegrationType": "AWS_PROXY",
@@ -353,7 +355,7 @@ class TestV2PayloadFormat:
         }
 
         # Create route
-        route_store = _store(_routes, REGION, api_id)
+        route_store = _store(_routes, ar, api_id)
         route = {
             "RouteId": "route-1",
             "RouteKey": "GET /pets",
@@ -364,7 +366,7 @@ class TestV2PayloadFormat:
             route["AuthorizationType"] = "JWT"
             route["AuthorizerId"] = "auth-1"
 
-            authorizers = _store(_authorizers, REGION, api_id)
+            authorizers = _store(_authorizers, ar, api_id)
             authorizers["auth-1"] = {
                 "AuthorizerId": "auth-1",
                 "AuthorizerType": "JWT",
@@ -378,7 +380,7 @@ class TestV2PayloadFormat:
         route_store["route-1"] = route
 
         # Create stage
-        stages = _store(_stages, REGION, api_id)
+        stages = _store(_stages, ar, api_id)
         stages["$default"] = {
             "StageName": "$default",
             "AutoDeploy": False,
@@ -507,9 +509,9 @@ class TestV2PayloadFormat:
         api_id = self._setup_api()
 
         # Add POST /pets route
-        from robotocore.services.apigatewayv2.provider import _store
+        from robotocore.services.apigatewayv2.provider import _acct_region, _store
 
-        routes = _store(_routes, REGION, api_id)
+        routes = _store(_routes, _acct_region(ACCOUNT_ID, REGION), api_id)
         routes["route-2"] = {
             "RouteId": "route-2",
             "RouteKey": "POST /pets",
@@ -563,10 +565,11 @@ class TestV2PayloadFormat:
 
 class TestWebSocketExecution:
     def _setup_ws_api(self):
-        from robotocore.services.apigatewayv2.provider import _store
+        from robotocore.services.apigatewayv2.provider import _acct_region, _store
 
         api_id = "ws-api"
-        apis = _store(_apis, REGION)
+        ar = _acct_region(ACCOUNT_ID, REGION)
+        apis = _store(_apis, ar)
         apis[api_id] = {
             "ApiId": api_id,
             "Name": "ws",
@@ -574,14 +577,14 @@ class TestWebSocketExecution:
             "RouteSelectionExpression": "$request.body.action",
         }
 
-        integrations = _store(_integrations, REGION, api_id)
+        integrations = _store(_integrations, ar, api_id)
         integrations["integ-1"] = {
             "IntegrationId": "integ-1",
             "IntegrationType": "AWS_PROXY",
             "IntegrationUri": "arn:aws:lambda:us-east-1:123:function:ws-fn",
         }
 
-        routes = _store(_routes, REGION, api_id)
+        routes = _store(_routes, ar, api_id)
         routes["r-connect"] = {
             "RouteId": "r-connect",
             "RouteKey": "$connect",
@@ -692,18 +695,19 @@ class TestWebSocketExecution:
 
     def test_websocket_no_connect_route(self):
         """If no $connect route, accept by default."""
-        from robotocore.services.apigatewayv2.provider import _store
+        from robotocore.services.apigatewayv2.provider import _acct_region, _store
 
         api_id = "ws-no-connect"
-        apis = _store(_apis, REGION)
+        ar = _acct_region(ACCOUNT_ID, REGION)
+        apis = _store(_apis, ar)
         apis[api_id] = {
             "ApiId": api_id,
             "ProtocolType": "WEBSOCKET",
             "RouteSelectionExpression": "$request.body.action",
         }
         # No routes at all
-        _store(_routes, REGION, api_id)
-        _store(_integrations, REGION, api_id)
+        _store(_routes, ar, api_id)
+        _store(_integrations, ar, api_id)
 
         status, _, _ = execute_websocket_connect(
             api_id,

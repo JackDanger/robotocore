@@ -107,6 +107,12 @@ def _create_placement_group(params: dict, region: str, account_id: str) -> Respo
         }
         store[name] = group
 
+    partition_count_xml = ""
+    if group["partitionCount"]:
+        partition_count_xml = (
+            f"        <partitionCount>{group['partitionCount']}</partitionCount>\n"
+        )
+
     xml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <CreatePlacementGroupResponse xmlns="http://ec2.amazonaws.com/doc/2016-11-15/">
     <requestId>{uuid.uuid4()}</requestId>
@@ -116,7 +122,7 @@ def _create_placement_group(params: dict, region: str, account_id: str) -> Respo
         <state>available</state>
         <strategy>{strategy}</strategy>
         <groupId>{group_id}</groupId>
-    </placementGroup>
+{partition_count_xml}    </placementGroup>
 </CreatePlacementGroupResponse>"""
     return Response(content=xml, status_code=200, media_type="text/xml")
 
@@ -149,12 +155,17 @@ def _describe_placement_groups(params: dict, region: str, account_id: str) -> Re
 
     items = ""
     for g in groups:
+        partition_count_xml = ""
+        if g.get("partitionCount"):
+            partition_count_xml = (
+                f"            <partitionCount>{g['partitionCount']}</partitionCount>\n"
+            )
         items += f"""        <item>
             <groupName>{g["groupName"]}</groupName>
             <strategy>{g["strategy"]}</strategy>
             <state>{g["state"]}</state>
             <groupId>{g["groupId"]}</groupId>
-        </item>
+{partition_count_xml}        </item>
 """
 
     xml = f"""<?xml version="1.0" encoding="UTF-8"?>

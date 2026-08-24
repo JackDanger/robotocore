@@ -62,19 +62,37 @@ async def handle_ecr_request(request: Request, region: str, account_id: str) -> 
                 media_type="application/x-amz-json-1.1",
             )
         max_results = params.get("maxResults")
-        if max_results:
-            # Forward to Moto, then truncate results
+        next_token = params.get("nextToken")
+
+        if max_results or next_token:
+            # Forward to Moto, then handle pagination
             response = await forward_to_moto(request, "ecr", account_id=account_id)
             resp_body = json.loads(response.body)
             repos = resp_body.get("repositories", [])
-            if len(repos) > max_results:
+
+            # Apply offset from nextToken
+            start_idx = 0
+            if next_token:
+                try:
+                    start_idx = int(next_token)
+                except ValueError:
+                    start_idx = 0
+            repos = repos[start_idx:]
+
+            # Apply maxResults limit
+            if max_results and len(repos) > max_results:
                 resp_body["repositories"] = repos[:max_results]
-                resp_body["nextToken"] = "pagination-token"
-                return Response(
-                    content=json.dumps(resp_body),
-                    status_code=response.status_code,
-                    media_type="application/x-amz-json-1.1",
-                )
-            return response
+                # Set nextToken to the next position
+                resp_body["nextToken"] = str(start_idx + max_results)
+            else:
+                resp_body["repositories"] = repos
+                # Remove nextToken if there are no more results
+                resp_body.pop("nextToken", None)
+
+            return Response(
+                content=json.dumps(resp_body),
+                status_code=response.status_code,
+                media_type="application/x-amz-json-1.1",
+            )
 
     return await forward_to_moto(request, "ecr", account_id=account_id)
