@@ -6,12 +6,16 @@ Tests the Docker/ECR-compatible registry endpoints for pushing and pulling image
 import base64
 import hashlib
 import json
+import os
 import uuid
 
 import httpx
 import pytest
 
 from tests.compatibility.conftest import make_client
+
+ENDPOINT_URL = os.environ.get("ENDPOINT_URL", "http://localhost:4566")
+REGISTRY_URL = f"{ENDPOINT_URL}/v2"
 
 
 @pytest.fixture
@@ -44,7 +48,7 @@ class TestRegistryV2Ping:
         headers = {"Authorization": f"Basic {token}"}
 
         response = httpx.get(
-            "http://localhost:4566/v2/",
+            f"{REGISTRY_URL}/",
             headers=headers,
             timeout=10.0,
         )
@@ -91,7 +95,7 @@ class TestRegistryManifestOperations:
 
             # Push manifest
             put_response = httpx.put(
-                f"http://localhost:4566/v2/{repo_name}/manifests/{tag}",
+                f"{REGISTRY_URL}/{repo_name}/manifests/{tag}",
                 content=manifest_bytes,
                 headers=headers,
                 timeout=10.0,
@@ -101,7 +105,7 @@ class TestRegistryManifestOperations:
 
             # Get manifest by tag
             get_response = httpx.get(
-                f"http://localhost:4566/v2/{repo_name}/manifests/{tag}",
+                f"{REGISTRY_URL}/{repo_name}/manifests/{tag}",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
@@ -113,7 +117,7 @@ class TestRegistryManifestOperations:
             # Get manifest by digest
             digest = put_response.headers["Docker-Content-Digest"]
             get_by_digest = httpx.get(
-                f"http://localhost:4566/v2/{repo_name}/manifests/{digest}",
+                f"{REGISTRY_URL}/{repo_name}/manifests/{digest}",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
@@ -132,7 +136,7 @@ class TestRegistryManifestOperations:
             auth_b64 = base64.b64encode(f"AWS:{token}".encode()).decode()
 
             response = httpx.get(
-                f"http://localhost:4566/v2/{repo_name}/manifests/nonexistent",
+                f"{REGISTRY_URL}/{repo_name}/manifests/nonexistent",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
@@ -170,7 +174,7 @@ class TestRegistryManifestOperations:
             manifest_bytes = json.dumps(manifest).encode()
 
             put_response = httpx.put(
-                f"http://localhost:4566/v2/{repo_name}/manifests/test-tag",
+                f"{REGISTRY_URL}/{repo_name}/manifests/test-tag",
                 content=manifest_bytes,
                 headers=headers,
                 timeout=10.0,
@@ -180,7 +184,7 @@ class TestRegistryManifestOperations:
             # Delete by digest
             digest = put_response.headers["Docker-Content-Digest"]
             delete_response = httpx.delete(
-                f"http://localhost:4566/v2/{repo_name}/manifests/{digest}",
+                f"{REGISTRY_URL}/{repo_name}/manifests/{digest}",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
@@ -188,7 +192,7 @@ class TestRegistryManifestOperations:
 
             # Verify it's gone
             get_response = httpx.get(
-                f"http://localhost:4566/v2/{repo_name}/manifests/{digest}",
+                f"{REGISTRY_URL}/{repo_name}/manifests/{digest}",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
@@ -230,7 +234,7 @@ class TestRegistryTagImmutability:
             }
 
             put1 = httpx.put(
-                f"http://localhost:4566/v2/{repo_name}/manifests/v1.0",
+                f"{REGISTRY_URL}/{repo_name}/manifests/v1.0",
                 content=json.dumps(manifest1).encode(),
                 headers=headers,
                 timeout=10.0,
@@ -250,7 +254,7 @@ class TestRegistryTagImmutability:
             }
 
             put2 = httpx.put(
-                f"http://localhost:4566/v2/{repo_name}/manifests/v1.0",
+                f"{REGISTRY_URL}/{repo_name}/manifests/v1.0",
                 content=json.dumps(manifest2).encode(),
                 headers=headers,
                 timeout=10.0,
@@ -290,7 +294,7 @@ class TestRegistryTagImmutability:
             }
 
             put1 = httpx.put(
-                f"http://localhost:4566/v2/{repo_name}/manifests/latest",
+                f"{REGISTRY_URL}/{repo_name}/manifests/latest",
                 content=json.dumps(manifest1).encode(),
                 headers=headers,
                 timeout=10.0,
@@ -310,7 +314,7 @@ class TestRegistryTagImmutability:
             }
 
             put2 = httpx.put(
-                f"http://localhost:4566/v2/{repo_name}/manifests/latest",
+                f"{REGISTRY_URL}/{repo_name}/manifests/latest",
                 content=json.dumps(manifest2).encode(),
                 headers=headers,
                 timeout=10.0,
@@ -361,7 +365,7 @@ class TestRegistryBlobOperations:
             }
 
             httpx.put(
-                f"http://localhost:4566/v2/{repo_name}/manifests/test",
+                f"{REGISTRY_URL}/{repo_name}/manifests/test",
                 content=json.dumps(manifest).encode(),
                 headers=headers,
                 timeout=10.0,
@@ -369,7 +373,7 @@ class TestRegistryBlobOperations:
 
             # HEAD the blob
             head_response = httpx.head(
-                f"http://localhost:4566/v2/{repo_name}/blobs/{layer_digest}",
+                f"{REGISTRY_URL}/{repo_name}/blobs/{layer_digest}",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
@@ -389,7 +393,7 @@ class TestRegistryBlobOperations:
             auth_b64 = base64.b64encode(f"AWS:{token}".encode()).decode()
 
             head_response = httpx.head(
-                f"http://localhost:4566/v2/{repo_name}/blobs/sha256:{'0' * 64}",
+                f"{REGISTRY_URL}/{repo_name}/blobs/sha256:{'0' * 64}",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
@@ -412,7 +416,7 @@ class TestRegistryUploadOperations:
             auth_b64 = base64.b64encode(f"AWS:{token}".encode()).decode()
 
             response = httpx.post(
-                f"http://localhost:4566/v2/{repo_name}/blobs/uploads/",
+                f"{REGISTRY_URL}/{repo_name}/blobs/uploads/",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
@@ -434,7 +438,7 @@ class TestRegistryUploadOperations:
 
             # Start upload
             start_response = httpx.post(
-                f"http://localhost:4566/v2/{repo_name}/blobs/uploads/",
+                f"{REGISTRY_URL}/{repo_name}/blobs/uploads/",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
@@ -450,7 +454,7 @@ class TestRegistryUploadOperations:
 
             # Complete upload with digest
             complete_response = httpx.put(
-                f"http://localhost:4566{upload_url}?digest={digest}",
+                f"{ENDPOINT_URL}{upload_url}?digest={digest}",
                 content=content,
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
@@ -472,7 +476,7 @@ class TestRegistryUploadOperations:
 
             # Start upload
             start_response = httpx.post(
-                f"http://localhost:4566/v2/{repo_name}/blobs/uploads/",
+                f"{REGISTRY_URL}/{repo_name}/blobs/uploads/",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
@@ -482,11 +486,70 @@ class TestRegistryUploadOperations:
 
             # Cancel upload
             cancel_response = httpx.delete(
-                f"http://localhost:4566{upload_url}",
+                f"{ENDPOINT_URL}{upload_url}",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
             assert cancel_response.status_code == 204
+
+        finally:
+            ecr.delete_repository(repositoryName=repo_name, force=True)
+
+    def test_upload_and_get_blob(self, ecr):
+        """Upload a blob and then GET it back, verifying bytes match."""
+        repo_name = _unique("test-repo")
+        ecr.create_repository(repositoryName=repo_name)
+
+        try:
+            token = _get_auth_token(ecr)
+            auth_b64 = base64.b64encode(f"AWS:{token}".encode()).decode()
+
+            # Start upload
+            start_response = httpx.post(
+                f"{REGISTRY_URL}/{repo_name}/blobs/uploads/",
+                headers={"Authorization": f"Basic {auth_b64}"},
+                timeout=10.0,
+            )
+            assert start_response.status_code == 202
+
+            upload_url = start_response.headers["Location"]
+
+            # Upload content
+            content = b"test blob content for round-trip verification"
+            digest = _compute_digest(content)
+
+            # Complete upload with digest
+            complete_response = httpx.put(
+                f"{ENDPOINT_URL}{upload_url}?digest={digest}",
+                content=content,
+                headers={"Authorization": f"Basic {auth_b64}"},
+                timeout=10.0,
+            )
+            assert complete_response.status_code == 201
+            assert complete_response.headers.get("Docker-Content-Digest") == digest
+
+            # Now GET the blob back
+            get_response = httpx.get(
+                f"{REGISTRY_URL}/{repo_name}/blobs/{digest}",
+                headers={"Authorization": f"Basic {auth_b64}"},
+                timeout=10.0,
+            )
+            assert get_response.status_code == 200
+            assert get_response.content == content, (
+                "Retrieved blob content should match uploaded content"
+            )
+            assert get_response.headers.get("Docker-Content-Digest") == digest
+            assert get_response.headers.get("Content-Length") == str(len(content))
+
+            # Also test HEAD request
+            head_response = httpx.head(
+                f"{REGISTRY_URL}/{repo_name}/blobs/{digest}",
+                headers={"Authorization": f"Basic {auth_b64}"},
+                timeout=10.0,
+            )
+            assert head_response.status_code == 200
+            assert head_response.headers.get("Docker-Content-Digest") == digest
+            assert head_response.headers.get("Content-Length") == str(len(content))
 
         finally:
             ecr.delete_repository(repositoryName=repo_name, force=True)
@@ -523,7 +586,7 @@ class TestRegistryTagList:
             tags = ["v1.0", "v2.0", "latest"]
             for tag in tags:
                 httpx.put(
-                    f"http://localhost:4566/v2/{repo_name}/manifests/{tag}",
+                    f"{REGISTRY_URL}/{repo_name}/manifests/{tag}",
                     content=json.dumps(manifest).encode(),
                     headers=headers,
                     timeout=10.0,
@@ -531,7 +594,7 @@ class TestRegistryTagList:
 
             # List tags
             list_response = httpx.get(
-                f"http://localhost:4566/v2/{repo_name}/tags/list",
+                f"{REGISTRY_URL}/{repo_name}/tags/list",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
@@ -575,7 +638,7 @@ class TestRegistryIntegrationWithECRControlPlane:
             tag = "registry-pushed"
 
             put_response = httpx.put(
-                f"http://localhost:4566/v2/{repo_name}/manifests/{tag}",
+                f"{REGISTRY_URL}/{repo_name}/manifests/{tag}",
                 content=json.dumps(manifest).encode(),
                 headers=headers,
                 timeout=10.0,
@@ -625,7 +688,7 @@ class TestRegistryIntegrationWithECRControlPlane:
             auth_b64 = base64.b64encode(f"AWS:{token}".encode()).decode()
 
             get_response = httpx.get(
-                f"http://localhost:4566/v2/{repo_name}/manifests/{tag}",
+                f"{REGISTRY_URL}/{repo_name}/manifests/{tag}",
                 headers={"Authorization": f"Basic {auth_b64}"},
                 timeout=10.0,
             )
@@ -648,7 +711,7 @@ class TestRegistryAuthentication:
         try:
             # Request without auth
             response = httpx.get(
-                f"http://localhost:4566/v2/{repo_name}/manifests/latest",
+                f"{REGISTRY_URL}/{repo_name}/manifests/latest",
                 timeout=10.0,
             )
             assert response.status_code == 401
@@ -667,7 +730,7 @@ class TestRegistryAuthentication:
 
             # Use Bearer token
             response = httpx.get(
-                "http://localhost:4566/v2/",
+                f"{REGISTRY_URL}/",
                 headers={"Authorization": f"Bearer {token}"},
                 timeout=10.0,
             )

@@ -31,6 +31,10 @@ OCI_INDEX_MEDIA_TYPE = "application/vnd.oci.image.index.v1+json"
 # Upload states (in-memory)
 _upload_sessions: dict[str, dict[str, Any]] = {}
 
+# Blob storage (in-memory, keyed by digest)
+# Format: {digest: content_bytes}
+_blob_store: dict[str, bytes] = {}
+
 
 @dataclass
 class RegistryImage:
@@ -490,9 +494,43 @@ async def _handle_get_blob(
     if not repository:
         return _make_error_response("NAME_UNKNOWN", f"repository {repo_name} not found", 404)
 
-    # For now, blobs are stored within manifests (layers)
-    # In a full implementation, we'd have a separate blob store
-    # Return 404 for now - clients should handle this gracefully
+    # Check if blob exists in the blob store
+    global _blob_store
+    blob_content = _blob_store.get(digest)
+    if blob_content is not None:
+        return Response(
+            content=blob_content,
+            status_code=200,
+            headers={
+                "Content-Type": "application/octet-stream",
+                "Docker-Content-Digest": digest,
+                "Content-Length": str(len(blob_content)),
+                "Docker-Distribution-API-Version": "registry/2.0",
+            },
+        )
+
+    # Also check if blob is referenced as a layer in any manifest
+    for image in repository.images:
+        try:
+            manifest = json.loads(image.image_manifest)
+            layers = manifest.get("layers", [])
+            for layer in layers:
+                if layer.get("digest") == digest:
+                    # Return empty content for layers (we don't have the actual layer data)
+                    # In a real implementation, this would return the actual layer content
+                    return Response(
+                        content=b"",
+                        status_code=200,
+                        headers={
+                            "Content-Type": layer.get("mediaType", "application/octet-stream"),
+                            "Docker-Content-Digest": digest,
+                            "Content-Length": str(layer.get("size", 0)),
+                            "Docker-Distribution-API-Version": "registry/2.0",
+                        },
+                    )
+        except json.JSONDecodeError:
+            continue
+
     return _make_error_response("BLOB_UNKNOWN", f"blob {digest} not found", 404)
 
 
@@ -503,6 +541,20 @@ async def _handle_head_blob(
     repository = _get_repository(backend, repo_name, account_id)
     if not repository:
         return _make_error_response("NAME_UNKNOWN", f"repository {repo_name} not found", 404)
+
+    # Check if blob exists in the blob store
+    global _blob_store
+    blob_content = _blob_store.get(digest)
+    if blob_content is not None:
+        return Response(
+            status_code=200,
+            headers={
+                "Content-Type": "application/octet-stream",
+                "Docker-Content-Digest": digest,
+                "Content-Length": str(len(blob_content)),
+                "Docker-Distribution-API-Version": "registry/2.0",
+            },
+        )
 
     # Check if any image has this blob as a layer
     for image in repository.images:
@@ -657,8 +709,10 @@ async def _handle_complete_upload(
             400,
         )
 
-    # Store blob (in a real implementation, this would go to blob storage)
-    # For now, we just acknowledge the upload
+    # Store blob in memory
+    global _blob_store
+    _blob_store[digest] = all_chunks
+
     # Clean up session
     del _upload_sessions[session_key]
 
