@@ -455,7 +455,6 @@ class TestStateSnapshotIntegration:
     def test_capacity_profile_state_round_trip(self):
         """Test that capacity profiles are saved and loaded via state snapshots."""
         import time
-        import os
 
         # Check if state is configured
         health_resp = requests.get(f"{ENDPOINT_URL}/_robotocore/health", timeout=5)
@@ -509,9 +508,7 @@ class TestStateSnapshotIntegration:
         assert response.status_code == 200
 
         # Mutate/clear capacity state
-        response = requests.post(
-            f"{ENDPOINT_URL}/_robotocore/ec2/capacity/reset", timeout=5
-        )
+        response = requests.post(f"{ENDPOINT_URL}/_robotocore/ec2/capacity/reset", timeout=5)
         assert response.status_code == 200
 
         # Verify state is cleared
@@ -519,9 +516,7 @@ class TestStateSnapshotIntegration:
         assert response.status_code == 200
         data = response.json()
         # After reset, no custom profiles should exist (only defaults created on-demand)
-        custom_profiles = [
-            p for p in data["profiles"] if p["instance_type"] == "g5.xlarge"
-        ]
+        custom_profiles = [p for p in data["profiles"] if p["instance_type"] == "g5.xlarge"]
         assert len(custom_profiles) == 0
 
         # Load state snapshot
