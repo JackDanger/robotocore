@@ -23,7 +23,17 @@ from typing import Any
 logger = logging.getLogger(__name__)
 
 # Environment variable to enable guest execution
-GUEST_EXECUTOR_ENABLED = os.environ.get("ROBOTOCORE_EC2_GUEST_EXECUTOR", "0") == "1"
+ENV_GUEST_EXECUTOR = "ROBOTOCORE_EC2_GUEST_EXECUTOR"
+
+
+def is_guest_executor_enabled() -> bool:
+    """Check if guest execution is enabled.
+
+    This checks the environment variable at runtime to allow enabling/disabling
+    without restarting the server.
+    """
+    return os.environ.get(ENV_GUEST_EXECUTOR, "0") == "1"
+
 
 # Container image for guest execution (systemd + basic tools)
 DEFAULT_GUEST_IMAGE = os.environ.get("ROBOTOCORE_EC2_GUEST_IMAGE", "jrei/systemd-ubuntu:22.04")
@@ -45,18 +55,6 @@ class ExecutionRecord:
 
 
 @dataclass
-class ServiceRecord:
-    """A systemd service start/stop record."""
-
-    timestamp: str
-    service_name: str
-    action: str  # "start", "stop", "enable", "disable"
-    status: str  # "success", "failed"
-    stdout: str
-    stderr: str
-
-
-@dataclass
 class GuestExecutionResult:
     """Complete execution result for an EC2 instance's user-data."""
 
@@ -66,8 +64,6 @@ class GuestExecutionResult:
     start_time: str
     end_time: str | None = None
     commands: list[ExecutionRecord] = field(default_factory=list)
-    services: list[ServiceRecord] = field(default_factory=list)
-    reboots: list[dict] = field(default_factory=list)
     status: str = "pending"  # pending, running, completed, failed
     error: str | None = None
 
@@ -91,18 +87,6 @@ class GuestExecutionResult:
                 }
                 for c in self.commands
             ],
-            "services": [
-                {
-                    "timestamp": s.timestamp,
-                    "service_name": s.service_name,
-                    "action": s.action,
-                    "status": s.status,
-                    "stdout": s.stdout,
-                    "stderr": s.stderr,
-                }
-                for s in self.services
-            ],
-            "reboots": self.reboots,
         }
 
 
@@ -403,18 +387,6 @@ class GuestExecutor:
                 duration_ms=duration_ms,
             )
 
-    def _setup_systemd(self, container_id: str) -> bool:
-        """Set up systemd inside the container for service management."""
-        # Check if systemd is already running
-        result = self._execute_in_container(container_id, "systemctl is-system-running", timeout=10)
-        if result.exit_code == 0:
-            return True
-
-        # Try to start systemd if not running
-        # This is a simplified approach - in a real implementation,
-        # the container image should have systemd as PID 1
-        return True  # Assume systemd is available
-
     def _execute_shell_part(
         self,
         container_id: str,
@@ -476,7 +448,7 @@ class GuestExecutor:
         This is called when RunInstances creates a new instance and guest
         execution is enabled.
         """
-        if not GUEST_EXECUTOR_ENABLED:
+        if not is_guest_executor_enabled():
             return None
 
         result = GuestExecutionResult(
@@ -517,9 +489,6 @@ class GuestExecutor:
 
         # Wait a moment for container to be ready
         time.sleep(1)
-
-        # Set up systemd
-        self._setup_systemd(container_id)
 
         # Parse and execute user-data
         parts = self._parse_user_data(user_data)
@@ -582,8 +551,3 @@ def get_guest_executor() -> GuestExecutor:
     if _guest_executor is None:
         _guest_executor = GuestExecutor()
     return _guest_executor
-
-
-def is_guest_executor_enabled() -> bool:
-    """Check if guest execution is enabled."""
-    return GUEST_EXECUTOR_ENABLED

@@ -12,7 +12,6 @@ from robotocore.services.ec2.guest.executor import (
     ExecutionRecord,
     GuestExecutionResult,
     GuestExecutor,
-    ServiceRecord,
 )
 
 
@@ -120,16 +119,6 @@ class TestGuestExecutionResult:
                     duration_ms=100.0,
                 ),
             ],
-            services=[
-                ServiceRecord(
-                    timestamp="2024-01-01T00:00:02Z",
-                    service_name="nginx",
-                    action="start",
-                    status="success",
-                    stdout="",
-                    stderr="",
-                ),
-            ],
         )
 
         data = result.to_dict()
@@ -141,8 +130,6 @@ class TestGuestExecutionResult:
         assert len(data["commands"]) == 1
         assert data["commands"][0]["command"] == "echo hello"
         assert data["commands"][0]["exit_code"] == 0
-        assert len(data["services"]) == 1
-        assert data["services"][0]["service_name"] == "nginx"
 
 
 class TestGuestExecutorState:
@@ -345,9 +332,10 @@ class TestGuestExecutorExecution:
 class TestGuestExecutorDisabled:
     """Tests for when guest executor is disabled."""
 
-    @patch("robotocore.services.ec2.guest.executor.GUEST_EXECUTOR_ENABLED", False)
-    def test_launch_instance_when_disabled(self):
+    @patch("robotocore.services.ec2.guest.executor.is_guest_executor_enabled")
+    def test_launch_instance_when_disabled(self, mock_is_enabled):
         """Launch should return None when disabled."""
+        mock_is_enabled.return_value = False
         executor = GuestExecutor()
 
         result = executor.launch_instance(
