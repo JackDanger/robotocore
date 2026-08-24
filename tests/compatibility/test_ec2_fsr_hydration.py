@@ -117,8 +117,7 @@ class TestFastSnapshotRestores:
 
             # Find our entry and verify state
             our_fsr = next(
-                fsr for fsr in resp["FastSnapshotRestores"]
-                if fsr["SnapshotId"] == snapshot_id
+                fsr for fsr in resp["FastSnapshotRestores"] if fsr["SnapshotId"] == snapshot_id
             )
             assert our_fsr["State"] == "enabled"
             assert our_fsr["AvailabilityZone"] == az
