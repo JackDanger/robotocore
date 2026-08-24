@@ -128,7 +128,7 @@ class EC2GuestExecutorPlugin(RobotocorePlugin):
                     params = parse_qs(body.decode("utf-8"))
                     operation = params.get("Action", [""])[0]
             except Exception:
-                pass
+                pass  # best-effort sniffing — leave operation unset if the body can't be parsed
 
         if operation == "RunInstances":
             self._handle_run_instances_response(request, response, context)
@@ -188,7 +188,7 @@ class EC2GuestExecutorPlugin(RobotocorePlugin):
                     # Parse block device mappings and IAM profile if present
                     # This is simplified - full parsing would handle all EC2 parameters
             except Exception:
-                pass
+                pass  # best-effort request-body parsing — fall back to the defaults set above
 
             account_id = context.get("account_id", "123456789012")
             region = context.get("region", "us-east-1")

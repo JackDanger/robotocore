@@ -289,7 +289,7 @@ class GuestExecutor:
                 decoded = base64.b64decode(data, validate=True)
                 data = decoded
             except Exception:
-                pass
+                pass  # not base64 — leave data as the raw bytes it already is
 
         if not isinstance(data, bytes):
             data = data.encode("utf-8") if isinstance(data, str) else b""
