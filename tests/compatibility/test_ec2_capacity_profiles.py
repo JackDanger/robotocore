@@ -449,6 +449,100 @@ class TestChaosIntegration:
             ec2.delete_vpc(VpcId=vpc_id)
 
 
+class TestStateSnapshotIntegration:
+    """Tests for state snapshot integration with capacity profiles."""
+
+    def test_capacity_profile_state_round_trip(self):
+        """Test that capacity profiles are saved and loaded via state snapshots."""
+        import time
+        import os
+
+        # Check if state is configured
+        health_resp = requests.get(f"{ENDPOINT_URL}/_robotocore/health", timeout=5)
+        if health_resp.status_code != 200:
+            pytest.skip("Server not available")
+
+        # Try to save - if state is not configured, skip the test
+        test_snap = f"test-capacity-snap-{int(time.time())}"
+        response = requests.post(
+            f"{ENDPOINT_URL}/_robotocore/state/save",
+            json={"name": test_snap},
+            timeout=5,
+        )
+        if response.status_code == 400 and "No state directory configured" in response.text:
+            pytest.skip("State snapshots not configured (ROBOTOCORE_STATE_DIR not set)")
+
+        assert response.status_code == 200, f"Save failed: {response.text}"
+
+        # Set up a capacity profile
+        response = requests.post(
+            f"{ENDPOINT_URL}/_robotocore/ec2/capacity",
+            json={
+                "instance_type": "g5.xlarge",
+                "availability_zone": "us-east-1a",
+                "total_capacity": 10,
+                "available_capacity": 5,
+                "spot_available": True,
+                "spot_price": 0.15,
+            },
+            timeout=5,
+        )
+        assert response.status_code == 200
+
+        # Verify profile exists
+        response = requests.get(f"{ENDPOINT_URL}/_robotocore/ec2/capacity", timeout=5)
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data["profiles"]) >= 1
+        profile = [p for p in data["profiles"] if p["instance_type"] == "g5.xlarge"]
+        assert len(profile) == 1
+        assert profile[0]["total_capacity"] == 10
+        assert profile[0]["available_capacity"] == 5
+
+        # Save state snapshot
+        snapshot_name = f"test-capacity-snap-{int(time.time())}"
+        response = requests.post(
+            f"{ENDPOINT_URL}/_robotocore/state/save",
+            json={"name": snapshot_name},
+            timeout=5,
+        )
+        assert response.status_code == 200
+
+        # Mutate/clear capacity state
+        response = requests.post(
+            f"{ENDPOINT_URL}/_robotocore/ec2/capacity/reset", timeout=5
+        )
+        assert response.status_code == 200
+
+        # Verify state is cleared
+        response = requests.get(f"{ENDPOINT_URL}/_robotocore/ec2/capacity", timeout=5)
+        assert response.status_code == 200
+        data = response.json()
+        # After reset, no custom profiles should exist (only defaults created on-demand)
+        custom_profiles = [
+            p for p in data["profiles"] if p["instance_type"] == "g5.xlarge"
+        ]
+        assert len(custom_profiles) == 0
+
+        # Load state snapshot
+        response = requests.post(
+            f"{ENDPOINT_URL}/_robotocore/state/load",
+            json={"name": snapshot_name},
+            timeout=5,
+        )
+        assert response.status_code == 200
+
+        # Verify profile is restored
+        response = requests.get(f"{ENDPOINT_URL}/_robotocore/ec2/capacity", timeout=5)
+        assert response.status_code == 200
+        data = response.json()
+        profile = [p for p in data["profiles"] if p["instance_type"] == "g5.xlarge"]
+        assert len(profile) == 1
+        assert profile[0]["total_capacity"] == 10
+        assert profile[0]["available_capacity"] == 5
+        assert profile[0]["spot_price"] == 0.15
+
+
 class TestDescribeInstanceTypeOfferings:
     """Tests for DescribeInstanceTypeOfferings with capacity profiles."""
 
