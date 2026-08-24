@@ -1459,6 +1459,41 @@ async def _boot_status_endpoint(request: Request) -> JSONResponse:
     return JSONResponse(get_orchestrator().get_status())
 
 
+async def _ec2_guest_executions(request: Request) -> JSONResponse:
+    """List all EC2 guest executions."""
+    from robotocore.services.ec2.guest.executor import get_guest_executor
+
+    executor = get_guest_executor()
+    account_id = request.query_params.get("account_id")
+    region = request.query_params.get("region")
+
+    results = executor.list_executions(account_id=account_id, region=region)
+
+    return JSONResponse(
+        {
+            "executions": [r.to_dict() for r in results],
+            "count": len(results),
+        }
+    )
+
+
+async def _ec2_guest_execution_detail(request: Request) -> JSONResponse:
+    """Get execution details for a specific EC2 instance."""
+    from robotocore.services.ec2.guest.executor import get_guest_executor
+
+    executor = get_guest_executor()
+    instance_id = request.path_params["instance_id"]
+    result = executor.get_execution_result(instance_id)
+
+    if result is None:
+        return JSONResponse(
+            {"error": f"No execution found for instance {instance_id}"},
+            status_code=404,
+        )
+
+    return JSONResponse(result.to_dict())
+
+
 # ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
@@ -1543,6 +1578,13 @@ management_routes = [
     Route("/_robotocore/tls/info", tls_info_endpoint, methods=["GET"]),
     # Boot status
     Route("/_robotocore/boot/status", _boot_status_endpoint, methods=["GET"]),
+    # EC2 Guest Executor
+    Route("/_robotocore/ec2/guest/executions", _ec2_guest_executions, methods=["GET"]),
+    Route(
+        "/_robotocore/ec2/guest/executions/{instance_id}",
+        _ec2_guest_execution_detail,
+        methods=["GET"],
+    ),
     # Console web UI
     *get_console_routes(),
 ]
