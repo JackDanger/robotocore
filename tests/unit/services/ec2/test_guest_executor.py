@@ -320,6 +320,7 @@ class TestGuestExecutorExecution:
     def test_execute_in_container_timeout(self, mock_run):
         """Command timeout should be handled."""
         from subprocess import TimeoutExpired
+
         mock_run.side_effect = TimeoutExpired("cmd", 300)
 
         executor = GuestExecutor()

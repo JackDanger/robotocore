@@ -18,6 +18,7 @@ import pytest
 # Skip all tests if Docker is not available
 try:
     import subprocess
+
     result = subprocess.run(
         ["docker", "ps"],
         capture_output=True,
@@ -105,14 +106,13 @@ date >> /tmp/hello.txt
 
         # Wait for execution to complete (with timeout)
         import requests
+
         max_wait = 60  # seconds
         start = time.time()
         execution = None
 
         while time.time() - start < max_wait:
-            resp = requests.get(
-                f"{_server_url}/_robotocore/ec2/guest/executions/{instance_id}"
-            )
+            resp = requests.get(f"{_server_url}/_robotocore/ec2/guest/executions/{instance_id}")
             if resp.status_code == 200:
                 execution = resp.json()
                 if execution.get("status") in ("completed", "failed"):
@@ -165,14 +165,13 @@ echo "Part 2" > /tmp/part2.txt
 
         # Wait for execution
         import requests
+
         max_wait = 60
         start = time.time()
         execution = None
 
         while time.time() - start < max_wait:
-            resp = requests.get(
-                f"{_server_url}/_robotocore/ec2/guest/executions/{instance_id}"
-            )
+            resp = requests.get(f"{_server_url}/_robotocore/ec2/guest/executions/{instance_id}")
             if resp.status_code == 200:
                 execution = resp.json()
                 if execution.get("status") in ("completed", "failed"):
@@ -218,14 +217,13 @@ lsblk > /tmp/block_devices.txt
 
         # Wait for execution
         import requests
+
         max_wait = 60
         start = time.time()
         execution = None
 
         while time.time() - start < max_wait:
-            resp = requests.get(
-                f"{_server_url}/_robotocore/ec2/guest/executions/{instance_id}"
-            )
+            resp = requests.get(f"{_server_url}/_robotocore/ec2/guest/executions/{instance_id}")
             if resp.status_code == 200:
                 execution = resp.json()
                 if execution.get("status") in ("completed", "failed"):
@@ -264,9 +262,8 @@ lsblk > /tmp/block_devices.txt
 
         # Verify execution shows terminated status
         import requests
-        resp = requests.get(
-            f"{_server_url}/_robotocore/ec2/guest/executions/{instance_id}"
-        )
+
+        resp = requests.get(f"{_server_url}/_robotocore/ec2/guest/executions/{instance_id}")
         if resp.status_code == 200:
             execution = resp.json()
             assert execution["status"] == "terminated"
@@ -301,14 +298,13 @@ echo "stderr message" >&2
 
         # Wait for execution
         import requests
+
         max_wait = 60
         start = time.time()
         execution = None
 
         while time.time() - start < max_wait:
-            resp = requests.get(
-                f"{_server_url}/_robotocore/ec2/guest/executions/{instance_id}"
-            )
+            resp = requests.get(f"{_server_url}/_robotocore/ec2/guest/executions/{instance_id}")
             if resp.status_code == 200:
                 execution = resp.json()
                 if execution.get("status") in ("completed", "failed"):
@@ -344,14 +340,13 @@ exit 42
 
         # Wait for execution
         import requests
+
         max_wait = 60
         start = time.time()
         execution = None
 
         while time.time() - start < max_wait:
-            resp = requests.get(
-                f"{_server_url}/_robotocore/ec2/guest/executions/{instance_id}"
-            )
+            resp = requests.get(f"{_server_url}/_robotocore/ec2/guest/executions/{instance_id}")
             if resp.status_code == 200:
                 execution = resp.json()
                 if execution.get("status") in ("completed", "failed"):

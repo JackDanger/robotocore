@@ -1469,10 +1469,12 @@ async def _ec2_guest_executions(request: Request) -> JSONResponse:
 
     results = executor.list_executions(account_id=account_id, region=region)
 
-    return JSONResponse({
-        "executions": [r.to_dict() for r in results],
-        "count": len(results),
-    })
+    return JSONResponse(
+        {
+            "executions": [r.to_dict() for r in results],
+            "count": len(results),
+        }
+    )
 
 
 async def _ec2_guest_execution_detail(request: Request) -> JSONResponse:
@@ -1578,7 +1580,11 @@ management_routes = [
     Route("/_robotocore/boot/status", _boot_status_endpoint, methods=["GET"]),
     # EC2 Guest Executor
     Route("/_robotocore/ec2/guest/executions", _ec2_guest_executions, methods=["GET"]),
-    Route("/_robotocore/ec2/guest/executions/{instance_id}", _ec2_guest_execution_detail, methods=["GET"]),
+    Route(
+        "/_robotocore/ec2/guest/executions/{instance_id}",
+        _ec2_guest_execution_detail,
+        methods=["GET"],
+    ),
     # Console web UI
     *get_console_routes(),
 ]
