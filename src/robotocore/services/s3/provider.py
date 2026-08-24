@@ -4,7 +4,9 @@ versioning, lifecycle, object lock, multipart support, and presigned URLs."""
 import logging
 import re
 import threading
+import time
 import xml.etree.ElementTree as ET
+from datetime import UTC, datetime, timedelta
 from urllib.parse import urlencode
 
 from starlette.datastructures import QueryParams
@@ -87,6 +89,62 @@ S3_NS = "http://s3.amazonaws.com/doc/2006-03-01/"
 def _is_presigned_url(query_params: QueryParams) -> bool:
     """Check if the request is a presigned URL request."""
     return "X-Amz-Signature" in query_params or "Signature" in query_params
+
+
+# GetObject response-* query params and the response headers they override.
+_RESPONSE_HEADER_OVERRIDES = {
+    "response-content-type": "content-type",
+    "response-content-disposition": "content-disposition",
+    "response-content-language": "content-language",
+    "response-content-encoding": "content-encoding",
+    "response-cache-control": "cache-control",
+    "response-expires": "expires",
+}
+
+
+def _presigned_url_expired(query_params: QueryParams) -> bool:
+    """Check whether a presigned URL's validity window has elapsed.
+
+    SigV4: valid from X-Amz-Date for X-Amz-Expires seconds.
+    SigV2: valid until the unix timestamp in Expires.
+    """
+    date_str = query_params.get("X-Amz-Date")
+    if date_str:
+        try:
+            start = datetime.strptime(date_str, "%Y%m%dT%H%M%SZ").replace(tzinfo=UTC)
+        except ValueError:
+            return False
+        expires = query_params.get("X-Amz-Expires")
+        if expires:
+            try:
+                deadline = start + timedelta(seconds=int(expires))
+            except ValueError:
+                return False
+            return deadline <= datetime.now(UTC)
+        return start <= datetime.now(UTC)
+    expires_unix = query_params.get("Expires")
+    if expires_unix:
+        try:
+            return int(expires_unix) <= time.time()
+        except ValueError:
+            return False
+    return False
+
+
+def _presigned_expired_response(path: str) -> Response:
+    """403 AccessDenied for an expired presigned URL (matches real S3)."""
+    key = path.lstrip("/").split("/")[-1] if "/" in path.lstrip("/") else ""
+    body = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        "<Error>"
+        "<Code>AccessDenied</Code>"
+        "<Message>Request has expired</Message>"
+        f"<Key>{key}</Key>"
+        "<RequestId>00000000-0000-0000-0000-000000000000</RequestId>"
+        "<HostId>robotocore</HostId>"
+        "</Error>"
+    )
+    return Response(content=body, status_code=403, media_type="application/xml")
 
 
 def _strip_presigned_params(request: Request, body: bytes | None = None) -> Request:
@@ -577,7 +635,15 @@ async def handle_s3_request(request: Request, region: str, account_id: str) -> R
         return Response(status_code=200)
 
     # Handle presigned URL requests by stripping signature params
+    response_overrides: dict[str, str] = {}
     if _is_presigned_url(request.query_params):
+        if _presigned_url_expired(request.query_params):
+            return _presigned_expired_response(path)
+        # response-* params override response headers on success (real S3 behavior)
+        for param, header in _RESPONSE_HEADER_OVERRIDES.items():
+            value = request.query_params.get(param)
+            if value:
+                response_overrides[header] = value
         body = await request.body()
         request = _strip_presigned_params(request, body)
 
@@ -631,6 +697,11 @@ async def handle_s3_request(request: Request, region: str, account_id: str) -> R
 
     # Forward to Moto for actual S3 operation
     response = await forward_to_moto(request, "s3", account_id=account_id)
+
+    # Apply presigned-URL response-* header overrides to the forwarded result
+    if response_overrides and response.status_code == 200:
+        for header, value in response_overrides.items():
+            response.headers[header] = value
 
     # Post-response cleanup and event firing
     if response.status_code in (200, 202, 204):
@@ -1018,12 +1089,15 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
 
     for qc in root.findall(f"{{{ns}}}QueueConfiguration") + root.findall("QueueConfiguration"):
         queue_arn = ""
+        config_id = ""
         events: list[str] = []
         filter_rules: list[dict] = []
 
         for child in qc:
             tag = child.tag.split("}")[-1] if "}" in child.tag else child.tag
-            if tag == "Queue":
+            if tag == "Id":
+                config_id = child.text or ""
+            elif tag == "Queue":
                 queue_arn = child.text or ""
             elif tag == "Event":
                 events.append(child.text or "")
@@ -1031,18 +1105,23 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
                 filter_rules = _parse_filter_rules(child)
 
         entry: dict = {"QueueArn": queue_arn, "Events": events}
+        if config_id:
+            entry["Id"] = config_id
         if filter_rules:
             entry["Filter"] = {"Key": {"FilterRules": filter_rules}}
         config.queue_configs.append(entry)
 
     for tc in root.findall(f"{{{ns}}}TopicConfiguration") + root.findall("TopicConfiguration"):
         topic_arn = ""
+        config_id = ""
         events = []
         filter_rules = []
 
         for child in tc:
             tag = child.tag.split("}")[-1] if "}" in child.tag else child.tag
-            if tag == "Topic":
+            if tag == "Id":
+                config_id = child.text or ""
+            elif tag == "Topic":
                 topic_arn = child.text or ""
             elif tag == "Event":
                 events.append(child.text or "")
@@ -1050,6 +1129,8 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
                 filter_rules = _parse_filter_rules(child)
 
         entry = {"TopicArn": topic_arn, "Events": events}
+        if config_id:
+            entry["Id"] = config_id
         if filter_rules:
             entry["Filter"] = {"Key": {"FilterRules": filter_rules}}
         config.topic_configs.append(entry)
@@ -1062,12 +1143,15 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
         + root.findall("LambdaFunctionConfiguration")
     ):
         lambda_arn = ""
+        config_id = ""
         events = []
         filter_rules = []
 
         for child in lc:
             tag = child.tag.split("}")[-1] if "}" in child.tag else child.tag
-            if tag in ("CloudFunction", "LambdaFunctionArn"):
+            if tag == "Id":
+                config_id = child.text or ""
+            elif tag in ("CloudFunction", "LambdaFunctionArn"):
                 lambda_arn = child.text or ""
             elif tag == "Event":
                 events.append(child.text or "")
@@ -1075,6 +1159,8 @@ def _parse_notification_config_xml(xml_str: str) -> NotificationConfig:
                 filter_rules = _parse_filter_rules(child)
 
         entry = {"LambdaFunctionArn": lambda_arn, "Events": events}
+        if config_id:
+            entry["Id"] = config_id
         if filter_rules:
             entry["Filter"] = {"Key": {"FilterRules": filter_rules}}
         config.lambda_configs.append(entry)
@@ -1114,6 +1200,8 @@ def _notification_config_to_xml(config: NotificationConfig) -> str:
 
     for qc in config.queue_configs:
         parts.append("<QueueConfiguration>")
+        if qc.get("Id"):
+            parts.append(f"<Id>{qc['Id']}</Id>")
         parts.append(f"<Queue>{qc['QueueArn']}</Queue>")
         for evt in qc.get("Events", []):
             parts.append(f"<Event>{evt}</Event>")
@@ -1122,6 +1210,8 @@ def _notification_config_to_xml(config: NotificationConfig) -> str:
 
     for tc in config.topic_configs:
         parts.append("<TopicConfiguration>")
+        if tc.get("Id"):
+            parts.append(f"<Id>{tc['Id']}</Id>")
         parts.append(f"<Topic>{tc['TopicArn']}</Topic>")
         for evt in tc.get("Events", []):
             parts.append(f"<Event>{evt}</Event>")
@@ -1130,6 +1220,8 @@ def _notification_config_to_xml(config: NotificationConfig) -> str:
 
     for lc in config.lambda_configs:
         parts.append("<LambdaFunctionConfiguration>")
+        if lc.get("Id"):
+            parts.append(f"<Id>{lc['Id']}</Id>")
         parts.append(f"<LambdaFunctionArn>{lc['LambdaFunctionArn']}</LambdaFunctionArn>")
         for evt in lc.get("Events", []):
             parts.append(f"<Event>{evt}</Event>")
