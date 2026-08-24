@@ -443,9 +443,7 @@ def _create_image(params: dict, region: str, account_id: str) -> Response:
     return Response(content=xml, status_code=200, media_type="text/xml")
 
 
-async def _run_instances(
-    request: Request, params: dict, region: str, account_id: str
-) -> Response:
+async def _run_instances(request: Request, params: dict, region: str, account_id: str) -> Response:
     """RunInstances - capacity check, forward to Moto, then guest container."""
     from moto.backends import get_backend  # noqa: I001
 
@@ -502,9 +500,7 @@ async def _run_instances(
             )
 
     if is_spot:
-        spot_available, _ = store.check_spot_capacity(
-            account_id, region, instance_type, az
-        )
+        spot_available, _ = store.check_spot_capacity(account_id, region, instance_type, az)
         if not spot_available:
             return _ec2_error(
                 "InsufficientInstanceCapacity",
@@ -518,9 +514,7 @@ async def _run_instances(
             )
 
     # Check on-demand capacity
-    success, error_code = store.check_capacity(
-        account_id, region, instance_type, az, max_count
-    )
+    success, error_code = store.check_capacity(account_id, region, instance_type, az, max_count)
     if not success:
         if error_code == "InsufficientInstanceCapacity":
             return _ec2_error(
@@ -610,9 +604,7 @@ async def _run_instances(
             device_name = _get_param(params, f"BlockDeviceMapping.{i}.DeviceName")
             if not device_name:
                 break
-            volume_size = (
-                _get_param(params, f"BlockDeviceMapping.{i}.Ebs.VolumeSize") or "8"
-            )
+            volume_size = _get_param(params, f"BlockDeviceMapping.{i}.Ebs.VolumeSize") or "8"
             block_device_mappings.append(
                 {
                     "DeviceName": device_name,
