@@ -36,7 +36,7 @@ def is_guest_executor_enabled() -> bool:
 
 
 # Container image for guest execution (systemd + basic tools)
-DEFAULT_GUEST_IMAGE = os.environ.get("ROBOTOCORE_EC2_GUEST_IMAGE", "jrei/systemd-ubuntu:22.04")
+DEFAULT_GUEST_IMAGE = os.environ.get("ROBOTOCORE_EC2_GUEST_IMAGE", "ubuntu:22.04")
 
 # Network for IMDS access
 GUEST_NETWORK_NAME = "robotocore-ec2-guest"

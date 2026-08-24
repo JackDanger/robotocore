@@ -360,11 +360,15 @@ exit 42
 
         assert execution is not None
 
-        # Check for exit code
+        # Check for exit code - look for the actual script execution, not the write_script command
         commands = execution.get("commands", [])
-        if commands:
+        # Find the command that executed the user-data script (not the write_script command)
+        script_commands = [
+            c for c in commands if c.get("command", "").startswith("bash /tmp/userdata")
+        ]
+        if script_commands:
             # The script should have exit code 42
-            assert commands[0].get("exit_code") == 42
+            assert script_commands[0].get("exit_code") == 42
 
         # Clean up
         ec2_client.terminate_instances(InstanceIds=[instance_id])

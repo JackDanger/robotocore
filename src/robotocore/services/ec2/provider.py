@@ -316,11 +316,17 @@ async def _run_instances(request: Request, params: dict, region: str, account_id
 
         root = ET.fromstring(body)
 
-        # Find instance IDs
-        ns = {"ec2": "http://ec2.amazonaws.com/doc/2016-11-15/"}
-        instances = root.findall(".//ec2:instanceId", ns)
-        if not instances:
-            instances = root.findall(".//instanceId")
+        # Find instance IDs by iterating through the XML tree
+        # The structure is: RunInstancesResponse > instancesSet > item > instanceId
+        instances = []
+        for child in root:
+            if "instancesSet" in child.tag:
+                for item in child:
+                    if "item" in item.tag:
+                        for subchild in item:
+                            if "instanceId" in subchild.tag:
+                                instances.append(subchild)
+                                break
 
         if not instances:
             return response
@@ -367,7 +373,7 @@ async def _run_instances(request: Request, params: dict, region: str, account_id
         for inst_elem in instances:
             instance_id = inst_elem.text if hasattr(inst_elem, "text") else inst_elem
             if instance_id:
-                logger.info(f"Launching guest container for instance {instance_id}")
+                logger.debug(f"Launching guest container for instance {instance_id}")
 
                 # Run in background thread to not block response
                 import threading
