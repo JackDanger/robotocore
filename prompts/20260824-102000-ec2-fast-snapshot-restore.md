@@ -1,7 +1,7 @@
 ---
 session: "ebs-fsr-001"
 timestamp: "2026-08-24T10:20:00Z"
-model: claude-opus-4-6
+model: moonshotai.kimi-k2.5
 ---
 
 ## Human
