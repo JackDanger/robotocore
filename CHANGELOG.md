@@ -6,6 +6,33 @@ auto-tags and publishes a versioned + `:latest` Docker image. Each release
 gets a top-level section here; the project source of truth for the
 maintenance policy is [`CLAUDE.md`](CLAUDE.md) under *Changelog discipline*.
 
+## 2026.5.15 (2026-05-15)
+
+### Added
+
+- **EC2 Capacity Profiles**: Deterministic EC2 capacity management for testing
+  launch workflows, spot fallback, and `InsufficientInstanceCapacity` handling.
+  - New admin endpoints under `/_robotocore/ec2/capacity`:
+    - `GET /_robotocore/ec2/capacity` — List capacity profiles
+    - `POST /_robotocore/ec2/capacity` — Set capacity profile
+    - `DELETE /_robotocore/ec2/capacity` — Delete capacity profile
+    - `POST /_robotocore/ec2/capacity/reset` — Reset all capacity profiles
+    - `POST /_robotocore/ec2/capacity/chaos` — Set chaos override for capacity
+  - Capacity model per (instance-type, availability-zone):
+    - `total_capacity` — Maximum instances that can be launched
+    - `available_capacity` — Current available capacity
+    - `spot_available` — Whether spot instances are available
+    - `spot_price` — Spot price when available
+    - `enabled` — Whether the offering exists (for unsupported errors)
+  - `RunInstances` now checks capacity and returns proper AWS error codes:
+    - `InsufficientInstanceCapacity` (HTTP 500) when capacity exhausted
+    - `Unsupported` (HTTP 400) for disabled offerings
+  - `RequestSpotInstances` with deterministic spot fulfillment:
+    - Returns `capacity-not-available` status when spot unavailable
+    - Returns `fulfilled` status with instance ID when spot available
+  - Chaos integration: Capacity rules can be overridden via chaos endpoint
+  - State snapshot integration: Capacity profiles round-trip with save/load
+
 ## 2026.5.13 (2026-05-13)
 
 ### Breaking: Docker Hub image renamed to `jackdanger/robotocore`
