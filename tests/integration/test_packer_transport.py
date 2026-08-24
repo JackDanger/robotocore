@@ -107,9 +107,7 @@ class TestInstanceTransport:
             assert result.success is True, f"Upload failed: {result.stderr}"
 
             # Verify the file exists
-            verify_result = transport.execute_shell(
-                "cat /tmp/uploaded_test.txt"
-            )
+            verify_result = transport.execute_shell("cat /tmp/uploaded_test.txt")
             assert verify_result.success is True
             assert verify_result.stdout.strip() == "Hello, World!"
 
@@ -146,9 +144,7 @@ class TestInstanceTransport:
             assert result.success is True, f"Upload failed: {result.stderr}"
 
             # Verify the file exists with the correct name
-            verify_result = transport.execute_shell(
-                "cat /tmp/dest_dir/test.txt"
-            )
+            verify_result = transport.execute_shell("cat /tmp/dest_dir/test.txt")
             assert verify_result.success is True
             assert verify_result.stdout.strip() == "Directory upload test"
 
@@ -183,9 +179,7 @@ class TestInstanceTransport:
             assert result.success is True
 
             # Verify the content was overwritten
-            verify_result = transport.execute_shell(
-                "cat /tmp/existing_file"
-            )
+            verify_result = transport.execute_shell("cat /tmp/existing_file")
             assert verify_result.success is True
             assert verify_result.stdout.strip() == "New content"
 
@@ -275,15 +269,11 @@ class TestInstanceTransport:
 
         try:
             # Provisioner 1: Create a file
-            result1 = transport.execute_shell(
-                "echo 'step1' > /tmp/provision_order.txt"
-            )
+            result1 = transport.execute_shell("echo 'step1' > /tmp/provision_order.txt")
             assert result1.success is True
 
             # Provisioner 2: Append to the file
-            result2 = transport.execute_shell(
-                "echo 'step2' >> /tmp/provision_order.txt"
-            )
+            result2 = transport.execute_shell("echo 'step2' >> /tmp/provision_order.txt")
             assert result2.success is True
 
             # Provisioner 3: Upload a file
@@ -296,9 +286,7 @@ class TestInstanceTransport:
             assert result3.success is True
 
             # Provisioner 4: Combine files
-            result4 = transport.execute_shell(
-                "cat /tmp/step3.txt >> /tmp/provision_order.txt"
-            )
+            result4 = transport.execute_shell("cat /tmp/step3.txt >> /tmp/provision_order.txt")
             assert result4.success is True
 
             # Verify the order

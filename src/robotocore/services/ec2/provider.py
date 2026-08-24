@@ -350,12 +350,32 @@ def _create_image(params: dict, region: str, account_id: str) -> Response:
 
     backend = get_backend("ec2")[account_id][region]
 
+    # Parse tag specifications from request
+    tag_specifications: list[dict[str, Any]] = []
+    i = 1
+    while True:
+        resource_type = _get_param(params, f"TagSpecification.{i}.ResourceType")
+        if not resource_type:
+            break
+        tags = []
+        j = 1
+        while True:
+            key = _get_param(params, f"TagSpecification.{i}.Tag.{j}.Key")
+            if not key:
+                break
+            value = _get_param(params, f"TagSpecification.{i}.Tag.{j}.Value")
+            tags.append({"Key": key, "Value": value})
+            j += 1
+        if tags:
+            tag_specifications.append({"ResourceType": resource_type, "Tags": tags})
+        i += 1
+
     # Create the image using Moto's backend
     ami = backend.create_image(
         instance_id=instance_id,
         name=ami_name,
         description=description,
-        context=None,
+        tag_specifications=tag_specifications,
     )
 
     xml = f"""<?xml version="1.0" encoding="UTF-8"?>
