@@ -3,6 +3,8 @@
 Intercepts operations that Moto doesn't implement or has bugs:
 - BatchCheckLayerAvailability: Not implemented in Moto
 - DescribeRepositories: maxResults pagination not enforced
+
+Also routes OCI Registry v2 data plane requests (/v2/...).
 """
 
 import json
@@ -11,9 +13,15 @@ from starlette.requests import Request
 from starlette.responses import Response
 
 from robotocore.providers.moto_bridge import forward_to_moto
+from robotocore.services.ecr.registry import handle_registry_v2_request
 
 
 async def handle_ecr_request(request: Request, region: str, account_id: str) -> Response:
+    """Handle ECR requests, including OCI Registry v2 data plane."""
+    # Check if this is a registry v2 request (path starts with /v2/)
+    path = request.url.path
+    if path.startswith("/v2/") or path == "/v2":
+        return await handle_registry_v2_request(request, region, account_id)
     """Handle ECR requests, intercepting unimplemented operations."""
     target = request.headers.get("x-amz-target", "")
     action = target.split(".")[-1] if "." in target else ""
