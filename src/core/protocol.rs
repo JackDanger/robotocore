@@ -19,6 +19,14 @@ pub struct ParsedRequest {
     pub body: Bytes,
     pub region: String,
     pub account: u64,
+    /// HTTP method (GET, PUT, POST, DELETE, HEAD).
+    pub method: String,
+    /// Request path (e.g. /bucket/key).
+    pub path: String,
+    /// Raw query string (e.g. "list-type=2&prefix=a").
+    pub query_string: String,
+    /// Request headers (lowercase keys).
+    pub headers: HashMap<String, String>,
 }
 
 /// Parsed AWS response to be serialized to HTTP.

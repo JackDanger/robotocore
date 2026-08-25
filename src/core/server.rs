@@ -125,11 +125,7 @@ impl S3ServiceHandler {
         query_string: &str,
     ) -> s3::protocol::AwsRequest {
         // Extract bucket and key from the path
-        let path = req
-            .params
-            .get("path")
-            .and_then(|v| v.as_str())
-            .unwrap_or("");
+        let path = &req.path;
         let path_parts: Vec<&str> = path.trim_start_matches('/').splitn(2, '/').collect();
         let bucket = path_parts
             .first()
@@ -151,17 +147,8 @@ impl S3ServiceHandler {
             }
         }
 
-        // Parse headers
-        let mut headers = std::collections::HashMap::new();
-        for (k, v) in req
-            .params
-            .get("__headers__")
-            .and_then(|h| h.as_object())
-            .cloned()
-            .unwrap_or_default()
-        {
-            headers.insert(k.to_lowercase(), v.as_str().unwrap_or("").to_string());
-        }
+        // Use the headers map directly
+        let headers = req.headers.clone();
 
         s3::protocol::AwsRequest {
             service: req.service.clone(),
@@ -197,7 +184,24 @@ impl ServiceHandler for S3ServiceHandler {
         &self,
         req: &ParsedRequest,
     ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
-        let s3_req = Self::to_s3_request(req, "GET", "");
+        // Detect the S3 operation from method + path + query
+        let mut query_params = std::collections::HashMap::new();
+        for pair in req.query_string.split('&') {
+            if let Some((k, v)) = pair.split_once('=') {
+                query_params.insert(
+                    urlencoding::decode(k).unwrap_or_default().into_owned(),
+                    urlencoding::decode(v).unwrap_or_default().into_owned(),
+                );
+            }
+        }
+        let operation = s3::handler::S3Handler::detect_s3_operation(
+            &req.method,
+            &req.path,
+            &query_params,
+        ).unwrap_or_else(|| req.operation.clone());
+
+        let mut s3_req = Self::to_s3_request(req, &req.method, &req.query_string);
+        s3_req.operation = operation;
         let resp = self.inner.handle(s3_req);
         Ok(Self::to_parsed_response(resp))
     }
@@ -331,10 +335,11 @@ pub async fn catch_all_handler(
         }
     };
 
-    // Determine operation
+    // Determine operation (may be empty for REST services like S3 where
+    // the operation is derived from method + path + query params)
     let operation = match extract_operation(&method, &headers, &body_bytes, &service) {
         Ok(o) => o,
-        Err(_) => return error_response(StatusCode::BAD_REQUEST, "Could not determine operation"),
+        Err(_) => String::new(),
     };
 
     // Extract account from Authorization header or default
@@ -352,14 +357,26 @@ pub async fn catch_all_handler(
         parse_query_protocol(&body_bytes).unwrap_or_default()
     };
 
+    // Build headers map (lowercase keys)
+    let mut header_map: HashMap<String, String> = HashMap::new();
+    for (k, v) in headers.iter() {
+        if let Ok(v) = v.to_str() {
+            header_map.insert(k.as_str().to_lowercase(), v.to_string());
+        }
+    }
+
     // Create ParsedRequest
     let parsed_req = ParsedRequest {
         service: service.clone(),
         operation: operation.clone(),
         params,
-        body: body_bytes,
+        body: body_bytes.clone(),
         region,
         account,
+        method: method.as_str().to_string(),
+        path: uri.path().to_string(),
+        query_string: uri.query().unwrap_or("").to_string(),
+        headers: header_map,
     };
 
     // Get service handler
@@ -559,6 +576,8 @@ fn response_from_parsed(resp: ParsedResponse, service: &str, operation: &str) ->
             }
         }
     }
+    headers_map.insert("server", HeaderValue::from_static("robotocore"));
+    headers_map.insert("x-robotocore-request-id", HeaderValue::from_str(&request_id).unwrap());
 
     (resp.status, headers_map, body_str).into_response()
 }

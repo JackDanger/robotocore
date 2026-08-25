@@ -24,7 +24,7 @@ impl DynamoDbHandler {
         let mut states = self.state.write();
         states
             .entry((account, region.to_string()))
-            .or_default()
+            .or_insert_with(DynamoDbState::new)
             .clone()
     }
 
@@ -132,10 +132,7 @@ impl DynamoDbHandler {
         ));
         state.put_table(table.clone());
 
-        let table_arn = format!(
-            "arn:aws:dynamodb:{}:{}:table/{}",
-            req.region, req.account, table_name
-        );
+        let table_arn = format!("arn:aws:dynamodb:{}:{}:table/{}", req.region, req.account, table_name);
         let key_schema_json: Vec<Value> = table
             .key_schema
             .iter()
@@ -160,7 +157,13 @@ impl DynamoDbHandler {
                     "ProvisionedThroughput": {
                         "ReadCapacityUnits": 0.0,
                         "WriteCapacityUnits": 0.0
-                    }
+                    },
+                    "LocalSecondaryIndexes": [],
+                    "GlobalSecondaryIndexes": [],
+                    "DeletionProtectionEnabled": false,
+                    "SseSpecification": { "SseType": "DISABLED" },
+                    "TableId": table_name,
+                    "BillingModeSummary": { "BillingMode": table.billing_mode }
                 }
             }),
         )
@@ -176,15 +179,9 @@ impl DynamoDbHandler {
 
         let state = self.get_state(req.account, &req.region);
         match state.delete_table(&table_name) {
-            Some(_table) => AwsResponse::json(
-                200,
-                json!({
-                    "TableDescription": {
-                        "TableName": table_name,
-                        "TableStatus": "DELETING"
-                    }
-                }),
-            ),
+            Some(_) => AwsResponse::json(200, json!({
+                "TableDescription": { "TableName": table_name, "TableStatus": "DELETING" }
+            })),
             None => AwsResponse::error(
                 400,
                 "ResourceNotFoundException",
@@ -204,10 +201,7 @@ impl DynamoDbHandler {
         let state = self.get_state(req.account, &req.region);
         match state.get_table(&table_name) {
             Some(table) => {
-                let table_arn = format!(
-                    "arn:aws:dynamodb:{}:{}:table/{}",
-                    req.region, req.account, table.name
-                );
+                let table_arn = format!("arn:aws:dynamodb:{}:{}:table/{}", req.region, req.account, table.name);
                 let key_schema_json: Vec<Value> = table
                     .key_schema
                     .iter()
@@ -220,26 +214,29 @@ impl DynamoDbHandler {
                     .collect();
                 let item_count = table.items.read().len() as i64;
 
-                AwsResponse::json(
-                    200,
-                    json!({
-                        "Table": {
-                            "TableName": table.name,
-                            "TableStatus": *table.status.read(),
-                            "KeySchema": key_schema_json,
-                            "AttributeDefinitions": attr_defs_json,
-                            "TableArn": table_arn,
-                            "ItemCount": item_count,
-                            "TableSizeBytes": 0,
-                            "CreationRequestTime": table.created_at as f64,
-                            "BillingMode": table.billing_mode,
-                            "ProvisionedThroughput": {
-                                "ReadCapacityUnits": 0.0,
-                                "WriteCapacityUnits": 0.0
-                            }
-                        }
-                    }),
-                )
+                AwsResponse::json(200, json!({
+                    "Table": {
+                        "TableName": table.name,
+                        "TableStatus": *table.status.read(),
+                        "KeySchema": key_schema_json,
+                        "AttributeDefinitions": attr_defs_json,
+                        "TableArn": table_arn,
+                        "ItemCount": item_count,
+                        "TableSizeBytes": 0,
+                        "CreationRequestTime": table.created_at as f64,
+                        "BillingMode": table.billing_mode,
+                        "ProvisionedThroughput": {
+                            "ReadCapacityUnits": 0.0,
+                            "WriteCapacityUnits": 0.0
+                        },
+                        "LocalSecondaryIndexes": [],
+                        "GlobalSecondaryIndexes": [],
+                        "DeletionProtectionEnabled": false,
+                        "SseSpecification": { "SseType": "DISABLED" },
+                        "TableId": table.name,
+                        "BillingModeSummary": { "BillingMode": table.billing_mode }
+                    }
+                }))
             }
             None => AwsResponse::error(
                 400,
@@ -250,23 +247,12 @@ impl DynamoDbHandler {
     }
 
     fn put_item(&self, req: &AwsRequest) -> AwsResponse {
-        let table_name = req
-            .params
-            .get("TableName")
-            .and_then(|v| v.as_str())
-            .unwrap_or("")
-            .to_string();
-
+        let table_name = req.params.get("TableName").and_then(|v| v.as_str()).unwrap_or("").to_string();
         let state = self.get_state(req.account, &req.region);
         let table = match state.get_table(&table_name) {
             Some(t) => t,
-            None => {
-                return AwsResponse::error(
-                    400,
-                    "ResourceNotFoundException",
-                    &format!("Requested resource not found: Table: {}", table_name),
-                );
-            }
+            None => return AwsResponse::error(400, "ResourceNotFoundException",
+                &format!("Requested resource not found: Table: {}", table_name)),
         };
 
         let item_json = req.params.get("Item").cloned().unwrap_or(Value::Null);
@@ -278,38 +264,20 @@ impl DynamoDbHandler {
         let item = Item::new(attributes);
         let key = match table.compute_key(&item) {
             Some(k) => k,
-            None => {
-                return AwsResponse::error(
-                    400,
-                    "ValidationException",
-                    "Missing primary key in item",
-                );
-            }
+            None => return AwsResponse::error(400, "ValidationException", "Missing primary key in item"),
         };
 
         table.items.write().insert(key, Arc::new(item));
-
         AwsResponse::json(200, json!({}))
     }
 
     fn get_item(&self, req: &AwsRequest) -> AwsResponse {
-        let table_name = req
-            .params
-            .get("TableName")
-            .and_then(|v| v.as_str())
-            .unwrap_or("")
-            .to_string();
-
+        let table_name = req.params.get("TableName").and_then(|v| v.as_str()).unwrap_or("").to_string();
         let state = self.get_state(req.account, &req.region);
         let table = match state.get_table(&table_name) {
             Some(t) => t,
-            None => {
-                return AwsResponse::error(
-                    400,
-                    "ResourceNotFoundException",
-                    &format!("Requested resource not found: Table: {}", table_name),
-                );
-            }
+            None => return AwsResponse::error(400, "ResourceNotFoundException",
+                &format!("Requested resource not found: Table: {}", table_name)),
         };
 
         let key_json = req.params.get("Key").cloned().unwrap_or(Value::Null);
@@ -319,49 +287,22 @@ impl DynamoDbHandler {
             .unwrap_or_default();
 
         let items = table.items.read();
-        for item in items.values() {
-            let mut matches = true;
-            for (attr_name, attr_val) in &key_attrs {
-                match item.attributes.get(attr_name) {
-                    Some(v) => {
-                        if v != attr_val {
-                            matches = false;
-                            break;
-                        }
-                    }
-                    None => {
-                        matches = false;
-                        break;
-                    }
-                }
-            }
-            if matches {
+        for (_key_str, item) in items.iter() {
+            if key_attrs.iter().all(|(name, val)| item.attributes.get(name) == Some(val)) {
                 let item_json = serde_json::to_value(&item.attributes).unwrap_or(Value::Null);
                 return AwsResponse::json(200, json!({ "Item": item_json }));
             }
         }
-
         AwsResponse::json(200, json!({}))
     }
 
     fn delete_item(&self, req: &AwsRequest) -> AwsResponse {
-        let table_name = req
-            .params
-            .get("TableName")
-            .and_then(|v| v.as_str())
-            .unwrap_or("")
-            .to_string();
-
+        let table_name = req.params.get("TableName").and_then(|v| v.as_str()).unwrap_or("").to_string();
         let state = self.get_state(req.account, &req.region);
         let table = match state.get_table(&table_name) {
             Some(t) => t,
-            None => {
-                return AwsResponse::error(
-                    400,
-                    "ResourceNotFoundException",
-                    &format!("Requested resource not found: Table: {}", table_name),
-                );
-            }
+            None => return AwsResponse::error(400, "ResourceNotFoundException",
+                &format!("Requested resource not found: Table: {}", table_name)),
         };
 
         let key_json = req.params.get("Key").cloned().unwrap_or(Value::Null);
@@ -370,17 +311,11 @@ impl DynamoDbHandler {
             .map(|m| m.iter().map(|(k, v)| (k.clone(), v.clone())).collect())
             .unwrap_or_default();
 
-        // Find the key to delete
         let key_to_delete = {
             let items = table.items.read();
-            items
-                .iter()
-                .find(|(_, item)| {
-                    key_attrs
-                        .iter()
-                        .all(|(name, val)| item.attributes.get(name) == Some(val))
-                })
-                .map(|(k, _)| k.clone())
+            items.iter().find(|(_, item)| {
+                key_attrs.iter().all(|(name, val)| item.attributes.get(name) == Some(val))
+            }).map(|(k, _)| k.clone())
         };
 
         if let Some(k) = key_to_delete {
@@ -390,158 +325,72 @@ impl DynamoDbHandler {
     }
 
     fn query(&self, req: &AwsRequest) -> AwsResponse {
-        let table_name = req
-            .params
-            .get("TableName")
-            .and_then(|v| v.as_str())
-            .unwrap_or("")
-            .to_string();
-
+        let table_name = req.params.get("TableName").and_then(|v| v.as_str()).unwrap_or("").to_string();
         let state = self.get_state(req.account, &req.region);
         let table = match state.get_table(&table_name) {
             Some(t) => t,
-            None => {
-                return AwsResponse::error(
-                    400,
-                    "ResourceNotFoundException",
-                    &format!("Requested resource not found: Table: {}", table_name),
-                );
-            }
+            None => return AwsResponse::error(400, "ResourceNotFoundException",
+                &format!("Requested resource not found: Table: {}", table_name)),
         };
 
         let items = table.items.read();
         let mut result_items: Vec<Value> = Vec::new();
-        for item in items.values() {
+        for (_key, item) in items.iter() {
             let item_json = serde_json::to_value(&item.attributes).unwrap_or(Value::Null);
             result_items.push(item_json);
         }
 
-        let limit = req
-            .params
-            .get("Limit")
-            .and_then(|v| v.as_u64())
-            .map(|v| v as usize)
-            .unwrap_or(1000);
+        let limit = req.params.get("Limit").and_then(|v| v.as_u64()).map(|v| v as usize).unwrap_or(1000);
         let items_slice = &result_items[..result_items.len().min(limit)];
 
-        AwsResponse::json(
-            200,
-            json!({
-                "Items": items_slice,
-                "Count": items_slice.len(),
-                "ScannedCount": items_slice.len()
-            }),
-        )
+        AwsResponse::json(200, json!({
+            "Items": items_slice,
+            "Count": items_slice.len(),
+            "ScannedCount": items_slice.len()
+        }))
     }
 
     fn scan(&self, req: &AwsRequest) -> AwsResponse {
-        let table_name = req
-            .params
-            .get("TableName")
-            .and_then(|v| v.as_str())
-            .unwrap_or("")
-            .to_string();
-
+        let table_name = req.params.get("TableName").and_then(|v| v.as_str()).unwrap_or("").to_string();
         let state = self.get_state(req.account, &req.region);
         let table = match state.get_table(&table_name) {
             Some(t) => t,
-            None => {
-                return AwsResponse::error(
-                    400,
-                    "ResourceNotFoundException",
-                    &format!("Requested resource not found: Table: {}", table_name),
-                );
-            }
+            None => return AwsResponse::error(400, "ResourceNotFoundException",
+                &format!("Requested resource not found: Table: {}", table_name)),
         };
 
         let items = table.items.read();
         let mut result_items: Vec<Value> = Vec::new();
-        for item in items.values() {
+        for (_key, item) in items.iter() {
             let item_json = serde_json::to_value(&item.attributes).unwrap_or(Value::Null);
             result_items.push(item_json);
         }
         drop(items);
 
-        let limit = req
-            .params
-            .get("Limit")
-            .and_then(|v| v.as_u64())
-            .map(|v| v as usize)
-            .unwrap_or(1000);
+        let limit = req.params.get("Limit").and_then(|v| v.as_u64()).map(|v| v as usize).unwrap_or(1000);
         let items_slice = &result_items[..result_items.len().min(limit)];
 
-        AwsResponse::json(
-            200,
-            json!({
-                "Items": items_slice,
-                "Count": items_slice.len(),
-                "ScannedCount": items_slice.len(),
-                "ConsumedCapacity": {
-                    "TableName": table_name,
-                    "CapacityUnits": 1.0
-                }
-            }),
-        )
+        AwsResponse::json(200, json!({
+            "Items": items_slice,
+            "Count": items_slice.len(),
+            "ScannedCount": items_slice.len(),
+            "ConsumedCapacity": { "TableName": table_name, "CapacityUnits": 1.0 }
+        }))
     }
 
     fn update_item(&self, req: &AwsRequest) -> AwsResponse {
-        let table_name = req
-            .params
-            .get("TableName")
-            .and_then(|v| v.as_str())
-            .unwrap_or("")
-            .to_string();
-
+        let table_name = req.params.get("TableName").and_then(|v| v.as_str()).unwrap_or("").to_string();
         let state = self.get_state(req.account, &req.region);
-        let table = match state.get_table(&table_name) {
+        let _table = match state.get_table(&table_name) {
             Some(t) => t,
-            None => {
-                return AwsResponse::error(
-                    400,
-                    "ResourceNotFoundException",
-                    &format!("Requested resource not found: Table: {}", table_name),
-                );
-            }
+            None => return AwsResponse::error(400, "ResourceNotFoundException",
+                &format!("Requested resource not found: Table: {}", table_name)),
         };
-
-        let key_json = req.params.get("Key").cloned().unwrap_or(Value::Null);
-        let key_attrs: HashMap<String, Value> = key_json
-            .as_object()
-            .map(|m| m.iter().map(|(k, v)| (k.clone(), v.clone())).collect())
-            .unwrap_or_default();
-
-        let items = table.items.read();
-        for item in items.values() {
-            let mut matches = true;
-            for (attr_name, attr_val) in &key_attrs {
-                match item.attributes.get(attr_name) {
-                    Some(v) => {
-                        if v != attr_val {
-                            matches = false;
-                            break;
-                        }
-                    }
-                    None => {
-                        matches = false;
-                        break;
-                    }
-                }
-            }
-            if matches {
-                drop(items);
-                return AwsResponse::json(200, json!({}));
-            }
-        }
-
         AwsResponse::json(200, json!({}))
     }
 
     fn batch_get_item(&self, req: &AwsRequest) -> AwsResponse {
-        let request_items = req
-            .params
-            .get("RequestItems")
-            .cloned()
-            .unwrap_or(Value::Null);
+        let request_items = req.params.get("RequestItems").cloned().unwrap_or(Value::Null);
         let mut responses: HashMap<String, Vec<Value>> = HashMap::new();
 
         if let Some(obj) = request_items.as_object() {
@@ -552,12 +401,7 @@ impl DynamoDbHandler {
                     None => continue,
                 };
 
-                let keys = keys_json
-                    .get("Keys")
-                    .and_then(|v| v.as_array())
-                    .cloned()
-                    .unwrap_or_default();
-
+                let keys = keys_json.get("Keys").and_then(|v| v.as_array()).cloned().unwrap_or_default();
                 let items = table.items.read();
                 let mut found: Vec<Value> = Vec::new();
                 for key_json in &keys {
@@ -565,25 +409,9 @@ impl DynamoDbHandler {
                         .as_object()
                         .map(|m| m.iter().map(|(k, v)| (k.clone(), v.clone())).collect())
                         .unwrap_or_default();
-                    for item in items.values() {
-                        let mut matches = true;
-                        for (attr_name, attr_val) in &key_attrs {
-                            match item.attributes.get(attr_name) {
-                                Some(v) => {
-                                    if v != attr_val {
-                                        matches = false;
-                                        break;
-                                    }
-                                }
-                                None => {
-                                    matches = false;
-                                    break;
-                                }
-                            }
-                        }
-                        if matches {
-                            let item_json =
-                                serde_json::to_value(&item.attributes).unwrap_or(Value::Null);
+                    for (_key_str, item) in items.iter() {
+                        if key_attrs.iter().all(|(name, val)| item.attributes.get(name) == Some(val)) {
+                            let item_json = serde_json::to_value(&item.attributes).unwrap_or(Value::Null);
                             found.push(item_json);
                             break;
                         }
@@ -593,21 +421,11 @@ impl DynamoDbHandler {
             }
         }
 
-        AwsResponse::json(
-            200,
-            json!({
-                "Responses": responses,
-                "UnprocessedKeys": {}
-            }),
-        )
+        AwsResponse::json(200, json!({ "Responses": responses, "UnprocessedKeys": {} }))
     }
 
     fn batch_write_item(&self, req: &AwsRequest) -> AwsResponse {
-        let request_items = req
-            .params
-            .get("RequestItems")
-            .cloned()
-            .unwrap_or(Value::Null);
+        let request_items = req.params.get("RequestItems").cloned().unwrap_or(Value::Null);
 
         if let Some(obj) = request_items.as_object() {
             for (table_name, writes_json) in obj {
@@ -636,14 +454,9 @@ impl DynamoDbHandler {
                             .unwrap_or_default();
                         let key_to_delete = {
                             let items = table.items.read();
-                            items
-                                .iter()
-                                .find(|(_, item)| {
-                                    key_attrs
-                                        .iter()
-                                        .all(|(name, val)| item.attributes.get(name) == Some(val))
-                                })
-                                .map(|(k, _)| k.clone())
+                            items.iter().find(|(_, item)| {
+                                key_attrs.iter().all(|(name, val)| item.attributes.get(name) == Some(val))
+                            }).map(|(k, _)| k.clone())
                         };
                         if let Some(k) = key_to_delete {
                             table.items.write().remove(&k);
@@ -653,38 +466,18 @@ impl DynamoDbHandler {
             }
         }
 
-        AwsResponse::json(
-            200,
-            json!({
-                "UnprocessedItems": {}
-            }),
-        )
+        AwsResponse::json(200, json!({ "UnprocessedItems": {} }))
     }
 
     fn update_table(&self, req: &AwsRequest) -> AwsResponse {
-        let table_name = req
-            .params
-            .get("TableName")
-            .and_then(|v| v.as_str())
-            .unwrap_or("")
-            .to_string();
-
+        let table_name = req.params.get("TableName").and_then(|v| v.as_str()).unwrap_or("").to_string();
         let state = self.get_state(req.account, &req.region);
         match state.get_table(&table_name) {
-            Some(table) => AwsResponse::json(
-                200,
-                json!({
-                    "TableDescription": {
-                        "TableName": table_name,
-                        "TableStatus": *table.status.read()
-                    }
-                }),
-            ),
-            None => AwsResponse::error(
-                400,
-                "ResourceNotFoundException",
-                &format!("Requested resource not found: Table: {}", table_name),
-            ),
+            Some(table) => AwsResponse::json(200, json!({
+                "TableDescription": { "TableName": table_name, "TableStatus": *table.status.read() }
+            })),
+            None => AwsResponse::error(400, "ResourceNotFoundException",
+                &format!("Requested resource not found: Table: {}", table_name)),
         }
     }
 
@@ -701,13 +494,10 @@ impl DynamoDbHandler {
     }
 
     fn describe_limits(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::json(
-            200,
-            json!({
-                "MaxNumberOfTables": 100,
-                "MaxGlobalSecondaryIndexesPerTable": 100
-            }),
-        )
+        AwsResponse::json(200, json!({
+            "MaxNumberOfTables": 100,
+            "MaxGlobalSecondaryIndexesPerTable": 100
+        }))
     }
 }
 
@@ -737,20 +527,12 @@ mod tests {
     #[test]
     fn test_create_and_list_tables() {
         let handler = DynamoDbHandler::new();
-
-        let req = make_req(
-            "CreateTable",
-            json!({
-                "TableName": "test-table",
-                "KeySchema": [
-                    {"AttributeName": "id", "KeyType": "HASH"}
-                ],
-                "AttributeDefinitions": [
-                    {"AttributeName": "id", "AttributeType": "S"}
-                ],
-                "BillingMode": "PAY_PER_REQUEST"
-            }),
-        );
+        let req = make_req("CreateTable", json!({
+            "TableName": "test-table",
+            "KeySchema": [{"AttributeName": "id", "KeyType": "HASH"}],
+            "AttributeDefinitions": [{"AttributeName": "id", "AttributeType": "S"}],
+            "BillingMode": "PAY_PER_REQUEST"
+        }));
         let resp = handler.handle(req);
         assert_eq!(resp.status, 200);
 
@@ -763,37 +545,22 @@ mod tests {
     #[test]
     fn test_put_and_get_item() {
         let handler = DynamoDbHandler::new();
+        handler.handle(make_req("CreateTable", json!({
+            "TableName": "users",
+            "KeySchema": [{"AttributeName": "id", "KeyType": "HASH"}],
+            "AttributeDefinitions": [{"AttributeName": "id", "AttributeType": "S"}],
+            "BillingMode": "PAY_PER_REQUEST"
+        })));
 
-        handler.handle(make_req(
-            "CreateTable",
-            json!({
-                "TableName": "users",
-                "KeySchema": [{"AttributeName": "id", "KeyType": "HASH"}],
-                "AttributeDefinitions": [{"AttributeName": "id", "AttributeType": "S"}],
-                "BillingMode": "PAY_PER_REQUEST"
-            }),
-        ));
+        handler.handle(make_req("PutItem", json!({
+            "TableName": "users",
+            "Item": { "id": {"S": "u1"}, "name": {"S": "Alice"} }
+        })));
 
-        let req = make_req(
-            "PutItem",
-            json!({
-                "TableName": "users",
-                "Item": {
-                    "id": {"S": "u1"},
-                    "name": {"S": "Alice"}
-                }
-            }),
-        );
-        let resp = handler.handle(req);
-        assert_eq!(resp.status, 200);
-
-        let req = make_req(
-            "GetItem",
-            json!({
-                "TableName": "users",
-                "Key": {"id": {"S": "u1"}}
-            }),
-        );
+        let req = make_req("GetItem", json!({
+            "TableName": "users",
+            "Key": { "id": {"S": "u1"} }
+        }));
         let resp = handler.handle(req);
         assert_eq!(resp.status, 200);
         assert!(resp.body.contains("Alice"));
@@ -802,25 +569,16 @@ mod tests {
     #[test]
     fn test_scan() {
         let handler = DynamoDbHandler::new();
-
-        handler.handle(make_req(
-            "CreateTable",
-            json!({
-                "TableName": "items",
-                "KeySchema": [{"AttributeName": "pk", "KeyType": "HASH"}],
-                "AttributeDefinitions": [{"AttributeName": "pk", "AttributeType": "S"}],
-                "BillingMode": "PAY_PER_REQUEST"
-            }),
-        ));
-
-        handler.handle(make_req(
-            "PutItem",
-            json!({
-                "TableName": "items",
-                "Item": {"pk": {"S": "1"}, "data": {"S": "foo"}}
-            }),
-        ));
-
+        handler.handle(make_req("CreateTable", json!({
+            "TableName": "items",
+            "KeySchema": [{"AttributeName": "pk", "KeyType": "HASH"}],
+            "AttributeDefinitions": [{"AttributeName": "pk", "AttributeType": "S"}],
+            "BillingMode": "PAY_PER_REQUEST"
+        })));
+        handler.handle(make_req("PutItem", json!({
+            "TableName": "items",
+            "Item": { "pk": {"S": "1"}, "data": {"S": "foo"} }
+        })));
         let req = make_req("Scan", json!({"TableName": "items"}));
         let resp = handler.handle(req);
         assert_eq!(resp.status, 200);

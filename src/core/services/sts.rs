@@ -99,6 +99,10 @@ mod tests {
             body: bytes::Bytes::new(),
             region: "us-east-1".to_string(),
             account: 123456789012,
+            method: "POST".to_string(),
+            path: "/".to_string(),
+            query_string: String::new(),
+            headers: HashMap::new(),
         };
 
         let resp = handle_get_caller_identity(&req).unwrap();
@@ -128,6 +132,10 @@ mod tests {
             body: bytes::Bytes::new(),
             region: "us-east-1".to_string(),
             account: 123456789012,
+            method: "POST".to_string(),
+            path: "/".to_string(),
+            query_string: String::new(),
+            headers: HashMap::new(),
         };
 
         let resp = handle_get_access_key_info(&req).unwrap();

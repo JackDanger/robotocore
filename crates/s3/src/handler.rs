@@ -8,6 +8,16 @@ use crate::models::{Bucket, MultipartUpload, S3State};
 use crate::protocol::{AwsRequest, AwsResponse};
 use crate::xml;
 
+/// HTTP method enum for S3 operation detection.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Method_ {
+    Get,
+    Put,
+    Post,
+    Delete,
+    Head,
+}
+
 /// The S3 service handler.
 pub struct S3Handler {
     /// Per (account, region) state.
@@ -112,11 +122,9 @@ impl S3Handler {
 
         let state = self.get_state(req.account, &req.region);
         if state.get_bucket(&bucket_name).is_some() {
-            return AwsResponse::error(
-                409,
-                "BucketAlreadyOwnedByYou",
-                "A bucket with the same name already exists, owned by you",
-            );
+            // Match moto behavior: return success for duplicate bucket creation
+            let body = xml::create_bucket_result(&bucket_name);
+            return AwsResponse::xml(200, body);
         }
 
         let bucket = Arc::new(Bucket::new(bucket_name.clone(), req.region.clone()));
@@ -384,9 +392,13 @@ impl S3Handler {
             }
         };
 
-        let _headers =
+        let headers =
             xml::head_object_headers(obj.size, &obj.etag, &obj.content_type, obj.last_modified);
-        AwsResponse::no_content(200)
+        AwsResponse {
+            status: 200,
+            headers,
+            body: vec![],
+        }
     }
 
     fn delete_object(&self, req: &AwsRequest) -> AwsResponse {
@@ -479,6 +491,12 @@ impl S3Handler {
             &contents,
             &common_prefixes,
         );
+        // Add KeyCount and EncodingType
+        let body = body
+            .replace("</ListBucketResult>", &format!(
+                "<KeyCount>{}</KeyCount><EncodingType>url</EncodingType></ListBucketResult>",
+                contents.len()
+            ));
         AwsResponse::xml(200, body)
     }
 
@@ -1122,6 +1140,86 @@ impl S3Handler {
 
     fn delete_bucket_website(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::no_content(204)
+    }
+
+    // ---- Operation detection ----
+
+    /// Detect the S3 operation from HTTP method, path, and query params.
+    /// Mirrors the Python `_detect_rest_operation` logic.
+    pub fn detect_s3_operation(method: &str, path: &str, query_params: &std::collections::HashMap<String, String>) -> Option<String> {
+        let parts: Vec<&str> = path.trim_start_matches('/').splitn(2, '/').collect();
+        let has_bucket = parts.first().copied().filter(|s| !s.is_empty()).is_some();
+        let has_key = parts.len() > 1;
+
+        // Sub-resource query params
+        let query_ops: &[(&str, &[(Method_, &str)])] = &[
+            ("acl", &[(Method_::Get, "GetBucketAcl"), (Method_::Put, "PutBucketAcl"), (Method_::Delete, "DeleteBucketAcl")]),
+            ("versioning", &[(Method_::Get, "GetBucketVersioning"), (Method_::Put, "PutBucketVersioning")]),
+            ("tagging", &[(Method_::Get, "GetBucketTagging"), (Method_::Put, "PutBucketTagging"), (Method_::Delete, "DeleteBucketTagging")]),
+            ("lifecycle", &[(Method_::Get, "GetBucketLifecycle"), (Method_::Put, "PutBucketLifecycle"), (Method_::Delete, "DeleteBucketLifecycle")]),
+            ("cors", &[(Method_::Get, "GetBucketCors"), (Method_::Put, "PutBucketCors"), (Method_::Delete, "DeleteBucketCors")]),
+            ("policy", &[(Method_::Get, "GetBucketPolicy"), (Method_::Put, "PutBucketPolicy"), (Method_::Delete, "DeleteBucketPolicy")]),
+            ("location", &[(Method_::Get, "GetBucketLocation")]),
+            ("website", &[(Method_::Get, "GetBucketWebsite"), (Method_::Put, "PutBucketWebsite"), (Method_::Delete, "DeleteBucketWebsite")]),
+            ("delete", &[(Method_::Post, "DeleteObjects")]),
+            ("uploads", &[(Method_::Post, "CreateMultipartUpload")]),
+            ("uploadId", &[(Method_::Put, "UploadPart"), (Method_::Post, "CompleteMultipartUpload"), (Method_::Delete, "AbortMultipartUpload")]),
+            ("restore", &[(Method_::Post, "RestoreObject")]),
+        ];
+
+        let method_ = match method {
+            "GET" => Method_::Get,
+            "PUT" => Method_::Put,
+            "POST" => Method_::Post,
+            "DELETE" => Method_::Delete,
+            "HEAD" => Method_::Head,
+            _ => Method_::Get,
+        };
+
+        for (param, ops) in query_ops {
+            if query_params.contains_key(*param) {
+                for (m, op) in *ops {
+                    if *m == method_ {
+                        return Some(op.to_string());
+                    }
+                }
+            }
+        }
+
+        // Root path
+        if !has_bucket {
+            return match method {
+                "GET" => Some("ListBuckets".to_string()),
+                _ => None,
+            };
+        }
+
+        // Object-level
+        if has_key {
+            return match method {
+                "GET" => Some("GetObject".to_string()),
+                "PUT" => Some("PutObject".to_string()),
+                "DELETE" => Some("DeleteObject".to_string()),
+                "HEAD" => Some("HeadObject".to_string()),
+                "POST" => Some("PutObject".to_string()),
+                _ => None,
+            };
+        }
+
+        // Bucket-level
+        match method {
+            "GET" => {
+                if query_params.get("list-type").map(|s| s.as_str()) == Some("2") {
+                    Some("ListObjectsV2".to_string())
+                } else {
+                    Some("ListObjects".to_string())
+                }
+            }
+            "PUT" => Some("CreateBucket".to_string()),
+            "DELETE" => Some("DeleteBucket".to_string()),
+            "HEAD" => Some("HeadBucket".to_string()),
+            _ => None,
+        }
     }
 
     // ---- Helpers ----
