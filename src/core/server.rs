@@ -293,6 +293,49 @@ impl ServiceHandler for SnsServiceHandler {
     }
 }
 
+/// Adapter that bridges the core protocol to the native Secrets Manager service crate.
+pub struct SmServiceHandler {
+    inner: secretsmanager::DefaultSecretsManagerHandler,
+}
+
+impl SmServiceHandler {
+    fn to_sm_request(req: &ParsedRequest) -> secretsmanager::protocol::AwsRequest {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        secretsmanager::protocol::AwsRequest {
+            service: req.service.clone(),
+            operation: req.operation.clone(),
+            account: req.account,
+            region: req.region.clone(),
+            params,
+            body: req.body.clone(),
+        }
+    }
+
+    fn to_parsed_response(resp: secretsmanager::protocol::AwsResponse) -> ParsedResponse {
+        let mut headers = std::collections::HashMap::new();
+        for (k, v) in resp.headers {
+            headers.insert(k, v);
+        }
+        ParsedResponse {
+            status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            headers,
+            body: serde_json::Value::Null,
+            raw: Some(resp.body),
+        }
+    }
+}
+
+impl ServiceHandler for SmServiceHandler {
+    fn handle_sync(
+        &self,
+        req: &ParsedRequest,
+    ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let sm_req = Self::to_sm_request(req);
+        let resp = self.inner.handle(sm_req);
+        Ok(Self::to_parsed_response(resp))
+    }
+}
+
 /// Registry of service handlers.
 pub struct ServiceRegistry {
     handlers: HashMap<String, Arc<dyn ServiceHandler>>,
@@ -338,6 +381,14 @@ impl ServiceRegistry {
             "sns".to_string(),
             Arc::new(SnsServiceHandler {
                 inner: sns::DefaultSnsHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native Secrets Manager handler
+        handlers.insert(
+            "secretsmanager".to_string(),
+            Arc::new(SmServiceHandler {
+                inner: secretsmanager::DefaultSecretsManagerHandler::new(),
             }) as Arc<dyn ServiceHandler>,
         );
 
