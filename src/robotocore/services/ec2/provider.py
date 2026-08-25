@@ -7,8 +7,9 @@ Intercepts operations that Moto doesn't implement or has bugs in:
 - EnableFastSnapshotRestores / DisableFastSnapshotRestores / DescribeFastSnapshotRestores:
   Fast Snapshot Restore state machine modeling
 - CreateVolume: VolumeInitializationRate validation and volume hydration state tracking
-- RunInstances: Optionally launches guest containers when guest execution is enabled
-- TerminateInstances: Optionally cleans up guest containers
+- RunInstances: Capacity check gate + optional guest container execution
+- RequestSpotInstances: Capacity check gate
+- TerminateInstances: Capacity release + optional guest container cleanup
 
 Also provides Packer-compatible virtual instance transport for opt-in
 container-backed instances with SSH/SSM connectivity.
@@ -30,6 +31,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 
 from robotocore.providers.moto_bridge import forward_to_moto
+from robotocore.services.ec2.capacity import get_capacity_store
 from robotocore.services.ec2.guest.executor import (
     get_guest_executor,
     is_guest_executor_enabled,
@@ -38,7 +40,6 @@ from robotocore.services.ec2.guest.executor import (
 logger = logging.getLogger(__name__)
 
 # Optional packer transport - only loaded when enabled
-logger = logging.getLogger(__name__)
 _packer_transport_available = False
 try:
     from .packer.ami_builder import get_ami_builder
@@ -90,6 +91,27 @@ PACKER_TRANSPORT_ENABLED = os.environ.get("ROBOTOCORE_PACKER_TRANSPORT", "").low
 # Track instances with active transport: {instance_id: transport}
 _instance_transports: dict[str, Any] = {}
 _instance_transports_lock = threading.Lock()
+
+# State handler registration flag
+_default_state_handler_registered = False
+
+
+def register_state_handler(manager=None) -> None:
+    """Register EC2 native state save/load hooks with a state manager."""
+    global _default_state_handler_registered
+
+    is_default_manager = manager is None
+    if manager is None:
+        if _default_state_handler_registered:
+            return
+        from robotocore.state.manager import get_state_manager
+
+        manager = get_state_manager()
+
+    store = get_capacity_store()
+    manager.register_native_handler("ec2_capacity", store.export_state, store.load_state)
+    if is_default_manager:
+        _default_state_handler_registered = True
 
 
 def _utc_timestamp() -> str:
@@ -143,6 +165,9 @@ def _check_chaos_injection(service: str, operation: str, region: str) -> dict | 
 
 async def handle_ec2_request(request: Request, region: str, account_id: str) -> Response:
     """Handle EC2 requests, intercepting unimplemented operations."""
+    # Ensure state handler is registered
+    register_state_handler()
+
     body = await request.body()
     params = parse_qs(body.decode("utf-8")) if body else {}
     # Also check query params
@@ -169,13 +194,17 @@ async def handle_ec2_request(request: Request, region: str, account_id: str) -> 
             chaos_rule.status_code,
         )
 
-    # Handle RunInstances with guest execution
+    # Handle RunInstances with capacity check and guest execution
     if action == "RunInstances":
         return await _run_instances(request, params, region, account_id)
 
     # Handle TerminateInstances with guest cleanup
     if action == "TerminateInstances":
         return await _terminate_instances(request, params, region, account_id)
+
+    # Handle RequestSpotInstances with capacity check
+    if action == "RequestSpotInstances":
+        return await _request_spot_instances(request, params, region, account_id)
 
     handler = _ACTION_MAP.get(action)
     if handler:
@@ -212,6 +241,16 @@ async def handle_ec2_request(request: Request, region: str, account_id: str) -> 
 def _get_param(params: dict, key: str) -> str:
     vals = params.get(key, [])
     return vals[0] if vals else ""
+
+
+def _get_int_param(params: dict, key: str, default: int = 0) -> int:
+    val = _get_param(params, key)
+    if not val:
+        return default
+    try:
+        return int(val)
+    except ValueError:
+        return default
 
 
 def _parse_tag_specifications(params: dict, resource_type: str) -> dict[str, str]:
@@ -1043,34 +1082,146 @@ def _create_image(params: dict, region: str, account_id: str) -> Response:
     return Response(content=xml, status_code=200, media_type="text/xml")
 
 
-_ACTION_MAP = {
-    "CreatePlacementGroup": _create_placement_group,
-    "DescribePlacementGroups": _describe_placement_groups,
-    "DeletePlacementGroup": _delete_placement_group,
-    "DetachVolume": _detach_volume,
-    "DeleteVpcEndpoints": _delete_vpc_endpoints,
-    "EnableFastSnapshotRestores": _enable_fast_snapshot_restores,
-    "DisableFastSnapshotRestores": _disable_fast_snapshot_restores,
-    "DescribeFastSnapshotRestores": _describe_fast_snapshot_restores,
-    "CreateVolume": _create_volume,
-    "CreateImage": _create_image,
-}
-
-
 async def _run_instances(request: Request, params: dict, region: str, account_id: str) -> Response:
-    """RunInstances - forward to Moto, then optionally launch guest container."""
-    # First, let Moto create the instances
-    response = await forward_to_moto(request, "ec2", account_id=account_id)
+    """RunInstances - capacity check, forward to Moto, then guest container."""
+    from moto.backends import get_backend  # noqa: I001
+
+    instance_type = _get_param(params, "InstanceType") or "m1.small"
+    min_count = _get_int_param(params, "MinCount", 1)
+    max_count = _get_int_param(params, "MaxCount", min_count)
+    placement_az = _get_param(params, "Placement.AvailabilityZone")
+    subnet_id = _get_param(params, "SubnetId")
+
+    # Determine AZ
+    az = placement_az
+    if not az and subnet_id:
+        try:
+            backend = get_backend("ec2")[account_id][region]
+            subnet = backend.get_subnet(subnet_id)
+            az = subnet.availability_zone
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Could not get AZ from subnet: %s", exc)
+
+    if not az:
+        az = f"{region}a"
+
+    # Check for market options (spot)
+    market_type = _get_param(params, "InstanceMarketOptions.MarketType")
+    is_spot = market_type == "spot"
+
+    # Check capacity only if an explicit profile exists
+    store = get_capacity_store()
+    profile = store.get_profile(account_id, region, instance_type, az)
+    capacity_consumed = 0
+
+    # Always check chaos override (even without explicit profile)
+    chaos_override = store.get_chaos_override()
+    if chaos_override:
+        error_code = chaos_override.get("error_code")
+        if error_code == "InsufficientInstanceCapacity":
+            return _ec2_error(
+                "InsufficientInstanceCapacity",
+                f"We currently do not have sufficient {instance_type} capacity "
+                f"in the Availability Zone you requested ({az}). "
+                f"Our system will be working on provisioning additional capacity. "
+                f"You can currently get {instance_type} capacity by not specifying "
+                f"an Availability Zone in your request or choosing "
+                f"{region}b, {region}c.",
+                status_code=500,
+            )
+        elif error_code == "Unsupported":
+            return _ec2_error(
+                "Unsupported",
+                "The requested configuration is currently not supported. "
+                "Please check the documentation for supported configurations.",
+                status_code=400,
+            )
+
+    if profile is not None:
+        # An explicit capacity profile exists - enforce it
+        if not profile.enabled:
+            return _ec2_error(
+                "Unsupported",
+                "The requested configuration is currently not supported. "
+                "Please check the documentation for supported configurations.",
+                status_code=400,
+            )
+
+        if is_spot:
+            spot_available, _ = store.check_spot_capacity(account_id, region, instance_type, az)
+            if not spot_available:
+                return _ec2_error(
+                    "InsufficientInstanceCapacity",
+                    f"We currently do not have sufficient {instance_type} capacity "
+                    f"in the Availability Zone you requested ({az}). "
+                    f"Our system will be working on provisioning additional capacity. "
+                    f"You can currently get {instance_type} capacity by not specifying "
+                    f"an Availability Zone in your request or choosing "
+                    f"{region}b, {region}c.",
+                    status_code=500,
+                )
+
+        # Check on-demand capacity
+        success, error_code = store.check_capacity(account_id, region, instance_type, az, max_count)
+        if not success:
+            if error_code == "InsufficientInstanceCapacity":
+                return _ec2_error(
+                    "InsufficientInstanceCapacity",
+                    f"We currently do not have sufficient {instance_type} capacity "
+                    f"in the Availability Zone you requested ({az}). "
+                    f"Our system will be working on provisioning additional capacity. "
+                    f"You can currently get {instance_type} capacity by not specifying "
+                    f"an Availability Zone in your request or choosing "
+                    f"{region}b, {region}c.",
+                    status_code=500,
+                )
+            elif error_code == "Unsupported":
+                return _ec2_error(
+                    "Unsupported",
+                    "The requested configuration is currently not supported. "
+                    "Please check the documentation for supported configurations.",
+                    status_code=400,
+                )
+
+        # Consume capacity
+        if not store.consume_capacity(account_id, region, instance_type, az, max_count):
+            return _ec2_error(
+                "InsufficientInstanceCapacity",
+                f"We currently do not have sufficient {instance_type} capacity "
+                f"in the Availability Zone you requested ({az}). "
+                f"Our system will be working on provisioning additional capacity. "
+                f"You can currently get {instance_type} capacity by not specifying "
+                f"an Availability Zone in your request or choosing "
+                f"{region}b, {region}c.",
+                status_code=500,
+            )
+        capacity_consumed = max_count
+
+    # Forward to Moto for actual instance creation
+    try:
+        response = await forward_to_moto(request, "ec2", account_id=account_id)
+    except Exception as e:  # noqa: BLE001
+        logger.exception("Error in RunInstances")
+        # Release capacity on failure
+        if capacity_consumed > 0:
+            store.release_capacity(account_id, region, instance_type, az, capacity_consumed)
+        return _ec2_error(
+            "InternalError",
+            f"An internal error has occurred: {e}",
+            status_code=500,
+        )
 
     # If guest execution is disabled, just return the response
     if not is_guest_executor_enabled():
         return response
 
-    # If the response is not successful, return it as-is
+    # If the response is not successful, release capacity and return
     if response.status_code != 200:
+        if capacity_consumed > 0:
+            store.release_capacity(account_id, region, instance_type, az, capacity_consumed)
         return response
 
-    # Parse the response to get instance IDs
+    # Parse the response to get instance IDs and launch guest containers
     try:
         import xml.etree.ElementTree as ET
 
@@ -1081,7 +1232,6 @@ async def _run_instances(request: Request, params: dict, region: str, account_id
         root = ET.fromstring(body)
 
         # Find instance IDs by iterating through the XML tree
-        # The structure is: RunInstancesResponse > instancesSet > item > instanceId
         instances = []
         for child in root:
             if "instancesSet" in child.tag:
@@ -1097,7 +1247,7 @@ async def _run_instances(request: Request, params: dict, region: str, account_id
 
         # Extract parameters from the request
         user_data = _get_param(params, "UserData")
-        instance_type = _get_param(params, "InstanceType") or "t2.micro"
+        instance_type_param = _get_param(params, "InstanceType") or "t2.micro"
 
         # Parse block device mappings
         block_device_mappings = []
@@ -1137,18 +1287,16 @@ async def _run_instances(request: Request, params: dict, region: str, account_id
         for inst_elem in instances:
             instance_id = inst_elem.text if hasattr(inst_elem, "text") else inst_elem
             if instance_id:
-                logger.debug(f"Launching guest container for instance {instance_id}")
+                logger.debug("Launching guest container for instance %s", instance_id)
 
                 # Run in background thread to not block response
-                import threading
-
                 def launch():
                     executor.launch_instance(
                         instance_id=instance_id,
                         account_id=account_id,
                         region=region,
                         user_data=user_data,
-                        instance_type=instance_type,
+                        instance_type=instance_type_param,
                         block_device_mappings=block_device_mappings,
                         iam_instance_profile=iam_instance_profile,
                     )
@@ -1156,7 +1304,7 @@ async def _run_instances(request: Request, params: dict, region: str, account_id
                 threading.Thread(target=launch, daemon=True).start()
 
     except Exception as e:
-        logger.warning(f"Failed to launch guest container: {e}")
+        logger.warning("Failed to launch guest container: %s", e)
 
     return response
 
@@ -1164,15 +1312,10 @@ async def _run_instances(request: Request, params: dict, region: str, account_id
 async def _terminate_instances(
     request: Request, params: dict, region: str, account_id: str
 ) -> Response:
-    """TerminateInstances - forward to Moto, then clean up guest containers."""
-    # First, let Moto terminate the instances
-    response = await forward_to_moto(request, "ec2", account_id=account_id)
+    """TerminateInstances - forward to Moto, release capacity, clean up guest containers."""
+    from moto.backends import get_backend  # noqa: I001
 
-    # If guest execution is disabled, just return the response
-    if not is_guest_executor_enabled():
-        return response
-
-    # Parse the request to get instance IDs
+    # Parse the request to get instance IDs before termination
     instance_ids = []
     i = 1
     while True:
@@ -1182,10 +1325,171 @@ async def _terminate_instances(
         instance_ids.append(inst_id)
         i += 1
 
+    # Look up instance details before termination (to get type/AZ for capacity release)
+    backend = get_backend("ec2")[account_id][region]
+    instances_to_release = []
+    for inst_id in instance_ids:
+        try:
+            instance = backend.get_instance(inst_id)
+            # Only release capacity if instance was not already terminated
+            if instance.state != "terminated":
+                instances_to_release.append(
+                    {
+                        "id": inst_id,
+                        "type": instance.instance_type,
+                        "az": instance._placement.zone,
+                    }
+                )
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Could not get instance %s for capacity release: %s", inst_id, exc)
+
+    # Forward to Moto to terminate the instances
+    response = await forward_to_moto(request, "ec2", account_id=account_id)
+
+    # Release capacity for terminated instances
+    store = get_capacity_store()
+    for inst in instances_to_release:
+        try:
+            # Only release if an explicit profile exists
+            profile = store.get_profile(account_id, region, inst["type"], inst["az"])
+            if profile is not None:
+                store.release_capacity(account_id, region, inst["type"], inst["az"], 1)
+                logger.debug(
+                    "Released capacity for terminated instance %s (%s/%s)",
+                    inst["id"],
+                    inst["type"],
+                    inst["az"],
+                )
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Failed to release capacity for instance %s: %s", inst["id"], exc)
+
+    # If guest execution is disabled, just return the response
+    if not is_guest_executor_enabled():
+        return response
+
     # Clean up guest containers
     executor = get_guest_executor()
-    for instance_id in instance_ids:
-        logger.info(f"Terminating guest container for instance {instance_id}")
-        executor.terminate_instance(instance_id)
+    for inst_id in instance_ids:
+        logger.info("Terminating guest container for instance %s", inst_id)
+        executor.terminate_instance(inst_id)
 
     return response
+
+
+async def _request_spot_instances(
+    request: Request, params: dict, region: str, account_id: str
+) -> Response:
+    """RequestSpotInstances - capacity check gate, then forward to Moto."""
+    from moto.backends import get_backend  # noqa: I001
+
+    instance_type = _get_param(params, "LaunchSpecification.InstanceType") or "m1.small"
+    count = _get_int_param(params, "InstanceCount", 1)
+    placement_az = _get_param(params, "LaunchSpecification.Placement.AvailabilityZone")
+    subnet_id = _get_param(params, "LaunchSpecification.SubnetId")
+
+    # Determine AZ
+    az = placement_az
+    if not az and subnet_id:
+        try:
+            backend = get_backend("ec2")[account_id][region]
+            subnet = backend.get_subnet(subnet_id)
+            az = subnet.availability_zone
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Could not get AZ from subnet: %s", exc)
+
+    if not az:
+        az = f"{region}a"
+
+    store = get_capacity_store()
+    profile = store.get_profile(account_id, region, instance_type, az)
+    capacity_consumed = 0
+
+    # Only enforce capacity if an explicit profile exists
+    if profile is not None:
+        if not profile.enabled:
+            return _build_spot_capacity_unavailable_response(params, count)
+
+        # Check chaos override
+        chaos_override = store.get_chaos_override()
+        if chaos_override:
+            error_code = chaos_override.get("error_code")
+            if error_code == "InsufficientInstanceCapacity":
+                return _build_spot_capacity_unavailable_response(params, count)
+
+        # Check spot capacity
+        spot_available, _ = store.check_spot_capacity(account_id, region, instance_type, az)
+        if not spot_available:
+            return _build_spot_capacity_unavailable_response(params, count)
+
+        # Consume capacity
+        if not store.consume_capacity(account_id, region, instance_type, az, count):
+            return _build_spot_capacity_unavailable_response(params, count)
+        capacity_consumed = count
+
+    # Forward to Moto for actual spot request creation
+    try:
+        return await forward_to_moto(request, "ec2", account_id=account_id)
+    except Exception as e:  # noqa: BLE001
+        logger.exception("Error in RequestSpotInstances")
+        # Release capacity on failure
+        if capacity_consumed > 0:
+            store.release_capacity(account_id, region, instance_type, az, capacity_consumed)
+        return _ec2_error(
+            "InternalError",
+            f"An internal error has occurred: {e}",
+            status_code=500,
+        )
+
+
+def _build_spot_capacity_unavailable_response(params: dict, count: int) -> Response:
+    """Build a spot capacity unavailable response."""
+    spot_price = _get_param(params, "SpotPrice")
+    image_id = _get_param(params, "LaunchSpecification.ImageId")
+    instance_type = _get_param(params, "LaunchSpecification.InstanceType") or "m1.small"
+
+    requests_xml = ""
+    for _ in range(count):
+        request_id = f"sir-{uuid.uuid4().hex[:17]}"
+        requests_xml += f"""        <item>
+            <spotInstanceRequestId>{request_id}</spotInstanceRequestId>
+            <spotPrice>{spot_price or "0.05"}</spotPrice>
+            <type>one-time</type>
+            <state>open</state>
+            <status>
+                <code>capacity-not-available</code>
+                <updateTime>2024-01-01T00:00:00.000Z</updateTime>
+                <message>There is no Spot capacity available that matches your request.</message>
+            </status>
+            <instanceId/>
+            <availabilityZoneGroup/>
+            <launchSpecification>
+                <imageId>{image_id or "ami-12345678"}</imageId>
+                <instanceType>{instance_type}</instanceType>
+            </launchSpecification>
+            <launchGroup/>
+            <createTime>2024-01-01T00:00:00.000Z</createTime>
+            <productDescription>Linux/UNIX</productDescription>
+        </item>
+"""
+
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<RequestSpotInstancesResponse xmlns="http://ec2.amazonaws.com/doc/2016-11-15/">
+    <requestId>{uuid.uuid4()}</requestId>
+    <spotInstanceRequestSet>
+{requests_xml}    </spotInstanceRequestSet>
+</RequestSpotInstancesResponse>"""
+    return Response(content=xml, status_code=200, media_type="text/xml")
+
+
+_ACTION_MAP = {
+    "CreatePlacementGroup": _create_placement_group,
+    "DescribePlacementGroups": _describe_placement_groups,
+    "DeletePlacementGroup": _delete_placement_group,
+    "DetachVolume": _detach_volume,
+    "DeleteVpcEndpoints": _delete_vpc_endpoints,
+    "EnableFastSnapshotRestores": _enable_fast_snapshot_restores,
+    "DisableFastSnapshotRestores": _disable_fast_snapshot_restores,
+    "DescribeFastSnapshotRestores": _describe_fast_snapshot_restores,
+    "CreateVolume": _create_volume,
+    "CreateImage": _create_image,
+}

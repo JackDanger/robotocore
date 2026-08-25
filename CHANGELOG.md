@@ -10,6 +10,31 @@ maintenance policy is [`CLAUDE.md`](CLAUDE.md) under *Changelog discipline*.
 
 ### Added
 
+#### EC2 Capacity Profiles - Deterministic capacity management
+
+Configurable EC2 capacity model for testing launch workflows, spot fallback, and `InsufficientInstanceCapacity` handling.
+
+- New admin endpoints under `/_robotocore/ec2/capacity`:
+  - `GET /_robotocore/ec2/capacity` — List capacity profiles
+  - `POST /_robotocore/ec2/capacity` — Set capacity profile
+  - `DELETE /_robotocore/ec2/capacity` — Delete capacity profile
+  - `POST /_robotocore/ec2/capacity/reset` — Reset all capacity profiles
+  - `POST /_robotocore/ec2/capacity/chaos` — Set chaos override for capacity
+- Capacity model per (instance-type, availability-zone):
+  - `total_capacity` — Maximum instances that can be launched
+  - `available_capacity` — Current available capacity
+  - `spot_available` — Whether spot instances are available
+  - `spot_price` — Spot price when available
+  - `enabled` — Whether the offering exists (for unsupported errors)
+- `RunInstances` now checks capacity and returns proper AWS error codes:
+  - `InsufficientInstanceCapacity` (HTTP 500) when capacity exhausted
+  - `Unsupported` (HTTP 400) for disabled offerings
+- `RequestSpotInstances` with deterministic spot fulfillment:
+  - Returns `capacity-not-available` status when spot unavailable
+  - Returns `fulfilled` status with instance ID when spot available
+- Chaos integration: Capacity rules can be overridden via chaos endpoint
+- State snapshot integration: Capacity profiles round-trip with save/load
+
 - **EC2 Fast Snapshot Restore (FSR) support**: Implemented `EnableFastSnapshotRestores`,
   `DisableFastSnapshotRestores`, and `DescribeFastSnapshotRestores` operations with
   proper state machine modeling (`enabling` → `optimizing` → `enabled`; `disabling` → `disabled`).
@@ -61,16 +86,17 @@ New opt-in feature that executes EC2 instance user-data (cloud-init scripts) ins
 - Containers are torn down when instances are terminated
 - Thread-safe execution tracking
 
-- **Packer-compatible virtual instance transport** (`src/robotocore/services/ec2/packer/`):
-  - New opt-in container-backed EC2 instance transport for Packer's `amazon-ebs` builder
-  - SSH and SSM transport support for provisioner connectivity
-  - File upload with proper destination path semantics (file vs directory validation)
-  - Shell provisioner execution with environment variables and working directory
-  - AMI creation with identity clearing (machine-id, hostname, SSH host keys)
-  - Filesystem state persistence to `/opt/ami-state` for AMI contents
-  - Fresh identity for instances launched from AMIs (covers "identity cleared too early/late" failure mode)
-  - Enable with `ROBOTOCORE_PACKER_TRANSPORT=1` environment variable
-  - **Out of scope**: GPU/driver fidelity remains a real-AWS test
+#### Packer-compatible virtual instance transport
+
+New opt-in container-backed EC2 instance transport for Packer's `amazon-ebs` builder.
+
+- SSH and SSM transport support for provisioner connectivity
+- File upload with proper destination path semantics (file vs directory validation)
+- Shell provisioner execution with environment variables and working directory
+- AMI creation with identity clearing (machine-id, hostname, SSH host keys)
+- Filesystem state persistence to `/opt/ami-state` for AMI contents
+- Fresh identity for instances launched from AMIs
+- Enable with `ROBOTOCORE_PACKER_TRANSPORT=1` environment variable
 
 ## 2026.5.13 (2026-05-13)
 
