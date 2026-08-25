@@ -250,6 +250,49 @@ impl ServiceHandler for DynamoDbServiceHandler {
     }
 }
 
+/// Adapter that bridges the core protocol to the native SNS service crate.
+pub struct SnsServiceHandler {
+    inner: sns::DefaultSnsHandler,
+}
+
+impl SnsServiceHandler {
+    fn to_sns_request(req: &ParsedRequest) -> sns::protocol::AwsRequest {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        sns::protocol::AwsRequest {
+            service: req.service.clone(),
+            operation: req.operation.clone(),
+            account: req.account,
+            region: req.region.clone(),
+            params,
+            body: req.body.clone(),
+        }
+    }
+
+    fn to_parsed_response(resp: sns::protocol::AwsResponse) -> ParsedResponse {
+        let mut headers = std::collections::HashMap::new();
+        for (k, v) in resp.headers {
+            headers.insert(k, v);
+        }
+        ParsedResponse {
+            status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            headers,
+            body: serde_json::Value::Null,
+            raw: Some(resp.body),
+        }
+    }
+}
+
+impl ServiceHandler for SnsServiceHandler {
+    fn handle_sync(
+        &self,
+        req: &ParsedRequest,
+    ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let sns_req = Self::to_sns_request(req);
+        let resp = self.inner.handle(sns_req);
+        Ok(Self::to_parsed_response(resp))
+    }
+}
+
 /// Registry of service handlers.
 pub struct ServiceRegistry {
     handlers: HashMap<String, Arc<dyn ServiceHandler>>,
@@ -287,6 +330,14 @@ impl ServiceRegistry {
             "dynamodb".to_string(),
             Arc::new(DynamoDbServiceHandler {
                 inner: dynamodb::DefaultDynamoDbHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native SNS handler
+        handlers.insert(
+            "sns".to_string(),
+            Arc::new(SnsServiceHandler {
+                inner: sns::DefaultSnsHandler::new(),
             }) as Arc<dyn ServiceHandler>,
         );
 
