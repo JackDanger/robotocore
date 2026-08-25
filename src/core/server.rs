@@ -398,6 +398,38 @@ impl ServiceHandler for SsmServiceHandler {
     }
 }
 
+/// Adapter for IAM service crate.
+pub struct IamServiceHandler {
+    inner: iam::DefaultIamHandler,
+}
+
+impl ServiceHandler for IamServiceHandler {
+    fn handle_sync(
+        &self,
+        req: &ParsedRequest,
+    ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        let iam_req = iam::protocol::AwsRequest {
+            service: req.service.clone(),
+            operation: req.operation.clone(),
+            account: req.account,
+            region: req.region.clone(),
+            params,
+            body: req.body.clone(),
+            query: req.query_string.clone(),
+        };
+        let resp = self.inner.handle(iam_req);
+        let mut headers = std::collections::HashMap::new();
+        for (k, v) in resp.headers { headers.insert(k, v); }
+        Ok(ParsedResponse {
+            status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            headers,
+            body: serde_json::Value::Null,
+            raw: Some(resp.body),
+        })
+    }
+}
+
 /// Registry of service handlers.
 pub struct ServiceRegistry {
     handlers: HashMap<String, Arc<dyn ServiceHandler>>,
@@ -467,6 +499,14 @@ impl ServiceRegistry {
             "ssm".to_string(),
             Arc::new(SsmServiceHandler {
                 inner: ssm::DefaultSsmHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native IAM handler
+        handlers.insert(
+            "iam".to_string(),
+            Arc::new(IamServiceHandler {
+                inner: iam::DefaultIamHandler::new(),
             }) as Arc<dyn ServiceHandler>,
         );
 
