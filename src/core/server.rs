@@ -336,6 +336,68 @@ impl ServiceHandler for SmServiceHandler {
     }
 }
 
+/// Adapter for KMS service crate.
+pub struct KmsServiceHandler {
+    inner: kms::DefaultKmsHandler,
+}
+
+impl ServiceHandler for KmsServiceHandler {
+    fn handle_sync(
+        &self,
+        req: &ParsedRequest,
+    ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        let kms_req = kms::protocol::AwsRequest {
+            service: req.service.clone(),
+            operation: req.operation.clone(),
+            account: req.account,
+            region: req.region.clone(),
+            params,
+            body: req.body.clone(),
+        };
+        let resp = self.inner.handle(kms_req);
+        let mut headers = std::collections::HashMap::new();
+        for (k, v) in resp.headers { headers.insert(k, v); }
+        Ok(ParsedResponse {
+            status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            headers,
+            body: serde_json::Value::Null,
+            raw: Some(resp.body),
+        })
+    }
+}
+
+/// Adapter for SSM service crate.
+pub struct SsmServiceHandler {
+    inner: ssm::DefaultSsmHandler,
+}
+
+impl ServiceHandler for SsmServiceHandler {
+    fn handle_sync(
+        &self,
+        req: &ParsedRequest,
+    ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        let ssm_req = ssm::protocol::AwsRequest {
+            service: req.service.clone(),
+            operation: req.operation.clone(),
+            account: req.account,
+            region: req.region.clone(),
+            params,
+            body: req.body.clone(),
+        };
+        let resp = self.inner.handle(ssm_req);
+        let mut headers = std::collections::HashMap::new();
+        for (k, v) in resp.headers { headers.insert(k, v); }
+        Ok(ParsedResponse {
+            status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            headers,
+            body: serde_json::Value::Null,
+            raw: Some(resp.body),
+        })
+    }
+}
+
 /// Registry of service handlers.
 pub struct ServiceRegistry {
     handlers: HashMap<String, Arc<dyn ServiceHandler>>,
@@ -389,6 +451,22 @@ impl ServiceRegistry {
             "secretsmanager".to_string(),
             Arc::new(SmServiceHandler {
                 inner: secretsmanager::DefaultSecretsManagerHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native KMS handler
+        handlers.insert(
+            "kms".to_string(),
+            Arc::new(KmsServiceHandler {
+                inner: kms::DefaultKmsHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native SSM handler
+        handlers.insert(
+            "ssm".to_string(),
+            Arc::new(SsmServiceHandler {
+                inner: ssm::DefaultSsmHandler::new(),
             }) as Arc<dyn ServiceHandler>,
         );
 
