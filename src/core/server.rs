@@ -113,6 +113,139 @@ impl ServiceHandler for SqsServiceHandler {
     }
 }
 
+/// Adapter that bridges the core protocol to the native S3 service crate.
+pub struct S3ServiceHandler {
+    inner: s3::DefaultS3Handler,
+}
+
+impl S3ServiceHandler {
+    fn to_s3_request(
+        req: &ParsedRequest,
+        method: &str,
+        query_string: &str,
+    ) -> s3::protocol::AwsRequest {
+        // Extract bucket and key from the path
+        let path = req
+            .params
+            .get("path")
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
+        let path_parts: Vec<&str> = path.trim_start_matches('/').splitn(2, '/').collect();
+        let bucket = path_parts
+            .first()
+            .map(|s| s.to_string())
+            .filter(|s| !s.is_empty());
+        let key = path_parts
+            .get(1)
+            .map(|s| s.to_string())
+            .filter(|s| !s.is_empty());
+
+        // Parse query params
+        let mut query_params = std::collections::HashMap::new();
+        for pair in query_string.split('&') {
+            if let Some((k, v)) = pair.split_once('=') {
+                query_params.insert(
+                    urlencoding::decode(k).unwrap_or_default().into_owned(),
+                    urlencoding::decode(v).unwrap_or_default().into_owned(),
+                );
+            }
+        }
+
+        // Parse headers
+        let mut headers = std::collections::HashMap::new();
+        for (k, v) in req
+            .params
+            .get("__headers__")
+            .and_then(|h| h.as_object())
+            .cloned()
+            .unwrap_or_default()
+        {
+            headers.insert(k.to_lowercase(), v.as_str().unwrap_or("").to_string());
+        }
+
+        s3::protocol::AwsRequest {
+            service: req.service.clone(),
+            operation: req.operation.clone(),
+            account: req.account,
+            region: req.region.clone(),
+            bucket,
+            key,
+            query_params,
+            headers,
+            method: method.to_string(),
+            body: req.body.clone(),
+            params: serde_json::to_value(&req.params).unwrap_or_default(),
+        }
+    }
+
+    fn to_parsed_response(resp: s3::protocol::AwsResponse) -> ParsedResponse {
+        let mut headers = std::collections::HashMap::new();
+        for (k, v) in resp.headers {
+            headers.insert(k, v);
+        }
+        ParsedResponse {
+            status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            headers,
+            body: serde_json::Value::Null,
+            raw: Some(String::from_utf8_lossy(&resp.body).to_string()),
+        }
+    }
+}
+
+impl ServiceHandler for S3ServiceHandler {
+    fn handle_sync(
+        &self,
+        req: &ParsedRequest,
+    ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let s3_req = Self::to_s3_request(req, "GET", "");
+        let resp = self.inner.handle(s3_req);
+        Ok(Self::to_parsed_response(resp))
+    }
+}
+
+/// Adapter that bridges the core protocol to the native DynamoDB service crate.
+pub struct DynamoDbServiceHandler {
+    inner: dynamodb::DefaultDynamoDbHandler,
+}
+
+impl DynamoDbServiceHandler {
+    fn to_dynamo_req(req: &ParsedRequest) -> dynamodb::protocol::AwsRequest {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        dynamodb::protocol::AwsRequest {
+            service: req.service.clone(),
+            operation: req.operation.clone(),
+            account: req.account,
+            region: req.region.clone(),
+            params,
+            body: req.body.clone(),
+        }
+    }
+
+    fn to_parsed_response(resp: dynamodb::protocol::AwsResponse) -> ParsedResponse {
+        let mut headers = std::collections::HashMap::new();
+        for (k, v) in resp.headers {
+            headers.insert(k, v);
+        }
+        ParsedResponse {
+            status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            headers,
+            body: serde_json::Value::Null,
+            raw: Some(resp.body),
+        }
+    }
+}
+
+impl ServiceHandler for DynamoDbServiceHandler {
+    fn handle_sync(
+        &self,
+        req: &ParsedRequest,
+    ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let ddb_req = Self::to_dynamo_req(req);
+        let resp = self.inner.handle(ddb_req);
+        Ok(Self::to_parsed_response(resp))
+    }
+}
+
 /// Registry of service handlers.
 pub struct ServiceRegistry {
     handlers: HashMap<String, Arc<dyn ServiceHandler>>,
@@ -134,6 +267,22 @@ impl ServiceRegistry {
             "sqs".to_string(),
             Arc::new(SqsServiceHandler {
                 inner: sqs::DefaultSqsHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native S3 handler
+        handlers.insert(
+            "s3".to_string(),
+            Arc::new(S3ServiceHandler {
+                inner: s3::DefaultS3Handler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native DynamoDB handler
+        handlers.insert(
+            "dynamodb".to_string(),
+            Arc::new(DynamoDbServiceHandler {
+                inner: dynamodb::DefaultDynamoDbHandler::new(),
             }) as Arc<dyn ServiceHandler>,
         );
 
