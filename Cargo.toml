@@ -1,7 +1,17 @@
-[package]
-name = "robotocore-rust"
+[workspace]
+members = ["crates/sqs"]
+resolver = "2"
+
+[workspace.package]
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+
+[package]
+name = "robotocore-rust"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
 description = "Rust reimplementation of robotocore AWS API mock server"
 
 [lib]
@@ -18,5 +28,35 @@ once_cell = "1.19"
 parking_lot = "0.12"
 serde = { version = "1.0", features = ["derive"] }
 pyo3 = { version = "0.22", features = ["extension-module"], optional = true }
+
+# Web server and async runtime
+axum = "0.7"
+tower = "0.4"
+hyper = "1.0"
+tokio = { version = "1", features = ["full"] }
+http = "1.0"
+bytes = "1.5"
+http-body-util = "0.1"
+
+# Serialization
+serde_json = "1.0"
+quick-xml = { version = "0.31", features = ["serialize"] }
+
+# Utilities
+tracing = "0.1"
+tracing-subscriber = "0.3"
+thiserror = "1.0"
+uuid = { version = "1.0", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+base64 = "0.22"
+sha2 = "0.10"
+hmac = "0.12"
+hex = "0.4"
+flate2 = "1.0"
+urlencoding = "2.1"
+clap = { version = "4.0", features = ["derive"] }
+
+# Native service providers
+sqs = { path = "crates/sqs" }
 
 [dev-dependencies]

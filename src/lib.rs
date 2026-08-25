@@ -22,6 +22,8 @@ pub use s3_routing::{
     S3RoutingConfig, S3VhostInfo, Scope,
 };
 
+pub mod core;
+
 // PyO3 FFI bindings
 #[cfg(feature = "python")]
 use pyo3::prelude::*;

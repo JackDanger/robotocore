@@ -165,10 +165,9 @@ pub fn parse_s3_vhost(host: Option<&str>) -> Option<S3VhostInfo> {
     }
 
     if host_no_port.ends_with(".localhost") || host_no_port.contains(".localhost:") {
-        let label = if let Some(idx) = host_no_port.find(".localhost") {
+        let label = {
+            let idx = host_no_port.find(".localhost")?;
             &host_no_port[..idx]
-        } else {
-            return None;
         };
 
         if !label.is_empty() && !label.contains('.') {

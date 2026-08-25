@@ -257,21 +257,22 @@ pub fn build_cors_headers(
         None => return Vec::new(),
     };
 
-    let mut headers: Vec<(String, String)> = Vec::new();
-    headers.push(("Access-Control-Allow-Origin".into(), origin_value.clone()));
-    headers.push((
-        "Access-Control-Allow-Methods".into(),
-        config.allowed_methods.join(", "),
-    ));
-    headers.push((
-        "Access-Control-Allow-Headers".into(),
-        config.allowed_headers.join(", "),
-    ));
-    headers.push((
-        "Access-Control-Expose-Headers".into(),
-        config.expose_headers.join(", "),
-    ));
-    headers.push(("Access-Control-Max-Age".into(), DEFAULT_MAX_AGE.to_string()));
+    let mut headers: Vec<(String, String)> = vec![
+        ("Access-Control-Allow-Origin".into(), origin_value.clone()),
+        (
+            "Access-Control-Allow-Methods".into(),
+            config.allowed_methods.join(", "),
+        ),
+        (
+            "Access-Control-Allow-Headers".into(),
+            config.allowed_headers.join(", "),
+        ),
+        (
+            "Access-Control-Expose-Headers".into(),
+            config.expose_headers.join(", "),
+        ),
+        ("Access-Control-Max-Age".into(), DEFAULT_MAX_AGE.to_string()),
+    ];
 
     // Reflected a specific origin -> Vary: Origin
     if origin_value != "*" {

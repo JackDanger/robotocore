@@ -351,7 +351,7 @@ pub fn route_to_service(request: &AwsRequest) -> Option<String> {
     }
 
     for (pattern, service) in PATH_PATTERNS.iter() {
-        if pattern.is_match(&path) {
+        if pattern.is_match(path) {
             // /v1/tags and /v1/untag are shared by Batch, AppSync, Kafka, MQ, and Pinpoint
             // — disambiguate via the service name in the auth credential scope
             if *service == "batch"
@@ -381,10 +381,8 @@ pub fn route_to_service(request: &AwsRequest) -> Option<String> {
             .unwrap_or(service);
         // ELB Classic and ELBv2 share the signing name 'elasticloadbalancing'.
         // Disambiguate by the API Version query parameter.
-        if resolved == "elbv2" {
-            if query.get("Version").map(String::as_str) == Some("2012-06-01") {
-                return Some("elb".to_string());
-            }
+        if resolved == "elbv2" && query.get("Version").map(String::as_str) == Some("2012-06-01") {
+            return Some("elb".to_string());
         }
         return Some(resolved.to_string());
     }
