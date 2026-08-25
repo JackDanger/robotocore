@@ -430,6 +430,41 @@ impl ServiceHandler for IamServiceHandler {
     }
 }
 
+/// Adapter for Lambda service crate.
+pub struct LambdaServiceHandler {
+    inner: lambda::DefaultLambdaHandler,
+}
+
+impl ServiceHandler for LambdaServiceHandler {
+    fn handle_sync(
+        &self,
+        req: &ParsedRequest,
+    ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        let lambda_req = lambda::protocol::AwsRequest {
+            service: req.service.clone(),
+            operation: req.operation.clone(),
+            account: req.account,
+            region: req.region.clone(),
+            params,
+            body: req.body.clone(),
+            method: req.method.clone(),
+            path: req.path.clone(),
+            query_string: req.query_string.clone(),
+            headers: req.headers.clone(),
+        };
+        let resp = self.inner.handle(lambda_req);
+        let mut headers = std::collections::HashMap::new();
+        for (k, v) in resp.headers { headers.insert(k, v); }
+        Ok(ParsedResponse {
+            status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            headers,
+            body: serde_json::Value::Null,
+            raw: Some(resp.body),
+        })
+    }
+}
+
 /// Registry of service handlers.
 pub struct ServiceRegistry {
     handlers: HashMap<String, Arc<dyn ServiceHandler>>,
@@ -507,6 +542,14 @@ impl ServiceRegistry {
             "iam".to_string(),
             Arc::new(IamServiceHandler {
                 inner: iam::DefaultIamHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native Lambda handler
+        handlers.insert(
+            "lambda".to_string(),
+            Arc::new(LambdaServiceHandler {
+                inner: lambda::DefaultLambdaHandler::new(),
             }) as Arc<dyn ServiceHandler>,
         );
 
