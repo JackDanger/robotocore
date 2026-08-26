@@ -2515,6 +2515,7 @@ class TestS3UpdateObjectEncryptionGapOp:
 
 
 class TestS3AdvancedOperations:
+    @pytest.fixture
     def s3(self):
         return boto3.client(
             "s3",
@@ -2524,6 +2525,7 @@ class TestS3AdvancedOperations:
             aws_secret_access_key="testing",
         )
 
+    @pytest.fixture
     def bucket(self, s3):
         import uuid
 
@@ -2658,6 +2660,7 @@ class TestS3AdvancedOperations:
 class TestS3BucketOperations:
     """Additional S3 bucket operations."""
 
+    @pytest.fixture
     def bucket(self, s3):
         import uuid
 
@@ -2808,6 +2811,7 @@ class TestS3DeleteBucketConfigurations:
 class TestS3ObjectLocking:
     """Tests for object lock, legal hold, and retention."""
 
+    @pytest.fixture
     def lock_bucket(self, s3):
         import uuid
 
@@ -3143,6 +3147,7 @@ class TestS3DeprecatedNotification:
 class TestS3SessionAndSelect:
     """Tests for CreateSession and SelectObjectContent."""
 
+    @pytest.fixture
     def dir_bucket(self, s3):
         """Create an S3 Express directory bucket and return its name."""
         name = f"compat-dir-{uuid.uuid4().hex[:8]}--use1-az1--x-s3"
@@ -3250,6 +3255,7 @@ class TestS3AbacAndMetadata:
 class TestS3RenameAndEncryption:
     """Tests for RenameObject and UpdateObjectEncryption."""
 
+    @pytest.fixture
     def dir_bucket(self, s3):
         """Create an S3 Express directory bucket and return its name."""
         name = f"compat-ren-{uuid.uuid4().hex[:8]}--use1-az1--x-s3"
@@ -3408,9 +3414,11 @@ class TestS3NotificationWithTopic:
 class TestS3LegacyOps:
     """Tests for legacy S3 operations (v1 APIs)."""
 
+    @pytest.fixture
     def s3(self):
         return make_client("s3")
 
+    @pytest.fixture
     def bucket(self, s3):
         bucket_name = f"legacy-test-{uuid.uuid4().hex[:8]}"
         s3.create_bucket(Bucket=bucket_name)
@@ -3456,6 +3464,7 @@ class TestS3LegacyOps:
 
 
 class TestS3EventBridgeNotification:
+    @pytest.fixture
     def unique_bucket(self, s3):
         name = "test-eb-notif-" + str(uuid.uuid4())[:8]
         s3.create_bucket(Bucket=name)
@@ -3468,6 +3477,7 @@ class TestS3EventBridgeNotification:
         except Exception:
             pass  # best-effort cleanup
 
+    @pytest.fixture
     def unique_queue(self, sqs):
         name = "test-eb-q-" + str(uuid.uuid4())[:8]
         resp = sqs.create_queue(QueueName=name)
@@ -3517,6 +3527,7 @@ class TestS3EventBridgeNotification:
 
 
 class TestS3AdditionalEventTypes:
+    @pytest.fixture
     def unique_bucket(self, s3):
         name = "test-evt-" + str(uuid.uuid4())[:8]
         s3.create_bucket(Bucket=name)
@@ -3535,6 +3546,7 @@ class TestS3AdditionalEventTypes:
         except Exception:
             pass  # best-effort cleanup
 
+    @pytest.fixture
     def unique_queue(self, sqs):
         name = "test-evt-q-" + str(uuid.uuid4())[:8]
         resp = sqs.create_queue(QueueName=name)
@@ -3601,6 +3613,7 @@ class TestS3AdditionalEventTypes:
 
 
 class TestS3ReplicationEngine:
+    @pytest.fixture
     def src_bucket(self, s3):
         name = "test-repl-src-" + str(uuid.uuid4())[:8]
         s3.create_bucket(Bucket=name)
@@ -3616,6 +3629,7 @@ class TestS3ReplicationEngine:
         except Exception:
             pass  # best-effort cleanup
 
+    @pytest.fixture
     def dest_bucket(self, s3):
         name = "test-repl-dst-" + str(uuid.uuid4())[:8]
         s3.create_bucket(Bucket=name)
@@ -3680,6 +3694,7 @@ class TestS3ReplicationEngine:
 class TestS3RestoreObjectNotification:
     """Verify that RestoreObject on a Glacier object fires s3:ObjectRestore:Post notification."""
 
+    @pytest.fixture
     def unique_bucket(self, s3):
         name = "test-restore-notif-" + str(uuid.uuid4())[:8]
         s3.create_bucket(Bucket=name)
@@ -3692,6 +3707,7 @@ class TestS3RestoreObjectNotification:
         except Exception:
             pass  # best-effort cleanup
 
+    @pytest.fixture
     def unique_queue(self, sqs):
         name = "test-restore-q-" + str(uuid.uuid4())[:8]
         resp = sqs.create_queue(QueueName=name)

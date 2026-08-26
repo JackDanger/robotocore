@@ -1098,6 +1098,7 @@ class TestTranscribeRemainingGapOps:
 class TestTranscribeNewOps:
     """Tests for newly implemented Transcribe operations."""
 
+    @pytest.fixture
     def client(self):
         return make_client("transcribe")
 
