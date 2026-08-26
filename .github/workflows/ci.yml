@@ -618,8 +618,8 @@ jobs:
         # setup, wrong architecture, missing shared libs) before starting the
         # long-running robotocore-full service container.
         run: |
-          docker run --rm robotocore:java-and-dotnet dotnet --version
-          docker run --rm robotocore:java-and-dotnet java -version
+          docker run --rm --entrypoint dotnet robotocore:java-and-dotnet --version
+          docker run --rm --entrypoint java robotocore:java-and-dotnet -version
 
       - name: Start java-and-dotnet container
         run: |
