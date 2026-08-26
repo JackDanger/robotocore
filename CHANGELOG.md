@@ -64,6 +64,28 @@ recomputed from the registry rather than hand-maintained.
   handlers reading dict-returning backends as objects) and S3 (the lost Metadata
   Tables stubs, which made `CreateBucketMetadataConfiguration` fall through to the
   browser-upload path).
+- **S3 object retention.** `GetObjectRetention` was missing from the object `GET`
+  dispatch, so it fell through to `GetObject` and returned the object's bytes —
+  callers saw a parse failure surfaced as a 500. Its response also placed
+  `Mode`/`RetainUntilDate` at the top level instead of inside `Retention`.
+- **S3Control batch jobs.** `UpdateJobPriority` and `UpdateJobStatus` read their
+  inputs from the request body, but the model locates both in the querystring, so
+  every call applied priority `0` and an empty status.
+- **Two endpoints shared by two operations** were always dispatched to the sibling,
+  because the query marker that separates them is invisible to the URI matcher:
+  `POST /apikeys?mode=import` (ImportApiKeys) and
+  `POST /backup-vaults/{name}/mpaApprovalTeam?delete`
+  (DisassociateBackupVaultMpaApprovalTeam).
+- **Lost state and operations** restored in moto: CloudDirectory's root object,
+  NetworkManager's per-network collections (every `CreateConnection` and
+  `Associate*` call 500'd), ServiceCatalog's initial provisioning artifact (so
+  products had none), `KeyGroup.update()`, LakeFormation's `UpdateDataCellsFilter`
+  and `StartQueryPlanning`, and S3's Metadata Tables stubs.
+- **Unknown identifiers now raise the modelled error** rather than a 500, across
+  RDS (5 lookups), EC2's `ModifyTransitGatewayVpcAttachment`, AutoScaling's
+  `DisableMetricsCollection`, KinesisAnalyticsV2's `DescribeApplication` and
+  MediaStore's `ListTagsForResource` (which also now resolves an ARN, not just a
+  name).
 
 ## 2026.8.24
 
