@@ -3470,7 +3470,8 @@ class TestS3ControlStorageLensGroups:
                     },
                 },
             )
-            assert resp["ResponseMetadata"]["HTTPStatusCode"] == 200
+            # CreateStorageLensGroup is modeled with responseCode 204.
+            assert resp["ResponseMetadata"]["HTTPStatusCode"] == 204
         finally:
             try:
                 s3control.delete_storage_lens_group(AccountId=ACCOUNT_ID, Name=name)

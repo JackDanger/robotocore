@@ -6,6 +6,87 @@ auto-tags and publishes a versioned + `:latest` Docker image. Each release
 gets a top-level section here; the project source of truth for the
 maintenance policy is [`CLAUDE.md`](CLAUDE.md) under *Changelog discipline*.
 
+## 2026.8.26
+
+### Changed
+
+#### moto pinned to the fork's `robotocore/all-fixes` branch
+
+`pyproject.toml` already resolved moto from `JackDanger/moto @ robotocore/all-fixes`,
+but the `vendor/moto` submodule and `uv.lock` were still pinned to a commit on the
+fork's `master` — a separate lineage that `all-fixes` does not contain. Since the
+Docker build installs moto from the submodule (`moto = { path = "vendor/moto" }`),
+the published image and the dev environment were resolving different moto trees.
+
+All three now track `all-fixes` (moto `5.1.23.dev0` → `5.2.4.dev0`), and
+`.gitmodules` records the branch so `git submodule update --remote` follows it.
+
+##### Migration
+
+`all-fixes` carries moto's migration from Jinja response templates to
+modeled-shape serialization, so responses across many services are now closer to
+the AWS wire format. Two behaviour changes are worth calling out:
+
+- **Many previously-unimplemented operations now work.** Connect alone gained 117:
+  operations that returned `501 NotImplemented` now either succeed or raise
+  `ResourceNotFoundException` for unknown IDs, as AWS does. If your tests assert
+  on `NotImplemented` for an operation, re-check it.
+- **AWS Panorama is gone.** Upstream getmoto removed the deprecated service
+  (getmoto/moto#10085). Panorama operations return `NotImplemented`.
+
+### Removed
+
+#### AWS Panorama
+
+Deregistered. AWS discontinued the service and upstream getmoto removed its
+implementation (getmoto/moto#10085), which the pinned `robotocore/all-fixes`
+branch picks up. `panorama` is gone from the service registry, so its operations
+now return `501`; its compat tests and probe data are deleted.
+
+Service counts drop accordingly: **156 services** (46 native, 110 Moto-backed).
+The counts in `README.md` and `CLAUDE.md` were already stale by one and are now
+recomputed from the registry rather than hand-maintained.
+
+### Fixed
+
+- **`uv.lock` was unparseable.** An earlier merge left a duplicated `stevedore`
+  package block, and `uv` refused to read the file at all (`Dependency 'stevedore'
+  has missing 'source' field but has more than one matching package`). Regenerated.
+- **Lambda .NET on slim images.** `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT` was set
+  at the image level but three code paths in the .NET runtime built their own
+  environment without it — the `dotnet --list-runtimes` probe passed no `env=` at
+  all. dotnet then needed libicu, whose package name moves between Debian releases,
+  and crashed. All dotnet subprocesses now go through one `_dotnet_compile_env()`.
+- Upstream fixes to moto for CloudDirectory (missing root object broke every
+  `ObjectReference` operation), CloudFront (ten handlers calling a removed
+  `response_template()`, plus config accessors the serializer needs), Connect
+  (two handlers reading parameters absent from their input shapes), EC2 (five
+  handlers reading dict-returning backends as objects) and S3 (the lost Metadata
+  Tables stubs, which made `CreateBucketMetadataConfiguration` fall through to the
+  browser-upload path).
+- **S3 object retention.** `GetObjectRetention` was missing from the object `GET`
+  dispatch, so it fell through to `GetObject` and returned the object's bytes —
+  callers saw a parse failure surfaced as a 500. Its response also placed
+  `Mode`/`RetainUntilDate` at the top level instead of inside `Retention`.
+- **S3Control batch jobs.** `UpdateJobPriority` and `UpdateJobStatus` read their
+  inputs from the request body, but the model locates both in the querystring, so
+  every call applied priority `0` and an empty status.
+- **Two endpoints shared by two operations** were always dispatched to the sibling,
+  because the query marker that separates them is invisible to the URI matcher:
+  `POST /apikeys?mode=import` (ImportApiKeys) and
+  `POST /backup-vaults/{name}/mpaApprovalTeam?delete`
+  (DisassociateBackupVaultMpaApprovalTeam).
+- **Lost state and operations** restored in moto: CloudDirectory's root object,
+  NetworkManager's per-network collections (every `CreateConnection` and
+  `Associate*` call 500'd), ServiceCatalog's initial provisioning artifact (so
+  products had none), `KeyGroup.update()`, LakeFormation's `UpdateDataCellsFilter`
+  and `StartQueryPlanning`, and S3's Metadata Tables stubs.
+- **Unknown identifiers now raise the modelled error** rather than a 500, across
+  RDS (5 lookups), EC2's `ModifyTransitGatewayVpcAttachment`, AutoScaling's
+  `DisableMetricsCollection`, KinesisAnalyticsV2's `DescribeApplication` and
+  MediaStore's `ListTagsForResource` (which also now resolves an ARN, not just a
+  name).
+
 ## 2026.8.24
 
 ### Added

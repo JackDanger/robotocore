@@ -2345,12 +2345,20 @@ class TestLogsAdditionalOps:
 
     def test_put_log_group_deletion_protection_nonexistent(self, client):
         """PutLogGroupDeletionProtection raises ResourceNotFoundException for nonexistent group."""
-        fake_arn = "arn:aws:logs:us-east-1:123456789012:log-group:nonexistent-group-xyz:*"
+        # logGroupIdentifier's modeled pattern excludes "*", so the ARN is used
+        # without its trailing ":*" wildcard.
+        fake_arn = "arn:aws:logs:us-east-1:123456789012:log-group:nonexistent-group-xyz"
         with pytest.raises(ClientError) as exc:
             client.put_log_group_deletion_protection(
                 logGroupIdentifier=fake_arn,
                 deletionProtectionEnabled=True,
             )
+        assert exc.value.response["Error"]["Code"] == "ResourceNotFoundException"
+
+    def test_get_log_record_nonexistent_pointer(self, client):
+        """GetLogRecord with a fake pointer raises ResourceNotFoundException."""
+        with pytest.raises(ClientError) as exc:
+            client.get_log_record(logRecordPointer="fake-pointer-does-not-exist")
         assert exc.value.response["Error"]["Code"] == "ResourceNotFoundException"
 
 

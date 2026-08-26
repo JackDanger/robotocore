@@ -662,6 +662,7 @@ class TestEventBridgeRuleState:
                 EventSourceArn=bus_arn,
             )
             resp = events.list_archives()
+            assert "Archives" in resp
             names = [a["ArchiveName"] for a in resp["Archives"]]
             assert archive_name in names
         finally:

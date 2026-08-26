@@ -1325,10 +1325,9 @@ class TestLakeFormationQueryPlanningOps:
 class TestLakeFormationAssumeDecoratedRoleGapOp:
     """Test AssumeDecoratedRoleWithSAML (returns 501 NotImplemented)."""
 
-    def test_assume_decorated_role_with_saml_not_implemented(self):
+    def test_assume_decorated_role_with_saml(self):
         import boto3
         from botocore.config import Config
-        from botocore.exceptions import ClientError
 
         client = boto3.client(
             "lakeformation",
@@ -1338,14 +1337,12 @@ class TestLakeFormationAssumeDecoratedRoleGapOp:
             aws_secret_access_key="test",
             config=Config(inject_host_prefix=False),
         )
-        with pytest.raises(ClientError) as exc:
-            client.assume_decorated_role_with_saml(
-                SAMLAssertion="a" * 100,
-                RoleArn="arn:aws:iam::123456789012:role/lakeformation-saml-role",
-                PrincipalArn="arn:aws:iam::123456789012:saml-provider/my-provider",
-            )
-        assert exc.value.response["Error"]["Code"] in (
-            "NotImplemented",
-            "AccessDeniedException",
-            "InvalidInputException",
+        resp = client.assume_decorated_role_with_saml(
+            SAMLAssertion="a" * 100,
+            RoleArn="arn:aws:iam::123456789012:role/lakeformation-saml-role",
+            PrincipalArn="arn:aws:iam::123456789012:saml-provider/my-provider",
         )
+        assert resp["AccessKeyId"].startswith("ASIA")
+        assert resp["SecretAccessKey"]
+        assert resp["SessionToken"]
+        assert resp["Expiration"]
