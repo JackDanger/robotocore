@@ -2302,8 +2302,10 @@ class TestEc2AutoCoverage:
         client.create_traffic_mirror_filter()
 
     def test_create_traffic_mirror_target(self, client):
-        """CreateTrafficMirrorTarget returns a response."""
-        client.create_traffic_mirror_target()
+        """CreateTrafficMirrorTarget requires exactly one target, as AWS does."""
+        with pytest.raises(botocore.exceptions.ClientError) as exc:
+            client.create_traffic_mirror_target()
+        assert exc.value.response["Error"]["Code"] == "InvalidInput"
 
     def test_create_verified_access_instance(self, client):
         """CreateVerifiedAccessInstance returns a response."""
@@ -6281,15 +6283,15 @@ class TestEC2AdditionalDescribeOps:
         assert resp["ResponseMetadata"]["HTTPStatusCode"] == 200
 
     def test_describe_fleet_history(self, ec2):
-        """DescribeFleetHistory returns history records."""
+        """DescribeFleetHistory rejects an unknown fleet id, as AWS does."""
         from datetime import datetime
 
-        resp = ec2.describe_fleet_history(
-            FleetId="fleet-fake123",
-            StartTime=datetime(2024, 1, 1),
-        )
-        assert "HistoryRecords" in resp
-        assert isinstance(resp["HistoryRecords"], list)
+        with pytest.raises(botocore.exceptions.ClientError) as exc:
+            ec2.describe_fleet_history(
+                FleetId="fleet-fake123",
+                StartTime=datetime(2024, 1, 1),
+            )
+        assert exc.value.response["Error"]["Code"] == "InvalidFleetId.NotFound"
 
     def test_describe_stale_security_groups(self, ec2):
         """DescribeStaleSecurityGroups returns stale groups for a VPC."""
@@ -11360,13 +11362,14 @@ class TestEC2Batch0AttachVerifiedAccessTrustProvider:
     def ec2(self):
         return make_client("ec2")
 
-    def test_attach_verified_access_trust_provider_returns_200(self, ec2):
-        """AttachVerifiedAccessTrustProvider returns 200 response."""
-        resp = ec2.attach_verified_access_trust_provider(
-            VerifiedAccessInstanceId="vai-12345678",
-            VerifiedAccessTrustProviderId="vatp-12345678",
-        )
-        assert resp["ResponseMetadata"]["HTTPStatusCode"] == 200
+    def test_attach_verified_access_trust_provider_unknown_instance(self, ec2):
+        """AttachVerifiedAccessTrustProvider rejects an unknown instance, as AWS does."""
+        with pytest.raises(botocore.exceptions.ClientError) as exc:
+            ec2.attach_verified_access_trust_provider(
+                VerifiedAccessInstanceId="vai-12345678",
+                VerifiedAccessTrustProviderId="vatp-12345678",
+            )
+        assert exc.value.response["Error"]["Code"] == "InvalidVerifiedAccessInstanceId.NotFound"
 
 
 class TestEC2Batch0BundleInstance:
