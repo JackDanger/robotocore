@@ -6,6 +6,52 @@ auto-tags and publishes a versioned + `:latest` Docker image. Each release
 gets a top-level section here; the project source of truth for the
 maintenance policy is [`CLAUDE.md`](CLAUDE.md) under *Changelog discipline*.
 
+## 2026.8.26
+
+### Changed
+
+#### moto pinned to the fork's `robotocore/all-fixes` branch
+
+`pyproject.toml` already resolved moto from `JackDanger/moto @ robotocore/all-fixes`,
+but the `vendor/moto` submodule and `uv.lock` were still pinned to a commit on the
+fork's `master` — a separate lineage that `all-fixes` does not contain. Since the
+Docker build installs moto from the submodule (`moto = { path = "vendor/moto" }`),
+the published image and the dev environment were resolving different moto trees.
+
+All three now track `all-fixes` (moto `5.1.23.dev0` → `5.2.4.dev0`), and
+`.gitmodules` records the branch so `git submodule update --remote` follows it.
+
+##### Migration
+
+`all-fixes` carries moto's migration from Jinja response templates to
+modeled-shape serialization, so responses across many services are now closer to
+the AWS wire format. Two behaviour changes are worth calling out:
+
+- **Many previously-unimplemented operations now work.** Connect alone gained 117:
+  operations that returned `501 NotImplemented` now either succeed or raise
+  `ResourceNotFoundException` for unknown IDs, as AWS does. If your tests assert
+  on `NotImplemented` for an operation, re-check it.
+- **AWS Panorama is gone.** Upstream getmoto removed the deprecated service
+  (getmoto/moto#10085). Panorama operations return `NotImplemented`.
+
+### Fixed
+
+- **`uv.lock` was unparseable.** An earlier merge left a duplicated `stevedore`
+  package block, and `uv` refused to read the file at all (`Dependency 'stevedore'
+  has missing 'source' field but has more than one matching package`). Regenerated.
+- **Lambda .NET on slim images.** `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT` was set
+  at the image level but three code paths in the .NET runtime built their own
+  environment without it — the `dotnet --list-runtimes` probe passed no `env=` at
+  all. dotnet then needed libicu, whose package name moves between Debian releases,
+  and crashed. All dotnet subprocesses now go through one `_dotnet_compile_env()`.
+- Upstream fixes to moto for CloudDirectory (missing root object broke every
+  `ObjectReference` operation), CloudFront (ten handlers calling a removed
+  `response_template()`, plus config accessors the serializer needs), Connect
+  (two handlers reading parameters absent from their input shapes), EC2 (five
+  handlers reading dict-returning backends as objects) and S3 (the lost Metadata
+  Tables stubs, which made `CreateBucketMetadataConfiguration` fall through to the
+  browser-upload path).
+
 ## 2026.8.24
 
 ### Added
