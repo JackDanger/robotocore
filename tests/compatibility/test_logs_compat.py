@@ -2353,6 +2353,12 @@ class TestLogsAdditionalOps:
             )
         assert exc.value.response["Error"]["Code"] == "ResourceNotFoundException"
 
+    def test_get_log_record_nonexistent_pointer(self, client):
+        """GetLogRecord with a fake pointer raises ResourceNotFoundException."""
+        with pytest.raises(ClientError) as exc:
+            client.get_log_record(logRecordPointer="fake-pointer-does-not-exist")
+        assert exc.value.response["Error"]["Code"] == "ResourceNotFoundException"
+
 
 class TestLogsFieldIndexes:
     """Tests for DescribeFieldIndexes operation."""
