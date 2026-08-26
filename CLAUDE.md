@@ -168,9 +168,9 @@ make status                            # Check if server is running
   - `moto/{service}/urls.py` — URL patterns
 
 
-## Service Coverage (158 services registered)
+## Service Coverage (156 services registered)
 
-158 AWS services are implemented. 46 have native providers with enhanced fidelity; 112 are Moto-backed.
+156 AWS services are implemented. 46 have native providers with enhanced fidelity; 110 are Moto-backed.
 
 **Native providers** (46): acm, apigateway, apigatewayv2, appsync, batch, cloudformation, cloudwatch, cognito-idp, config, dynamodb, dynamodbstreams, ec2, ecr, ecs, es, events, firehose, iam, kinesis, lambda, logs, opensearch, pipes, rekognition, resource-groups, resourcegroupstaggingapi, route53, s3, scheduler, secretsmanager, ses, sesv2, sns, sqs, ssm, stepfunctions, sts, support, xray
 

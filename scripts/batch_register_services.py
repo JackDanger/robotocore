@@ -212,7 +212,6 @@ SERVICE_DESCRIPTIONS = {
     "networkmanager": "Network Manager",
     "opensearchserverless": "OpenSearch Serverless",
     "osis": "OpenSearch Ingestion",
-    "panorama": "Panorama",
     "personalize": "Amazon Personalize",
     "pinpoint": "Pinpoint",
     "pipes": "EventBridge Pipes",

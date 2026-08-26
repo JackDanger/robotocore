@@ -34,6 +34,19 @@ the AWS wire format. Two behaviour changes are worth calling out:
 - **AWS Panorama is gone.** Upstream getmoto removed the deprecated service
   (getmoto/moto#10085). Panorama operations return `NotImplemented`.
 
+### Removed
+
+#### AWS Panorama
+
+Deregistered. AWS discontinued the service and upstream getmoto removed its
+implementation (getmoto/moto#10085), which the pinned `robotocore/all-fixes`
+branch picks up. `panorama` is gone from the service registry, so its operations
+now return `501`; its compat tests and probe data are deleted.
+
+Service counts drop accordingly: **156 services** (46 native, 110 Moto-backed).
+The counts in `README.md` and `CLAUDE.md` were already stale by one and are now
+recomputed from the registry rather than hand-maintained.
+
 ### Fixed
 
 - **`uv.lock` was unparseable.** An earlier merge left a duplicated `stevedore`

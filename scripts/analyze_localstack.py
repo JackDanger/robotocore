@@ -170,7 +170,6 @@ _LS_TIER: dict[str, str] = {
     "networkmanager": "not_offered",
     "opensearchserverless": "not_offered",
     "osis": "not_offered",
-    "panorama": "not_offered",
     "polly": "not_offered",
     "quicksight": "not_offered",
     "redshiftdata": "not_offered",

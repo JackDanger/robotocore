@@ -266,7 +266,7 @@ SERVICE_REGISTRY: dict[str, ServiceInfo] = {
         "organizations", ServiceStatus.MOTO_BACKED, "json", "AWS Organizations"
     ),
     "osis": ServiceInfo("osis", ServiceStatus.MOTO_BACKED, "rest-json", "OpenSearch Ingestion"),
-    "panorama": ServiceInfo("panorama", ServiceStatus.MOTO_BACKED, "rest-json", "Panorama"),
+    # panorama: deregistered — AWS discontinued the service and moto removed it (getmoto/moto#10085)
     # personalize: deregistered — all Moto ops return 500
     "pinpoint": ServiceInfo("pinpoint", ServiceStatus.MOTO_BACKED, "rest-json", "Pinpoint"),
     "pipes": ServiceInfo(
