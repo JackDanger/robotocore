@@ -613,6 +613,14 @@ jobs:
       - name: Build java-and-dotnet Docker image
         run: docker build --target java-and-dotnet -t robotocore:java-and-dotnet .
 
+      - name: Verify dotnet CLI is functional in java-and-dotnet image
+        # Fails fast if the runtime toolchain is broken (missing ICU/globalization
+        # setup, wrong architecture, missing shared libs) before starting the
+        # long-running robotocore-full service container.
+        run: |
+          docker run --rm robotocore:java-and-dotnet dotnet --version
+          docker run --rm robotocore:java-and-dotnet java -version
+
       - name: Start java-and-dotnet container
         run: |
           docker run -d -p 4566:4566 --name robotocore-full robotocore:java-and-dotnet

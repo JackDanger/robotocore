@@ -44,6 +44,27 @@ _RUNTIME_BINARY: dict[str, str] = {
 }
 
 
+def _dotnet_compile_env() -> dict[str, str]:
+    """Environment for every dotnet CLI subprocess (probe, build, publish).
+
+    Starts from the current process environment so PATH, HOME, DOTNET_ROOT and
+    NUGET_PACKAGES are inherited, then force-sets the vars the CLI needs to run
+    unattended on a slim image.
+    """
+    env = os.environ.copy()
+    # Suppress .NET CLI telemetry and first-run experience, which can hang or
+    # write to unexpected locations in CI.
+    env["DOTNET_CLI_TELEMETRY_OPTOUT"] = "1"
+    env["DOTNET_NOLOGO"] = "1"
+    env["DOTNET_SKIP_FIRST_TIME_EXPERIENCE"] = "1"
+    # Invariant globalization keeps dotnet off libicu, whose package name moves
+    # between Debian releases (libicu72 -> libicu74). The Dockerfile sets this at
+    # the image level, but subprocesses that build their own env -- and any run
+    # outside the container -- need it set here too.
+    env["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1"
+    return env
+
+
 def invalidate_caches() -> None:
     """Clear the cached host probe results.
 
@@ -69,6 +90,7 @@ def _list_installed_majors() -> set[int]:
             capture_output=True,
             text=True,
             timeout=10,
+            env=_dotnet_compile_env(),
         )
         if proc.returncode == 0:
             for line in proc.stdout.splitlines():
@@ -280,6 +302,9 @@ class DotnetExecutor:
 
         tmpdir = extract_code(code_zip, layer_zips, code_dir=code_dir, function_name=function_name)
         env = build_env(function_name, region, account_id, timeout, memory_size, handler, env_vars)
+        # The handler itself runs under `dotnet exec`, so it needs invariant mode too --
+        # build_env() starts from a clean slate and would not inherit it from the image.
+        env["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1"
 
         # Parse handler: "Assembly::Type::Method"
         parts = handler.split("::")
@@ -353,15 +378,7 @@ class DotnetExecutor:
         with open(proj_path, "w") as f:
             f.write(proj_content)
 
-        # Build a clean env for dotnet that inherits system essentials.
-        # The Lambda env may override HOME/DOTNET_ROOT etc. in ways that
-        # break dotnet CLI tooling, so we merge carefully.
-        compile_env = os.environ.copy()
-        # Suppress .NET CLI telemetry and first-run experience which can
-        # hang or write to unexpected locations in CI.
-        compile_env["DOTNET_CLI_TELEMETRY_OPTOUT"] = "1"
-        compile_env["DOTNET_NOLOGO"] = "1"
-        compile_env["DOTNET_SKIP_FIRST_TIME_EXPERIENCE"] = "1"
+        compile_env = _dotnet_compile_env()
 
         try:
             proc = subprocess.run(
@@ -416,12 +433,7 @@ class DotnetExecutor:
             with open(os.path.join(bootstrap_dir, "Bootstrap.cs"), "w") as f:
                 f.write(BOOTSTRAP_CS)
 
-            # Build the bootstrap using a clean env (not the Lambda env)
-            # to avoid issues with DOTNET_ROOT, HOME, etc.
-            compile_env = os.environ.copy()
-            compile_env["DOTNET_CLI_TELEMETRY_OPTOUT"] = "1"
-            compile_env["DOTNET_NOLOGO"] = "1"
-            compile_env["DOTNET_SKIP_FIRST_TIME_EXPERIENCE"] = "1"
+            compile_env = _dotnet_compile_env()
             try:
                 build_proc = subprocess.run(
                     [
