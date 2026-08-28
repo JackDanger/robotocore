@@ -22,6 +22,18 @@ struct Args {
     /// Log level
     #[arg(short, long, default_value = "info")]
     log_level: String,
+
+    /// URL of the Moto sidecar (e.g., http://127.0.0.1:4568)
+    #[arg(long)]
+    moto_url: Option<String>,
+
+    /// Port for the Moto sidecar
+    #[arg(long, default_value = "4568")]
+    moto_port: u16,
+
+    /// Start the Moto sidecar automatically
+    #[arg(long)]
+    auto_moto: bool,
 }
 
 #[tokio::main]
@@ -39,8 +51,31 @@ async fn main() {
     // Create service registry
     let registry = ServiceRegistry::new();
 
+    // Optionally start Moto proxy
+    let native_list = vec![
+        "sts".to_string(), "sqs".to_string(), "s3".to_string(),
+        "dynamodb".to_string(), "sns".to_string(), "secretsmanager".to_string(),
+        "kms".to_string(), "ssm".to_string(), "iam".to_string(),
+        "lambda".to_string(), "logs".to_string(), "events".to_string(),
+        "kinesis".to_string(),
+    ];
+    let moto_proxy = match &args.moto_url {
+        Some(url) => {
+            Some(robotocore_rust::core::proxy::MotoProxy::new(url.clone(), native_list.clone()))
+        }
+        None if args.auto_moto => {
+            let url = format!("http://127.0.0.1:{}", args.moto_port);
+            Some(robotocore_rust::core::proxy::MotoProxy::new(url, native_list))
+        }
+        _ => None,
+    };
+
+    if moto_proxy.is_some() {
+        tracing::info!("Moto proxy enabled for non-native services");
+    }
+
     // Build Axum app
-    let app = build_router(registry);
+    let app = build_router(registry, moto_proxy);
 
     // Create listener
     let addr = format!("127.0.0.1:{}", args.port);

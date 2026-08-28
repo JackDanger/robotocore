@@ -10,6 +10,7 @@
 
 pub mod account;
 pub mod protocol;
+pub mod proxy;
 pub mod server;
 pub mod services;
 pub mod signing;
