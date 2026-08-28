@@ -1,4 +1,5 @@
-//! cloudwatch request/response types (query protocol, XML).
+//! Kinesis request/response types (json protocol).
+
 use bytes::Bytes;
 use serde_json::Value;
 
@@ -10,7 +11,6 @@ pub struct AwsRequest {
     pub region: String,
     pub params: Value,
     pub body: Bytes,
-    pub query: String,
 }
 
 #[derive(Debug, Clone)]
@@ -21,46 +21,28 @@ pub struct AwsResponse {
 }
 
 impl AwsResponse {
-    pub fn xml(status: u16, root: &str, body_xml: String) -> Self {
-        let full_body = format!(
-            "<{root}Response xmlns=\\"https://api.aws.amazon.com/doc/2010-08-01/\\">{body_xml}</{root}Response>"
-        );
-        Self { status,
+    pub fn json(status: u16, body: Value) -> Self {
+        Self {
+            status,
             headers: vec![
-                ("Content-Type".to_string(), "text/xml".to_string()),
+                ("Content-Type".to_string(), "application/x-amz-json-1.0".to_string()),
                 ("x-amzn-RequestId".to_string(), uuid::Uuid::new_v4().to_string()),
                 ("server".to_string(), "robotocore".to_string()),
             ],
-            body: full_body,
-}
-}
+            body: serde_json::to_string(&body).unwrap_or_else(|_| "{}".to_string()),
+        }
+    }
 
     pub fn error(status: u16, code: &str, message: &str) -> Self {
-        let body = format!(
-            "<ErrorResponse><Error><Code>{}</Code><Message>{}</Message></Error></ErrorResponse>",
-            code, message
-        );
-        Self { status,
+        let body = serde_json::json!({ "__type": code, "message": message });
+        Self {
+            status,
             headers: vec![
-                ("Content-Type".to_string(), "text/xml".to_string()),
+                ("Content-Type".to_string(), "application/x-amz-json-1.0".to_string()),
                 ("x-amzn-RequestId".to_string(), uuid::Uuid::new_v4().to_string()),
                 ("server".to_string(), "robotocore".to_string()),
             ],
-            body,
-}
-}
-}
-
-pub fn get_param(req: &AwsRequest, key: &str) -> Option<String> {
-    if let Some(v) = req.params.get(key).and_then(|v| v.as_str()) {
-        return Some(v.to_string());
-}
-    if !req.query.is_empty() {
-        for pair in req.query.split('&') {
-            if let Some((k, v)) = pair.split_once("=") {
-                if k == key { return Some(v.to_string()); }
-}
-}
+            body: serde_json::to_string(&body).unwrap_or_else(|_| "{}".to_string()),
+        }
     }
-    None
 }
