@@ -50,11 +50,11 @@ class WerkzeugRawBodyRequest(WerkzeugRequest):
 
     @property
     def form(self):
-        raise AttributeError("form parsing disabled")
+        return {}
 
     @property
     def files(self):
-        raise AttributeError("file parsing disabled")
+        return {}
 
 
 class _RegexConverter(BaseConverter):
@@ -68,21 +68,24 @@ class _RegexConverter(BaseConverter):
 _routing_cache: dict[str, Map] = {}
 
 
-def _get_routing_table(service: str) -> Map:
+def _get_routing_table(service: str, region: str = "us-east-1") -> Map:
     """Build and cache a Werkzeug URL Map from a Moto backend's flask_paths."""
-    if service in _routing_cache:
-        return _routing_cache[service]
+    cache_key = f"{service}:{region}"
+    if cache_key in _routing_cache:
+        return _routing_cache[cache_key]
 
     backend_dict = moto_backends.get_backend(service)
     if isinstance(backend_dict, BackendDict):
-        if DEFAULT_ACCOUNT_ID not in backend_dict:
-            backend_dict[DEFAULT_ACCOUNT_ID] = {}
-        if "us-east-1" in backend_dict[DEFAULT_ACCOUNT_ID]:
+        # BackendDict auto-creates backends on access
+        try:
+            backend = backend_dict[DEFAULT_ACCOUNT_ID][region]
+        except (KeyError, TypeError):
             backend = backend_dict[DEFAULT_ACCOUNT_ID]["us-east-1"]
-        else:
-            backend = backend_dict[DEFAULT_ACCOUNT_ID]["global"]
     else:
-        backend = backend_dict["global"]
+        try:
+            backend = backend_dict[region]
+        except (KeyError, TypeError):
+            backend = backend_dict["global"]
 
     url_map = Map()
     url_map.converters["regex"] = _RegexConverter
@@ -136,12 +139,13 @@ def _extract_service(request: Request) -> str:
         return prefix.lower()
 
     # 2. Authorization header (credential scope)
+    # Format: AWS4-HMAC-SHA256 Credential=KEY/DATE/REGION/SERVICE/aws4_request
     auth = request.headers.get("authorization", "")
     if "Credential=" in auth:
         try:
-            cred_part = auth.split("Credential=")[1].split("/")[0]
-            # Format: ACCESS_KEY_DATE_REGION_SERVICE
-            parts = cred_part.split("_")
+            cred_part = auth.split("Credential=")[1].split(",")[0]
+            # Format: KEY/DATE/REGION/SERVICE/aws4_request
+            parts = cred_part.strip().split("/")
             if len(parts) >= 4:
                 return parts[3]
         except (IndexError, AttributeError):
@@ -163,6 +167,12 @@ def _extract_service(request: Request) -> str:
     if path.startswith("/2016-11-15/"):
         return "apigatewayv2"
 
+    # 5. Use the path component as service name (e.g., /rds, /ec2)
+    # This is how the Rust proxy sends requests
+    parts = path.strip("/").split("/")
+    if parts and parts[0]:
+        return parts[0]
+
     # 5. Body-based (Action= parameter for query protocol)
     try:
         body = (
@@ -182,32 +192,74 @@ async def moto_handler(request: Request) -> Response:
     """Main handler - dispatch to Moto backend."""
     body = await request.body()
 
-    # Get the service from the X-Robotocore-Service header (set by Rust server)
-    # or extract it from the request
+    # Get the service from the X-Robotocore-Service header,
+    # the path component, or extract it from the request
     service = request.headers.get("x-robotocore-service", "")
+    if not service:
+        parts = request.url.path.strip("/").split("/")
+        if parts and parts[0]:
+            service = parts[0]
     if not service:
         service = _extract_service(request)
 
+    # Map service names to Moto backend names
+    service_map = {
+        "amazonsqs": "sqs",
+        "s3": "s3",
+        "ec2": "ec2",
+        "rds": "rds",
+        "cloudformation": "cloudformation",
+        "lambda": "lambda",
+        "dynamodb": "dynamodb",
+        "sts": "sts",
+        "iam": "iam",
+        "sns": "sns",
+        "kms": "kms",
+        "ssm": "ssm",
+        "logs": "logs",
+        "events": "events",
+        "kinesis": "kinesis",
+        "firehose": "firehose",
+        "secretsmanager": "secretsmanager",
+        "stepfunctions": "stepfunctions",
+        "cloudwatch": "cloudwatch",
+    }
+    service = service_map.get(service, service)
+
     if not service:
         return Response(
-            content=json.dumps(
-                {"__type": "UnknownService", "message": "Could not determine service"}
-            ),
+            content=json.dumps({
+                "__type": "UnknownService",
+                "message": "Could not determine service",
+            }),
             status_code=400,
             media_type="application/json",
         )
 
-    # Find the Moto backend
+    # Extract region from auth header
+    region = "us-east-1"
+    auth = request.headers.get("authorization", "")
+    if "Credential=" in auth:
+        try:
+            cred_part = auth.split("Credential=")[1].split(",")[0]
+            parts = cred_part.strip().split("/")
+            if len(parts) >= 3:
+                region = parts[2]
+        except (IndexError, AttributeError):
+            pass
+
+    # Build the full URL
+    full_url = str(request.url)
+
+    # Find the Moto backend and dispatcher
     try:
-        routing_map = _get_routing_table(service)
+        routing_map = _get_routing_table(service, region)
     except Exception as e:
         return Response(
-            content=json.dumps(
-                {
-                    "__type": "ServiceNotAvailable",
-                    "message": f"Moto backend not found for {service}: {e}",
-                }
-            ),
+            content=json.dumps({
+                "__type": "ServiceNotAvailable",
+                "message": f"Moto backend not found for {service}: {e}",
+            }),
             status_code=501,
             media_type="application/json",
         )
@@ -215,78 +267,77 @@ async def moto_handler(request: Request) -> Response:
     # Build the Werkzeug environ
     method = request.method
     path = request.url.path
-    query = (
-        request.url.query.decode()
-        if hasattr(request.url.query, "decode")
-        else str(request.url.query)
-    )
-
-    # Build headers
-    headers = {}
-    for key, value in request.headers.items():
-        headers[key] = value
+    query = str(request.url.query)
 
     environ = EnvironBuilder(
         path=f"{path}?{query}" if query else path,
         method=method,
         data=body,
-        headers=headers,
+        headers=dict(request.headers),
     ).get_environ()
+
+    werkzeug_request = WerkzeugRawBodyRequest(environ, body)
 
     # Route to the correct Moto handler
     try:
         binding = routing_map.bind_to_environ(environ)
-        endpoint, args = binding.match()
+        endpoint, _args = binding.match()
     except Exception:
-        # Try a catch-all
-        try:
-            binding = routing_map.bind_to_environ(environ)
-            endpoint, args = binding.match()
-        except Exception:
+        return Response(
+            content=json.dumps({
+                "__type": "NotFound",
+                "message": f"No Moto handler for {service} {method} {path}",
+            }),
+            status_code=404,
+            media_type="application/json",
+        )
+
+    # Call the Moto dispatcher with (request, full_url, headers)
+    try:
+        result = endpoint(werkzeug_request, full_url, werkzeug_request.headers)
+        if not result:
             return Response(
-                content=json.dumps(
-                    {
-                        "__type": "NotFound",
-                        "message": f"No Moto handler for {service} {method} {path}",
-                    }
-                ),
-                status_code=404,
+                content=json.dumps({
+                    "__type": "NotImplemented",
+                    "message": f"Operation not implemented for {service}",
+                }),
+                status_code=501,
                 media_type="application/json",
             )
+        status_code, resp_headers, resp_body = result
+        if isinstance(resp_body, (str, bytes)) and len(resp_body) == 0:
+            resp_body = None
 
-    # Create the Werkzeug request
-    werkzeug_request = WerkzeugRawBodyRequest(environ, body)
+        headers_dict = {}
+        if resp_headers:
+            for k, v in resp_headers.items():
+                if k.lower() not in ("content-length",):
+                    headers_dict[k] = v
 
-    # Call the Moto handler
-    try:
-        response = endpoint(werkzeug_request, **args)
-        status_code = getattr(response, "status_code", 200)
-        if isinstance(status_code, str):
-            status_code = int(status_code.split()[0])
-        resp_body = response.get_data()
-        content_type = response.headers.get("Content-Type", "application/json")
-
-        # Build Starlette response
-        resp_headers = {}
-        for key, value in response.headers.items():
-            if key.lower() not in ("content-length", "content-type"):
-                resp_headers[key] = value
+        content_type = headers_dict.get(
+            "Content-Type", "application/xml"
+        )
+        if isinstance(resp_body, bytes):
+            resp_body = resp_body.decode("utf-8", errors="replace")
 
         return Response(
-            content=resp_body,
+            content=resp_body or "",
             status_code=status_code,
             media_type=content_type,
-            headers=resp_headers,
+            headers=headers_dict,
         )
     except Exception as e:
         import traceback
-
         traceback.print_exc()
         return Response(
-            content=json.dumps({"__type": "InternalError", "message": str(e)}),
+            content=json.dumps({
+                "__type": "InternalError",
+                "message": str(e),
+            }),
             status_code=500,
             media_type="application/json",
         )
+
 
 
 async def health(request: Request) -> Response:
@@ -307,10 +358,11 @@ async def health(request: Request) -> Response:
 
 def create_app() -> Starlette:
     """Create the Starlette ASGI application."""
+    all_methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
     return Starlette(
         routes=[
-            Route("/_sidecar/health", health),
-            Route("/{service:path}", moto_handler),
+            Route("/_sidecar/health", health, methods=["GET"]),
+            Route("/{service:path}", moto_handler, methods=all_methods),
         ],
     )
 

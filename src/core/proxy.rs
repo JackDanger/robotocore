@@ -45,11 +45,8 @@ impl MotoProxy {
         &self,
         req: &ParsedRequest,
     ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
-        let url = format!(
-            "{}/{}",
-            self.base_url,
-            req.service
-        );
+        // Send to the sidecar root - the service is identified by the header
+        let url = format!("{}/", self.base_url);
 
         // Build the proxy request
         let mut proxy_req = self
