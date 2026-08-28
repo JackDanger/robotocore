@@ -465,6 +465,99 @@ impl ServiceHandler for LambdaServiceHandler {
     }
 }
 
+/// Adapter for CloudWatch Logs service crate.
+pub struct LogsServiceHandler {
+    inner: logs::DefaultLogsHandler,
+}
+
+impl ServiceHandler for LogsServiceHandler {
+    fn handle_sync(
+        &self,
+        req: &ParsedRequest,
+    ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        let logs_req = logs::protocol::AwsRequest {
+            service: req.service.clone(),
+            operation: req.operation.clone(),
+            account: req.account,
+            region: req.region.clone(),
+            params,
+            body: req.body.clone(),
+        };
+        let resp = self.inner.handle(logs_req);
+        let mut headers = std::collections::HashMap::new();
+        for (k, v) in resp.headers { headers.insert(k, v); }
+        Ok(ParsedResponse {
+            status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            headers,
+            body: serde_json::Value::Null,
+            raw: Some(resp.body),
+        })
+    }
+}
+
+/// Adapter for EventBridge service crate.
+pub struct EventsServiceHandler {
+    inner: events::DefaultEventsHandler,
+}
+
+impl ServiceHandler for EventsServiceHandler {
+    fn handle_sync(
+        &self,
+        req: &ParsedRequest,
+    ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        let events_req = events::protocol::AwsRequest {
+            service: req.service.clone(),
+            operation: req.operation.clone(),
+            account: req.account,
+            region: req.region.clone(),
+            params,
+            body: req.body.clone(),
+        };
+        let resp = self.inner.handle(events_req);
+        let mut headers = std::collections::HashMap::new();
+        for (k, v) in resp.headers { headers.insert(k, v); }
+        Ok(ParsedResponse {
+            status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            headers,
+            body: serde_json::Value::Null,
+            raw: Some(resp.body),
+        })
+    }
+}
+
+/// Adapter for Kinesis service crate.
+pub struct KinesisServiceHandler {
+    inner: kinesis::DefaultKinesisHandler,
+}
+
+impl ServiceHandler for KinesisServiceHandler {
+    fn handle_sync(
+        &self,
+        req: &ParsedRequest,
+    ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        let kinesis_req = kinesis::protocol::AwsRequest {
+            service: req.service.clone(),
+            operation: req.operation.clone(),
+            account: req.account,
+            region: req.region.clone(),
+            params,
+            body: req.body.clone(),
+        };
+        let resp = self.inner.handle(kinesis_req);
+        let mut headers = std::collections::HashMap::new();
+        for (k, v) in resp.headers { headers.insert(k, v); }
+        Ok(ParsedResponse {
+            status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            headers,
+            body: serde_json::Value::Null,
+            raw: Some(resp.body),
+        })
+    }
+}
+
 /// Registry of service handlers.
 pub struct ServiceRegistry {
     handlers: HashMap<String, Arc<dyn ServiceHandler>>,
@@ -550,6 +643,30 @@ impl ServiceRegistry {
             "lambda".to_string(),
             Arc::new(LambdaServiceHandler {
                 inner: lambda::DefaultLambdaHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native CloudWatch Logs handler
+        handlers.insert(
+            "logs".to_string(),
+            Arc::new(LogsServiceHandler {
+                inner: logs::DefaultLogsHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native EventBridge handler
+        handlers.insert(
+            "events".to_string(),
+            Arc::new(EventsServiceHandler {
+                inner: events::DefaultEventsHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native Kinesis handler
+        handlers.insert(
+            "kinesis".to_string(),
+            Arc::new(KinesisServiceHandler {
+                inner: kinesis::DefaultKinesisHandler::new(),
             }) as Arc<dyn ServiceHandler>,
         );
 
