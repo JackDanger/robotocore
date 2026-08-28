@@ -467,7 +467,7 @@ impl ServiceHandler for LambdaServiceHandler {
 
 /// Adapter for CloudWatch Logs service crate.
 pub struct LogsServiceHandler {
-    inner: logs::DefaultLogsHandler,
+    inner: cloudwatch_logs::DefaultLogsHandler,
 }
 
 impl ServiceHandler for LogsServiceHandler {
@@ -476,7 +476,7 @@ impl ServiceHandler for LogsServiceHandler {
         req: &ParsedRequest,
     ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
         let params = serde_json::to_value(&req.params).unwrap_or_default();
-        let logs_req = logs::protocol::AwsRequest {
+        let logs_req = cloudwatch_logs::protocol::AwsRequest {
             service: req.service.clone(),
             operation: req.operation.clone(),
             account: req.account,
@@ -650,7 +650,7 @@ impl ServiceRegistry {
         handlers.insert(
             "logs".to_string(),
             Arc::new(LogsServiceHandler {
-                inner: logs::DefaultLogsHandler::new(),
+                inner: cloudwatch_logs::DefaultLogsHandler::new(),
             }) as Arc<dyn ServiceHandler>,
         );
 
