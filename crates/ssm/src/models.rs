@@ -29,8 +29,8 @@ impl Parameter {
             allowed_values: RwLock::new(Vec::new()),
             tags: RwLock::new(Vec::new()),
             version: RwLock::new(1),
-            created: chrono::Utc::now().timestamp_millis() as u64,
-            modified: RwLock::new(chrono::Utc::now().timestamp_millis() as u64),
+            created: chrono::Utc::now().timestamp() as u64,
+            modified: RwLock::new(chrono::Utc::now().timestamp() as u64),
             last_modified_by: "robotocore".to_string(),
         }
     }

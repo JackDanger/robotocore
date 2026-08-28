@@ -281,7 +281,8 @@ def s3_tests(suffix):
 
 
 def sqs_tests(suffix):
-    queue = f"diff-test-{suffix}"
+    import uuid
+    queue = f"diff-{uuid.uuid4().hex[:8]}-{suffix}"
 
     def setup(c, s):
         try:
@@ -420,11 +421,267 @@ def dynamodb_tests(suffix):
     ]
 
 
+
+
+
+
+
+def firehose_tests(suffix):
+    stream = f"diff-stream-{suffix}"
+    def setup(c, s):
+        try: c.delete_delivery_stream(DeliveryStreamName=stream)
+        except Exception: pass
+        c.create_delivery_stream(DeliveryStreamName=stream,
+            ExtendedS3DestinationConfiguration={
+                "RoleARN": "arn:aws:iam::123456789012:role/firehose-role",
+                "BucketARN": "arn:aws:s3:::test-bucket"
+            })
+    def teardown(c, s):
+        try: c.delete_delivery_stream(DeliveryStreamName=stream)
+        except Exception: pass
+    return [
+        ("create_delivery_stream", setup,
+         lambda c, s: c.create_delivery_stream(DeliveryStreamName=stream,
+             ExtendedS3DestinationConfiguration={
+                 "RoleARN": "arn:aws:iam::123456789012:role/firehose-role",
+                 "BucketARN": "arn:aws:s3:::test-bucket"
+             }), teardown),
+        ("list_delivery_streams", setup,
+         lambda c, s: c.list_delivery_streams(), teardown),
+        ("put_record", setup,
+         lambda c, s: c.put_record(DeliveryStreamName=stream,
+             Record={"Data": b"test"}), teardown),
+    ]
+
+def ecr_tests(suffix):
+    repo = f"diff-repo-{suffix}"
+    def setup(c, s):
+        try: c.delete_repository(repositoryName=repo)
+        except Exception: pass
+        c.create_repository(repositoryName=repo)
+    def teardown(c, s):
+        try:
+            for img in c.list_images(repositoryName=repo).get("imageIds", []):
+                c.batch_delete_image(repositoryName=repo, imageIds=[img])
+            c.delete_repository(repositoryName=repo)
+        except Exception: pass
+    return [
+        ("create_repository", setup,
+         lambda c, s: c.create_repository(repositoryName=repo), teardown),
+        ("describe_repositories", setup,
+         lambda c, s: c.describe_repositories(), teardown),
+        ("put_image", setup,
+         lambda c, s: c.put_image(repositoryName=repo, imageTag="v1",
+             imageManifest=json.dumps({"schemaVersion": 2, "mediaType": "application/vnd.docker.distribution.manifest.v2+json", "config": {}, "layers": []})), teardown),
+        ("list_images", setup,
+         lambda c, s: c.list_images(repositoryName=repo), teardown),
+    ]
+
+def ecs_tests(suffix):
+    cluster = f"diff-cluster-{suffix}"
+    def setup(c, s):
+        try: c.delete_cluster(cluster=cluster)
+        except Exception: pass
+        c.create_cluster(clusterName=cluster)
+    def teardown(c, s):
+        try: c.delete_cluster(cluster=cluster)
+        except Exception: pass
+    return [
+        ("create_cluster", setup,
+         lambda c, s: c.create_cluster(clusterName=cluster), teardown),
+        ("describe_clusters", setup,
+         lambda c, s: c.describe_clusters(clusters=[cluster]), teardown),
+    ]
+
+def stepfunctions_tests(suffix):
+    sm = f"diff-sm-{suffix}"
+    def setup(c, s):
+        try: c.delete_state_machine(stateMachineArn=f"arn:aws:states:us-east-1:123456789012:stateMachine:{sm}")
+        except Exception: pass
+    def teardown(c, s):
+        try: c.delete_state_machine(stateMachineArn=f"arn:aws:states:us-east-1:123456789012:stateMachine:{sm}")
+        except Exception: pass
+    return [
+        ("create_state_machine", setup,
+         lambda c, s: c.create_state_machine(
+             stateMachineName=sm,
+             roleArn="arn:aws:iam::123456789012:role/sfn-role",
+             definition=json.dumps({"StartAt": "s1", "States": {"s1": {"Type": "Succeed"}}})),
+         teardown),
+        ("list_state_machines", setup,
+         lambda c, s: c.list_state_machines(), teardown),
+    ]
+
+def cloudwatch_tests(suffix):
+    ns = f"diff-ns-{suffix}"
+    def setup(c, s): pass
+    def teardown(c, s): pass
+    return [
+        ("put_metric_data", setup,
+         lambda c, s: c.put_metric_data(Namespace=ns,
+             MetricData=[{"MetricName": "CPU", "Value": 50.0, "Unit": "Percent"}]), teardown),
+        ("list_metrics", setup,
+         lambda c, s: c.list_metrics(Namespace=ns), teardown),
+    ]
+
+def kinesis_tests(suffix):
+    stream = f"diff-kinesis-{suffix}"
+    def setup(c, s):
+        try: c.delete_stream(StreamName=stream)
+        except Exception: pass
+        c.create_stream(StreamName=stream, ShardCount=1)
+        import time; time.sleep(1)
+    def teardown(c, s):
+        try:
+            import time; time.sleep(1)
+            c.delete_stream(StreamName=stream)
+        except Exception: pass
+    return [
+        ("create_stream", setup,
+         lambda c, s: c.create_stream(StreamName=stream, ShardCount=1), teardown),
+        ("list_streams", setup,
+         lambda c, s: c.list_streams(), teardown),
+    ]
+
+def kms_tests(suffix):
+    def setup(c, s): pass
+    def teardown(c, s): pass
+    return [
+        ("create_key", setup,
+         lambda c, s: c.create_key(Description=f"diff-key-{suffix}"), teardown),
+        ("list_keys", setup,
+         lambda c, s: c.list_keys(), teardown),
+    ]
+
+def sns_tests(suffix):
+    topic = f"diff-topic-{suffix}"
+    def setup(c, s):
+        try: c.delete_topic(TopicArn=f"arn:aws:sns:us-east-1:123456789012:{topic}")
+        except Exception: pass
+    def teardown(c, s):
+        try: c.delete_topic(TopicArn=f"arn:aws:sns:us-east-1:123456789012:{topic}")
+        except Exception: pass
+    return [
+        ("create_topic", setup,
+         lambda c, s: c.create_topic(Name=topic), teardown),
+        ("list_topics", setup,
+         lambda c, s: c.list_topics(), teardown),
+    ]
+
+def ssm_tests(suffix):
+    name = f"/diff/{suffix}/param"
+    def setup(c, s):
+        try: c.delete_parameter(Name=name)
+        except Exception: pass
+    def teardown(c, s):
+        try: c.delete_parameter(Name=name)
+        except Exception: pass
+    return [
+        ("put_parameter", setup,
+         lambda c, s: c.put_parameter(Name=name, Value="test", Type="String"), teardown),
+        ("get_parameter", setup,
+         lambda c, s: (c.put_parameter(Name=name, Value="test", Type="String"), c.get_parameter(Name=name))[1], teardown),
+        ("describe_parameters", setup,
+         lambda c, s: c.describe_parameters(), teardown),
+    ]
+
+def secretsmanager_tests(suffix):
+    name = f"diff/{suffix}/secret"
+    def setup(c, s):
+        try: c.delete_secret(SecretId=name)
+        except Exception: pass
+    def teardown(c, s):
+        try: c.delete_secret(SecretId=name)
+        except Exception: pass
+    return [
+        ("create_secret", setup,
+         lambda c, s: c.create_secret(Name=name, SecretString="test"), teardown),
+        ("list_secrets", setup,
+         lambda c, s: c.list_secrets(), teardown),
+    ]
+
+def events_tests(suffix):
+    rule = f"diff-rule-{suffix}"
+    def setup(c, s):
+        try: c.delete_rule(Name=rule)
+        except Exception: pass
+    def teardown(c, s):
+        try: c.delete_rule(Name=rule)
+        except Exception: pass
+    return [
+        ("put_rule", setup,
+         lambda c, s: c.put_rule(Name=rule), teardown),
+        ("list_rules", setup,
+         lambda c, s: c.list_rules(), teardown),
+    ]
+
+def logs_tests(suffix):
+    group = f"/diff/{suffix}/logs"
+    def setup(c, s):
+        try: c.delete_log_group(logGroupName=group)
+        except Exception: pass
+    def teardown(c, s):
+        try: c.delete_log_group(logGroupName=group)
+        except Exception: pass
+    return [
+        ("create_log_group", setup,
+         lambda c, s: c.create_log_group(logGroupName=group), teardown),
+        ("describe_log_groups", setup,
+         lambda c, s: c.describe_log_groups(), teardown),
+    ]
+
+def iam_tests(suffix):
+    role = f"diff-role-{suffix}"
+    def setup(c, s):
+        try: c.delete_role(RoleName=role)
+        except Exception: pass
+    def teardown(c, s):
+        try: c.delete_role(RoleName=role)
+        except Exception: pass
+    return [
+        ("create_role", setup,
+         lambda c, s: c.create_role(RoleName=role,
+             AssumeRolePolicyDocument=json.dumps({
+                 "Version": "2012-10-17",
+                 "Statement": [{"Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]
+             })), teardown),
+        ("list_roles", setup,
+         lambda c, s: c.list_roles(), teardown),
+    ]
+
+def lambda_tests(suffix):
+    fn = f"diff-fn-{suffix}"
+    def setup(c, s):
+        try: c.delete_function(FunctionName=fn)
+        except Exception: pass
+    def teardown(c, s):
+        try: c.delete_function(FunctionName=fn)
+        except Exception: pass
+    return [
+        ("list_functions", setup,
+         lambda c, s: c.list_functions(), teardown),
+    ]
+
+
 TEST_DEFINITIONS = {
     "s3": s3_tests,
     "sqs": sqs_tests,
     "sts": sts_tests,
     "dynamodb": dynamodb_tests,
+    "firehose": firehose_tests,
+    "ecr": ecr_tests,
+    "ecs": ecs_tests,
+    "stepfunctions": stepfunctions_tests,
+    "cloudwatch": cloudwatch_tests,
+    "kinesis": kinesis_tests,
+    "kms": kms_tests,
+    "sns": sns_tests,
+    "ssm": ssm_tests,
+    "secretsmanager": secretsmanager_tests,
+    "events": events_tests,
+    "logs": logs_tests,
+    "iam": iam_tests,
+    "lambda": lambda_tests,
 }
 
 
@@ -542,7 +799,7 @@ def run_diff_tests(services, endpoint_python, endpoint_rust, only_ops=None):
 
 def main():
     parser = argparse.ArgumentParser(description="Differential test: Python vs Rust robotocore")
-    parser.add_argument("--services", default="s3,sqs,sts,dynamodb", help="Comma-separated service list")
+    parser.add_argument("--services", default="s3,sqs,sts,dynamodb,firehose,ecr,ecs,stepfunctions,cloudwatch,kinesis,kms,sns,ssm,secretsmanager,events,logs,iam,lambda", help="Comma-separated service list")
     parser.add_argument("--ops", default=None, help="Comma-separated operation filter")
     parser.add_argument("--endpoint-python", default="http://localhost:4566", help="Python server URL")
     parser.add_argument("--endpoint-rust", default="http://localhost:4567", help="Rust server URL")

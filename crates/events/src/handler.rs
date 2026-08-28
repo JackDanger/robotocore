@@ -67,7 +67,7 @@ impl EventsHandler {
             state: "ENABLED".to_string(),
             role_arn: req.params.get("RoleArn").and_then(|v| v.as_str()).map(String::from),
             schedule_expression: req.params.get("ScheduleExpression").and_then(|v| v.as_str()).map(String::from),
-            created: chrono::Utc::now().timestamp_millis() as u64,
+            created: chrono::Utc::now().timestamp() as u64,
             targets: RwLock::new(Vec::new()),
             tags: RwLock::new(Vec::new()),
             inputs: RwLock::new(Vec::new()),

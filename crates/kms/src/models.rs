@@ -35,7 +35,7 @@ impl Key {
             description: RwLock::new(String::new()),
             enabled: RwLock::new(true),
             key_material: vec![0u8; 32],
-            created: chrono::Utc::now().timestamp_millis() as u64,
+            created: chrono::Utc::now().timestamp() as u64,
             tags: RwLock::new(Vec::new()),
         }
     }

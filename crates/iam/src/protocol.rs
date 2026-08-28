@@ -26,7 +26,7 @@ impl AwsResponse {
     /// Build an XML response for a successful IAM operation.
     pub fn xml(status: u16, root: &str, body_xml: String) -> Self {
         let full_body = format!(
-            "<{root}Response xmlns=\"https://iam.amazonaws.com/doc/2010-05-08/\">{body_xml}</{root}Response>"
+            "<{root}Response xmlns=\"https://iam.amazonaws.com/doc/2010-05-08/\"><{root}Result>{body_xml}</{root}Result></{root}Response>"
         );
         Self {
             status,

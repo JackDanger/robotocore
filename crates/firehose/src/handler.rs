@@ -110,7 +110,7 @@ impl FirehoseHandler {
                 .unwrap_or("")
                 .to_string(),
             destination_type: "extended_s3".to_string(),
-            created: chrono::Utc::now().timestamp_millis() as u64,
+            created: chrono::Utc::now().timestamp() as u64,
             encryption: None,
             tags: req.params.get("Tags")
                 .and_then(|v| v.as_array())

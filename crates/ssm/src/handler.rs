@@ -69,7 +69,7 @@ impl SsmHandler {
         }
 
         let state = self.get_state(req.account, &req.region);
-        let now = chrono::Utc::now().timestamp_millis() as u64;
+        let now = chrono::Utc::now().timestamp() as u64;
 
         if let Some(existing) = state.get_parameter(&name) {
             *existing.value.write() = value;
@@ -158,7 +158,7 @@ impl SsmHandler {
         let doc_type = req.params.get("DocumentType").and_then(|v| v.as_str()).unwrap_or("Command").to_string();
 
         let state = self.get_state(req.account, &req.region);
-        let now = chrono::Utc::now().timestamp_millis() as u64;
+        let now = chrono::Utc::now().timestamp() as u64;
         let doc = Arc::new(Document {
             name: name.clone(),
             content,
@@ -293,7 +293,7 @@ impl SsmHandler {
 
     fn create_activation(&self, _req: &AwsRequest) -> AwsResponse {
         let activation_id = uuid::Uuid::new_v4().simple().to_string();
-        let now = chrono::Utc::now().timestamp_millis() as u64;
+        let now = chrono::Utc::now().timestamp() as u64;
         AwsResponse::json(200, json!({
             "Activation": {
                 "ActivationId": activation_id,
