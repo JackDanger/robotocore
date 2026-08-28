@@ -150,10 +150,12 @@ impl DynamoDbHandler {
                 "TableDescription": {
                     "TableName": table_name,
                     "TableStatus": "ACTIVE",
+                    "TableId": table.table_id.clone(),
                     "KeySchema": key_schema_json,
                     "AttributeDefinitions": attr_defs_json,
                     "TableArn": table_arn,
                     "CreationRequestTime": table.created_at as f64,
+                    "CreationDateTime": table.created_at as f64,
                     "ProvisionedThroughput": {
                         "ReadCapacityUnits": 0.0,
                         "WriteCapacityUnits": 0.0
@@ -162,7 +164,7 @@ impl DynamoDbHandler {
                     "GlobalSecondaryIndexes": [],
                     "DeletionProtectionEnabled": false,
                     "SseSpecification": { "SseType": "DISABLED" },
-                    "TableId": table_name,
+                    "TableId": table.table_id.clone(),
                     "BillingModeSummary": { "BillingMode": table.billing_mode }
                 }
             }),
@@ -233,7 +235,7 @@ impl DynamoDbHandler {
                         "GlobalSecondaryIndexes": [],
                         "DeletionProtectionEnabled": false,
                         "SseSpecification": { "SseType": "DISABLED" },
-                        "TableId": table.name,
+                        "TableId": table.table_id.clone(),
                         "BillingModeSummary": { "BillingMode": table.billing_mode }
                     }
                 }))

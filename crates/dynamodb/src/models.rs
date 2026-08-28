@@ -28,6 +28,7 @@ impl Item {
 /// A DynamoDB table definition.
 #[derive(Debug)]
 pub struct Table {
+    pub table_id: String,
     pub name: String,
     pub account: u64,
     pub region: String,
@@ -54,6 +55,7 @@ impl Table {
         billing_mode: String,
     ) -> Self {
         Self {
+            table_id: uuid::Uuid::new_v4().simple().to_string(),
             name,
             account,
             region,

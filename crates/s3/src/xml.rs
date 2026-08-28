@@ -40,6 +40,7 @@ pub fn create_bucket_result(bucket: &str) -> String {
     format!(
         r#"<?xml version="1.0" encoding="UTF-8"?>
 <CreateBucketResult xmlns="{ns}">
+  <Location>http://{bucket}.s3.amazonaws.com</Location>
   <Bucket>{bucket}</Bucket>
 </CreateBucketResult>"#,
         ns = S3_NS,
