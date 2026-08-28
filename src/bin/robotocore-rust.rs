@@ -57,7 +57,9 @@ async fn main() {
         "dynamodb".to_string(), "sns".to_string(), "secretsmanager".to_string(),
         "kms".to_string(), "ssm".to_string(), "iam".to_string(),
         "lambda".to_string(), "logs".to_string(), "events".to_string(),
-        "kinesis".to_string(),
+        "kinesis".to_string(), "firehose".to_string(),
+        "cloudwatch".to_string(), "ecr".to_string(), "ecs".to_string(),
+        "stepfunctions".to_string(),
     ];
     let moto_proxy = match &args.moto_url {
         Some(url) => {

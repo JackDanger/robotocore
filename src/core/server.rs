@@ -558,6 +558,71 @@ impl ServiceHandler for KinesisServiceHandler {
     }
 }
 
+/// Adapter for Firehose.
+pub struct FirehoseServiceHandler { inner: firehose::DefaultFirehoseHandler }
+impl ServiceHandler for FirehoseServiceHandler {
+    fn handle_sync(&self, req: &ParsedRequest) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        let r = firehose::protocol::AwsRequest { service: req.service.clone(), operation: req.operation.clone(), account: req.account, region: req.region.clone(), params, body: req.body.clone() };
+        let resp = self.inner.handle(r);
+        let mut h = std::collections::HashMap::new();
+        for (k, v) in resp.headers { h.insert(k, v); }
+        Ok(ParsedResponse { status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR), headers: h, body: serde_json::Value::Null, raw: Some(resp.body) })
+    }
+}
+
+/// Adapter for CloudWatch.
+pub struct CloudWatchServiceHandler { inner: cloudwatch::DefaultCloudwatchHandler }
+impl ServiceHandler for CloudWatchServiceHandler {
+    fn handle_sync(&self, req: &ParsedRequest) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        let r = cloudwatch::protocol::AwsRequest { service: req.service.clone(), operation: req.operation.clone(), account: req.account, region: req.region.clone(), params, body: req.body.clone() };
+        let resp = self.inner.handle(r);
+        let mut h = std::collections::HashMap::new();
+        for (k, v) in resp.headers { h.insert(k, v); }
+        Ok(ParsedResponse { status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR), headers: h, body: serde_json::Value::Null, raw: Some(resp.body) })
+    }
+}
+
+/// Adapter for ECR.
+pub struct EcrServiceHandler { inner: ecr::DefaultEcrHandler }
+impl ServiceHandler for EcrServiceHandler {
+    fn handle_sync(&self, req: &ParsedRequest) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        let r = ecr::protocol::AwsRequest { service: req.service.clone(), operation: req.operation.clone(), account: req.account, region: req.region.clone(), params, body: req.body.clone() };
+        let resp = self.inner.handle(r);
+        let mut h = std::collections::HashMap::new();
+        for (k, v) in resp.headers { h.insert(k, v); }
+        Ok(ParsedResponse { status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR), headers: h, body: serde_json::Value::Null, raw: Some(resp.body) })
+    }
+}
+
+/// Adapter for ECS.
+pub struct EcsServiceHandler { inner: ecs::DefaultEcsHandler }
+impl ServiceHandler for EcsServiceHandler {
+    fn handle_sync(&self, req: &ParsedRequest) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        let r = ecs::protocol::AwsRequest { service: req.service.clone(), operation: req.operation.clone(), account: req.account, region: req.region.clone(), params, body: req.body.clone() };
+        let resp = self.inner.handle(r);
+        let mut h = std::collections::HashMap::new();
+        for (k, v) in resp.headers { h.insert(k, v); }
+        Ok(ParsedResponse { status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR), headers: h, body: serde_json::Value::Null, raw: Some(resp.body) })
+    }
+}
+
+/// Adapter for Step Functions.
+pub struct StepFunctionsServiceHandler { inner: stepfunctions::DefaultStepfunctionsHandler }
+impl ServiceHandler for StepFunctionsServiceHandler {
+    fn handle_sync(&self, req: &ParsedRequest) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+        let params = serde_json::to_value(&req.params).unwrap_or_default();
+        let r = stepfunctions::protocol::AwsRequest { service: req.service.clone(), operation: req.operation.clone(), account: req.account, region: req.region.clone(), params, body: req.body.clone() };
+        let resp = self.inner.handle(r);
+        let mut h = std::collections::HashMap::new();
+        for (k, v) in resp.headers { h.insert(k, v); }
+        Ok(ParsedResponse { status: StatusCode::from_u16(resp.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR), headers: h, body: serde_json::Value::Null, raw: Some(resp.body) })
+    }
+}
+
 /// Registry of service handlers.
 pub struct ServiceRegistry {
     handlers: HashMap<String, Arc<dyn ServiceHandler>>,
@@ -667,6 +732,46 @@ impl ServiceRegistry {
             "kinesis".to_string(),
             Arc::new(KinesisServiceHandler {
                 inner: kinesis::DefaultKinesisHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native Firehose handler
+        handlers.insert(
+            "firehose".to_string(),
+            Arc::new(FirehoseServiceHandler {
+                inner: firehose::DefaultFirehoseHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native CloudWatch handler
+        handlers.insert(
+            "cloudwatch".to_string(),
+            Arc::new(CloudWatchServiceHandler {
+                inner: cloudwatch::DefaultCloudwatchHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native ECR handler
+        handlers.insert(
+            "ecr".to_string(),
+            Arc::new(EcrServiceHandler {
+                inner: ecr::DefaultEcrHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native ECS handler
+        handlers.insert(
+            "ecs".to_string(),
+            Arc::new(EcsServiceHandler {
+                inner: ecs::DefaultEcsHandler::new(),
+            }) as Arc<dyn ServiceHandler>,
+        );
+
+        // Register native Step Functions handler
+        handlers.insert(
+            "stepfunctions".to_string(),
+            Arc::new(StepFunctionsServiceHandler {
+                inner: stepfunctions::DefaultStepfunctionsHandler::new(),
             }) as Arc<dyn ServiceHandler>,
         );
 
