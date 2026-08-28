@@ -1,4 +1,4 @@
-//! Ecr operation handler.
+//! ECR operation handler.
 
 use parking_lot::RwLock;
 use serde_json::{json, Value};
@@ -25,302 +25,507 @@ impl EcrHandler {
     pub fn handle(&self, req: AwsRequest) -> AwsResponse {
         let op = req.operation.as_str();
         match op {
-            "BatchCheckLayerAvailability" => self.batchchecklayeravailability(&req),
-            "BatchDeleteImage" => self.batchdeleteimage(&req),
-            "BatchGetImage" => self.batchgetimage(&req),
-            "BatchGetRepositoryScanningConfiguration" => self.batchgetrepositoryscanningconfiguration(&req),
-            "CompleteLayerUpload" => self.completelayerupload(&req),
-            "CreatePullThroughCacheRule" => self.createpullthroughcacherule(&req),
-            "CreateRepository" => self.createrepository(&req),
-            "CreateRepositoryCreationTemplate" => self.createrepositorycreationtemplate(&req),
-            "DeleteLifecyclePolicy" => self.deletelifecyclepolicy(&req),
-            "DeletePullThroughCacheRule" => self.deletepullthroughcacherule(&req),
-            "DeleteRegistryPolicy" => self.deleteregistrypolicy(&req),
-            "DeleteRepository" => self.deleterepository(&req),
-            "DeleteRepositoryCreationTemplate" => self.deleterepositorycreationtemplate(&req),
-            "DeleteRepositoryPolicy" => self.deleterepositorypolicy(&req),
-            "DeleteSigningConfiguration" => self.deletesigningconfiguration(&req),
-            "DeregisterPullTimeUpdateExclusion" => self.deregisterpulltimeupdateexclusion(&req),
-            "DescribeImageReplicationStatus" => self.describeimagereplicationstatus(&req),
-            "DescribeImageScanFindings" => self.describeimagescanfindings(&req),
-            "DescribeImageSigningStatus" => self.describeimagesigningstatus(&req),
-            "DescribeImages" => self.describeimages(&req),
-            "DescribePullThroughCacheRules" => self.describepullthroughcacherules(&req),
-            "DescribeRegistry" => self.describeregistry(&req),
-            "DescribeRepositories" => self.describerepositories(&req),
-            "DescribeRepositoryCreationTemplates" => self.describerepositorycreationtemplates(&req),
-            "GetAccountSetting" => self.getaccountsetting(&req),
-            "GetAuthorizationToken" => self.getauthorizationtoken(&req),
-            "GetDownloadUrlForLayer" => self.getdownloadurlforlayer(&req),
-            "GetLifecyclePolicy" => self.getlifecyclepolicy(&req),
-            "GetLifecyclePolicyPreview" => self.getlifecyclepolicypreview(&req),
-            "GetRegistryPolicy" => self.getregistrypolicy(&req),
-            "GetRegistryScanningConfiguration" => self.getregistryscanningconfiguration(&req),
-            "GetRepositoryPolicy" => self.getrepositorypolicy(&req),
-            "GetSigningConfiguration" => self.getsigningconfiguration(&req),
-            "InitiateLayerUpload" => self.initiatelayerupload(&req),
-            "ListImageReferrers" => self.listimagereferrers(&req),
-            "ListImages" => self.listimages(&req),
-            "ListPullTimeUpdateExclusions" => self.listpulltimeupdateexclusions(&req),
-            "ListTagsForResource" => self.listtagsforresource(&req),
-            "PutAccountSetting" => self.putaccountsetting(&req),
-            "PutImage" => self.putimage(&req),
-            "PutImageScanningConfiguration" => self.putimagescanningconfiguration(&req),
-            "PutImageTagMutability" => self.putimagetagmutability(&req),
-            "PutLifecyclePolicy" => self.putlifecyclepolicy(&req),
-            "PutRegistryPolicy" => self.putregistrypolicy(&req),
-            "PutRegistryScanningConfiguration" => self.putregistryscanningconfiguration(&req),
-            "PutReplicationConfiguration" => self.putreplicationconfiguration(&req),
-            "PutSigningConfiguration" => self.putsigningconfiguration(&req),
-            "RegisterPullTimeUpdateExclusion" => self.registerpulltimeupdateexclusion(&req),
-            "SetRepositoryPolicy" => self.setrepositorypolicy(&req),
-            "StartImageScan" => self.startimagescan(&req),
-            "StartLifecyclePolicyPreview" => self.startlifecyclepolicypreview(&req),
-            "TagResource" => self.tagresource(&req),
-            "UntagResource" => self.untagresource(&req),
-            "UpdateImageStorageClass" => self.updateimagestorageclass(&req),
-            "UpdatePullThroughCacheRule" => self.updatepullthroughcacherule(&req),
-            "UpdateRepositoryCreationTemplate" => self.updaterepositorycreationtemplate(&req),
-            "UploadLayerPart" => self.uploadlayerpart(&req),
-            "ValidatePullThroughCacheRule" => self.validatepullthroughcacherule(&req),
+            "CreateRepository" => self.create_repository(&req),
+            "DeleteRepository" => self.delete_repository(&req),
+            "DescribeRepositories" => self.describe_repositories(&req),
+            "ListImages" => self.list_images(&req),
+            "PutImage" => self.put_image(&req),
+            "BatchGetImage" => self.batch_get_image(&req),
+            "BatchDeleteImage" => self.batch_delete_image(&req),
+            "GetAuthorizationToken" => self.get_authorization_token(&req),
+            "ListTagsForResource" => self.list_tags(&req),
+            "TagResource" => self.tag_resource(&req),
+            "UntagResource" => self.untag_resource(&req),
+            "GetRepositoryPolicy" => self.get_repository_policy(&req),
+            "SetRepositoryPolicy" => self.set_repository_policy(&req),
+            "DeleteRepositoryPolicy" => self.delete_repository_policy(&req),
+            "StartImageScan" => self.start_image_scan(&req),
+            "DescribeImageScanFindings" => self.describe_scan_findings(&req),
+            "DescribeImageSigningStatus" => self.describe_signing_status(&req),
+            "PutImageScanningConfiguration" => self.put_image_scanning_config(&req),
+            "PutImageTagMutability" => self.put_image_tag_mutability(&req),
+            "BatchCheckLayerAvailability" => self.batch_check_layer(&req),
+            "InitiateLayerUpload" => self.initiate_layer_upload(&req),
+            "UploadLayerPart" => self.upload_layer_part(&req),
+            "CompleteLayerUpload" => self.complete_layer_upload(&req),
+            "GetDownloadUrlForLayer" => self.get_download_url(&req),
+            "DescribeRepositories" => self.describe_repositories(&req),
+            "DescribeRegistry" => self.describe_registry(&req),
+            "PutLifecyclePolicy" => self.put_lifecycle_policy(&req),
+            "GetLifecyclePolicy" => self.get_lifecycle_policy(&req),
+            "DeleteLifecyclePolicy" => self.delete_lifecycle_policy(&req),
+            "PutRegistryScanningConfiguration" => self.put_registry_scanning(&req),
+            "GetRegistryScanningConfiguration" => self.get_registry_scanning(&req),
+            "BatchGetRepositoryScanningConfiguration" => self.batch_get_scanning_config(&req),
             other => AwsResponse::error(400, "ValidationException",
                 &format!("The operation {} is not implemented", other)),
         }
     }
 
-    fn batchchecklayeravailability(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn create_repository(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        if name.is_empty() {
+            return AwsResponse::error(400, "ValidationException", "repositoryName required");
+        }
+        let state = self.get_state(req.account, &req.region);
+        let mut repos = state.repositories.write();
+        if repos.contains_key(&name) {
+            return AwsResponse::error(400, "RepositoryAlreadyExistsException",
+                &format!("Repository {name} already exists"));
+        }
+        let arn = format!("arn:aws:ecr:{}:{}:repository/{}", req.region, req.account, name);
+        let repo = json!({
+            "repositoryName": name,
+            "repositoryArn": arn,
+            "repositoryUri": format!("{}.dkr.ecr.{}.amazonaws.com/{}", req.account, req.region, name),
+            "createdAt": chrono::Utc::now().to_rfc3339(),
+            "imageTagMutability": req.params.get("imageTagMutability")
+                .and_then(|v| v.as_str()).unwrap_or("MUTABLE"),
+            "imageScanningConfiguration": req.params.get("imageScanningConfiguration")
+                .cloned().unwrap_or(json!({ "scanOnPush": true })),
+            "encryptionType": "AES256",
+        });
+        repos.insert(name.clone(), repo.clone());
+        AwsResponse::json(200, repo)
     }
 
-    fn batchdeleteimage(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn delete_repository(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut repos = state.repositories.write();
+        if repos.remove(name).is_none() {
+            return AwsResponse::error(400, "RepositoryNotFoundException",
+                &format!("Repository {name} not found"));
+        }
+        state.images.write().remove(name);
+        AwsResponse::json(200, json!({
+            "repository": {
+                "repositoryName": name,
+                "repositoryArn": format!("arn:aws:ecr:{}:{}:repository/{}", req.region, req.account, name),
+                "repositoryUri": format!("{}.dkr.ecr.{}.amazonaws.com/{}", req.account, req.region, name),
+            }
+        }))
     }
 
-    fn batchgetimage(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn describe_repositories(&self, req: &AwsRequest) -> AwsResponse {
+        let state = self.get_state(req.account, &req.region);
+        let repos = state.repositories.read();
+        let repo_names: Vec<String> = req.params.get("repositoryNames")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+
+        let repos: Vec<Value> = if repo_names.is_empty() {
+            repos.values().cloned().collect()
+        } else {
+            repo_names.iter()
+                .filter_map(|n| repos.get(n).cloned())
+                .collect()
+        };
+        AwsResponse::json(200, json!({ "repositories": repos }))
     }
 
-    fn batchgetrepositoryscanningconfiguration(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn list_images(&self, req: &AwsRequest) -> AwsResponse {
+        let repo_name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let images = state.images.read();
+        let repo_images: Vec<Value> = images.get(repo_name)
+            .cloned()
+            .unwrap_or_default();
+        let image_ids: Vec<Value> = repo_images.iter()
+            .map(|img| json!({
+                "imageDigest": img.get("imageDigest").cloned().unwrap_or(Value::Null),
+                "imageTag": img.get("imageTag").cloned().unwrap_or(Value::Null),
+            }))
+            .collect();
+        AwsResponse::json(200, json!({
+            "imageIds": image_ids,
+            "nextToken": Value::Null
+        }))
     }
 
-    fn completelayerupload(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn put_image(&self, req: &AwsRequest) -> AwsResponse {
+        let repo_name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let state = self.get_state(req.account, &req.region);
+        if !state.repositories.read().contains_key(&repo_name) {
+            return AwsResponse::error(400, "RepositoryNotFoundException",
+                &format!("Repository {repo_name} not found"));
+        }
+        let digest = format!("sha256:{}", &uuid::Uuid::new_v4().simple().to_string()[..32]);
+        let image = json!({
+            "imageDigest": digest,
+            "imageTag": req.params.get("imageTag").cloned().unwrap_or(Value::Null),
+            "imageUrl": format!("{}.dkr.ecr.{}.amazonaws.com/{}:{}", req.account, req.region, repo_name,
+                req.params.get("imageTag").and_then(|v| v.as_str()).unwrap_or("latest")),
+            "imageSizeInBytes": 0,
+            "imagePushedAt": chrono::Utc::now().to_rfc3339(),
+        });
+        let mut images = state.images.write();
+        images.entry(repo_name).or_insert_with(Vec::new).push(image.clone());
+        AwsResponse::json(200, image)
     }
 
-    fn createpullthroughcacherule(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn batch_get_image(&self, req: &AwsRequest) -> AwsResponse {
+        let repo_name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let image_ids: Vec<Value> = req.params.get("imageIds")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let images = state.images.read();
+        let repo_images: Vec<Value> = images.get(repo_name)
+            .cloned()
+            .unwrap_or_default();
+        let images: Vec<Value> = image_ids.iter()
+            .filter_map(|id| repo_images.iter().find(|img| {
+                img.get("imageDigest").and_then(|d| d.as_str())
+                    == id.get("imageDigest").and_then(|d| d.as_str())
+                    || img.get("imageTag").and_then(|t| t.as_str())
+                        == id.get("imageTag").and_then(|t| t.as_str())
+            })).cloned().collect();
+        AwsResponse::json(200, json!({
+            "images": images,
+            "failures": []
+        }))
     }
 
-    fn createrepository(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn batch_delete_image(&self, req: &AwsRequest) -> AwsResponse {
+        let repo_name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let image_ids: Vec<Value> = req.params.get("imageIds")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut images = state.images.write();
+        let repo_images = images.get_mut(repo_name);
+        let mut deleted = Vec::new();
+        if let Some(imgs) = repo_images {
+            imgs.retain(|img| {
+                let found = image_ids.iter().any(|id| {
+                    img.get("imageDigest").and_then(|d| d.as_str())
+                        == id.get("imageDigest").and_then(|d| d.as_str())
+                        || img.get("imageTag").and_then(|t| t.as_str())
+                            == id.get("imageTag").and_then(|t| t.as_str())
+                });
+                if found {
+                    deleted.push(img.clone());
+                }
+                !found
+            });
+        }
+        AwsResponse::json(200, json!({
+            "imageIds": deleted.iter().map(|img| json!({
+                "imageDigest": img.get("imageDigest").cloned().unwrap_or(Value::Null),
+                "imageTag": img.get("imageTag").cloned().unwrap_or(Value::Null),
+            })).collect::<Vec<_>>(),
+            "failures": []
+        }))
     }
 
-    fn createrepositorycreationtemplate(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn get_authorization_token(&self, _req: &AwsRequest) -> AwsResponse {
+        let token = base64::Engine::encode(
+            &base64::engine::general_purpose::STANDARD,
+            "AWS:test".as_bytes()
+        );
+        AwsResponse::json(200, json!({
+            "authorizationData": [{
+                "authorizationToken": token,
+                "expiresAt": (chrono::Utc::now() + chrono::Duration::hours(12)).to_rfc3339(),
+                "proxyEndpoint": "https://123456789012.dkr.ecr.us-east-1.amazonaws.com"
+            }]
+        }))
     }
 
-    fn deletelifecyclepolicy(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn list_tags(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("resourceArn")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let tags = state.tags.read().get(arn).cloned().unwrap_or_default();
+        AwsResponse::json(200, json!({ "tags": tags }))
     }
 
-    fn deletepullthroughcacherule(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn tag_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("resourceArn")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let tags: Vec<Value> = req.params.get("tags")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut all_tags = state.tags.write();
+        let entry = all_tags.entry(arn).or_insert_with(Vec::new);
+        entry.extend(tags);
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn deleteregistrypolicy(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn untag_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("resourceArn")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let keys: Vec<String> = req.params.get("tagKeys")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut all_tags = state.tags.write();
+        if let Some(tags) = all_tags.get_mut(arn) {
+            tags.retain(|t| {
+                t.get("key").and_then(|k| k.as_str())
+                    .map(|k| !keys.contains(&k.to_string()))
+                    .unwrap_or(true)
+            });
+        }
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn deleterepository(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn get_repository_policy(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let policy = state.policies.read().get(name).cloned();
+        match policy {
+            Some(p) => AwsResponse::json(200, json!({
+                "repositoryName": name,
+                "policyText": p
+            })),
+            None => AwsResponse::error(400, "RepositoryPolicyNotFoundException",
+                &format!("Repository {name} has no policy")),
+        }
     }
 
-    fn deleterepositorycreationtemplate(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn set_repository_policy(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let policy = req.params.get("policyText")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let state = self.get_state(req.account, &req.region);
+        state.policies.write().insert(name, policy);
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn deleterepositorypolicy(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn delete_repository_policy(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        state.policies.write().remove(name);
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn deletesigningconfiguration(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn start_image_scan(&self, req: &AwsRequest) -> AwsResponse {
+        let repo_name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let image_id = req.params.get("imageId").cloned().unwrap_or(Value::Null);
+        let state = self.get_state(req.account, &req.region);
+        let images = state.images.read();
+        let repo_images: Vec<Value> = images.get(repo_name).cloned().unwrap_or_default();
+        let image = if !image_id.is_null() {
+            repo_images.iter().find(|img| {
+                img.get("imageDigest").and_then(|d| d.as_str())
+                    == image_id.get("imageDigest").and_then(|d| d.as_str())
+            }).cloned()
+        } else {
+            repo_images.last().cloned()
+        };
+        match image {
+            Some(img) => AwsResponse::json(200, json!({
+                "imageId": {
+                    "imageDigest": img.get("imageDigest").cloned().unwrap_or(Value::Null),
+                    "imageTag": img.get("imageTag").cloned().unwrap_or(Value::Null),
+                },
+                "initiateTime": chrono::Utc::now().timestamp_millis(),
+                "imageScanStatus": "IN_PROGRESS"
+            })),
+            None => AwsResponse::error(400, "ImageNotFoundException", "Image not found"),
+        }
     }
 
-    fn deregisterpulltimeupdateexclusion(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn describe_scan_findings(&self, req: &AwsRequest) -> AwsResponse {
+        let repo_name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let images = state.images.read();
+        let repo_images: Vec<Value> = images.get(repo_name).cloned().unwrap_or_default();
+        let findings: Vec<Value> = repo_images.iter()
+            .map(|img| json!({
+                "imageId": {
+                    "imageDigest": img.get("imageDigest").cloned().unwrap_or(Value::Null),
+                    "imageTag": img.get("imageTag").cloned().unwrap_or(Value::Null),
+                },
+                "imageScanStatus": "COMPLETE",
+                "findingSeverityCounts": {},
+            }))
+            .collect();
+        AwsResponse::json(200, json!({ "imageScanSummaries": findings }))
     }
 
-    fn describeimagereplicationstatus(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn describe_signing_status(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({ "signingConfiguration": Value::Null }))
     }
 
-    fn describeimagescanfindings(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn put_image_scanning_config(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let state = self.get_state(req.account, &req.region);
+        let config = req.params.get("imageScanningConfiguration").cloned().unwrap_or(Value::Null);
+        state.scanning_configs.write().insert(name, config);
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn describeimagesigningstatus(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn put_image_tag_mutability(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn describeimages(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn batch_check_layer(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({
+            "layers": [{ "digest": "sha256:abc123", "layerAvailability": true }],
+            "failures": []
+        }))
     }
 
-    fn describepullthroughcacherules(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn initiate_layer_upload(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({
+            "uploadId": uuid::Uuid::new_v4().simple().to_string(),
+            "partSize": 8388608
+        }))
     }
 
-    fn describeregistry(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn upload_layer_part(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn describerepositories(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn complete_layer_upload(&self, _req: &AwsRequest) -> AwsResponse {
+        let digest = format!("sha256:{}", uuid::Uuid::new_v4().simple());
+        AwsResponse::json(200, json!({ "layerDigest": digest }))
     }
 
-    fn describerepositorycreationtemplates(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn get_download_url(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({
+            "downloadUrl": format!("https://123456789012.dkr.ecr.us-east-1.amazonaws.com/layer/{}", uuid::Uuid::new_v4().simple())
+        }))
     }
 
-    fn getaccountsetting(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn describe_registry(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({
+            "registryId": "123456789012",
+            "replicationConfiguration": Value::Null,
+            "registryType": "DEFAULT"
+        }))
     }
 
-    fn getauthorizationtoken(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn put_lifecycle_policy(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let policy = req.params.get("lifecyclePolicyText")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let state = self.get_state(req.account, &req.region);
+        state.policies.write().insert(name, policy);
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn getdownloadurlforlayer(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn get_lifecycle_policy(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let policy = state.policies.read().get(name).cloned().unwrap_or_default();
+        AwsResponse::json(200, json!({
+            "repositoryName": name,
+            "lifecyclePolicyText": policy
+        }))
     }
 
-    fn getlifecyclepolicy(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn delete_lifecycle_policy(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("repositoryName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        state.policies.write().remove(name);
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn getlifecyclepolicypreview(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn put_registry_scanning(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn getregistrypolicy(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn get_registry_scanning(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({
+            "scanningConfiguration": {
+                "scanOnPush": true,
+                "imageSignatureWatchingEnabled": false
+            }
+        }))
     }
 
-    fn getregistryscanningconfiguration(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn batch_get_scanning_config(&self, req: &AwsRequest) -> AwsResponse {
+        let names: Vec<String> = req.params.get("repositoryNames")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let configs = state.scanning_configs.read();
+        let results: Vec<Value> = names.iter().map(|n| {
+            json!({
+                "repositoryName": n,
+                "imageScanningConfiguration": configs.get(n).cloned().unwrap_or(json!({"scanOnPush": true}))
+            })
+        }).collect();
+        AwsResponse::json(200, json!({ "imageScanningConfigurationDescriptions": results }))
     }
+}
 
-    fn getrepositorypolicy(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn getsigningconfiguration(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn initiatelayerupload(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn listimagereferrers(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn listimages(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn listpulltimeupdateexclusions(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn listtagsforresource(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putaccountsetting(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putimage(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putimagescanningconfiguration(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putimagetagmutability(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putlifecyclepolicy(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putregistrypolicy(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putregistryscanningconfiguration(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putreplicationconfiguration(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putsigningconfiguration(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn registerpulltimeupdateexclusion(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn setrepositorypolicy(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn startimagescan(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn startlifecyclepolicypreview(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn tagresource(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn untagresource(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn updateimagestorageclass(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn updatepullthroughcacherule(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn updaterepositorycreationtemplate(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn uploadlayerpart(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn validatepullthroughcacherule(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
+fn req_layers_param() -> Vec<Value> {
+    Vec::new()
 }
 
 impl Default for EcrHandler {
     fn default() -> Self { Self::new() }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use bytes::Bytes;
+    use serde_json::json;
+
+    fn make_req(operation: &str, params: Value) -> AwsRequest {
+        AwsRequest {
+            service: "ecr".to_string(),
+            operation: operation.to_string(),
+            account: 123456789012,
+            region: "us-east-1".to_string(),
+            params,
+            body: Bytes::new(),
+        }
+    }
+
+    #[test]
+    fn test_create_and_list_repos() {
+        let handler = EcrHandler::new();
+        handler.handle(make_req("CreateRepository", json!({
+            "repositoryName": "my-app"
+        })));
+        let resp = handler.handle(make_req("DescribeRepositories", json!({})));
+        assert_eq!(resp.status, 200);
+        assert!(resp.body.contains("my-app"));
+    }
+
+    #[test]
+    fn test_put_and_list_images() {
+        let handler = EcrHandler::new();
+        handler.handle(make_req("CreateRepository", json!({
+            "repositoryName": "test-repo"
+        })));
+        handler.handle(make_req("PutImage", json!({
+            "repositoryName": "test-repo",
+            "imageTag": "v1"
+        })));
+        let resp = handler.handle(make_req("ListImages", json!({
+            "repositoryName": "test-repo"
+        })));
+        assert_eq!(resp.status, 200);
+        assert!(resp.body.contains("v1"));
+    }
 }

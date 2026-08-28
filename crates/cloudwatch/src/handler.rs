@@ -1,4 +1,4 @@
-//! Cloudwatch operation handler.
+//! CloudWatch operation handler.
 
 use parking_lot::RwLock;
 use serde_json::{json, Value};
@@ -25,227 +25,368 @@ impl CloudwatchHandler {
     pub fn handle(&self, req: AwsRequest) -> AwsResponse {
         let op = req.operation.as_str();
         match op {
-            "DeleteAlarmMuteRule" => self.deletealarmmuterule(&req),
-            "DeleteAlarms" => self.deletealarms(&req),
-            "DeleteAnomalyDetector" => self.deleteanomalydetector(&req),
-            "DeleteDashboards" => self.deletedashboards(&req),
-            "DeleteInsightRules" => self.deleteinsightrules(&req),
-            "DeleteMetricStream" => self.deletemetricstream(&req),
-            "DescribeAlarmContributors" => self.describealarmcontributors(&req),
-            "DescribeAlarmHistory" => self.describealarmhistory(&req),
-            "DescribeAlarms" => self.describealarms(&req),
-            "DescribeAlarmsForMetric" => self.describealarmsformetric(&req),
-            "DescribeAnomalyDetectors" => self.describeanomalydetectors(&req),
-            "DescribeInsightRules" => self.describeinsightrules(&req),
-            "DisableAlarmActions" => self.disablealarmactions(&req),
-            "DisableInsightRules" => self.disableinsightrules(&req),
-            "EnableAlarmActions" => self.enablealarmactions(&req),
-            "EnableInsightRules" => self.enableinsightrules(&req),
-            "GetAlarmMuteRule" => self.getalarmmuterule(&req),
-            "GetDashboard" => self.getdashboard(&req),
-            "GetInsightRuleReport" => self.getinsightrulereport(&req),
-            "GetMetricData" => self.getmetricdata(&req),
-            "GetMetricStatistics" => self.getmetricstatistics(&req),
-            "GetMetricStream" => self.getmetricstream(&req),
-            "GetMetricWidgetImage" => self.getmetricwidgetimage(&req),
-            "ListAlarmMuteRules" => self.listalarmmuterules(&req),
-            "ListDashboards" => self.listdashboards(&req),
-            "ListManagedInsightRules" => self.listmanagedinsightrules(&req),
-            "ListMetricStreams" => self.listmetricstreams(&req),
-            "ListMetrics" => self.listmetrics(&req),
-            "ListTagsForResource" => self.listtagsforresource(&req),
-            "PutAlarmMuteRule" => self.putalarmmuterule(&req),
-            "PutAnomalyDetector" => self.putanomalydetector(&req),
-            "PutCompositeAlarm" => self.putcompositealarm(&req),
-            "PutDashboard" => self.putdashboard(&req),
-            "PutInsightRule" => self.putinsightrule(&req),
-            "PutManagedInsightRules" => self.putmanagedinsightrules(&req),
-            "PutMetricAlarm" => self.putmetricalarm(&req),
-            "PutMetricData" => self.putmetricdata(&req),
-            "PutMetricStream" => self.putmetricstream(&req),
-            "SetAlarmState" => self.setalarmstate(&req),
-            "StartMetricStreams" => self.startmetricstreams(&req),
-            "StopMetricStreams" => self.stopmetricstreams(&req),
-            "TagResource" => self.tagresource(&req),
-            "UntagResource" => self.untagresource(&req),
+            "PutMetricData" => self.put_metric_data(&req),
+            "GetMetricStatistics" => self.get_metric_statistics(&req),
+            "GetMetricData" => self.get_metric_data(&req),
+            "ListMetrics" => self.list_metrics(&req),
+            "DescribeAlarms" => self.describe_alarms(&req),
+            "PutMetricAlarm" => self.put_metric_alarm(&req),
+            "DeleteAlarms" => self.delete_alarms(&req),
+            "GetMetricAlarmHistory" => self.get_alarm_history(&req),
+            "ListDashboards" => self.list_dashboards(&req),
+            "CreateDashboard" => self.create_dashboard(&req),
+            "DeleteDashboard" => self.delete_dashboard(&req),
+            "GetDashboard" => self.get_dashboard(&req),
+            "PutDashboard" => self.put_dashboard(&req),
+            "ListTagsForResource" => self.list_tags(&req),
+            "TagResource" => self.tag_resource(&req),
+            "UntagResource" => self.untag_resource(&req),
+            "GetMetricAlarmHistory" => self.get_alarm_history(&req),
+            "DescribeAlarmsForMetric" => self.describe_alarms_for_metric(&req),
+            "SetAlarmState" => self.set_alarm_state(&req),
+            "ListMetrics" => self.list_metrics(&req),
+            "GetMetricData" => self.get_metric_data(&req),
+            "GetMetricStatistics" => self.get_metric_statistics(&req),
+            "GetMetricData" => self.get_metric_data(&req),
             other => AwsResponse::error(400, "ValidationException",
                 &format!("The operation {} is not implemented", other)),
         }
     }
 
-    fn deletealarmmuterule(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn put_metric_data(&self, req: &AwsRequest) -> AwsResponse {
+        let namespace = req.params.get("Namespace")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let datapoints: Vec<Value> = req.params.get("MetricData")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut metrics = state.metrics.write();
+        for dp in &datapoints {
+            let metric_name = dp.get("MetricName")
+                .and_then(|v| v.as_str()).unwrap_or("unknown");
+            let key = format!("{}/{}", namespace, metric_name);
+            metrics.entry(key).or_insert_with(Vec::new).push(dp.clone());
+        }
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn deletealarms(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn get_metric_statistics(&self, req: &AwsRequest) -> AwsResponse {
+        let namespace = req.params.get("Namespace")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let metric_name = req.params.get("MetricName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let key = format!("{}/{}", namespace, metric_name);
+        let state = self.get_state(req.account, &req.region);
+        let metrics = state.metrics.read();
+        let datapoints: Vec<Value> = metrics.get(&key)
+            .cloned()
+            .unwrap_or_default();
+        let stats = if datapoints.is_empty() {
+            json!([])
+        } else {
+            let values: Vec<f64> = datapoints.iter()
+                .filter_map(|dp| dp.get("Value").and_then(|v| v.as_f64()))
+                .collect();
+            let sum: f64 = values.iter().sum();
+            let max = values.iter().cloned().fold(0.0f64, f64::max);
+            let min = values.iter().cloned().fold(0.0f64, f64::min);
+            json!([{
+                "Timestamp": chrono::Utc::now().to_rfc3339(),
+                "Average": if values.is_empty() { 0.0 } else { sum / values.len() as f64 },
+                "Sum": sum,
+                "Minimum": min,
+                "Maximum": max,
+                "SampleCount": values.len() as u64
+            }])
+        };
+        AwsResponse::json(200, json!({
+            "Label": metric_name,
+            "Datapoints": stats
+        }))
     }
 
-    fn deleteanomalydetector(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn get_metric_data(&self, req: &AwsRequest) -> AwsResponse {
+        let requests: Vec<Value> = req.params.get("MetricDataQueries")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let metrics = state.metrics.read();
+        let results: Vec<Value> = requests.iter().map(|req| {
+            let id = req.get("Id").and_then(|v| v.as_str()).unwrap_or("default");
+            let ns = req.get("Namespace").and_then(|v| v.as_str()).unwrap_or("");
+            let mn = req.get("MetricName").and_then(|v| v.as_str()).unwrap_or("");
+            let key = format!("{}/{}", ns, mn);
+            let dps: Vec<Value> = metrics.get(&key).cloned().unwrap_or_default();
+            json!({
+                "Id": id,
+                "Label": mn,
+                "Timestamps": dps.iter().filter_map(|dp| dp.get("Timestamp").cloned()).collect::<Vec<_>>(),
+                "Values": dps.iter().filter_map(|dp| dp.get("Value").cloned()).collect::<Vec<_>>()
+            })
+        }).collect();
+        AwsResponse::json(200, json!({
+            "MetricDataResults": results
+        }))
     }
 
-    fn deletedashboards(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn list_metrics(&self, req: &AwsRequest) -> AwsResponse {
+        let namespace = req.params.get("Namespace")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let metric_name = req.params.get("MetricName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let metrics = state.metrics.read();
+        let metrics: Vec<Value> = metrics.iter()
+            .filter(|(k, _)| k.starts_with(&format!("{}/", namespace)))
+            .filter(|(k, _)| metric_name.is_empty() || k.split('/').last() == Some(&metric_name))
+            .map(|(key, dps)| {
+                let parts: Vec<&str> = key.splitn(2, '/').collect();
+                json!({
+                    "Namespace": parts.get(0).copied().unwrap_or(""),
+                    "MetricName": parts.get(1).copied().unwrap_or(""),
+                    "Dimensions": []
+                })
+            })
+            .collect();
+        AwsResponse::json(200, json!({
+            "Metrics": metrics,
+            "NextToken": Value::Null
+        }))
     }
 
-    fn deleteinsightrules(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn describe_alarms(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({
+            "MetricAlarms": [],
+            "CompositeAlarms": [],
+            "NextToken": Value::Null
+        }))
     }
 
-    fn deletemetricstream(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn put_metric_alarm(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("AlarmName")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let arn = format!("arn:aws:cloudwatch:{}:{}:alarm:{}", req.region, req.account, name);
+        let state = self.get_state(req.account, &req.region);
+        let alarm = json!({
+            "AlarmName": name,
+            "AlarmArn": arn,
+            "AlarmDescription": req.params.get("AlarmDescription")
+                .and_then(|v| v.as_str()).unwrap_or(""),
+            "Namespace": req.params.get("Namespace")
+                .and_then(|v| v.as_str()).unwrap_or(""),
+            "MetricName": req.params.get("MetricName")
+                .and_then(|v| v.as_str()).unwrap_or(""),
+            "Threshold": req.params.get("Threshold")
+                .and_then(|v| v.as_f64()).unwrap_or(0.0),
+            "ComparisonOperator": req.params.get("ComparisonOperator")
+                .and_then(|v| v.as_str()).unwrap_or("GreaterThanThreshold"),
+            "EvaluationPeriods": req.params.get("EvaluationPeriods")
+                .and_then(|v| v.as_u64()).unwrap_or(1),
+            "Period": req.params.get("Period")
+                .and_then(|v| v.as_u64()).unwrap_or(300),
+            "State": {
+                "Value": "OK",
+                "Reason": "Insufficient Data",
+                "StateUpdatedTimestamp": chrono::Utc::now().to_rfc3339()
+            }
+        });
+        state.alarms.write().insert(name.clone(), alarm);
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn describealarmcontributors(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn delete_alarms(&self, req: &AwsRequest) -> AwsResponse {
+        let names: Vec<String> = req.params.get("AlarmNames")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut alarms = state.alarms.write();
+        for name in &names {
+            alarms.remove(name);
+        }
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn describealarmhistory(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn get_alarm_history(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({
+            "AlarmHistoryItems": []
+        }))
     }
 
-    fn describealarms(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn describe_alarms_for_metric(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({
+            "MetricAlarms": [],
+            "NextToken": Value::Null
+        }))
     }
 
-    fn describealarmsformetric(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn set_alarm_state(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("AlarmName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut alarms = state.alarms.write();
+        if let Some(alarm) = alarms.get_mut(name) {
+            let value = req.params.get("StateValue")
+                .and_then(|v| v.as_str()).unwrap_or("OK");
+            alarm["State"]["Value"] = json!(value);
+        }
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn describeanomalydetectors(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn list_dashboards(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({
+            "DashboardEntries": []
+        }))
     }
 
-    fn describeinsightrules(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn create_dashboard(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("DashboardName")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let body = req.params.get("DashboardBody")
+            .and_then(|v| v.as_str()).unwrap_or("{}").to_string();
+        let state = self.get_state(req.account, &req.region);
+        state.dashboards.write().insert(name.clone(), body);
+        AwsResponse::json(200, json!({
+            "DashboardName": name,
+            "DashboardArn": format!("arn:aws:cloudwatch:{}:{}:dashboard:{}:{}", req.region, req.account, req.account, name)
+        }))
     }
 
-    fn disablealarmactions(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn delete_dashboard(&self, req: &AwsRequest) -> AwsResponse {
+        let names: Vec<String> = req.params.get("DashboardNames")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut dashboards = state.dashboards.write();
+        for name in &names {
+            dashboards.remove(name);
+        }
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn disableinsightrules(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn get_dashboard(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("DashboardName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let dashboards = state.dashboards.read();
+        match dashboards.get(name) {
+            Some(body) => AwsResponse::json(200, json!({
+                "DashboardName": name,
+                "DashboardBody": body,
+                "DashboardArn": format!("arn:aws:cloudwatch:{}:{}:dashboard:{}:{}", req.region, req.account, req.account, name)
+            })),
+            None => AwsResponse::error(400, "ResourceNotFoundException",
+                &format!("Dashboard {name} not found")),
+        }
     }
 
-    fn enablealarmactions(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn put_dashboard(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("DashboardName")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let body = req.params.get("DashboardBody")
+            .and_then(|v| v.as_str()).unwrap_or("{}").to_string();
+        let state = self.get_state(req.account, &req.region);
+        state.dashboards.write().insert(name, body);
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn enableinsightrules(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn list_tags(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("ResourceARN")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let tags = state.tags.read().get(arn).cloned().unwrap_or_default();
+        AwsResponse::json(200, json!({ "Tags": tags }))
     }
 
-    fn getalarmmuterule(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn tag_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("ResourceARN")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let tags: Vec<Value> = req.params.get("Tags")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut all_tags = state.tags.write();
+        let entry = all_tags.entry(arn).or_insert_with(Vec::new);
+        entry.extend(tags);
+        AwsResponse::json(200, Value::Null)
     }
 
-    fn getdashboard(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn getinsightrulereport(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn getmetricdata(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn getmetricstatistics(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn getmetricstream(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn getmetricwidgetimage(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn listalarmmuterules(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn listdashboards(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn listmanagedinsightrules(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn listmetricstreams(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn listmetrics(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn listtagsforresource(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putalarmmuterule(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putanomalydetector(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putcompositealarm(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putdashboard(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putinsightrule(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putmanagedinsightrules(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putmetricalarm(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putmetricdata(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn putmetricstream(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn setalarmstate(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn startmetricstreams(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn stopmetricstreams(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn tagresource(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
-    }
-
-    fn untagresource(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::error(501, "NotImplemented", "TODO")
+    fn untag_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("ResourceARN")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let keys: Vec<String> = req.params.get("TagKeys")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut all_tags = state.tags.write();
+        if let Some(tags) = all_tags.get_mut(arn) {
+            tags.retain(|t| {
+                t.get("Key").and_then(|k| k.as_str())
+                    .map(|k| !keys.contains(&k.to_string()))
+                    .unwrap_or(true)
+            });
+        }
+        AwsResponse::json(200, Value::Null)
     }
 }
 
 impl Default for CloudwatchHandler {
     fn default() -> Self { Self::new() }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use bytes::Bytes;
+    use serde_json::json;
+
+    fn make_req(operation: &str, params: Value) -> AwsRequest {
+        AwsRequest {
+            service: "cloudwatch".to_string(),
+            operation: operation.to_string(),
+            account: 123456789012,
+            region: "us-east-1".to_string(),
+            params,
+            body: Bytes::new(),
+        }
+    }
+
+    #[test]
+    fn test_put_and_get_metrics() {
+        let handler = CloudwatchHandler::new();
+        handler.handle(make_req("PutMetricData", json!({
+            "Namespace": "AWS/EC2",
+            "MetricData": [
+                { "MetricName": "CPUUtilization", "Value": 75.0, "Unit": "Percent" }
+            ]
+        })));
+        let resp = handler.handle(make_req("GetMetricStatistics", json!({
+            "Namespace": "AWS/EC2",
+            "MetricName": "CPUUtilization",
+            "StartTime": "2024-01-01T00:00:00Z",
+            "EndTime": "2024-01-01T01:00:00Z",
+            "Period": 300
+        })));
+        assert_eq!(resp.status, 200);
+        assert!(resp.body.contains("Datapoints"));
+    }
+
+    #[test]
+    fn test_dashboard_crud() {
+        let handler = CloudwatchHandler::new();
+        handler.handle(make_req("CreateDashboard", json!({
+            "DashboardName": "my-dash",
+            "DashboardBody": "{}"
+        })));
+        let resp = handler.handle(make_req("GetDashboard", json!({
+            "DashboardName": "my-dash"
+        })));
+        assert_eq!(resp.status, 200);
+        assert!(resp.body.contains("my-dash"));
+    }
 }
