@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="28" skipped="0" tests="39" time="322.390" timestamp="2026-08-29T02:32:44.449063-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Operations" name="test_describe_vpcs" time="0.092" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Operations" name="test_describe_subnets" time="0.011" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Operations" name="test_create_security_group" time="0.038"><failure message="botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the CreateSecurityGroup operation: The request must contain the parameter GroupDescription">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Operations object at 0x10c32d7c0&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10d99aa50&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="28" skipped="0" tests="39" time="329.233" timestamp="2026-08-29T03:56:58.018265-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Operations" name="test_describe_vpcs" time="0.084" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Operations" name="test_describe_subnets" time="0.012" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Operations" name="test_create_security_group" time="0.041"><failure message="botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the CreateSecurityGroup operation: The request must contain the parameter GroupDescription">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Operations object at 0x10bb0fc20&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d05cdd0&gt;
 
     def test_create_security_group(self, ec2):
 &gt;       response = ec2.create_security_group(
@@ -17,7 +17,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10d99aa50&gt;
+self = &lt;botocore.client.EC2 object at 0x10d05cdd0&gt;
 operation_name = 'CreateSecurityGroup'
 api_params = {'Description': 'Test security group', 'GroupName': 'test-sg'}
 
@@ -108,8 +108,8 @@ api_params = {'Description': 'Test security group', 'GroupName': 'test-sg'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the CreateSecurityGroup operation: The request must contain the parameter GroupDescription
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Operations" name="test_create_and_describe_key_pair" time="0.054" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Operations" name="test_describe_instances" time="0.007" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Operations" name="test_describe_regions" time="0.043" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2VPCOperations" name="test_create_and_describe_vpc" time="0.014"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2VPCOperations object at 0x10c32e780&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10ddf97c0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Operations" name="test_create_and_describe_key_pair" time="0.079" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Operations" name="test_describe_instances" time="0.007" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Operations" name="test_describe_regions" time="0.045" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2VPCOperations" name="test_create_and_describe_vpc" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2VPCOperations object at 0x10bb30c20&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d6fb5f0&gt;
 
     def test_create_and_describe_vpc(self, ec2):
 &gt;       resp = ec2.create_vpc(CidrBlock="10.99.0.0/16")
@@ -125,7 +125,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10ddf97c0&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10d6fb5f0&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.99.0.0/16'}
 
     @with_current_context()
@@ -215,8 +215,8 @@ api_params = {'CidrBlock': '10.99.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2VPCOperations" name="test_create_subnet_in_vpc" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2VPCOperations object at 0x10c32eb40&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10d866990&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2VPCOperations" name="test_create_subnet_in_vpc" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2VPCOperations object at 0x10bb30fe0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d1a4d40&gt;
 
     def test_create_subnet_in_vpc(self, ec2):
 &gt;       vpc_resp = ec2.create_vpc(CidrBlock="10.98.0.0/16")
@@ -232,7 +232,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10d866990&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10d1a4d40&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.98.0.0/16'}
 
     @with_current_context()
@@ -322,8 +322,8 @@ api_params = {'CidrBlock': '10.98.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2SecurityGroupIngress" name="test_create_security_group_with_ingress" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2SecurityGroupIngress object at 0x10c32ef30&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10dc84da0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2SecurityGroupIngress" name="test_create_security_group_with_ingress" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2SecurityGroupIngress object at 0x10bb313d0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d447050&gt;
 
     def test_create_security_group_with_ingress(self, ec2):
 &gt;       vpc_resp = ec2.create_vpc(CidrBlock="10.97.0.0/16")
@@ -339,7 +339,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10dc84da0&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10d447050&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.97.0.0/16'}
 
     @with_current_context()
@@ -429,8 +429,8 @@ api_params = {'CidrBlock': '10.97.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2ElasticIP" name="test_allocate_and_describe_elastic_ip" time="0.019"><failure message="botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the ReleaseAddress operation: Invalid request, expect PublicIp/AllocationId parameter.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2ElasticIP object at 0x10c32f350&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10dbb7020&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2ElasticIP" name="test_allocate_and_describe_elastic_ip" time="0.018"><failure message="botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the ReleaseAddress operation: Invalid request, expect PublicIp/AllocationId parameter.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2ElasticIP object at 0x10bb317c0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d3993a0&gt;
 
     def test_allocate_and_describe_elastic_ip(self, ec2):
         alloc = ec2.allocate_address(Domain="vpc")
@@ -455,9 +455,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10dbb7020&gt;
+self = &lt;botocore.client.EC2 object at 0x10d3993a0&gt;
 operation_name = 'ReleaseAddress'
-api_params = {'AllocationId': 'eipalloc-04f8720981f6b10ef'}
+api_params = {'AllocationId': 'eipalloc-cb694c90b86fc435a'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -546,8 +546,8 @@ api_params = {'AllocationId': 'eipalloc-04f8720981f6b10ef'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the ReleaseAddress operation: Invalid request, expect PublicIp/AllocationId parameter.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2InternetGateway" name="test_create_and_describe_internet_gateway" time="0.019"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidInternetGatewayID.NotFound) when calling the DeleteInternetGateway operation: InternetGatewayID None does not exist.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2InternetGateway object at 0x10c32f770&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10f119d60&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2InternetGateway" name="test_create_and_describe_internet_gateway" time="0.019"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidInternetGatewayID.NotFound) when calling the DeleteInternetGateway operation: InternetGatewayID None does not exist.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2InternetGateway object at 0x10bb31b80&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10e95c140&gt;
 
     def test_create_and_describe_internet_gateway(self, ec2):
         resp = ec2.create_internet_gateway()
@@ -571,9 +571,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10f119d60&gt;
+self = &lt;botocore.client.EC2 object at 0x10e95c140&gt;
 operation_name = 'DeleteInternetGateway'
-api_params = {'InternetGatewayId': 'igw-cecb46ca0f401ee19'}
+api_params = {'InternetGatewayId': 'igw-a8be91785273f74ca'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -662,8 +662,8 @@ api_params = {'InternetGatewayId': 'igw-cecb46ca0f401ee19'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidInternetGatewayID.NotFound) when calling the DeleteInternetGateway operation: InternetGatewayID None does not exist.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2KeyPairExtended" name="test_create_key_pair_with_unique_name" time="0.072"><failure message="KeyError: 'KeyName'">self = &lt;tests.compatibility.test_ec2_compat.TestEC2KeyPairExtended object at 0x10c32f830&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10ed2c7a0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2KeyPairExtended" name="test_create_key_pair_with_unique_name" time="0.109"><failure message="KeyError: 'KeyName'">self = &lt;tests.compatibility.test_ec2_compat.TestEC2KeyPairExtended object at 0x10bb0fdd0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10eae2ab0&gt;
 
     def test_create_key_pair_with_unique_name(self, ec2):
         key_name = _unique("keypair")
@@ -674,8 +674,8 @@ ec2 = &lt;botocore.client.EC2 object at 0x10ed2c7a0&gt;
                    ^^^^^^^^^^^^^^^
 E           KeyError: 'KeyName'
 
-tests/compatibility/test_ec2_compat.py:167: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Tags" name="test_create_tags_on_vpc" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Tags object at 0x10c32f050&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10f31a720&gt;
+tests/compatibility/test_ec2_compat.py:167: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Tags" name="test_create_tags_on_vpc" time="0.014"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Tags object at 0x109699a00&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10eb14980&gt;
 
     def test_create_tags_on_vpc(self, ec2):
         """Create tags on a VPC and verify with DescribeTags."""
@@ -692,7 +692,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10f31a720&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10eb14980&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.80.0.0/16'}
 
     @with_current_context()
@@ -782,8 +782,8 @@ api_params = {'CidrBlock': '10.80.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Tags" name="test_create_tags_on_subnet" time="0.014"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Tags object at 0x10c32e570&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10f624bf0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Tags" name="test_create_tags_on_subnet" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Tags object at 0x10bb318e0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10e5aad50&gt;
 
     def test_create_tags_on_subnet(self, ec2):
         """Create tags on a subnet and verify."""
@@ -800,7 +800,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10f624bf0&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10e5aad50&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.81.0.0/16'}
 
     @with_current_context()
@@ -890,8 +890,8 @@ api_params = {'CidrBlock': '10.81.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Tags" name="test_describe_tags_with_filter" time="0.054"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Tags object at 0x10c32df10&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10d866db0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Tags" name="test_describe_tags_with_filter" time="0.055"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Tags object at 0x10bb30e00&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d05e870&gt;
 
     def test_describe_tags_with_filter(self, ec2):
         """Use DescribeTags with resource-id filter."""
@@ -908,7 +908,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10d866db0&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10d05e870&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.82.0.0/16'}
 
     @with_current_context()
@@ -998,8 +998,8 @@ api_params = {'CidrBlock': '10.82.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2InternetGatewayAttach" name="test_attach_and_detach_internet_gateway" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2InternetGatewayAttach object at 0x10c32d250&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10ef84770&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2InternetGatewayAttach" name="test_attach_and_detach_internet_gateway" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2InternetGatewayAttach object at 0x10bb304d0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10eb167b0&gt;
 
     def test_attach_and_detach_internet_gateway(self, ec2):
         """Attach an IGW to a VPC, then detach it."""
@@ -1016,7 +1016,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10ef84770&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10eb167b0&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.83.0.0/16'}
 
     @with_current_context()
@@ -1106,8 +1106,8 @@ api_params = {'CidrBlock': '10.83.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2RouteTables" name="test_create_and_describe_route_table" time="0.014"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2RouteTables object at 0x10c32fc80&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10d9cb980&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2RouteTables" name="test_create_and_describe_route_table" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2RouteTables object at 0x10bb32090&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d0e9be0&gt;
 
     def test_create_and_describe_route_table(self, ec2):
         """Create a route table and verify it exists."""
@@ -1124,7 +1124,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10d9cb980&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10d0e9be0&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.84.0.0/16'}
 
     @with_current_context()
@@ -1214,8 +1214,8 @@ api_params = {'CidrBlock': '10.84.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2RouteTables" name="test_create_route_in_route_table" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2RouteTables object at 0x10c3400e0&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10dcc5e80&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2RouteTables" name="test_create_route_in_route_table" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2RouteTables object at 0x10bb324b0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d47ff80&gt;
 
     def test_create_route_in_route_table(self, ec2):
         """Create a route pointing to an IGW."""
@@ -1232,7 +1232,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10dcc5e80&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10d47ff80&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.85.0.0/16'}
 
     @with_current_context()
@@ -1322,8 +1322,8 @@ api_params = {'CidrBlock': '10.85.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2NetworkInterfaces" name="test_create_and_describe_network_interface" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2NetworkInterfaces object at 0x10c340500&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10f144380&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2NetworkInterfaces" name="test_create_and_describe_network_interface" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2NetworkInterfaces object at 0x10bb32930&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10ea064b0&gt;
 
     def test_create_and_describe_network_interface(self, ec2):
         """Create a network interface in a subnet."""
@@ -1340,7 +1340,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10f144380&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10ea064b0&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.86.0.0/16'}
 
     @with_current_context()
@@ -1430,8 +1430,8 @@ api_params = {'CidrBlock': '10.86.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2AvailabilityZones" name="test_describe_availability_zones" time="0.009" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2AvailabilityZones" name="test_availability_zone_has_state" time="0.009" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2SecurityGroupEgress" name="test_authorize_and_revoke_egress" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2SecurityGroupEgress object at 0x10c3411c0&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10ddc0350&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2AvailabilityZones" name="test_describe_availability_zones" time="0.009" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2AvailabilityZones" name="test_availability_zone_has_state" time="0.009" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2SecurityGroupEgress" name="test_authorize_and_revoke_egress" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2SecurityGroupEgress object at 0x10bb335f0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10ea86720&gt;
 
     def test_authorize_and_revoke_egress(self, ec2):
         """Authorize and then revoke an egress rule."""
@@ -1448,7 +1448,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10ddc0350&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10ea86720&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.87.0.0/16'}
 
     @with_current_context()
@@ -1538,8 +1538,8 @@ api_params = {'CidrBlock': '10.87.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2SecurityGroupEgress" name="test_revoke_security_group_ingress" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2SecurityGroupEgress object at 0x10c3415e0&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10f3c5310&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2SecurityGroupEgress" name="test_revoke_security_group_ingress" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2SecurityGroupEgress object at 0x10bb33a10&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10ebbf260&gt;
 
     def test_revoke_security_group_ingress(self, ec2):
         """Authorize an ingress rule and then revoke it."""
@@ -1556,7 +1556,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10f3c5310&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10ebbf260&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.88.0.0/16'}
 
     @with_current_context()
@@ -1646,8 +1646,8 @@ api_params = {'CidrBlock': '10.88.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2ExtendedOperations" name="test_create_and_delete_key_pair" time="0.091"><failure message="KeyError: 'KeyName'">self = &lt;tests.compatibility.test_ec2_compat.TestEC2ExtendedOperations object at 0x10c32d880&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10f3c7f80&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2ExtendedOperations" name="test_create_and_delete_key_pair" time="0.102"><failure message="KeyError: 'KeyName'">self = &lt;tests.compatibility.test_ec2_compat.TestEC2ExtendedOperations object at 0x10bb336e0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10e978b00&gt;
 
     def test_create_and_delete_key_pair(self, ec2):
         key_name = _unique("ext-key")
@@ -1657,8 +1657,8 @@ ec2 = &lt;botocore.client.EC2 object at 0x10f3c7f80&gt;
                    ^^^^^^^^^^^^^^^
 E           KeyError: 'KeyName'
 
-tests/compatibility/test_ec2_compat.py:444: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2ExtendedOperations" name="test_describe_key_pairs" time="0.064"><failure message="KeyError: 'KeyName'">self = &lt;tests.compatibility.test_ec2_compat.TestEC2ExtendedOperations object at 0x10c32ec00&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10f1189e0&gt;
+tests/compatibility/test_ec2_compat.py:444: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2ExtendedOperations" name="test_describe_key_pairs" time="0.088"><failure message="KeyError: 'KeyName'">self = &lt;tests.compatibility.test_ec2_compat.TestEC2ExtendedOperations object at 0x10bb32ae0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d107680&gt;
 
     def test_describe_key_pairs(self, ec2):
         key_name = _unique("ext-desc-key")
@@ -1669,8 +1669,8 @@ ec2 = &lt;botocore.client.EC2 object at 0x10f1189e0&gt;
                      ^^^^^^^^^^^^^
 E           KeyError: 'KeyName'
 
-tests/compatibility/test_ec2_compat.py:454: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2ExtendedOperations" name="test_create_and_delete_security_group" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2ExtendedOperations object at 0x10c3411f0&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10dc847d0&gt;
+tests/compatibility/test_ec2_compat.py:454: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2ExtendedOperations" name="test_create_and_delete_security_group" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2ExtendedOperations object at 0x10bb32270&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d05fbf0&gt;
 
     def test_create_and_delete_security_group(self, ec2):
 &gt;       vpc_resp = ec2.create_vpc(CidrBlock="10.88.0.0/16")
@@ -1686,7 +1686,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10dc847d0&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10d05fbf0&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.88.0.0/16'}
 
     @with_current_context()
@@ -1776,8 +1776,8 @@ api_params = {'CidrBlock': '10.88.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Images" name="test_describe_images_with_owner" time="0.506" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2MultipleSubnets" name="test_create_multiple_subnets" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2MultipleSubnets object at 0x10c3416d0&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10f1608f0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Images" name="test_describe_images_with_owner" time="0.496" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2MultipleSubnets" name="test_create_multiple_subnets" time="0.014"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2MultipleSubnets object at 0x10bb33b30&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d4ae5d0&gt;
 
     def test_create_multiple_subnets(self, ec2):
         """Create multiple subnets in a VPC and verify."""
@@ -1794,7 +1794,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10f1608f0&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10d4ae5d0&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.89.0.0/16'}
 
     @with_current_context()
@@ -1884,8 +1884,8 @@ api_params = {'CidrBlock': '10.89.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2InstanceTypes" name="test_describe_instance_types" time="1.263" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2InstanceTypes" name="test_describe_images_owner_alias" time="0.497" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2RunInstances" name="test_run_and_terminate_instances" time="0.514"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterCombination) when calling the TerminateInstances operation: No instances specified">self = &lt;tests.compatibility.test_ec2_compat.TestEC2RunInstances object at 0x10c3423c0&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10f1360c0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2InstanceTypes" name="test_describe_instance_types" time="1.245" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2InstanceTypes" name="test_describe_images_owner_alias" time="0.499" /><testcase classname="tests.compatibility.test_ec2_compat.TestEC2RunInstances" name="test_run_and_terminate_instances" time="0.520"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterCombination) when calling the TerminateInstances operation: No instances specified">self = &lt;tests.compatibility.test_ec2_compat.TestEC2RunInstances object at 0x10bb38860&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10e75a8a0&gt;
 
     def test_run_and_terminate_instances(self, ec2):
         """RunInstances / TerminateInstances with t2.micro."""
@@ -1911,8 +1911,8 @@ tests/compatibility/test_ec2_compat.py:536: AssertionError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ec2_compat.TestEC2RunInstances object at 0x10c3423c0&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10f1360c0&gt;
+self = &lt;tests.compatibility.test_ec2_compat.TestEC2RunInstances object at 0x10bb38860&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10e75a8a0&gt;
 
     def test_run_and_terminate_instances(self, ec2):
         """RunInstances / TerminateInstances with t2.micro."""
@@ -1942,9 +1942,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10f1360c0&gt;
+self = &lt;botocore.client.EC2 object at 0x10e75a8a0&gt;
 operation_name = 'TerminateInstances'
-api_params = {'InstanceIds': ['i-7e7401e04f83a2518']}
+api_params = {'InstanceIds': ['i-83b628439e064f221']}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2033,8 +2033,8 @@ api_params = {'InstanceIds': ['i-7e7401e04f83a2518']}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterCombination) when calling the TerminateInstances operation: No instances specified
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2RunInstances" name="test_describe_instances_with_filters" time="0.524"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterCombination) when calling the TerminateInstances operation: No instances specified">self = &lt;tests.compatibility.test_ec2_compat.TestEC2RunInstances object at 0x10c3427e0&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10ef191f0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2RunInstances" name="test_describe_instances_with_filters" time="0.527"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterCombination) when calling the TerminateInstances operation: No instances specified">self = &lt;tests.compatibility.test_ec2_compat.TestEC2RunInstances object at 0x10bb38c80&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d146930&gt;
 
     def test_describe_instances_with_filters(self, ec2):
         """DescribeInstances with instance-state-name and tag:Name filters."""
@@ -2082,9 +2082,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10ef191f0&gt;
+self = &lt;botocore.client.EC2 object at 0x10d146930&gt;
 operation_name = 'TerminateInstances'
-api_params = {'InstanceIds': ['i-8439662dc5ed30e5c']}
+api_params = {'InstanceIds': ['i-472aff04d668d250d']}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2173,8 +2173,8 @@ api_params = {'InstanceIds': ['i-8439662dc5ed30e5c']}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterCombination) when calling the TerminateInstances operation: No instances specified
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2RunInstances" name="test_describe_instance_status" time="0.565"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterCombination) when calling the TerminateInstances operation: No instances specified">self = &lt;tests.compatibility.test_ec2_compat.TestEC2RunInstances object at 0x10c342c00&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10e757bc0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2RunInstances" name="test_describe_instance_status" time="0.557"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterCombination) when calling the TerminateInstances operation: No instances specified">self = &lt;tests.compatibility.test_ec2_compat.TestEC2RunInstances object at 0x10bb390a0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10ee717f0&gt;
 
     def test_describe_instance_status(self, ec2):
         """DescribeInstanceStatus returns valid response."""
@@ -2205,9 +2205,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10e757bc0&gt;
+self = &lt;botocore.client.EC2 object at 0x10ee717f0&gt;
 operation_name = 'TerminateInstances'
-api_params = {'InstanceIds': ['i-b116657c5fa6cf108']}
+api_params = {'InstanceIds': ['i-44c40c4f5e205dc91']}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2296,8 +2296,8 @@ api_params = {'InstanceIds': ['i-b116657c5fa6cf108']}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterCombination) when calling the TerminateInstances operation: No instances specified
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2RunInstances" name="test_modify_instance_attribute" time="9.783"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterCombination) when calling the TerminateInstances operation: No instances specified">self = &lt;tests.compatibility.test_ec2_compat.TestEC2RunInstances object at 0x10c343020&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10f7a5e80&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2RunInstances" name="test_modify_instance_attribute" time="9.773"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterCombination) when calling the TerminateInstances operation: No instances specified">self = &lt;tests.compatibility.test_ec2_compat.TestEC2RunInstances object at 0x10bb394c0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10ec65d90&gt;
 
     def test_modify_instance_attribute(self, ec2):
         """ModifyInstanceAttribute to change instance type."""
@@ -2323,9 +2323,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.waiter.EC2.Waiter.InstanceStopped object at 0x10f9f6f00&gt;
-kwargs = {'InstanceIds': ['i-82d88aff79846aabb']}
-acceptors = [&lt;botocore.waiter.AcceptorConfig object at 0x10f9f6db0&gt;, &lt;botocore.waiter.AcceptorConfig object at 0x10f9f6bd0&gt;, &lt;botocore.waiter.AcceptorConfig object at 0x10f9f6960&gt;]
+self = &lt;botocore.waiter.EC2.Waiter.InstanceStopped object at 0x10dff2d20&gt;
+kwargs = {'InstanceIds': ['i-12ce3500502f42812']}
+acceptors = [&lt;botocore.waiter.AcceptorConfig object at 0x10dff2bd0&gt;, &lt;botocore.waiter.AcceptorConfig object at 0x10dff29f0&gt;, &lt;botocore.waiter.AcceptorConfig object at 0x10dff2780&gt;]
 current_state = 'waiting', config = {'Delay': 1, 'MaxAttempts': 10}
 sleep_amount = 1, max_attempts = 10, last_matched_acceptor = None
 num_attempts = 10
@@ -2395,8 +2395,8 @@ E               botocore.exceptions.WaiterError: Waiter InstanceStopped failed: 
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ec2_compat.TestEC2RunInstances object at 0x10c343020&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10f7a5e80&gt;
+self = &lt;tests.compatibility.test_ec2_compat.TestEC2RunInstances object at 0x10bb394c0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10ec65d90&gt;
 
     def test_modify_instance_attribute(self, ec2):
         """ModifyInstanceAttribute to change instance type."""
@@ -2431,9 +2431,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10f7a5e80&gt;
+self = &lt;botocore.client.EC2 object at 0x10ec65d90&gt;
 operation_name = 'TerminateInstances'
-api_params = {'InstanceIds': ['i-82d88aff79846aabb']}
+api_params = {'InstanceIds': ['i-12ce3500502f42812']}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2522,8 +2522,8 @@ api_params = {'InstanceIds': ['i-82d88aff79846aabb']}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterCombination) when calling the TerminateInstances operation: No instances specified
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2TagsCRUD" name="test_create_describe_delete_tags" time="0.014"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2TagsCRUD object at 0x10c3434a0&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10e39dc10&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2TagsCRUD" name="test_create_describe_delete_tags" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.">self = &lt;tests.compatibility.test_ec2_compat.TestEC2TagsCRUD object at 0x10bb39970&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10ece8920&gt;
 
     def test_create_describe_delete_tags(self, ec2):
         """CreateTags / DescribeTags / DeleteTags lifecycle."""
@@ -2540,7 +2540,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10e39dc10&gt;, operation_name = 'CreateVpc'
+self = &lt;botocore.client.EC2 object at 0x10ece8920&gt;, operation_name = 'CreateVpc'
 api_params = {'CidrBlock': '10.80.0.0/16'}
 
     @with_current_context()
@@ -2630,8 +2630,8 @@ api_params = {'CidrBlock': '10.80.0.0/16'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidParameterValue) when calling the CreateVpc operation: Value (None) for parameter cidrBlock is invalid. This is not a valid CIDR block.
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Volumes" name="test_create_describe_delete_volume" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the CreateVolume operation: The request must contain the parameter size/snapshot">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Volumes object at 0x10c3438f0&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10e8e7590&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Volumes" name="test_create_describe_delete_volume" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the CreateVolume operation: The request must contain the parameter size/snapshot">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Volumes object at 0x10bb39dc0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10d5a7740&gt;
 
     def test_create_describe_delete_volume(self, ec2):
         """CreateVolume / DescribeVolumes / DeleteVolume."""
@@ -2648,9 +2648,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10e8e7590&gt;
+self = &lt;botocore.client.EC2 object at 0x10d5a7740&gt;
 operation_name = 'CreateVolume'
-api_params = {'AvailabilityZone': 'us-east-1a', 'ClientToken': '67f40923-fd82-4b47-8c83-bb025978d665', 'Size': 10}
+api_params = {'AvailabilityZone': 'us-east-1a', 'ClientToken': 'b588d53d-da7a-49f1-9ae0-f5d4767852b3', 'Size': 10}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2739,8 +2739,8 @@ api_params = {'AvailabilityZone': 'us-east-1a', 'ClientToken': '67f40923-fd82-4b
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the CreateVolume operation: The request must contain the parameter size/snapshot
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Volumes" name="test_attach_detach_volume" time="0.507"><failure message="botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the CreateVolume operation: The request must contain the parameter size/snapshot">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Volumes object at 0x10c32ed50&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10eb36570&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Volumes" name="test_attach_detach_volume" time="0.509"><failure message="botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the CreateVolume operation: The request must contain the parameter size/snapshot">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Volumes object at 0x10bb33ce0&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10ed998e0&gt;
 
     def test_attach_detach_volume(self, ec2):
         """AttachVolume / DetachVolume lifecycle."""
@@ -2766,9 +2766,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10eb36570&gt;
+self = &lt;botocore.client.EC2 object at 0x10ed998e0&gt;
 operation_name = 'CreateVolume'
-api_params = {'AvailabilityZone': 'us-east-1a', 'ClientToken': '4f33efbe-fd6f-434e-baa8-9805a342fbbb', 'Size': 10}
+api_params = {'AvailabilityZone': 'us-east-1a', 'ClientToken': 'f55fcc63-2750-4bb1-b5ca-24fc1cf4e0f8', 'Size': 10}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2857,8 +2857,8 @@ api_params = {'AvailabilityZone': 'us-east-1a', 'ClientToken': '4f33efbe-fd6f-43
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the CreateVolume operation: The request must contain the parameter size/snapshot
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Snapshots" name="test_create_describe_delete_snapshot" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the CreateVolume operation: The request must contain the parameter size/snapshot">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Snapshots object at 0x10c343b60&gt;
-ec2 = &lt;botocore.client.EC2 object at 0x10eb81700&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ec2_compat.TestEC2Snapshots" name="test_create_describe_delete_snapshot" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (MissingParameter) when calling the CreateVolume operation: The request must contain the parameter size/snapshot">self = &lt;tests.compatibility.test_ec2_compat.TestEC2Snapshots object at 0x10bb32a50&gt;
+ec2 = &lt;botocore.client.EC2 object at 0x10ed39d00&gt;
 
     def test_create_describe_delete_snapshot(self, ec2):
         """CreateSnapshot / DescribeSnapshots / DeleteSnapshot."""
@@ -2875,9 +2875,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EC2 object at 0x10eb81700&gt;
+self = &lt;botocore.client.EC2 object at 0x10ed39d00&gt;
 operation_name = 'CreateVolume'
-api_params = {'AvailabilityZone': 'us-east-1a', 'ClientToken': '5d9156b7-ab5c-417c-b081-613415ade2db', 'Size': 1}
+api_params = {'AvailabilityZone': 'us-east-1a', 'ClientToken': 'd14f8d18-c156-4614-b29a-a4be8164e635', 'Size': 1}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
