@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="12" failures="69" skipped="0" tests="94" time="2.338" timestamp="2026-08-29T11:12:30.373560-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_create_cluster" time="0.068" /><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_describe_clusters" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_list_clusters" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_delete_cluster" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_register_task_definition" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10a01cf20&gt;
-ecs = &lt;botocore.client.ECS object at 0x1089f7170&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="12" failures="69" skipped="0" tests="94" time="2.295" timestamp="2026-08-29T13:04:56.351197-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_create_cluster" time="0.078" /><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_describe_clusters" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_list_clusters" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_delete_cluster" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_register_task_definition" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e29d160&gt;
+ecs = &lt;botocore.client.ECS object at 0x10c45dd30&gt;
 
     def test_register_task_definition(self, ecs):
         family = _unique("task-fam")
@@ -24,9 +24,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x1089f7170&gt;
+self = &lt;botocore.client.ECS object at 0x10c45dd30&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx:latest', 'memory': 128, 'name': 'app'}], 'family': 'task-fam-78d4bf07'}
+api_params = {'containerDefinitions': [{'image': 'nginx:latest', 'memory': 128, 'name': 'app'}], 'family': 'task-fam-8039181b'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -115,8 +115,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx:latest', 'memory': 128, 
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_describe_task_definition" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10a01d2e0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a90bda0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_describe_task_definition" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e29d520&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eb8be30&gt;
 
     def test_describe_task_definition(self, ecs):
         family = _unique("desc-td")
@@ -141,9 +141,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a90bda0&gt;
+self = &lt;botocore.client.ECS object at 0x10eb8be30&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx:latest', 'memory': 128, 'name': 'web'}], 'family': 'desc-td-ab8c6834'}
+api_params = {'containerDefinitions': [{'image': 'nginx:latest', 'memory': 128, 'name': 'web'}], 'family': 'desc-td-84c57c54'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -232,8 +232,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx:latest', 'memory': 128, 
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_list_task_definitions" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10a01d6a0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a96fc20&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_list_task_definitions" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e29d8e0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ebeff80&gt;
 
     def test_list_task_definitions(self, ecs):
         family = _unique("list-td")
@@ -258,9 +258,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a96fc20&gt;
+self = &lt;botocore.client.ECS object at 0x10ebeff80&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'busybox:latest', 'memory': 64, 'name': 'svc'}], 'family': 'list-td-e9ca3e62'}
+api_params = {'containerDefinitions': [{'image': 'busybox:latest', 'memory': 64, 'name': 'svc'}], 'family': 'list-td-2ae8f6ad'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -349,8 +349,8 @@ api_params = {'containerDefinitions': [{'image': 'busybox:latest', 'memory': 64,
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_task_definition_revisions" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10a01da60&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a942ff0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_task_definition_revisions" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e29dca0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ebc2bd0&gt;
 
     def test_task_definition_revisions(self, ecs):
         family = _unique("rev-td")
@@ -369,9 +369,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a942ff0&gt;
+self = &lt;botocore.client.ECS object at 0x10ebc2bd0&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx:1.0', 'memory': 128, 'name': 'v1'}], 'family': 'rev-td-124fce02'}
+api_params = {'containerDefinitions': [{'image': 'nginx:1.0', 'memory': 128, 'name': 'v1'}], 'family': 'rev-td-84866dcc'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -460,8 +460,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx:1.0', 'memory': 128, 'na
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_list_task_definition_families" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10a01de20&gt;
-ecs = &lt;botocore.client.ECS object at 0x10aa96420&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_list_task_definition_families" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e29e060&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecde7b0&gt;
 
     def test_list_task_definition_families(self, ecs):
         family = _unique("fam-list")
@@ -480,9 +480,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10aa96420&gt;
+self = &lt;botocore.client.ECS object at 0x10ecde7b0&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'busybox', 'memory': 64, 'name': 'app'}], 'family': 'fam-list-bdef286c'}
+api_params = {'containerDefinitions': [{'image': 'busybox', 'memory': 64, 'name': 'app'}], 'family': 'fam-list-81a59be4'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -571,8 +571,8 @@ api_params = {'containerDefinitions': [{'image': 'busybox', 'memory': 64, 'name'
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_create_service" time="0.007"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10a01e390&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a8df950&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_create_service" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10e29e5d0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eb5f530&gt;
 
     @pytest.fixture
     def task_def(self, ecs):
@@ -592,9 +592,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a8df950&gt;
+self = &lt;botocore.client.ECS object at 0x10eb5f530&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'svc-td-03ec7d8c'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'svc-td-d4770ac6'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -683,8 +683,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_describe_services" time="0.008"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10a01e780&gt;
-ecs = &lt;botocore.client.ECS object at 0x10aa51f10&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_describe_services" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10e29e9c0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecc13d0&gt;
 
     @pytest.fixture
     def task_def(self, ecs):
@@ -704,9 +704,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10aa51f10&gt;
+self = &lt;botocore.client.ECS object at 0x10ecc13d0&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'svc-td-bb3f4a00'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'svc-td-128dc0b2'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -795,8 +795,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_list_services" time="0.007"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10a01eb70&gt;
-ecs = &lt;botocore.client.ECS object at 0x109ef61b0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_list_services" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10e29edb0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10e201e80&gt;
 
     @pytest.fixture
     def task_def(self, ecs):
@@ -816,9 +816,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x109ef61b0&gt;
+self = &lt;botocore.client.ECS object at 0x10e201e80&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'svc-td-7c860bba'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'svc-td-1e50ad3b'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -907,8 +907,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_update_service" time="0.007"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10a01ef90&gt;
-ecs = &lt;botocore.client.ECS object at 0x10aced850&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_update_service" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10e29f1d0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef89940&gt;
 
     @pytest.fixture
     def task_def(self, ecs):
@@ -928,9 +928,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10aced850&gt;
+self = &lt;botocore.client.ECS object at 0x10ef89940&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'svc-td-14eea49c'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'svc-td-bc2d0334'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1019,8 +1019,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_tag_resource" time="0.006"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10a01f380&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a940380&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_tag_resource" time="0.005"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10e29f5c0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ebec1d0&gt;
 
     def test_tag_resource(self, ecs):
         cluster_name = _unique("tag-cluster")
@@ -1061,8 +1061,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10a90ba70&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'd71e8dd8-0efa-416c-b3cc-f23edb9aedef', 'server': '...re-request-id': '68a2d2ed-df2c-4c0f-b69c-6e9c47e339bc', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 18:12:30 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10eb8a9f0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '764b42c8-babe-41e2-a4cf-e5...re-request-id': '6bb42319-7e15-49e2-a522-e8832768d1cb', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 20:04:56 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1072,8 +1072,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'd7
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_untag_resource" time="0.006"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x108cebbc0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10acbd3a0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_untag_resource" time="0.005"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10cf6fbc0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f004770&gt;
 
     def test_untag_resource(self, ecs):
         cluster_name = _unique("untag-cluster")
@@ -1111,8 +1111,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10ace18e0&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '2876ea3c-62cd-403f-a82e-41...re-request-id': '19d41531-17f8-4ba9-9a6e-469c407a57f7', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 18:12:30 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10ef922d0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'e12ea853-ebbe-40a4-a159-4c...re-request-id': '6d224a2c-a51b-4ca6-8392-1d0625809ef6', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 20:04:56 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1122,8 +1122,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_list_clusters" time="0.006" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_describe_clusters" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_create_cluster_with_tags" time="0.004"><failure message="AssertionError: assert None == 'staging'&#10; +  where None = &lt;built-in method get of dict object at 0x10836e2c0&gt;('env')&#10; +    where &lt;built-in method get of dict object at 0x10836e2c0&gt; = {}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10a01ddf0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad3c770&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_list_clusters" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_describe_clusters" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_create_cluster_with_tags" time="0.004"><failure message="AssertionError: assert None == 'staging'&#10; +  where None = &lt;built-in method get of dict object at 0x10ef5d500&gt;('env')&#10; +    where &lt;built-in method get of dict object at 0x10ef5d500&gt; = {}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10e29ddc0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef848c0&gt;
 
     def test_create_cluster_with_tags(self, ecs):
         name = _unique("tagged-cluster")
@@ -1135,11 +1135,11 @@ ecs = &lt;botocore.client.ECS object at 0x10ad3c770&gt;
             tags = {t["key"]: t["value"] for t in resp["cluster"].get("tags", [])}
 &gt;           assert tags.get("env") == "staging"
 E           AssertionError: assert None == 'staging'
-E            +  where None = &lt;built-in method get of dict object at 0x10836e2c0&gt;('env')
-E            +    where &lt;built-in method get of dict object at 0x10836e2c0&gt; = {}.get
+E            +  where None = &lt;built-in method get of dict object at 0x10ef5d500&gt;('env')
+E            +    where &lt;built-in method get of dict object at 0x10ef5d500&gt; = {}.get
 
-tests/compatibility/test_ecs_compat.py:281: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_register_deregister_task_definition" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10a01d070&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad3ecf0&gt;
+tests/compatibility/test_ecs_compat.py:281: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_register_deregister_task_definition" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10e29d5e0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef86e40&gt;
 
     def test_register_deregister_task_definition(self, ecs):
         import uuid
@@ -1167,9 +1167,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ad3ecf0&gt;
+self = &lt;botocore.client.ECS object at 0x10ef86e40&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'cpu': 128, 'image': 'nginx:latest', 'memory': 256, 'name': 'web'}], 'family': 'task-fam-dacc1c24'}
+api_params = {'containerDefinitions': [{'cpu': 128, 'image': 'nginx:latest', 'memory': 256, 'name': 'web'}], 'family': 'task-fam-9778800c'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1258,8 +1258,8 @@ api_params = {'containerDefinitions': [{'cpu': 128, 'image': 'nginx:latest', 'me
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_list_task_definitions" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10a01c860&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a943b30&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_list_task_definitions" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10e29cb00&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ebc3d10&gt;
 
     def test_list_task_definitions(self, ecs):
         import uuid
@@ -1280,9 +1280,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a943b30&gt;
+self = &lt;botocore.client.ECS object at 0x10ebc3d10&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'alpine', 'memory': 64, 'name': 'app'}], 'family': 'list-td-5f7bb314'}
+api_params = {'containerDefinitions': [{'image': 'alpine', 'memory': 64, 'name': 'app'}], 'family': 'list-td-8e910b53'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1371,8 +1371,8 @@ api_params = {'containerDefinitions': [{'image': 'alpine', 'memory': 64, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_list_task_definition_families" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the ListTaskDefinitionFamilies operation: The operation ListTaskDefinitionFamilies is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10a01fa40&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad9c1a0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_list_task_definition_families" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the ListTaskDefinitionFamilies operation: The operation ListTaskDefinitionFamilies is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10e29fc20&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef44320&gt;
 
     def test_list_task_definition_families(self, ecs):
 &gt;       resp = ecs.list_task_definition_families()
@@ -1388,7 +1388,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ad9c1a0&gt;
+self = &lt;botocore.client.ECS object at 0x10ef44320&gt;
 operation_name = 'ListTaskDefinitionFamilies', api_params = {}
 
     @with_current_context()
@@ -1478,8 +1478,8 @@ operation_name = 'ListTaskDefinitionFamilies', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the ListTaskDefinitionFamilies operation: The operation ListTaskDefinitionFamilies is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_create_cluster_with_settings" time="0.005"><failure message="AssertionError: assert None == 'enabled'&#10; +  where None = &lt;built-in method get of dict object at 0x10aca5400&gt;('containerInsights')&#10; +    where &lt;built-in method get of dict object at 0x10aca5400&gt; = {}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10a01fe30&gt;
-ecs = &lt;botocore.client.ECS object at 0x10aab5af0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_create_cluster_with_settings" time="0.004"><failure message="AssertionError: assert None == 'enabled'&#10; +  where None = &lt;built-in method get of dict object at 0x10f22a2c0&gt;('containerInsights')&#10; +    where &lt;built-in method get of dict object at 0x10f22a2c0&gt; = {}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10e2c0050&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ebc03b0&gt;
 
     def test_create_cluster_with_settings(self, ecs):
         name = _unique("settings-cluster")
@@ -1491,11 +1491,11 @@ ecs = &lt;botocore.client.ECS object at 0x10aab5af0&gt;
             settings = {s["name"]: s["value"] for s in resp["cluster"].get("settings", [])}
 &gt;           assert settings.get("containerInsights") == "enabled"
 E           AssertionError: assert None == 'enabled'
-E            +  where None = &lt;built-in method get of dict object at 0x10aca5400&gt;('containerInsights')
-E            +    where &lt;built-in method get of dict object at 0x10aca5400&gt; = {}.get
+E            +  where None = &lt;built-in method get of dict object at 0x10f22a2c0&gt;('containerInsights')
+E            +    where &lt;built-in method get of dict object at 0x10f22a2c0&gt; = {}.get
 
-tests/compatibility/test_ecs_compat.py:335: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_put_cluster_capacity_providers" time="0.007"><failure message="AssertionError: assert 'FARGATE' in []&#10; +  where [] = &lt;built-in method get of dict object at 0x10af02bc0&gt;('capacityProviders', [])&#10; +    where &lt;built-in method get of dict object at 0x10af02bc0&gt; = {'activeServicesCount': 0, 'clusterArn': 'arn:aws:ecs:us-east-1:123456789012:cluster/cap-cluster-6630a2a5', 'clusterName': 'cap-cluster-6630a2a5', 'pendingTasksCount': 0, ...}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10a044260&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad75130&gt;
+tests/compatibility/test_ecs_compat.py:335: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_put_cluster_capacity_providers" time="0.006"><failure message="AssertionError: assert 'FARGATE' in []&#10; +  where [] = &lt;built-in method get of dict object at 0x10edd3a80&gt;('capacityProviders', [])&#10; +    where &lt;built-in method get of dict object at 0x10edd3a80&gt; = {'activeServicesCount': 0, 'clusterArn': 'arn:aws:ecs:us-east-1:123456789012:cluster/cap-cluster-9c6a9425', 'clusterName': 'cap-cluster-9c6a9425', 'pendingTasksCount': 0, ...}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10e2c0440&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eff0e60&gt;
 
     def test_put_cluster_capacity_providers(self, ecs):
         name = _unique("cap-cluster")
@@ -1510,11 +1510,11 @@ ecs = &lt;botocore.client.ECS object at 0x10ad75130&gt;
             cluster = desc["clusters"][0]
 &gt;           assert "FARGATE" in cluster.get("capacityProviders", [])
 E           AssertionError: assert 'FARGATE' in []
-E            +  where [] = &lt;built-in method get of dict object at 0x10af02bc0&gt;('capacityProviders', [])
-E            +    where &lt;built-in method get of dict object at 0x10af02bc0&gt; = {'activeServicesCount': 0, 'clusterArn': 'arn:aws:ecs:us-east-1:123456789012:cluster/cap-cluster-6630a2a5', 'clusterName': 'cap-cluster-6630a2a5', 'pendingTasksCount': 0, ...}.get
+E            +  where [] = &lt;built-in method get of dict object at 0x10edd3a80&gt;('capacityProviders', [])
+E            +    where &lt;built-in method get of dict object at 0x10edd3a80&gt; = {'activeServicesCount': 0, 'clusterArn': 'arn:aws:ecs:us-east-1:123456789012:cluster/cap-cluster-9c6a9425', 'clusterName': 'cap-cluster-9c6a9425', 'pendingTasksCount': 0, ...}.get
 
-tests/compatibility/test_ecs_compat.py:350: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_cluster_has_arn" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_cluster_status_active" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_cluster_registered_count_zero" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_delete_cluster_returns_inactive" time="0.004"><failure message="AssertionError: assert 'ACTIVE' == 'INACTIVE'&#10;  &#10;  - INACTIVE&#10;  ? --&#10;  + ACTIVE">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10a045280&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a90a960&gt;
+tests/compatibility/test_ecs_compat.py:350: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_cluster_has_arn" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_cluster_status_active" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_cluster_registered_count_zero" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_delete_cluster_returns_inactive" time="0.004"><failure message="AssertionError: assert 'ACTIVE' == 'INACTIVE'&#10;  &#10;  - INACTIVE&#10;  ? --&#10;  + ACTIVE">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e2c1430&gt;
+ecs = &lt;botocore.client.ECS object at 0x10efd7110&gt;
 
     def test_delete_cluster_returns_inactive(self, ecs):
         name = _unique("del-cluster")
@@ -1527,19 +1527,19 @@ E         - INACTIVE
 E         ? --
 E         + ACTIVE
 
-tests/compatibility/test_ecs_compat.py:389: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_describe_nonexistent_cluster" time="0.003"><failure message="AssertionError: assert 0 &gt;= 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10abc9c80&gt;('failures', [])&#10; +      where &lt;built-in method get of dict object at 0x10abc9c80&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '146', 'content-type': 'application/x-amz-json-1.0', 'date': '...:aws:ecs:us-east-1:123456789012:cluster/nonexist-8a817019', 'clusterName': 'nonexist-8a817019', 'status': 'INACTIVE'}]}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10a045670&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad74ec0&gt;
+tests/compatibility/test_ecs_compat.py:389: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_describe_nonexistent_cluster" time="0.003"><failure message="AssertionError: assert 0 &gt;= 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10f0d5dc0&gt;('failures', [])&#10; +      where &lt;built-in method get of dict object at 0x10f0d5dc0&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '146', 'content-type': 'application/x-amz-json-1.0', 'date': '...:aws:ecs:us-east-1:123456789012:cluster/nonexist-b9ac4772', 'clusterName': 'nonexist-b9ac4772', 'status': 'INACTIVE'}]}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e2c1820&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eff0dd0&gt;
 
     def test_describe_nonexistent_cluster(self, ecs):
         resp = ecs.describe_clusters(clusters=[_unique("nonexist")])
 &gt;       assert len(resp.get("failures", [])) &gt;= 1
 E       AssertionError: assert 0 &gt;= 1
 E        +  where 0 = len([])
-E        +    where [] = &lt;built-in method get of dict object at 0x10abc9c80&gt;('failures', [])
-E        +      where &lt;built-in method get of dict object at 0x10abc9c80&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '146', 'content-type': 'application/x-amz-json-1.0', 'date': '...:aws:ecs:us-east-1:123456789012:cluster/nonexist-8a817019', 'clusterName': 'nonexist-8a817019', 'status': 'INACTIVE'}]}.get
+E        +    where [] = &lt;built-in method get of dict object at 0x10f0d5dc0&gt;('failures', [])
+E        +      where &lt;built-in method get of dict object at 0x10f0d5dc0&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '146', 'content-type': 'application/x-amz-json-1.0', 'date': '...:aws:ecs:us-east-1:123456789012:cluster/nonexist-b9ac4772', 'clusterName': 'nonexist-b9ac4772', 'status': 'INACTIVE'}]}.get
 
-tests/compatibility/test_ecs_compat.py:393: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_has_arn" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10a045a60&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae08a70&gt;
+tests/compatibility/test_ecs_compat.py:393: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_has_arn" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e2c1c10&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ee9c7a0&gt;
 
     def test_task_definition_has_arn(self, ecs):
         family = _unique("td-arn")
@@ -1564,9 +1564,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ae08a70&gt;
+self = &lt;botocore.client.ECS object at 0x10ee9c7a0&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'td-arn-8480e914'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'td-arn-006fc025'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1655,8 +1655,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_status_active" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10a01f800&gt;
-ecs = &lt;botocore.client.ECS object at 0x10aab5d60&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_status_active" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e29fbf0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecb5220&gt;
 
     def test_task_definition_status_active(self, ecs):
         family = _unique("td-status")
@@ -1681,9 +1681,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10aab5d60&gt;
+self = &lt;botocore.client.ECS object at 0x10ecb5220&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'td-status-9d059f91'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'td-status-9e624aa6'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1772,8 +1772,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_deregister_task_definition" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10a01d790&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae08ef0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_deregister_task_definition" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e29da30&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ee9cfb0&gt;
 
     def test_deregister_task_definition(self, ecs):
         family = _unique("td-dereg")
@@ -1798,9 +1798,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ae08ef0&gt;
+self = &lt;botocore.client.ECS object at 0x10ee9cfb0&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'td-dereg-8e62f8ce'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'td-dereg-feff73bc'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1889,8 +1889,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_cpu_and_memory" time="0.034"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10a01e960&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae093a0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_cpu_and_memory" time="0.029"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e29f380&gt;
+ecs = &lt;botocore.client.ECS object at 0x10c45dd30&gt;
 
     def test_task_definition_with_cpu_and_memory(self, ecs):
         family = _unique("td-res")
@@ -1916,9 +1916,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ae093a0&gt;
+self = &lt;botocore.client.ECS object at 0x10c45dd30&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'cpu': 256, 'image': 'nginx', 'memory': 512, 'name': 'app'}], 'family': 'td-res-7f7d66d5'}
+api_params = {'containerDefinitions': [{'cpu': 256, 'image': 'nginx', 'memory': 512, 'name': 'app'}], 'family': 'td-res-cd2ca0ab'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2007,8 +2007,8 @@ api_params = {'containerDefinitions': [{'cpu': 256, 'image': 'nginx', 'memory': 
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_port_mappings" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10a0457f0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10acbf950&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_port_mappings" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e2c1bb0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef048c0&gt;
 
     def test_task_definition_with_port_mappings(self, ecs):
         family = _unique("td-ports")
@@ -2037,9 +2037,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10acbf950&gt;
+self = &lt;botocore.client.ECS object at 0x10ef048c0&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'web', 'portMappings': [{'containerPort': 80, 'hos...: 80, 'protocol': 'tcp'}, {'containerPort': 443, 'hostPort': 443, 'protocol': 'tcp'}]}], 'family': 'td-ports-557b3b89'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'web', 'portMappings': [{'containerPort': 80, 'hos...: 80, 'protocol': 'tcp'}, {'containerPort': 443, 'hostPort': 443, 'protocol': 'tcp'}]}], 'family': 'td-ports-baf0a9ca'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2128,8 +2128,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_environment" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10a045040&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a9d91f0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_environment" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e2c1400&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f0052e0&gt;
 
     def test_task_definition_with_environment(self, ecs):
         family = _unique("td-env")
@@ -2158,9 +2158,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a9d91f0&gt;
+self = &lt;botocore.client.ECS object at 0x10f0052e0&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'environment': [{'name': 'APP_ENV', 'value': 'test'}, {'name': 'DEBUG', 'value': 'true'}], 'image': 'busybox', 'memory': 128, 'name': 'app'}], 'family': 'td-env-7579cedb'}
+api_params = {'containerDefinitions': [{'environment': [{'name': 'APP_ENV', 'value': 'test'}, {'name': 'DEBUG', 'value': 'true'}], 'image': 'busybox', 'memory': 128, 'name': 'app'}], 'family': 'td-env-0290c4c1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2249,8 +2249,8 @@ api_params = {'containerDefinitions': [{'environment': [{'name': 'APP_ENV', 'val
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_multiple_containers" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10a044890&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a96d910&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_multiple_containers" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e2c0950&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecd8980&gt;
 
     def test_task_definition_with_multiple_containers(self, ecs):
         family = _unique("td-multi")
@@ -2272,9 +2272,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a96d910&gt;
+self = &lt;botocore.client.ECS object at 0x10ecd8980&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'web'}, {'image': 'busybox', 'memory': 64, 'name': 'sidecar'}], 'family': 'td-multi-f85e1d31'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'web'}, {'image': 'busybox', 'memory': 64, 'name': 'sidecar'}], 'family': 'td-multi-2c880a0c'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2363,8 +2363,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_revision_increments" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10a045bb0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ace1880&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_revision_increments" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e2c1d60&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ec5b920&gt;
 
     def test_task_definition_revision_increments(self, ecs):
         family = _unique("td-rev")
@@ -2383,9 +2383,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ace1880&gt;
+self = &lt;botocore.client.ECS object at 0x10ec5b920&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx:1.0', 'memory': 128, 'name': 'app'}], 'family': 'td-rev-881df94e'}
+api_params = {'containerDefinitions': [{'image': 'nginx:1.0', 'memory': 128, 'name': 'app'}], 'family': 'td-rev-40daee6d'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2474,8 +2474,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx:1.0', 'memory': 128, 'na
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_list_tags_for_cluster" time="0.005"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10a045fa0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a96d490&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_list_tags_for_cluster" time="0.005"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e2c2150&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef06c60&gt;
 
     def test_list_tags_for_cluster(self, ecs):
         name = _unique("tag-cluster")
@@ -2491,8 +2491,8 @@ ecs = &lt;botocore.client.ECS object at 0x10a96d490&gt;
                    ^^^^^^^^^^^^^^
 E           KeyError: 'env'
 
-tests/compatibility/test_ecs_compat.py:551: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_tag_and_untag_cluster" time="0.005"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10a046390&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ace0e60&gt;
+tests/compatibility/test_ecs_compat.py:551: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_tag_and_untag_cluster" time="0.005"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e2c2540&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f007f20&gt;
 
     def test_tag_and_untag_cluster(self, ecs):
         name = _unique("tagop-cluster")
@@ -2533,8 +2533,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10aa53e30&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '5aea60a2-b06e-4511-a316-4f5956c8e799', 'server': '...re-request-id': '8b616afe-cfb2-4f61-a9c9-70217a1f7d61', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 18:12:31 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10ef91670&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'eb97630c-ef66-466e-9c89-c0...re-request-id': '1a745a28-6e26-4d99-83db-1ccfa3e57eaf', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 20:04:57 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -2544,8 +2544,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '5a
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_run_task" time="0.007"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10a046960&gt;
-ecs = &lt;botocore.client.ECS object at 0x10acedd30&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_run_task" time="0.007"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10e2c2ae0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef857f0&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -2565,9 +2565,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10acedd30&gt;
+self = &lt;botocore.client.ECS object at 0x10ef857f0&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'task-td-40760d69'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'task-td-9be14e22'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2656,8 +2656,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_run_task_with_count" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10a046db0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10aa96390&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_run_task_with_count" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10e2c2f30&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef88560&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -2677,9 +2677,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10aa96390&gt;
+self = &lt;botocore.client.ECS object at 0x10ef88560&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'task-td-8dd5c3b7'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'task-td-4c8667df'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2768,8 +2768,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_stop_task" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10a047200&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a046060&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_stop_task" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10e2c3380&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef87bf0&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -2789,9 +2789,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a046060&gt;
+self = &lt;botocore.client.ECS object at 0x10ef87bf0&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'task-td-e81ebeaa'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'task-td-e98c82bb'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2880,8 +2880,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_describe_tasks" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10a047650&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad3e210&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_describe_tasks" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10e2c37d0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecb5ca0&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -2901,9 +2901,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ad3e210&gt;
+self = &lt;botocore.client.ECS object at 0x10ecb5ca0&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'task-td-c4708f77'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'task-td-ef17de4b'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2992,8 +2992,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_start_task_nonexistent_cluster" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10a047a40&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a9d99d0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_start_task_nonexistent_cluster" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10e2c3bc0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ec593a0&gt;
 
     def test_start_task_nonexistent_cluster(self, ecs):
         from botocore.exceptions import ClientError
@@ -3010,8 +3010,8 @@ E
 E         - ClusterNotFoundException
 E         + 400
 
-tests/compatibility/test_ecs_compat.py:630: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_discover_poll_endpoint" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DiscoverPollEndpoint operation: The operation DiscoverPollEndpoint is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsAutoCoverage object at 0x10a01ec60&gt;
-client = &lt;botocore.client.ECS object at 0x10ad9ca40&gt;
+tests/compatibility/test_ecs_compat.py:630: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_discover_poll_endpoint" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DiscoverPollEndpoint operation: The operation DiscoverPollEndpoint is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsAutoCoverage object at 0x10e2c3980&gt;
+client = &lt;botocore.client.ECS object at 0x10ecc0950&gt;
 
     def test_discover_poll_endpoint(self, client):
         """DiscoverPollEndpoint returns a response."""
@@ -3028,7 +3028,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ad9ca40&gt;
+self = &lt;botocore.client.ECS object at 0x10ecc0950&gt;
 operation_name = 'DiscoverPollEndpoint', api_params = {}
 
     @with_current_context()
@@ -3118,8 +3118,8 @@ operation_name = 'DiscoverPollEndpoint', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DiscoverPollEndpoint operation: The operation DiscoverPollEndpoint is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_list_account_settings" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the ListAccountSettings operation: The operation ListAccountSettings is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsAutoCoverage object at 0x10a01ff80&gt;
-client = &lt;botocore.client.ECS object at 0x10a90bdd0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_list_account_settings" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the ListAccountSettings operation: The operation ListAccountSettings is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsAutoCoverage object at 0x10e2c3110&gt;
+client = &lt;botocore.client.ECS object at 0x10efd5d00&gt;
 
     def test_list_account_settings(self, client):
         """ListAccountSettings returns a response."""
@@ -3136,7 +3136,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a90bdd0&gt;
+self = &lt;botocore.client.ECS object at 0x10efd5d00&gt;
 operation_name = 'ListAccountSettings', api_params = {}
 
     @with_current_context()
@@ -3226,8 +3226,8 @@ operation_name = 'ListAccountSettings', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the ListAccountSettings operation: The operation ListAccountSettings is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_list_container_instances" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_list_tasks" time="0.003" /><testcase classname="tests.compatibility.test_ecs_compat.TestCapacityProviderOperations" name="test_create_capacity_provider" time="0.003"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestCapacityProviderOperations object at 0x10a0460c0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad9c320&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_list_container_instances" time="0.003" /><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_list_tasks" time="0.003" /><testcase classname="tests.compatibility.test_ecs_compat.TestCapacityProviderOperations" name="test_create_capacity_provider" time="0.003"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestCapacityProviderOperations object at 0x10e2c17f0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ebef860&gt;
 
     def test_create_capacity_provider(self, ecs):
         cp_name = _unique("cp")
@@ -3251,9 +3251,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ad9c320&gt;
+self = &lt;botocore.client.ECS object at 0x10ebef860&gt;
 operation_name = 'CreateCapacityProvider'
-api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autoscaling:us-east-1:123456789012:autoScalingGroup:xxx:autoScalingGroupName/my-asg'}, 'name': 'cp-dac63098'}
+api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autoscaling:us-east-1:123456789012:autoScalingGroup:xxx:autoScalingGroupName/my-asg'}, 'name': 'cp-59763938'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3342,8 +3342,8 @@ api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autos
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestCapacityProviderOperations" name="test_delete_capacity_provider" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestCapacityProviderOperations object at 0x10a044500&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a941130&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestCapacityProviderOperations" name="test_delete_capacity_provider" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestCapacityProviderOperations object at 0x10e29f710&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eb8ba40&gt;
 
     def test_delete_capacity_provider(self, ecs):
         cp_name = _unique("del-cp")
@@ -3367,9 +3367,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a941130&gt;
+self = &lt;botocore.client.ECS object at 0x10eb8ba40&gt;
 operation_name = 'CreateCapacityProvider'
-api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autoscaling:us-east-1:123456789012:autoScalingGroup:xxx:autoScalingGroupName/my-asg'}, 'name': 'del-cp-933ea1d6'}
+api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autoscaling:us-east-1:123456789012:autoScalingGroup:xxx:autoScalingGroupName/my-asg'}, 'name': 'del-cp-dc24b635'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3458,8 +3458,8 @@ api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autos
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestCapacityProviderOperations" name="test_create_capacity_provider_with_managed_scaling" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestCapacityProviderOperations object at 0x10a045820&gt;
-ecs = &lt;botocore.client.ECS object at 0x10acbe150&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestCapacityProviderOperations" name="test_create_capacity_provider_with_managed_scaling" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestCapacityProviderOperations object at 0x10e29fc50&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecda390&gt;
 
     def test_create_capacity_provider_with_managed_scaling(self, ecs):
         cp_name = _unique("ms-cp")
@@ -3487,9 +3487,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10acbe150&gt;
+self = &lt;botocore.client.ECS object at 0x10ecda390&gt;
 operation_name = 'CreateCapacityProvider'
-api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autoscaling:us-east-1:123456789012:autoScalingGroup:xxx:autoScalingGroupName/my-asg', 'managedScaling': {'status': 'ENABLED', 'targetCapacity': 80}}, 'name': 'ms-cp-cdf598b3'}
+api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autoscaling:us-east-1:123456789012:autoScalingGroup:xxx:autoScalingGroupName/my-asg', 'managedScaling': {'status': 'ENABLED', 'targetCapacity': 80}}, 'name': 'ms-cp-89fc3d40'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3578,8 +3578,8 @@ api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autos
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAccountSettingOperations" name="test_put_account_setting" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSetting operation: The operation PutAccountSetting is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAccountSettingOperations object at 0x10a05c1d0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ade5bb0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAccountSettingOperations" name="test_put_account_setting" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSetting operation: The operation PutAccountSetting is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAccountSettingOperations object at 0x10e2dc3b0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ee88cb0&gt;
 
     def test_put_account_setting(self, ecs):
 &gt;       resp = ecs.put_account_setting(name="containerInstanceLongArnFormat", value="enabled")
@@ -3595,7 +3595,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ade5bb0&gt;
+self = &lt;botocore.client.ECS object at 0x10ee88cb0&gt;
 operation_name = 'PutAccountSetting'
 api_params = {'name': 'containerInstanceLongArnFormat', 'value': 'enabled'}
 
@@ -3686,8 +3686,8 @@ api_params = {'name': 'containerInstanceLongArnFormat', 'value': 'enabled'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSetting operation: The operation PutAccountSetting is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAccountSettingOperations" name="test_put_and_list_account_settings" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSetting operation: The operation PutAccountSetting is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAccountSettingOperations object at 0x10a05c5c0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10aab4050&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAccountSettingOperations" name="test_put_and_list_account_settings" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSetting operation: The operation PutAccountSetting is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAccountSettingOperations object at 0x10e2dc7a0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef92c00&gt;
 
     def test_put_and_list_account_settings(self, ecs):
 &gt;       ecs.put_account_setting(name="serviceLongArnFormat", value="enabled")
@@ -3702,7 +3702,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10aab4050&gt;
+self = &lt;botocore.client.ECS object at 0x10ef92c00&gt;
 operation_name = 'PutAccountSetting'
 api_params = {'name': 'serviceLongArnFormat', 'value': 'enabled'}
 
@@ -3793,8 +3793,8 @@ api_params = {'name': 'serviceLongArnFormat', 'value': 'enabled'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSetting operation: The operation PutAccountSetting is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAccountSettingOperations" name="test_put_account_setting_effective" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSetting operation: The operation PutAccountSetting is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAccountSettingOperations object at 0x10a05c9b0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae1cfb0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAccountSettingOperations" name="test_put_account_setting_effective" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSetting operation: The operation PutAccountSetting is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAccountSettingOperations object at 0x10e2dcb90&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef2acf0&gt;
 
     def test_put_account_setting_effective(self, ecs):
 &gt;       ecs.put_account_setting(name="taskLongArnFormat", value="enabled")
@@ -3809,7 +3809,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ae1cfb0&gt;
+self = &lt;botocore.client.ECS object at 0x10ef2acf0&gt;
 operation_name = 'PutAccountSetting'
 api_params = {'name': 'taskLongArnFormat', 'value': 'enabled'}
 
@@ -3900,8 +3900,8 @@ api_params = {'name': 'taskLongArnFormat', 'value': 'enabled'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSetting operation: The operation PutAccountSetting is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestListAttributesOperation" name="test_list_attributes_empty" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the ListAttributes operation: The operation ListAttributes is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestListAttributesOperation object at 0x10a05ce60&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a96d910&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestListAttributesOperation" name="test_list_attributes_empty" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the ListAttributes operation: The operation ListAttributes is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestListAttributesOperation object at 0x10e2dd070&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecc3470&gt;
 
     def test_list_attributes_empty(self, ecs):
         name = _unique("attr-cluster")
@@ -3920,9 +3920,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a96d910&gt;
+self = &lt;botocore.client.ECS object at 0x10ecc3470&gt;
 operation_name = 'ListAttributes'
-api_params = {'cluster': 'attr-cluster-715b9140', 'targetType': 'container-instance'}
+api_params = {'cluster': 'attr-cluster-e113ead4', 'targetType': 'container-instance'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4011,8 +4011,8 @@ api_params = {'cluster': 'attr-cluster-715b9140', 'targetType': 'container-insta
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the ListAttributes operation: The operation ListAttributes is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders" name="test_describe_capacity_providers_empty" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeCapacityProviders operation: The operation DescribeCapacityProviders is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders object at 0x10a05d2e0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae5b590&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders" name="test_describe_capacity_providers_empty" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeCapacityProviders operation: The operation DescribeCapacityProviders is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders object at 0x10e2dd4c0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f173800&gt;
 
     def test_describe_capacity_providers_empty(self, ecs):
 &gt;       resp = ecs.describe_capacity_providers(capacityProviders=["nonexistent-cp"])
@@ -4028,7 +4028,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ae5b590&gt;
+self = &lt;botocore.client.ECS object at 0x10f173800&gt;
 operation_name = 'DescribeCapacityProviders'
 api_params = {'capacityProviders': ['nonexistent-cp']}
 
@@ -4119,8 +4119,8 @@ api_params = {'capacityProviders': ['nonexistent-cp']}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeCapacityProviders operation: The operation DescribeCapacityProviders is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders" name="test_describe_capacity_providers_after_create" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders object at 0x10a05d6d0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ac89cd0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders" name="test_describe_capacity_providers_after_create" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders object at 0x10e2dd8b0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f17ae70&gt;
 
     def test_describe_capacity_providers_after_create(self, ecs):
         cp_name = _unique("desc-cp")
@@ -4144,9 +4144,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ac89cd0&gt;
+self = &lt;botocore.client.ECS object at 0x10f17ae70&gt;
 operation_name = 'CreateCapacityProvider'
-api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autoscaling:us-east-1:123456789012:autoScalingGroup:xxx:autoScalingGroupName/my-asg'}, 'name': 'desc-cp-bf09f0a5'}
+api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autoscaling:us-east-1:123456789012:autoScalingGroup:xxx:autoScalingGroupName/my-asg'}, 'name': 'desc-cp-ebdff212'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4235,8 +4235,8 @@ api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autos
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestUpdateCapacityProvider" name="test_update_capacity_provider_managed_scaling" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestUpdateCapacityProvider object at 0x10a05dbb0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae58b60&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestUpdateCapacityProvider" name="test_update_capacity_provider_managed_scaling" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestUpdateCapacityProvider object at 0x10e2ddd90&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f170b00&gt;
 
     def test_update_capacity_provider_managed_scaling(self, ecs):
         cp_name = _unique("upd-cp")
@@ -4264,9 +4264,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ae58b60&gt;
+self = &lt;botocore.client.ECS object at 0x10f170b00&gt;
 operation_name = 'CreateCapacityProvider'
-api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autoscaling:us-east-1:123456789012:autoScalingGroup:xxx:autoScalingGroupName/my-asg', 'managedScaling': {'status': 'ENABLED', 'targetCapacity': 50}}, 'name': 'upd-cp-e87e2e7a'}
+api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autoscaling:us-east-1:123456789012:autoScalingGroup:xxx:autoScalingGroupName/my-asg', 'managedScaling': {'status': 'ENABLED', 'targetCapacity': 50}}, 'name': 'upd-cp-f6c21353'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4355,8 +4355,8 @@ api_params = {'autoScalingGroupProvider': {'autoScalingGroupArn': 'arn:aws:autos
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the CreateCapacityProvider operation: The operation CreateCapacityProvider is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions" name="test_delete_task_definitions" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions object at 0x10a044c80&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ac18890&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions" name="test_delete_task_definitions" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions object at 0x10e2c1070&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f184f50&gt;
 
     def test_delete_task_definitions(self, ecs):
         family = _unique("del-tds")
@@ -4375,9 +4375,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ac18890&gt;
+self = &lt;botocore.client.ECS object at 0x10f184f50&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'del-tds-56210c0c'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'del-tds-d0cb99e4'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4466,8 +4466,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions" name="test_delete_task_definitions_marks_deleted" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions object at 0x10a047620&gt;
-ecs = &lt;botocore.client.ECS object at 0x10aa577d0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions" name="test_delete_task_definitions_marks_deleted" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions object at 0x10e2c2c00&gt;
+ecs = &lt;botocore.client.ECS object at 0x10efd8740&gt;
 
     def test_delete_task_definitions_marks_deleted(self, ecs):
         family = _unique("del-tds-status")
@@ -4486,9 +4486,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10aa577d0&gt;
+self = &lt;botocore.client.ECS object at 0x10efd8740&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'busybox', 'memory': 64, 'name': 'app'}], 'family': 'del-tds-status-6a864b2b'}
+api_params = {'containerDefinitions': [{'image': 'busybox', 'memory': 64, 'name': 'app'}], 'family': 'del-tds-status-1bf89f5d'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4577,9 +4577,9 @@ api_params = {'containerDefinitions': [{'image': 'busybox', 'memory': 64, 'name'
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_register_container_instance" time="0.006"><failure message="AssertionError: assert 'REGISTERED' == 'ACTIVE'&#10;  &#10;  - ACTIVE&#10;  + REGISTERED">self = &lt;tests.compatibility.test_ecs_compat.TestContainerInstanceOperations object at 0x10a05dbe0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae08fe0&gt;
-cluster = 'ci-cluster-e1621615'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_register_container_instance" time="0.005"><failure message="AssertionError: assert 'REGISTERED' == 'ACTIVE'&#10;  &#10;  - ACTIVE&#10;  + REGISTERED">self = &lt;tests.compatibility.test_ecs_compat.TestContainerInstanceOperations object at 0x10e2ddb50&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ee9d430&gt;
+cluster = 'ci-cluster-66d26f89'
 
     def test_register_container_instance(self, ecs, cluster):
         resp = ecs.register_container_instance(
@@ -4596,9 +4596,9 @@ E
 E         - ACTIVE
 E         + REGISTERED
 
-tests/compatibility/test_ecs_compat.py:885: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_describe_container_instances" time="0.007" /><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_deregister_container_instance" time="0.006"><failure message="AssertionError: assert 'DEREGISTERED' == 'INACTIVE'&#10;  &#10;  - INACTIVE&#10;  + DEREGISTERED">self = &lt;tests.compatibility.test_ecs_compat.TestContainerInstanceOperations object at 0x10a05cbf0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad9c6b0&gt;
-cluster = 'ci-cluster-0aeff65c'
+tests/compatibility/test_ecs_compat.py:885: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_describe_container_instances" time="0.007" /><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_deregister_container_instance" time="0.006"><failure message="AssertionError: assert 'DEREGISTERED' == 'INACTIVE'&#10;  &#10;  - INACTIVE&#10;  + DEREGISTERED">self = &lt;tests.compatibility.test_ecs_compat.TestContainerInstanceOperations object at 0x10e2dc980&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef47fe0&gt;
+cluster = 'ci-cluster-450eac0a'
 
     def test_deregister_container_instance(self, ecs, cluster):
         reg = ecs.register_container_instance(
@@ -4618,9 +4618,9 @@ E
 E         - INACTIVE
 E         + DEREGISTERED
 
-tests/compatibility/test_ecs_compat.py:917: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_update_container_instances_state" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the UpdateContainerInstancesState operation: The operation UpdateContainerInstancesState is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestContainerInstanceOperations object at 0x10a05c200&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae566c0&gt;
-cluster = 'ci-cluster-38ded67e'
+tests/compatibility/test_ecs_compat.py:917: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_update_container_instances_state" time="0.010"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the UpdateContainerInstancesState operation: The operation UpdateContainerInstancesState is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestContainerInstanceOperations object at 0x10e2dc110&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ee881a0&gt;
+cluster = 'ci-cluster-9af2f59a'
 
     def test_update_container_instances_state(self, ecs, cluster):
         reg = ecs.register_container_instance(
@@ -4647,9 +4647,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ae566c0&gt;
+self = &lt;botocore.client.ECS object at 0x10ee881a0&gt;
 operation_name = 'UpdateContainerInstancesState'
-api_params = {'cluster': 'ci-cluster-38ded67e', 'containerInstances': ['arn:aws:ecs:us-east-1:123456789012:container-instance/d50128aa089d475bb7a1c741a7ffc9e1'], 'status': 'DRAINING'}
+api_params = {'cluster': 'ci-cluster-9af2f59a', 'containerInstances': ['arn:aws:ecs:us-east-1:123456789012:container-instance/8020a134efba42a7b171b10bb27b889a'], 'status': 'DRAINING'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4738,8 +4738,8 @@ api_params = {'cluster': 'ci-cluster-38ded67e', 'containerInstances': ['arn:aws:
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the UpdateContainerInstancesState operation: The operation UpdateContainerInstancesState is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_create_task_set" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10a05e2a0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a01d040&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_create_task_set" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10e2de480&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eff3020&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -4759,9 +4759,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a01d040&gt;
+self = &lt;botocore.client.ECS object at 0x10eff3020&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'ts-td-74fe2552'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'ts-td-1bb0021b'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4850,8 +4850,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_describe_task_sets" time="0.007"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10a05e6f0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ace06b0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_describe_task_sets" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10e2de8d0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ee89790&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -4871,9 +4871,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ace06b0&gt;
+self = &lt;botocore.client.ECS object at 0x10ee89790&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'ts-td-aaea2691'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'ts-td-ff5940f1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4962,8 +4962,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_update_task_set" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10a05eb40&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a90ba40&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_update_task_set" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10e2ded20&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eff12b0&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -4983,9 +4983,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a90ba40&gt;
+self = &lt;botocore.client.ECS object at 0x10eff12b0&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'ts-td-a2cd609d'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'ts-td-0016e605'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -5074,8 +5074,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_delete_task_set" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10a05ef90&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a9dbc50&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_delete_task_set" time="0.006"><error message="failed on setup with &quot;botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10e2df170&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f170dd0&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -5095,9 +5095,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a9dbc50&gt;
+self = &lt;botocore.client.ECS object at 0x10f170dd0&gt;
 operation_name = 'RegisterTaskDefinition'
-api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'ts-td-a712f18d'}
+api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name': 'app'}], 'family': 'ts-td-39630128'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -5186,8 +5186,8 @@ api_params = {'containerDefinitions': [{'image': 'nginx', 'memory': 128, 'name':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the RegisterTaskDefinition operation: The operation RegisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestGetTaskProtection" name="test_get_task_protection_nonexistent_cluster" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestGetTaskProtection object at 0x10a05f3e0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae098b0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestGetTaskProtection" name="test_get_task_protection_nonexistent_cluster" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestGetTaskProtection object at 0x10e2df5f0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef46390&gt;
 
     def test_get_task_protection_nonexistent_cluster(self, ecs):
         """GetTaskProtection returns ClusterNotFoundException for a fake cluster."""
@@ -5201,8 +5201,8 @@ E
 E         - ClusterNotFoundException
 E         + 400
 
-tests/compatibility/test_ecs_compat.py:1047: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestListServicesByNamespace" name="test_list_services_by_namespace" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the ListServicesByNamespace operation: The operation ListServicesByNamespace is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestListServicesByNamespace object at 0x10a05f890&gt;
-ecs = &lt;botocore.client.ECS object at 0x10aa54230&gt;
+tests/compatibility/test_ecs_compat.py:1047: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestListServicesByNamespace" name="test_list_services_by_namespace" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the ListServicesByNamespace operation: The operation ListServicesByNamespace is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestListServicesByNamespace object at 0x10e2dfaa0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10efda480&gt;
 
     def test_list_services_by_namespace(self, ecs):
 &gt;       resp = ecs.list_services_by_namespace(namespace="test-namespace")
@@ -5218,7 +5218,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10aa54230&gt;
+self = &lt;botocore.client.ECS object at 0x10efda480&gt;
 operation_name = 'ListServicesByNamespace'
 api_params = {'namespace': 'test-namespace'}
 
@@ -5309,9 +5309,9 @@ api_params = {'namespace': 'test-namespace'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the ListServicesByNamespace operation: The operation ListServicesByNamespace is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAttributeOperations" name="test_put_attributes" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAttributes operation: The operation PutAttributes is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAttributeOperations object at 0x10a05fd10&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae5a8d0&gt;
-cluster = 'attr-cluster-834409ce'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAttributeOperations" name="test_put_attributes" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAttributes operation: The operation PutAttributes is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAttributeOperations object at 0x10e2dffb0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecc3ef0&gt;
+cluster = 'attr-cluster-5494b8b6'
 
     def test_put_attributes(self, ecs, cluster):
 &gt;       resp = ecs.put_attributes(
@@ -5336,9 +5336,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ae5a8d0&gt;
+self = &lt;botocore.client.ECS object at 0x10ecc3ef0&gt;
 operation_name = 'PutAttributes'
-api_params = {'attributes': [{'name': 'env', 'targetId': 'fake-ci-id', 'targetType': 'container-instance', 'value': 'production'}], 'cluster': 'attr-cluster-834409ce'}
+api_params = {'attributes': [{'name': 'env', 'targetId': 'fake-ci-id', 'targetType': 'container-instance', 'value': 'production'}], 'cluster': 'attr-cluster-5494b8b6'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -5427,9 +5427,9 @@ api_params = {'attributes': [{'name': 'env', 'targetId': 'fake-ci-id', 'targetTy
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the PutAttributes operation: The operation PutAttributes is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAttributeOperations" name="test_list_attributes_after_put" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAttributes operation: The operation PutAttributes is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAttributeOperations object at 0x10a05ff20&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae3d6a0&gt;
-cluster = 'attr-cluster-34307697'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAttributeOperations" name="test_list_attributes_after_put" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAttributes operation: The operation PutAttributes is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAttributeOperations object at 0x10e2dffe0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef46e40&gt;
+cluster = 'attr-cluster-b06e1503'
 
     def test_list_attributes_after_put(self, ecs, cluster):
 &gt;       ecs.put_attributes(
@@ -5454,9 +5454,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ae3d6a0&gt;
+self = &lt;botocore.client.ECS object at 0x10ef46e40&gt;
 operation_name = 'PutAttributes'
-api_params = {'attributes': [{'name': 'team', 'targetId': 'fake-ci-id-2', 'targetType': 'container-instance', 'value': 'platform'}], 'cluster': 'attr-cluster-34307697'}
+api_params = {'attributes': [{'name': 'team', 'targetId': 'fake-ci-id-2', 'targetType': 'container-instance', 'value': 'platform'}], 'cluster': 'attr-cluster-b06e1503'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -5545,9 +5545,9 @@ api_params = {'attributes': [{'name': 'team', 'targetId': 'fake-ci-id-2', 'targe
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the PutAttributes operation: The operation PutAttributes is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAttributeOperations" name="test_delete_attributes" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAttributes operation: The operation PutAttributes is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAttributeOperations object at 0x10a05f6b0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10aa549b0&gt;
-cluster = 'attr-cluster-69b96888'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAttributeOperations" name="test_delete_attributes" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAttributes operation: The operation PutAttributes is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAttributeOperations object at 0x10e2df7d0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10efda570&gt;
+cluster = 'attr-cluster-aa6b05f9'
 
     def test_delete_attributes(self, ecs, cluster):
 &gt;       ecs.put_attributes(
@@ -5572,9 +5572,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10aa549b0&gt;
+self = &lt;botocore.client.ECS object at 0x10efda570&gt;
 operation_name = 'PutAttributes'
-api_params = {'attributes': [{'name': 'temp-attr', 'targetId': 'fake-ci-id-3', 'targetType': 'container-instance', 'value': 'temp-val'}], 'cluster': 'attr-cluster-69b96888'}
+api_params = {'attributes': [{'name': 'temp-attr', 'targetId': 'fake-ci-id-3', 'targetType': 'container-instance', 'value': 'temp-val'}], 'cluster': 'attr-cluster-aa6b05f9'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -5663,8 +5663,8 @@ api_params = {'attributes': [{'name': 'temp-attr', 'targetId': 'fake-ci-id-3', '
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the PutAttributes operation: The operation PutAttributes is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_put_account_setting_default" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSettingDefault operation: The operation PutAccountSettingDefault is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10a05ec90&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ace0ef0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_put_account_setting_default" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSettingDefault operation: The operation PutAccountSettingDefault is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e2dea80&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef46b10&gt;
 
     def test_put_account_setting_default(self, ecs):
 &gt;       resp = ecs.put_account_setting_default(
@@ -5681,7 +5681,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ace0ef0&gt;
+self = &lt;botocore.client.ECS object at 0x10ef46b10&gt;
 operation_name = 'PutAccountSettingDefault'
 api_params = {'name': 'containerInstanceLongArnFormat', 'value': 'enabled'}
 
@@ -5772,8 +5772,8 @@ api_params = {'name': 'containerInstanceLongArnFormat', 'value': 'enabled'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSettingDefault operation: The operation PutAccountSettingDefault is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_cluster_nonexistent" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10a05e2d0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10aab75f0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_cluster_nonexistent" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e2de210&gt;
+ecs = &lt;botocore.client.ECS object at 0x10efd5010&gt;
 
     def test_update_cluster_nonexistent(self, ecs):
         """UpdateCluster returns ClusterNotFoundException for nonexistent cluster."""
@@ -5790,8 +5790,8 @@ E
 E         - ClusterNotFoundException
 E         + 400
 
-tests/compatibility/test_ecs_compat.py:1162: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_cluster_settings_nonexistent" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10a05c980&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad76a20&gt;
+tests/compatibility/test_ecs_compat.py:1162: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_cluster_settings_nonexistent" time="0.005"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e2dd490&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef85880&gt;
 
     def test_update_cluster_settings_nonexistent(self, ecs):
         """UpdateClusterSettings returns ClusterNotFoundException for nonexistent cluster."""
@@ -5808,8 +5808,8 @@ E
 E         - ClusterNotFoundException
 E         + 400
 
-tests/compatibility/test_ecs_compat.py:1173: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_submit_container_state_change" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the SubmitContainerStateChange operation: The operation SubmitContainerStateChange is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10a05d4c0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a940da0&gt;
+tests/compatibility/test_ecs_compat.py:1173: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_submit_container_state_change" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the SubmitContainerStateChange operation: The operation SubmitContainerStateChange is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e2c3a40&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecd9d60&gt;
 
     def test_submit_container_state_change(self, ecs):
         name = _unique("scsc-cluster")
@@ -5828,9 +5828,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10a940da0&gt;
+self = &lt;botocore.client.ECS object at 0x10ecd9d60&gt;
 operation_name = 'SubmitContainerStateChange'
-api_params = {'cluster': 'scsc-cluster-88e36764', 'status': 'RUNNING'}
+api_params = {'cluster': 'scsc-cluster-c1d94674', 'status': 'RUNNING'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -5919,8 +5919,8 @@ api_params = {'cluster': 'scsc-cluster-88e36764', 'status': 'RUNNING'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the SubmitContainerStateChange operation: The operation SubmitContainerStateChange is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_submit_task_state_change" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the SubmitTaskStateChange operation: The operation SubmitTaskStateChange is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10a047440&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad5fb00&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_submit_task_state_change" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the SubmitTaskStateChange operation: The operation SubmitTaskStateChange is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e2f4410&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef05fd0&gt;
 
     def test_submit_task_state_change(self, ecs):
         name = _unique("stsc-cluster")
@@ -5939,9 +5939,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ad5fb00&gt;
+self = &lt;botocore.client.ECS object at 0x10ef05fd0&gt;
 operation_name = 'SubmitTaskStateChange'
-api_params = {'cluster': 'stsc-cluster-16023a51', 'status': 'RUNNING'}
+api_params = {'cluster': 'stsc-cluster-5f3e2ebd', 'status': 'RUNNING'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -6030,8 +6030,8 @@ api_params = {'cluster': 'stsc-cluster-16023a51', 'status': 'RUNNING'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the SubmitTaskStateChange operation: The operation SubmitTaskStateChange is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_execute_command_nonexistent" time="0.004"><failure message="AssertionError: assert '400' in ('ClusterNotFoundException', 'InvalidParameterException')">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10a07c3b0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae0bb30&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_execute_command_nonexistent" time="0.004"><failure message="AssertionError: assert '400' in ('ClusterNotFoundException', 'InvalidParameterException')">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e2f46b0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecd82f0&gt;
 
     def test_execute_command_nonexistent(self, ecs):
         """ExecuteCommand returns error for nonexistent cluster/task."""
@@ -6050,8 +6050,8 @@ ecs = &lt;botocore.client.ECS object at 0x10ae0bb30&gt;
         )
 E       AssertionError: assert '400' in ('ClusterNotFoundException', 'InvalidParameterException')
 
-tests/compatibility/test_ecs_compat.py:1204: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_container_agent_nonexistent" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10a07c7a0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10a96fe60&gt;
+tests/compatibility/test_ecs_compat.py:1204: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_container_agent_nonexistent" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e2f4aa0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef8baa0&gt;
 
     def test_update_container_agent_nonexistent(self, ecs):
         """UpdateContainerAgent returns error for nonexistent cluster."""
@@ -6068,8 +6068,8 @@ E
 E         - ClusterNotFoundException
 E         + 400
 
-tests/compatibility/test_ecs_compat.py:1218: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_task_protection_nonexistent" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10a07cb90&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad90530&gt;
+tests/compatibility/test_ecs_compat.py:1218: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_task_protection_nonexistent" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e2f4e90&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef8b950&gt;
 
     def test_update_task_protection_nonexistent(self, ecs):
         """UpdateTaskProtection returns error for nonexistent cluster."""
@@ -6087,8 +6087,8 @@ E
 E         - ClusterNotFoundException
 E         + 400
 
-tests/compatibility/test_ecs_compat.py:1230: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAccountSettings" name="test_delete_account_setting" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAccountSettings" name="test_delete_account_setting_after_put" time="0.003"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSetting operation: The operation PutAccountSetting is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsAccountSettings object at 0x10a07d460&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad77410&gt;
+tests/compatibility/test_ecs_compat.py:1230: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAccountSettings" name="test_delete_account_setting" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAccountSettings" name="test_delete_account_setting_after_put" time="0.003"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSetting operation: The operation PutAccountSetting is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsAccountSettings object at 0x10e2f5730&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ebc1d30&gt;
 
     def test_delete_account_setting_after_put(self, ecs):
         """DeleteAccountSetting after PutAccountSetting removes the value."""
@@ -6104,7 +6104,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ad77410&gt;
+self = &lt;botocore.client.ECS object at 0x10ebc1d30&gt;
 operation_name = 'PutAccountSetting'
 api_params = {'name': 'containerInsights', 'value': 'enabled'}
 
@@ -6195,8 +6195,8 @@ api_params = {'name': 'containerInsights', 'value': 'enabled'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the PutAccountSetting operation: The operation PutAccountSetting is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeployments" name="test_describe_service_deployments_empty" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeServiceDeployments operation: The operation DescribeServiceDeployments is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10a07d850&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad93590&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeployments" name="test_describe_service_deployments_empty" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeServiceDeployments operation: The operation DescribeServiceDeployments is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10e2f5b80&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ebec830&gt;
 
     def test_describe_service_deployments_empty(self, ecs):
         """DescribeServiceDeployments with unknown ARNs returns empty list."""
@@ -6214,7 +6214,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ad93590&gt;
+self = &lt;botocore.client.ECS object at 0x10ebec830&gt;
 operation_name = 'DescribeServiceDeployments'
 api_params = {'serviceDeploymentArns': ['arn:aws:ecs:us-east-1:123456789012:service-deployment/fake-id']}
 
@@ -6305,8 +6305,8 @@ api_params = {'serviceDeploymentArns': ['arn:aws:ecs:us-east-1:123456789012:serv
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeServiceDeployments operation: The operation DescribeServiceDeployments is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeployments" name="test_describe_service_revisions_empty" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeServiceRevisions operation: The operation DescribeServiceRevisions is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10a07dc70&gt;
-ecs = &lt;botocore.client.ECS object at 0x10acec770&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeployments" name="test_describe_service_revisions_empty" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeServiceRevisions operation: The operation DescribeServiceRevisions is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10e2f5fa0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef29340&gt;
 
     def test_describe_service_revisions_empty(self, ecs):
         """DescribeServiceRevisions with unknown ARNs returns empty list."""
@@ -6324,7 +6324,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10acec770&gt;
+self = &lt;botocore.client.ECS object at 0x10ef29340&gt;
 operation_name = 'DescribeServiceRevisions'
 api_params = {'serviceRevisionArns': ['arn:aws:ecs:us-east-1:123456789012:service-revision/fake-id']}
 
@@ -6415,8 +6415,8 @@ api_params = {'serviceRevisionArns': ['arn:aws:ecs:us-east-1:123456789012:servic
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeServiceRevisions operation: The operation DescribeServiceRevisions is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeployments" name="test_list_service_deployments_nonexistent_service" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCluster operation: Cluster arn:aws:ecs:us-east-1:123456789012:cluster/test-svc-deploy-cls not found">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10a07e090&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ac8bf80&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeployments" name="test_list_service_deployments_nonexistent_service" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCluster operation: Cluster arn:aws:ecs:us-east-1:123456789012:cluster/test-svc-deploy-cls not found">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10e2f63c0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f17a630&gt;
 
     def test_list_service_deployments_nonexistent_service(self, ecs):
         """ListServiceDeployments with a nonexistent service raises ServiceNotFoundException."""
@@ -6438,8 +6438,8 @@ tests/compatibility/test_ecs_compat.py:1288: AssertionError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10a07e090&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ac8bf80&gt;
+self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10e2f63c0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f17a630&gt;
 
     def test_list_service_deployments_nonexistent_service(self, ecs):
         """ListServiceDeployments with a nonexistent service raises ServiceNotFoundException."""
@@ -6465,7 +6465,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ac8bf80&gt;
+self = &lt;botocore.client.ECS object at 0x10f17a630&gt;
 operation_name = 'DeleteCluster'
 api_params = {'cluster': 'arn:aws:ecs:us-east-1:123456789012:cluster/test-svc-deploy-cls'}
 
@@ -6556,8 +6556,8 @@ api_params = {'cluster': 'arn:aws:ecs:us-east-1:123456789012:cluster/test-svc-de
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCluster operation: Cluster arn:aws:ecs:us-east-1:123456789012:cluster/test-svc-deploy-cls not found
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsUpdateServicePrimaryTaskSet" name="test_update_service_primary_task_set_nonexistent" time="0.004"><failure message="AssertionError: assert '400' in ('ClusterNotFoundException', 'ServiceNotFoundException', 'InvalidParameterException')">self = &lt;tests.compatibility.test_ecs_compat.TestEcsUpdateServicePrimaryTaskSet object at 0x10a05d040&gt;
-ecs = &lt;botocore.client.ECS object at 0x10abea600&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsUpdateServicePrimaryTaskSet" name="test_update_service_primary_task_set_nonexistent" time="0.004"><failure message="AssertionError: assert '400' in ('ClusterNotFoundException', 'ServiceNotFoundException', 'InvalidParameterException')">self = &lt;tests.compatibility.test_ecs_compat.TestEcsUpdateServicePrimaryTaskSet object at 0x10e2ddbe0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f1c0500&gt;
 
     def test_update_service_primary_task_set_nonexistent(self, ecs):
         """UpdateServicePrimaryTaskSet with fake IDs raises error."""
@@ -6576,8 +6576,8 @@ ecs = &lt;botocore.client.ECS object at 0x10abea600&gt;
         )
 E       AssertionError: assert '400' in ('ClusterNotFoundException', 'ServiceNotFoundException', 'InvalidParameterException')
 
-tests/compatibility/test_ecs_compat.py:1306: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations" name="test_describe_service_deployments_empty" time="0.032"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeServiceDeployments operation: The operation DescribeServiceDeployments is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations object at 0x10a05e900&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ab52660&gt;
+tests/compatibility/test_ecs_compat.py:1306: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations" name="test_describe_service_deployments_empty" time="0.031"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeServiceDeployments operation: The operation DescribeServiceDeployments is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations object at 0x10e2df5c0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ed92690&gt;
 
     def test_describe_service_deployments_empty(self, ecs):
         """DescribeServiceDeployments with empty list returns response structure."""
@@ -6594,7 +6594,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ab52660&gt;
+self = &lt;botocore.client.ECS object at 0x10ed92690&gt;
 operation_name = 'DescribeServiceDeployments'
 api_params = {'serviceDeploymentArns': []}
 
@@ -6685,8 +6685,8 @@ api_params = {'serviceDeploymentArns': []}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeServiceDeployments operation: The operation DescribeServiceDeployments is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations" name="test_describe_service_revisions_empty" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeServiceRevisions operation: The operation DescribeServiceRevisions is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations object at 0x10a07cbc0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad919d0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations" name="test_describe_service_revisions_empty" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeServiceRevisions operation: The operation DescribeServiceRevisions is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations object at 0x10e2f6120&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f0056a0&gt;
 
     def test_describe_service_revisions_empty(self, ecs):
         """DescribeServiceRevisions with empty list returns response structure."""
@@ -6703,7 +6703,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ad919d0&gt;
+self = &lt;botocore.client.ECS object at 0x10f0056a0&gt;
 operation_name = 'DescribeServiceRevisions'
 api_params = {'serviceRevisionArns': []}
 
@@ -6794,8 +6794,8 @@ api_params = {'serviceRevisionArns': []}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeServiceRevisions operation: The operation DescribeServiceRevisions is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSMissingGapOps" name="test_stop_service_deployment" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the StopServiceDeployment operation: The operation StopServiceDeployment is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSMissingGapOps object at 0x10a07dc40&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ade7110&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSMissingGapOps" name="test_stop_service_deployment" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the StopServiceDeployment operation: The operation StopServiceDeployment is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSMissingGapOps object at 0x10e2f5820&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ee9e150&gt;
 
     def test_stop_service_deployment(self, ecs):
         """StopServiceDeployment returns 200."""
@@ -6813,7 +6813,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ade7110&gt;
+self = &lt;botocore.client.ECS object at 0x10ee9e150&gt;
 operation_name = 'StopServiceDeployment'
 api_params = {'serviceDeploymentArn': 'arn:aws:ecs:us-east-1:123456789012:service-deployment/test/fake-deployment'}
 
@@ -6904,8 +6904,8 @@ api_params = {'serviceDeploymentArn': 'arn:aws:ecs:us-east-1:123456789012:servic
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the StopServiceDeployment operation: The operation StopServiceDeployment is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSMissingGapOps" name="test_submit_attachment_state_changes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the SubmitAttachmentStateChanges operation: The operation SubmitAttachmentStateChanges is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSMissingGapOps object at 0x10a07ce30&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad900b0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSMissingGapOps" name="test_submit_attachment_state_changes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the SubmitAttachmentStateChanges operation: The operation SubmitAttachmentStateChanges is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSMissingGapOps object at 0x10e2f52e0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f004380&gt;
 
     def test_submit_attachment_state_changes(self, ecs):
         """SubmitAttachmentStateChanges returns an acknowledgment."""
@@ -6929,7 +6929,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ad900b0&gt;
+self = &lt;botocore.client.ECS object at 0x10f004380&gt;
 operation_name = 'SubmitAttachmentStateChanges'
 api_params = {'attachments': [{'attachmentArn': 'arn:aws:ecs:us-east-1:123456789012:attachment/abc', 'status': 'ATTACHED'}], 'cluster': 'default'}
 
@@ -7020,8 +7020,8 @@ api_params = {'attachments': [{'attachmentArn': 'arn:aws:ecs:us-east-1:123456789
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the SubmitAttachmentStateChanges operation: The operation SubmitAttachmentStateChanges is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_create_express_gateway_service" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the CreateExpressGatewayService operation: The operation CreateExpressGatewayService is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExpressGatewayService object at 0x10a07c590&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae3d520&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_create_express_gateway_service" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the CreateExpressGatewayService operation: The operation CreateExpressGatewayService is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExpressGatewayService object at 0x10e2f44d0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecc09e0&gt;
 
     def test_create_express_gateway_service(self, ecs):
         """CreateExpressGatewayService returns 200."""
@@ -7042,7 +7042,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ae3d520&gt;
+self = &lt;botocore.client.ECS object at 0x10ecc09e0&gt;
 operation_name = 'CreateExpressGatewayService'
 api_params = {'executionRoleArn': 'arn:aws:iam::123456789012:role/exec-role', 'infrastructureRoleArn': 'arn:aws:iam::123456789012:role/infra-role', 'primaryContainer': {'containerPort': 80, 'image': 'nginx:latest'}, 'serviceName': 'test-express-svc'}
 
@@ -7133,8 +7133,8 @@ api_params = {'executionRoleArn': 'arn:aws:iam::123456789012:role/exec-role', 'i
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the CreateExpressGatewayService operation: The operation CreateExpressGatewayService is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_describe_express_gateway_service" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeExpressGatewayService operation: The operation DescribeExpressGatewayService is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExpressGatewayService object at 0x10a07e3f0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ad3dac0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_describe_express_gateway_service" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeExpressGatewayService operation: The operation DescribeExpressGatewayService is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExpressGatewayService object at 0x10e2f6750&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ec5aae0&gt;
 
     def test_describe_express_gateway_service(self, ecs):
         """DescribeExpressGatewayService with fake ARN returns 200."""
@@ -7152,7 +7152,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ad3dac0&gt;
+self = &lt;botocore.client.ECS object at 0x10ec5aae0&gt;
 operation_name = 'DescribeExpressGatewayService'
 api_params = {'serviceArn': 'arn:aws:ecs:us-east-1:123456789012:express-gateway-service/fake'}
 
@@ -7243,8 +7243,8 @@ api_params = {'serviceArn': 'arn:aws:ecs:us-east-1:123456789012:express-gateway-
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeExpressGatewayService operation: The operation DescribeExpressGatewayService is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_update_express_gateway_service" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the UpdateExpressGatewayService operation: The operation UpdateExpressGatewayService is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExpressGatewayService object at 0x10a07e810&gt;
-ecs = &lt;botocore.client.ECS object at 0x10aab4320&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_update_express_gateway_service" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the UpdateExpressGatewayService operation: The operation UpdateExpressGatewayService is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExpressGatewayService object at 0x10e2f6b70&gt;
+ecs = &lt;botocore.client.ECS object at 0x10f186390&gt;
 
     def test_update_express_gateway_service(self, ecs):
         """UpdateExpressGatewayService with fake ARN returns 200."""
@@ -7262,7 +7262,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10aab4320&gt;
+self = &lt;botocore.client.ECS object at 0x10f186390&gt;
 operation_name = 'UpdateExpressGatewayService'
 api_params = {'serviceArn': 'arn:aws:ecs:us-east-1:123456789012:express-gateway-service/fake'}
 
@@ -7353,8 +7353,8 @@ api_params = {'serviceArn': 'arn:aws:ecs:us-east-1:123456789012:express-gateway-
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the UpdateExpressGatewayService operation: The operation UpdateExpressGatewayService is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_delete_express_gateway_service" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteExpressGatewayService operation: The operation DeleteExpressGatewayService is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExpressGatewayService object at 0x10a07ec30&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ae57dd0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_delete_express_gateway_service" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteExpressGatewayService operation: The operation DeleteExpressGatewayService is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExpressGatewayService object at 0x10e2f6f90&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecdb1d0&gt;
 
     def test_delete_express_gateway_service(self, ecs):
         """DeleteExpressGatewayService with fake ARN returns 200."""
@@ -7372,7 +7372,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ae57dd0&gt;
+self = &lt;botocore.client.ECS object at 0x10ecdb1d0&gt;
 operation_name = 'DeleteExpressGatewayService'
 api_params = {'serviceArn': 'arn:aws:ecs:us-east-1:123456789012:express-gateway-service/fake'}
 
