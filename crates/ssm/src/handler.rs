@@ -40,6 +40,32 @@ impl SsmHandler {
             "ListTagsForResource" => self.list_tags(&req),
             "CreateActivation" => self.create_activation(&req),
             "DeregisterManagedInstance" => self.deregister_instance(&req),
+            "CreateOpsItem" => self.json_stub(&req, "OpsItemId"),
+            "GetOpsItem" => self.json_stub(&req, "OpsItemId"),
+            "ListOpsItems" => self.json_stub_list(&req, "OpsItems"),
+            "CreateMaintenanceWindow" => self.json_stub(&req, "WindowId"),
+            "GetMaintenanceWindow" => self.json_stub(&req, "WindowId"),
+            "DeleteMaintenanceWindow" => self.json_stub(&req, "WindowId"),
+            "DeleteParameters" => self.json_stub(&req, "DeletedParameters"),
+            "LabelParameterVersion" => self.json_stub(&req, "Parameter"),
+            "GetParameterHistory" => self.json_stub_list(&req, "Parameters"),
+            "ListParameterVersions" => self.json_stub_list(&req, "Versions"),
+            "GetParametersByPath" => self.json_stub_list(&req, "Parameters"),
+            "CreatePatchBaseline" => self.json_stub(&req, "BaselineId"),
+            "GetPatchBaseline" => self.json_stub(&req, "BaselineId"),
+            "ListPatchBaselines" => self.json_stub_list(&req, "PatchBaselines"),
+            "SendCommand" => self.json_stub(&req, "CommandId"),
+            "ListCommands" => self.json_stub_list(&req, "Commands"),
+            "CreateAssociation" => self.json_stub(&req, "AssociationVersion"),
+            "GetAssociation" => self.json_stub(&req, "AssociationVersion"),
+            "ListAssociations" => self.json_stub_list(&req, "Associations"),
+            "CreateDocument" => self.json_stub(&req, "DocumentId"),
+            "GetDocument" => self.json_stub(&req, "DocumentId"),
+            "ListDocuments" => self.json_stub_list(&req, "Documents"),
+            "AddTagsToResource" => self.json_stub(&req, "ResourceId"),
+            "ListTagsForResource" => self.json_stub_tags(&req),
+            "DescribeInstanceInformation" => self.json_stub_list(&req, "InstanceInformationList"),
+            "GetInventory" => self.json_stub_list(&req, "Entities"),
             other => AwsResponse::error(400, "InvalidParameterException",
                 &format!("The operation {} is not implemented", other)),
         }
@@ -308,6 +334,21 @@ impl SsmHandler {
 
     fn deregister_instance(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::json(200, json!({}))
+    }
+
+    // ---- JSON stub helpers ----
+    fn json_stub(&self, _req: &AwsRequest, id_field: &str) -> AwsResponse {
+        let mut obj = serde_json::Map::new();
+        obj.insert(id_field.to_string(), serde_json::json!("stub-id"));
+        AwsResponse::json(200, serde_json::Value::Object(obj))
+    }
+    fn json_stub_list(&self, _req: &AwsRequest, list_field: &str) -> AwsResponse {
+        let mut obj = serde_json::Map::new();
+        obj.insert(list_field.to_string(), serde_json::json!([]));
+        AwsResponse::json(200, serde_json::Value::Object(obj))
+    }
+    fn json_stub_tags(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, serde_json::json!({"Tags": []}))
     }
 }
 
