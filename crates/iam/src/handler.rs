@@ -136,9 +136,9 @@ impl IamHandler {
             "CreateInstanceProfile" => self.xml_ip_create(&req),
             "GetInstanceProfile" => self.xml_ip_get(&req),
             "DeleteInstanceProfile" => self.xml_empty(&req, "DeleteInstanceProfile"),
-            "ListInstanceProfiles" => self.xml_ip_list(&req),
-            "AddRoleToInstanceProfile" => self.xml_empty(&req, "AddRoleToInstanceProfile"),
-            "RemoveRoleFromInstanceProfile" => self.xml_empty(&req, "RemoveRoleFromInstanceProfile"),
+            "ListInstanceProfiles" => self.ip_list(&req),
+            "AddRoleToInstanceProfile" => self.ip_add_role(&req),
+            "RemoveRoleFromInstanceProfile" => self.ip_remove_role(&req),
             "TagInstanceProfile" => self.xml_empty(&req, "TagInstanceProfile"),
             "UntagInstanceProfile" => self.xml_empty(&req, "UntagInstanceProfile"),
             "ListInstanceProfileTags" => self.xml_empty(&req, "ListInstanceProfileTags"),
@@ -185,6 +185,37 @@ impl IamHandler {
         )
     }
 
+    /// Parse query protocol list params like Tags.member.1.Key, Tags.member.1.Value
+    /// into a JSON array of objects.
+    fn parse_query_list(&self, params: &serde_json::Value, prefix: &str) -> Vec<serde_json::Value> {
+        let mut items: Vec<serde_json::Value> = Vec::new();
+        let mut idx = 1;
+        loop {
+            let key_prefix = format!("{}.member.{}", prefix, idx);
+            // Collect all fields for this item
+            let mut item = serde_json::Map::new();
+            let mut found = false;
+            for (k, v) in params.as_object().unwrap_or(&serde_json::Map::new()) {
+                if let Some(field) = k.strip_prefix(&format!("{}.{}", key_prefix, "")) {
+                    // The key is like "Tags.member.1.Key" -> field = "Key"
+                    // But the actual format is "Tags.member.1.Key" so prefix = "Tags.member.1"
+                    // and the remainder is ".Key"
+                    let field = field.strip_prefix('.').unwrap_or(field);
+                    if !field.is_empty() {
+                        item.insert(field.to_string(), v.clone());
+                        found = true;
+                    }
+                }
+            }
+            if !found {
+                break;
+            }
+            items.push(serde_json::Value::Object(item));
+            idx += 1;
+        }
+        items
+    }
+
     fn create_user(&self, req: &AwsRequest) -> AwsResponse {
         let username = get_param(req, "UserName").unwrap_or_default();
         if username.is_empty() {
@@ -196,8 +227,24 @@ impl IamHandler {
                 &format!("User with name {} already exists.", username));
         }
         let user = Arc::new(User::new(req.account, username));
+        // Handle Tags parameter
+        let tags = self.parse_query_list(&req.params, "Tags");
+        if !tags.is_empty() {
+            *user.tags.write() = tags;
+        }
         state.users.write().insert(user.username.clone(), user.clone());
-        AwsResponse::xml(200, "CreateUser", self.user_xml(&user))
+        let mut body = self.user_xml(&user);
+        // Include tags in response
+        if !user.tags.read().is_empty() {
+            body.push_str("<Tags>");
+            for t in user.tags.read().iter() {
+                body.push_str(&format!("<member><Key>{}</Key><Value>{}</Value></member>",
+                    t.get("Key").and_then(|k| k.as_str()).unwrap_or(""),
+                    t.get("Value").and_then(|v| v.as_str()).unwrap_or("")));
+            }
+            body.push_str("</Tags>");
+        }
+        AwsResponse::xml(200, "CreateUser", body)
     }
 
     fn get_user(&self, req: &AwsRequest) -> AwsResponse {
@@ -341,7 +388,7 @@ impl IamHandler {
 
     fn tag_user(&self, req: &AwsRequest) -> AwsResponse {
         let username = get_param(req, "UserName").unwrap_or_default();
-        let tags = req.params.get("Tags").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+        let tags = self.parse_query_list(&req.params, "Tags");
         let state = self.get_state(req.account);
         if let Some(user) = state.get_user(&username) {
             let mut existing = user.tags.write().clone();
@@ -504,8 +551,22 @@ impl IamHandler {
                 &format!("Role with name {} already exists.", role_name));
         }
         let role = Arc::new(Role::new(req.account, role_name, assume_policy));
+        let tags = self.parse_query_list(&req.params, "Tags");
+        if !tags.is_empty() {
+            *role.tags.write() = tags;
+        }
         state.roles.write().insert(role.role_name.clone(), role.clone());
-        AwsResponse::xml(200, "CreateRole", self.role_xml(&role))
+        let mut body = self.role_xml(&role);
+        if !role.tags.read().is_empty() {
+            body.push_str("<Tags>");
+            for t in role.tags.read().iter() {
+                body.push_str(&format!("<member><Key>{}</Key><Value>{}</Value></member>",
+                    t.get("Key").and_then(|k| k.as_str()).unwrap_or(""),
+                    t.get("Value").and_then(|v| v.as_str()).unwrap_or("")));
+            }
+            body.push_str("</Tags>");
+        }
+        AwsResponse::xml(200, "CreateRole", body)
     }
 
     fn get_role(&self, req: &AwsRequest) -> AwsResponse {
@@ -572,7 +633,7 @@ impl IamHandler {
 
     fn tag_role(&self, req: &AwsRequest) -> AwsResponse {
         let role_name = get_param(req, "RoleName").unwrap_or_default();
-        let tags = req.params.get("Tags").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+        let tags = self.parse_query_list(&req.params, "Tags");
         let state = self.get_state(req.account);
         if let Some(role) = state.get_role(&role_name) {
             let mut existing = role.tags.write().clone();
@@ -737,7 +798,21 @@ impl IamHandler {
         let group_name = get_param(req, "GroupName").unwrap_or_default();
         let state = self.get_state(req.account);
         match state.get_group(&group_name) {
-            Some(group) => AwsResponse::xml(200, "GetGroup", self.group_xml(&group)),
+            Some(group) => {
+                let mut body = self.group_xml(&*group);
+                // Include users in the group
+                let users = group.users.read();
+                if !users.is_empty() {
+                    body.push_str("<Users>");
+                    for user_name in users.iter() {
+                        if let Some(user) = state.users.read().get(user_name) {
+                            body.push_str(&self.user_xml(user));
+                        }
+                    }
+                    body.push_str("</Users>");
+                }
+                AwsResponse::xml(200, "GetGroup", body)
+            }
             None => AwsResponse::error(404, "NoSuchEntity",
                 &format!("The group with name {} cannot be found.", group_name)),
         }
@@ -827,7 +902,7 @@ impl IamHandler {
 
     fn tag_group(&self, req: &AwsRequest) -> AwsResponse {
         let group_name = get_param(req, "GroupName").unwrap_or_default();
-        let tags = req.params.get("Tags").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+        let tags = self.parse_query_list(&req.params, "Tags");
         let state = self.get_state(req.account);
         if let Some(group) = state.get_group(&group_name) {
             let mut existing = group.tags.write().clone();
@@ -1094,7 +1169,7 @@ impl IamHandler {
 
     fn tag_policy(&self, req: &AwsRequest) -> AwsResponse {
         let arn = get_param(req, "PolicyArn").unwrap_or_default();
-        let tags = req.params.get("Tags").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+        let tags = self.parse_query_list(&req.params, "Tags");
         let state = self.get_state(req.account);
         if let Some(policy) = state.get_policy(&arn) {
             let mut existing = policy.tags.write().clone();
@@ -1312,6 +1387,8 @@ impl IamHandler {
     }
     fn xml_ip_create(&self, req: &AwsRequest) -> AwsResponse {
         let name = get_param(req, "InstanceProfileName").unwrap_or_else(|| "unknown".into());
+        let state = self.get_state(req.account);
+        state.create_instance_profile(&name);
         AwsResponse::xml(200, "CreateInstanceProfile", format!(
             "<CreateInstanceProfileResult><InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>arn:aws:iam::{}:instance-profile/{}</InstanceProfileArn><Path>/</Path><Roles/></InstanceProfile></CreateInstanceProfileResult>",
             name, req.account, name
@@ -1319,11 +1396,75 @@ impl IamHandler {
     }
     fn xml_ip_get(&self, req: &AwsRequest) -> AwsResponse {
         let name = get_param(req, "InstanceProfileName").unwrap_or_else(|| "unknown".into());
-        AwsResponse::xml(200, "GetInstanceProfile", format!(
-            "<GetInstanceProfileResult><InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>arn:aws:iam::{}:instance-profile/{}</InstanceProfileArn><Path>/</Path><Roles/></InstanceProfile></GetInstanceProfileResult>",
-            name, req.account, name
-        ))
+        let state = self.get_state(req.account);
+        if state.instance_profiles.read().contains_key(&name) {
+            let roles = state.instance_profiles.read().get(&name).cloned().unwrap_or_default();
+            let mut roles_xml = String::new();
+            for role_name in &roles {
+                if let Some(role) = state.get_role(role_name) {
+                    roles_xml.push_str(&self.role_xml(&*role));
+                }
+            }
+            AwsResponse::xml(200, "GetInstanceProfile", format!(
+                "<GetInstanceProfileResult><InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>arn:aws:iam::{}:instance-profile/{}</InstanceProfileArn><Path>/</Path><Roles>{}</Roles></InstanceProfile></GetInstanceProfileResult>",
+                name, req.account, name, roles_xml
+            ))
+        } else {
+            AwsResponse::error(404, "NoSuchEntity", &format!("The instance profile with name {} cannot be found.", name))
+        }
     }
+    fn ip_add_role(&self, req: &AwsRequest) -> AwsResponse {
+        let name = get_param(req, "InstanceProfileName").unwrap_or_default();
+        let role_name = get_param(req, "RoleName").unwrap_or_default();
+        let state = self.get_state(req.account);
+        if !state.instance_profiles.read().contains_key(&name) {
+            return AwsResponse::error(404, "NoSuchEntity", &format!("Instance profile {} not found.", name));
+        }
+        if state.get_role(&role_name).is_none() {
+            return AwsResponse::error(404, "NoSuchEntity", &format!("Role {} not found.", role_name));
+        }
+        let mut profiles = state.instance_profiles.write();
+        if let Some(roles) = profiles.get_mut(&name) {
+            if !roles.contains(&role_name) {
+                roles.push(role_name);
+            }
+        }
+        AwsResponse::xml(200, "AddRoleToInstanceProfile", String::new())
+    }
+
+    fn ip_remove_role(&self, req: &AwsRequest) -> AwsResponse {
+        let name = get_param(req, "InstanceProfileName").unwrap_or_default();
+        let role_name = get_param(req, "RoleName").unwrap_or_default();
+        let state = self.get_state(req.account);
+        let mut profiles = state.instance_profiles.write();
+        if let Some(roles) = profiles.get_mut(&name) {
+            roles.retain(|r| r != &role_name);
+        }
+        AwsResponse::xml(200, "RemoveRoleFromInstanceProfile", String::new())
+    }
+
+    fn ip_list(&self, req: &AwsRequest) -> AwsResponse {
+        let state = self.get_state(req.account);
+        let profiles = state.list_instance_profiles();
+        let mut body = String::new();
+        for p in &profiles {
+            let name = p.get("InstanceProfileName").and_then(|n| n.as_str()).unwrap_or("");
+            let arn = p.get("InstanceProfileArn").and_then(|a| a.as_str()).unwrap_or("");
+            let roles = p.get("Roles").and_then(|r| r.as_array()).cloned().unwrap_or_default();
+            let mut roles_xml = String::new();
+            for role_name in roles.iter().filter_map(|r| r.as_str()) {
+                if let Some(role) = state.get_role(role_name) {
+                    roles_xml.push_str(&self.role_xml(&*role));
+                }
+            }
+            body.push_str(&format!(
+                "<InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>{}</InstanceProfileArn><Path>/</Path><Roles>{}</Roles></InstanceProfile>",
+                name, arn, roles_xml
+            ));
+        }
+        AwsResponse::xml(200, "ListInstanceProfiles", format!("<InstanceProfiles>{}</InstanceProfiles>", body))
+    }
+
     fn xml_ssh_upload(&self, req: &AwsRequest) -> AwsResponse {
         let name = get_param(req, "SSHPublicKeyName").unwrap_or_else(|| "unknown".into());
         let user = get_param(req, "UserName").unwrap_or_else(|| "unknown".into());

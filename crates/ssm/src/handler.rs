@@ -48,8 +48,8 @@ impl SsmHandler {
             "DeleteMaintenanceWindow" => self.json_stub(&req, "WindowId"),
             "DeleteParameters" => self.json_stub(&req, "DeletedParameters"),
             "LabelParameterVersion" => self.json_stub(&req, "Parameter"),
-            "GetParameterHistory" => self.json_stub_list(&req, "Parameters"),
-            "ListParameterVersions" => self.json_stub_list(&req, "Versions"),
+            "GetParameterHistory" => self.get_parameter_history(&req),
+            "ListParameterVersions" => self.list_parameter_versions(&req),
             "GetParametersByPath" => self.json_stub_list(&req, "Parameters"),
             "CreatePatchBaseline" => self.json_stub(&req, "BaselineId"),
             "GetPatchBaseline" => self.json_stub(&req, "BaselineId"),
@@ -169,8 +169,24 @@ impl SsmHandler {
 
     fn get_parameters_by_path(&self, req: &AwsRequest) -> AwsResponse {
         let path = req.params.get("Path").and_then(|v| v.as_str()).unwrap_or("/");
+        let recursive = req.params.get("Recursive").and_then(|v| v.as_bool()).unwrap_or(false);
         let state = self.get_state(req.account, &req.region);
-        let params = state.list_parameters(path);
+
+        // Get all parameters and filter by path
+        let all_params = state.all_parameters();
+        let path_prefix = if path.ends_with('/') { path.to_string() } else { format!("{}/", path) };
+
+        let params: Vec<_> = if recursive {
+            all_params.iter().filter(|p| p.name.starts_with(&path_prefix)).collect()
+        } else {
+            // Non-recursive: only direct children
+            all_params.iter().filter(|p| {
+                if !p.name.starts_with(&path_prefix) { return false; }
+                let rest = &p.name[path_prefix.len()..];
+                !rest.contains('/')
+            }).collect()
+        };
+
         let param_list: Vec<Value> = params.iter().map(|p| Self::param_response(p)).collect();
         AwsResponse::json(200, json!({
             "Parameters": param_list,
@@ -334,6 +350,50 @@ impl SsmHandler {
 
     fn deregister_instance(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::json(200, json!({}))
+    }
+
+    fn get_parameter_history(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("Name").and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        let param = match state.get_parameter(name) {
+            Some(p) => p,
+            None => return AwsResponse::error(400, "ParameterNotFound",
+                &format!("Parameter {} not found", name)),
+        };
+        let history = param.history.read();
+        let versions: Vec<Value> = history.iter().map(|v| {
+            json!({
+                "Name": param.name,
+                "Value": v.value,
+                "Type": param.parameter_type,
+                "Version": v.version,
+                "LastModifiedDate": v.timestamp as f64,
+                "LastModifiedBy": param.last_modified_by,
+                "ARN": format!("arn:aws:ssm:{}:123456789012:parameter/{}", req.region, param.name),
+            })
+        }).collect();
+        AwsResponse::json(200, json!({ "Parameters": versions }))
+    }
+
+    fn list_parameter_versions(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("Name").and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        let param = match state.get_parameter(name) {
+            Some(p) => p,
+            None => return AwsResponse::error(400, "ParameterNotFound",
+                &format!("Parameter {} not found", name)),
+        };
+        let history = param.history.read();
+        let versions: Vec<Value> = history.iter().map(|v| {
+            json!({
+                "Name": param.name,
+                "Type": param.parameter_type,
+                "Version": v.version,
+                "LastModifiedDate": v.timestamp as f64,
+                "LastModifiedBy": param.last_modified_by,
+            })
+        }).collect();
+        AwsResponse::json(200, json!({ "Parameters": versions }))
     }
 
     // ---- JSON stub helpers ----

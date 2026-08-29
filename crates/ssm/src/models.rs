@@ -4,6 +4,15 @@ use parking_lot::RwLock;
 use std::collections::HashMap;
 use std::sync::Arc;
 
+/// A version of an SSM parameter.
+#[derive(Debug)]
+pub struct ParameterVersion {
+    pub version: u64,
+    pub value: String,
+    pub timestamp: u64,
+    pub label: String,
+}
+
 /// An SSM parameter.
 #[derive(Debug)]
 pub struct Parameter {
@@ -17,13 +26,14 @@ pub struct Parameter {
     pub created: u64,
     pub modified: RwLock<u64>,
     pub last_modified_by: String,
+    pub history: RwLock<Vec<ParameterVersion>>,
 }
 
 impl Parameter {
     pub fn new(name: String, value: String, param_type: String) -> Self {
         Self {
             name,
-            value: RwLock::new(value),
+            value: RwLock::new(value.clone()),
             parameter_type: param_type,
             description: RwLock::new(String::new()),
             allowed_values: RwLock::new(Vec::new()),
@@ -32,6 +42,12 @@ impl Parameter {
             created: chrono::Utc::now().timestamp() as u64,
             modified: RwLock::new(chrono::Utc::now().timestamp() as u64),
             last_modified_by: "robotocore".to_string(),
+            history: RwLock::new(vec![ParameterVersion {
+                version: 1,
+                value: value.clone(),
+                timestamp: chrono::Utc::now().timestamp() as u64,
+                label: String::new(),
+            }]),
         }
     }
 }
@@ -83,6 +99,10 @@ impl SsmState {
 
     pub fn delete_parameter(&self, name: &str) -> Option<Arc<Parameter>> {
         self.parameters.write().remove(name)
+    }
+
+    pub fn all_parameters(&self) -> Vec<Arc<Parameter>> {
+        self.parameters.read().values().cloned().collect()
     }
 
     pub fn list_parameters(&self, prefix: &str) -> Vec<Arc<Parameter>> {
