@@ -187,10 +187,17 @@ impl ServiceHandler for S3ServiceHandler {
         // Detect the S3 operation from method + path + query
         let mut query_params = std::collections::HashMap::new();
         for pair in req.query_string.split('&') {
+            if pair.is_empty() { continue; }
             if let Some((k, v)) = pair.split_once('=') {
                 query_params.insert(
                     urlencoding::decode(k).unwrap_or_default().into_owned(),
                     urlencoding::decode(v).unwrap_or_default().into_owned(),
+                );
+            } else {
+                // Value-less query param (e.g. ?policy, ?cors, ?lifecycle)
+                query_params.insert(
+                    urlencoding::decode(pair).unwrap_or_default().into_owned(),
+                    String::new(),
                 );
             }
         }
