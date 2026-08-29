@@ -157,7 +157,7 @@ impl IamHandler {
             "GetLoginProfile" => self.xml_login_get(&req),
             "UpdateLoginProfile" => self.xml_empty(&req, "UpdateLoginProfile"),
             "DeleteLoginProfile" => self.xml_empty(&req, "DeleteLoginProfile"),
-            "GetAccountAuthorizationDetails" => self.xml_empty(&req, "GetAccountAuthorizationDetails"),
+            "GetAccountAuthorizationDetails" => self.get_account_authorization_details(&req),
             "GenerateCredentialReport" => self.xml_empty(&req, "GenerateCredentialReport"),
             "GetCredentialReport" => self.xml_empty(&req, "GetCredentialReport"),
             "GetContextKeyPolicy" => self.xml_empty(&req, "GetContextKeyPolicy"),
@@ -1118,8 +1118,27 @@ impl IamHandler {
         AwsResponse::xml(200, "ListPolicies", body)
     }
 
-    fn create_policy_version(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::xml(200, "CreatePolicyVersion", String::new())
+    fn create_policy_version(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = get_param(req, "PolicyArn").unwrap_or_default();
+        let set_as_default = get_param(req, "SetAsDefault")
+            .map(|v| v == "true")
+            .unwrap_or(false);
+        let state = self.get_state(req.account);
+
+        // Generate version ID
+        let version_id = format!("v{}", state.policy_version_counter.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1);
+
+        let body = format!(
+            "<PolicyVersion>\
+             <VersionId>{}</VersionId>\
+             <IsDefaultVersion>{}</IsDefaultVersion>\
+             <CreateDate>{}</CreateDate>\
+             <Document>{{}}</Document>\
+             </PolicyVersion>",
+            version_id, set_as_default, chrono::Utc::now().to_rfc3339()
+        );
+
+        AwsResponse::xml(200, "CreatePolicyVersion", body)
     }
 
     fn get_policy_version(&self, req: &AwsRequest) -> AwsResponse {
@@ -1463,6 +1482,46 @@ impl IamHandler {
             ));
         }
         AwsResponse::xml(200, "ListInstanceProfiles", format!("<InstanceProfiles>{}</InstanceProfiles>", body))
+    }
+
+    fn get_account_authorization_details(&self, req: &AwsRequest) -> AwsResponse {
+        let state = self.get_state(req.account);
+
+        // Users
+        let users = state.users.read();
+        let mut user_xml = String::new();
+        for (_name, user) in users.iter() {
+            user_xml.push_str(&self.user_xml(user));
+        }
+
+        // Roles
+        let roles = state.roles.read();
+        let mut role_xml = String::new();
+        for (_name, role) in roles.iter() {
+            role_xml.push_str(&self.role_xml(&*role));
+        }
+
+        // Groups
+        let groups = state.groups.read();
+        let mut group_xml = String::new();
+        for (_name, group) in groups.iter() {
+            group_xml.push_str(&self.group_xml(&*group));
+        }
+
+        let body = format!(
+            "<UserDetailList>{}</UserDetailList>\
+             <GroupDetailList>{}</GroupDetailList>\
+             <RoleDetailList>{}</RoleDetailList>\
+             <PolicyDetailList/>\
+             <PolicyVersionList/>\
+             <Policies/>\
+             <RoleToPolicyMap/>\
+             <UserToPolicyMap/>\
+             <GroupToPolicyMap/>",
+            user_xml, group_xml, role_xml
+        );
+
+        AwsResponse::xml(200, "GetAccountAuthorizationDetails", body)
     }
 
     fn xml_ssh_upload(&self, req: &AwsRequest) -> AwsResponse {
