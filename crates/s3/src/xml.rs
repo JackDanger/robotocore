@@ -99,36 +99,28 @@ pub fn list_objects_v2(
         is_truncated = is_truncated,
     );
 
-    if !contents.is_empty() {
-        xml.push_str("\n  <Contents>");
-        for (key, etag, size, last_modified, storage_class) in contents {
-            let dt = chrono::DateTime::from_timestamp(*last_modified as i64, 0)
-                .map(|d| d.to_rfc3339())
-                .unwrap_or_default();
-            xml.push_str(&format!(
-                r#"
-    <Contents>
-      <Key>{}</Key>
-      <LastModified>{}</LastModified>
-      <ETag>"{}"</ETag>
-      <Size>{}</Size>
-      <StorageClass>{}</StorageClass>
-    </Contents>"#,
-                key, dt, etag, size, storage_class
-            ));
-        }
-        xml.push_str("\n  </Contents>");
+    for (key, etag, size, last_modified, storage_class) in contents {
+        let dt = chrono::DateTime::from_timestamp(*last_modified as i64, 0)
+            .map(|d| d.to_rfc3339())
+            .unwrap_or_default();
+        xml.push_str(&format!(
+            r#"
+  <Contents>
+    <Key>{}</Key>
+    <LastModified>{}</LastModified>
+    <ETag>"{}"</ETag>
+    <Size>{}</Size>
+    <StorageClass>{}</StorageClass>
+  </Contents>"#,
+            key, dt, etag, size, storage_class
+        ));
     }
 
-    if !common_prefixes.is_empty() {
-        xml.push_str("\n  <CommonPrefixes>");
-        for cp in common_prefixes {
-            xml.push_str(&format!(
-                "\n    <CommonPrefixes>\n      <Prefix>{}</Prefix>\n    </CommonPrefixes>",
-                cp
-            ));
-        }
-        xml.push_str("\n  </CommonPrefixes>");
+    for cp in common_prefixes {
+        xml.push_str(&format!(
+            "\n  <CommonPrefixes>\n    <Prefix>{}</Prefix>\n  </CommonPrefixes>",
+            cp
+        ));
     }
 
     xml.push_str("\n</ListBucketResult>");
