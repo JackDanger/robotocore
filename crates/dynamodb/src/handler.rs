@@ -383,12 +383,187 @@ impl DynamoDbHandler {
     fn update_item(&self, req: &AwsRequest) -> AwsResponse {
         let table_name = req.params.get("TableName").and_then(|v| v.as_str()).unwrap_or("").to_string();
         let state = self.get_state(req.account, &req.region);
-        let _table = match state.get_table(&table_name) {
+        let table = match state.get_table(&table_name) {
             Some(t) => t,
             None => return AwsResponse::error(400, "ResourceNotFoundException",
                 &format!("Requested resource not found: Table: {}", table_name)),
         };
-        AwsResponse::json(200, json!({}))
+
+        let key_json = req.params.get("Key").cloned().unwrap_or(Value::Null);
+        let update_expr = req.params.get("UpdateExpression").and_then(|v| v.as_str()).unwrap_or("");
+        let expression_values = req.params.get("ExpressionAttributeValues").cloned().unwrap_or(Value::Null);
+        let return_values = req.params.get("ReturnValues").and_then(|v| v.as_str()).unwrap_or("NONE");
+
+        // Find the item
+        let key_attrs: HashMap<String, Value> = key_json
+            .as_object()
+            .map(|m| m.iter().map(|(k, v)| (k.clone(), v.clone())).collect())
+            .unwrap_or_default();
+        let items = table.items.read();
+        let item_key = items.iter().find(|(_, item)| {
+            key_attrs.iter().all(|(name, val)| item.attributes.get(name) == Some(val))
+        });
+
+        let (item_key, _item) = match item_key {
+            Some((k, item)) => (k.clone(), item.clone()),
+            None => {
+                if !update_expr.contains("ADD") {
+                    // For non-ADD updates, the item must exist
+                    return AwsResponse::json(200, json!({ "ConsumedCapacity": null }));
+                }
+                // For ADD, create the item if it doesn't exist
+                drop(items);
+                let mut new_attrs: HashMap<String, Value> = key_attrs.clone();
+                // Apply ADD expression to create new item
+                self.apply_add_expr(&mut new_attrs, update_expr, &expression_values);
+                let new_item = Item::new(new_attrs.clone());
+                if let Some(key) = table.compute_key(&new_item) {
+                    table.items.write().insert(key, Arc::new(new_item));
+                }
+                if return_values == "ALL_NEW" {
+                    let item_json = serde_json::to_value(&new_attrs).unwrap_or(Value::Null);
+                    return AwsResponse::json(200, json!({ "Item": item_json }));
+                }
+                return AwsResponse::json(200, json!({}));
+            }
+        };
+
+        drop(items);
+
+        // Get the item and apply the update
+        let mut items = table.items.write();
+        let item = match items.get(&item_key) {
+            Some(item) => item.clone(),
+            None => return AwsResponse::json(200, json!({})),
+        };
+
+        let mut attrs: HashMap<String, Value> = item.attributes.clone();
+
+        // Parse and apply the update expression
+        self.apply_update_expr(&mut attrs, update_expr, &expression_values);
+
+        // Update the item
+        let updated_item = Item::new(attrs.clone());
+        items.insert(item_key.clone(), Arc::new(updated_item));
+        drop(items);
+
+        // Build response
+        let mut resp = json!({});
+        if return_values == "ALL_NEW" {
+            resp["Item"] = serde_json::to_value(&attrs).unwrap_or(Value::Null);
+        } else if return_values == "ALL_OLD" {
+            resp["Item"] = serde_json::to_value(&item.attributes).unwrap_or(Value::Null);
+        }
+        AwsResponse::json(200, resp)
+    }
+
+    fn apply_update_expr(&self, attrs: &mut HashMap<String, Value>, expr: &str, values: &Value) {
+        let expr = expr.trim();
+
+        // Handle SET clause
+        if let Some(set_pos) = expr.find("SET") {
+            let rest = expr[set_pos + 3..].trim();
+            // Parse SET attr = value pairs
+            let pairs: Vec<&str> = rest.split(",").map(|s| s.trim()).collect();
+            for pair in pairs {
+                if let Some(eq_pos) = pair.find('=') {
+                    let attr = pair[..eq_pos].trim();
+                    let val_expr = pair[eq_pos+1..].trim();
+
+                    // Resolve the value
+                    let val = if val_expr.starts_with(':') {
+                        // Expression attribute value
+                        values.get(val_expr).cloned().unwrap_or(Value::Null)
+                    } else if val_expr.contains(" + ") || val_expr.contains(" - ") {
+                        // Arithmetic: attr + :val or attr - :val
+                        let parts: Vec<&str> = val_expr.split_whitespace().collect();
+                        if parts.len() == 3 {
+                            let a_name = parts[0];
+                            let op = parts[1];
+                            let val_ref = parts[2];
+                            let current = attrs.get(a_name).cloned().unwrap_or(json!(0));
+                            let add_val = values.get(val_ref).cloned().unwrap_or(json!(0));
+                            let cur_num: f64 = self.dyn_to_f64(&current);
+                            let add_num: f64 = self.dyn_to_f64(&add_val);
+                            let result = if op == "+" { cur_num + add_num } else { cur_num - add_num };
+                            json!({ "N": result.to_string() })
+                        } else {
+                            json!({ "S": val_expr })
+                        }
+                    } else if val_expr.starts_with("if_not_exists") {
+                        let inner = val_expr[val_expr.find('(').unwrap() + 1..val_expr.rfind(')').unwrap()].trim();
+                        let parts: Vec<&str> = inner.split(',').map(|s| s.trim()).collect();
+                        if parts.len() == 2 {
+                            let a_name = parts[0];
+                            let val_ref = parts[1];
+                            if attrs.contains_key(a_name) {
+                                attrs.get(a_name).cloned().unwrap_or(Value::Null)
+                            } else {
+                                values.get(val_ref).cloned().unwrap_or(Value::Null)
+                            }
+                        } else {
+                            json!({ "S": val_expr })
+                        }
+                    } else {
+                        json!({ "S": val_expr })
+                    };
+
+                    attrs.insert(attr.to_string(), val);
+                }
+            }
+        }
+
+        // Handle ADD clause
+        if let Some(add_pos) = expr.find("ADD") {
+            let rest = expr[add_pos + 3..].trim();
+            self.apply_add_expr(attrs, rest, values);
+        }
+
+        // Handle REMOVE clause
+        if let Some(remove_pos) = expr.find("REMOVE") {
+            let rest = expr[remove_pos + 6..].trim();
+            let names: Vec<&str> = rest.split(",").map(|s| s.trim()).collect();
+            for name in names {
+                attrs.remove(name);
+            }
+        }
+    }
+
+    fn apply_add_expr(&self, attrs: &mut HashMap<String, Value>, expr: &str, values: &Value) {
+        // ADD attr :val, attr2 :val2
+        let parts: Vec<&str> = expr.split(",").map(|s| s.trim()).collect();
+        for part in parts {
+            let words: Vec<&str> = part.split_whitespace().collect();
+            if words.len() == 2 {
+                let attr = words[0];
+                let val_ref = words[1];
+                let add_val = values.get(val_ref).cloned().unwrap_or(json!(0));
+                let current = attrs.get(attr).cloned().unwrap_or(json!({ "N": "0" }));
+                let cur_num: f64 = self.dyn_to_f64(&current);
+                let add_num: f64 = self.dyn_to_f64(&add_val);
+                let result = cur_num + add_num;
+                // Format as integer if it's a whole number
+                if result == result.floor() {
+                    attrs.insert(attr.to_string(), json!({ "N": format!("{}", result as i64) }));
+                } else {
+                    attrs.insert(attr.to_string(), json!({ "N": result.to_string() }));
+                }
+            }
+        }
+    }
+
+    fn dyn_to_f64(&self, v: &Value) -> f64 {
+        match v {
+            Value::String(s) => s.parse().unwrap_or(0.0),
+            Value::Number(n) => n.as_f64().unwrap_or(0.0),
+            Value::Object(obj) => {
+                // DynamoDB type: {"N": "1"} or {"S": "abc"}
+                obj.get("N").and_then(|n| n.as_str()).and_then(|s| s.parse().ok())
+                    .or_else(|| obj.get("S").and_then(|s| s.as_str()).and_then(|s| s.parse().ok()))
+                    .unwrap_or(0.0)
+            }
+            _ => 0.0,
+        }
     }
 
     fn batch_get_item(&self, req: &AwsRequest) -> AwsResponse {
@@ -505,6 +680,43 @@ impl DynamoDbHandler {
     fn json_empty(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::json(200, serde_json::json!({}))
     }
+    fn describe_ttl(&self, req: &AwsRequest) -> AwsResponse {
+        let table_name = req.params.get("TableName").and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        if state.get_table(&table_name).is_some() {
+            AwsResponse::json(200, json!({
+                "TimeToLiveDescription": {
+                    "TableName": table_name,
+                    "TimeToLiveStatus": "DISABLED"
+                }
+            }))
+        } else {
+            AwsResponse::error(400, "ResourceNotFoundException", &format!("Table not found: {}", table_name))
+        }
+    }
+
+    fn update_ttl(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({
+            "TimeToLiveSpecification": {
+                "TableName": "unknown",
+                "TimeToLive": { "Enabled": false, "AttributeName": "" }
+            }
+        }))
+    }
+
+    fn condition_check(&self, req: &AwsRequest) -> AwsResponse {
+        let table_name = req.params.get("TableName").and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        if state.get_table(&table_name).is_none() {
+            return AwsResponse::error(400, "ResourceNotFoundException", &format!("Table not found: {}", table_name));
+        }
+        // Simplified: always return true (no real condition evaluation)
+        AwsResponse::json(200, json!({
+            "ConditionalCheckFalse": false,
+            "Item": {}
+        }))
+    }
+
     fn json_stub(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
         let mut obj = serde_json::Map::new();
         obj.insert(field.to_string(), serde_json::json!({}));
