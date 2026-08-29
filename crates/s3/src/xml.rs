@@ -7,11 +7,10 @@ pub const S3_NS: &str = "http://s3.amazonaws.com/doc/2006-03-01/";
 pub fn error_response(code: &str, message: &str) -> String {
     format!(
         r#"<?xml version="1.0" encoding="UTF-8"?>
-<Error xmlns="{ns}">
+<Error>
   <Code>{code}</Code>
   <Message>{message}</Message>
 </Error>"#,
-        ns = S3_NS,
         code = code,
         message = message,
     )
@@ -21,13 +20,12 @@ pub fn error_response(code: &str, message: &str) -> String {
 pub fn error_response_full(code: &str, message: &str, resource: &str, request_id: &str) -> String {
     format!(
         r#"<?xml version="1.0" encoding="UTF-8"?>
-<Error xmlns="{ns}">
+<Error>
   <Code>{code}</Code>
   <Message>{message}</Message>
   <Resource>{resource}</Resource>
   <RequestId>{request_id}</RequestId>
 </Error>"#,
-        ns = S3_NS,
         code = code,
         message = message,
         resource = resource,
