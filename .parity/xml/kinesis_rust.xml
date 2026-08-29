@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="79" skipped="0" tests="97" time="4.074" timestamp="2026-08-29T13:05:58.073974-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_create_stream" time="0.066" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_streams" time="0.016" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_put_and_get_record" time="0.008"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a044050&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a868920&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="79" skipped="0" tests="97" time="4.154" timestamp="2026-08-29T15:07:35.296942-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_create_stream" time="0.067" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_streams" time="0.017" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_put_and_get_record" time="0.008"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2c7da0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cb1ca70&gt;
 stream = 'test-compat-stream'
 
     def test_put_and_get_record(self, kinesis, stream):
@@ -23,8 +23,8 @@ stream = 'test-compat-stream'
 E       assert 0 &gt;= 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_kinesis_compat.py:54: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_describe_stream" time="0.007"><failure message="AssertionError: assert 'Shards' in {'RetentionPeriodHours': 24, 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream', 'StreamModeDetails': {'StreamMode': 'ON_DEMAND'}, 'StreamName': 'test-compat-stream', ...}">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a0443e0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x108894f80&gt;
+tests/compatibility/test_kinesis_compat.py:54: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_describe_stream" time="0.007"><failure message="AssertionError: assert 'Shards' in {'RetentionPeriodHours': 24, 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream', 'StreamModeDetails': {'StreamMode': 'ON_DEMAND'}, 'StreamName': 'test-compat-stream', ...}">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fc1a0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cbb9370&gt;
 stream = 'test-compat-stream'
 
     def test_describe_stream(self, kinesis, stream):
@@ -35,8 +35,8 @@ stream = 'test-compat-stream'
 &gt;       assert "Shards" in desc
 E       AssertionError: assert 'Shards' in {'RetentionPeriodHours': 24, 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream', 'StreamModeDetails': {'StreamMode': 'ON_DEMAND'}, 'StreamName': 'test-compat-stream', ...}
 
-tests/compatibility/test_kinesis_compat.py:62: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_shards" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a0447a0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9c9e20&gt;
+tests/compatibility/test_kinesis_compat.py:62: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_shards" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fc560&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc7e0f0&gt;
 stream = 'test-compat-stream'
 
     def test_list_shards(self, kinesis, stream):
@@ -53,7 +53,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a9c9e20&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cc7e0f0&gt;
 operation_name = 'ListShards', api_params = {'StreamName': 'test-compat-stream'}
 
     @with_current_context()
@@ -143,8 +143,8 @@ operation_name = 'ListShards', api_params = {'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_put_records_batch" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_get_shard_iterator_at_sequence_number" time="0.008"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a013dd0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x1084c9df0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_put_records_batch" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_get_shard_iterator_at_sequence_number" time="0.008"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2c7dd0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ab866c0&gt;
 stream = 'test-compat-stream'
 
     def test_get_shard_iterator_at_sequence_number(self, kinesis, stream):
@@ -168,8 +168,8 @@ stream = 'test-compat-stream'
 E       assert 0 &gt;= 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_kinesis_compat.py:106: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_add_and_list_tags_for_stream" time="0.007"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a044d70&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9c8f20&gt;
+tests/compatibility/test_kinesis_compat.py:106: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_add_and_list_tags_for_stream" time="0.008"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2c7530&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cbbb9b0&gt;
 stream = 'test-compat-stream'
 
     def test_add_and_list_tags_for_stream(self, kinesis, stream):
@@ -184,8 +184,8 @@ stream = 'test-compat-stream'
                ^^^^^^^^^^^^^^
 E       KeyError: 'env'
 
-tests/compatibility/test_kinesis_compat.py:117: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_remove_tags_from_stream" time="0.008" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_increase_stream_retention_period" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a045040&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9b01a0&gt;
+tests/compatibility/test_kinesis_compat.py:117: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_remove_tags_from_stream" time="0.010" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_increase_stream_retention_period" time="0.009"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fce00&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce85310&gt;
 stream = 'test-compat-stream'
 
     def test_increase_stream_retention_period(self, kinesis, stream):
@@ -205,7 +205,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a9b01a0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce85310&gt;
 operation_name = 'IncreaseStreamRetentionPeriod'
 api_params = {'RetentionPeriodHours': 48, 'StreamName': 'test-compat-stream'}
 
@@ -296,8 +296,8 @@ api_params = {'RetentionPeriodHours': 48, 'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_decrease_stream_retention_period" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a045400&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9ebe00&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_decrease_stream_retention_period" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fd1c0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10c22dbe0&gt;
 stream = 'test-compat-stream'
 
     def test_decrease_stream_retention_period(self, kinesis, stream):
@@ -317,7 +317,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a9ebe00&gt;
+self = &lt;botocore.client.Kinesis object at 0x10c22dbe0&gt;
 operation_name = 'IncreaseStreamRetentionPeriod'
 api_params = {'RetentionPeriodHours': 48, 'StreamName': 'test-compat-stream'}
 
@@ -408,8 +408,8 @@ api_params = {'RetentionPeriodHours': 48, 'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_put_records_batch_multiple_all_succeed" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_get_records_with_limit" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a045bb0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9cbe60&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_put_records_batch_multiple_all_succeed" time="0.007" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_get_records_with_limit" time="0.009"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fd970&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc7cb90&gt;
 stream = 'test-compat-stream'
 
     def test_get_records_with_limit(self, kinesis, stream):
@@ -430,7 +430,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a9cbe60&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cc7cb90&gt;
 operation_name = 'ListShards', api_params = {'StreamName': 'test-compat-stream'}
 
     @with_current_context()
@@ -520,8 +520,8 @@ operation_name = 'ListShards', api_params = {'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_describe_stream_summary" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeStreamSummary operation: The operation DescribeStreamSummary is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a045fd0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x109f15850&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_describe_stream_summary" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeStreamSummary operation: The operation DescribeStreamSummary is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fdd90&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cb1e2a0&gt;
 stream = 'test-compat-stream'
 
     def test_describe_stream_summary(self, kinesis, stream):
@@ -539,7 +539,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x109f15850&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cb1e2a0&gt;
 operation_name = 'DescribeStreamSummary'
 api_params = {'StreamName': 'test-compat-stream'}
 
@@ -630,8 +630,8 @@ api_params = {'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeStreamSummary operation: The operation DescribeStreamSummary is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_shard_iterator_latest_vs_trim_horizon" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a0463f0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9c9a00&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_shard_iterator_latest_vs_trim_horizon" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fe1b0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cae2b70&gt;
 stream = 'test-compat-stream'
 
     def test_shard_iterator_latest_vs_trim_horizon(self, kinesis, stream):
@@ -652,7 +652,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a9c9a00&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cae2b70&gt;
 operation_name = 'ListShards', api_params = {'StreamName': 'test-compat-stream'}
 
     @with_current_context()
@@ -742,8 +742,8 @@ operation_name = 'ListShards', api_params = {'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_put_record_with_explicit_hash_key" time="0.008"><failure message="assert False&#10; +  where False = any(&lt;generator object TestKinesisOperations.test_put_record_with_explicit_hash_key.&lt;locals&gt;.&lt;genexpr&gt; at 0x10a85d150&gt;)">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a046810&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a96b1a0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_put_record_with_explicit_hash_key" time="0.008"><failure message="assert False&#10; +  where False = any(&lt;generator object TestKinesisOperations.test_put_record_with_explicit_hash_key.&lt;locals&gt;.&lt;genexpr&gt; at 0x10cb09150&gt;)">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fe5d0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cb1f5f0&gt;
 stream = 'test-compat-stream'
 
     def test_put_record_with_explicit_hash_key(self, kinesis, stream):
@@ -766,10 +766,10 @@ stream = 'test-compat-stream'
         records = kinesis.get_records(ShardIterator=iterator)
 &gt;       assert any(r["Data"] == b"hash-key-test" for r in records["Records"])
 E       assert False
-E        +  where False = any(&lt;generator object TestKinesisOperations.test_put_record_with_explicit_hash_key.&lt;locals&gt;.&lt;genexpr&gt; at 0x10a85d150&gt;)
+E        +  where False = any(&lt;generator object TestKinesisOperations.test_put_record_with_explicit_hash_key.&lt;locals&gt;.&lt;genexpr&gt; at 0x10cb09150&gt;)
 
-tests/compatibility/test_kinesis_compat.py:240: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_stream_encryption" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the StartStreamEncryption operation: The operation StartStreamEncryption is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a046c30&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9e6030&gt;
+tests/compatibility/test_kinesis_compat.py:240: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_stream_encryption" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the StartStreamEncryption operation: The operation StartStreamEncryption is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fe9f0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce5e540&gt;
 stream = 'test-compat-stream'
 
     def test_stream_encryption(self, kinesis, stream):
@@ -790,7 +790,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a9e6030&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce5e540&gt;
 operation_name = 'StartStreamEncryption'
 api_params = {'EncryptionType': 'KMS', 'KeyId': 'alias/aws/kinesis', 'StreamName': 'test-compat-stream'}
 
@@ -881,8 +881,8 @@ api_params = {'EncryptionType': 'KMS', 'KeyId': 'alias/aws/kinesis', 'StreamName
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the StartStreamEncryption operation: The operation StartStreamEncryption is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_register_and_describe_stream_consumer" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a047050&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aac3140&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_register_and_describe_stream_consumer" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fee10&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce03020&gt;
 stream = 'test-compat-stream'
 
     def test_register_and_describe_stream_consumer(self, kinesis, stream):
@@ -904,7 +904,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aac3140&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce03020&gt;
 operation_name = 'RegisterStreamConsumer'
 api_params = {'ConsumerName': 'test-consumer', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream'}
 
@@ -995,8 +995,8 @@ api_params = {'ConsumerName': 'test-consumer', 'StreamARN': 'arn:aws:kinesis:us-
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_stream_consumers" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a047470&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9cb080&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_stream_consumers" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2ff230&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc65760&gt;
 stream = 'test-compat-stream'
 
     def test_list_stream_consumers(self, kinesis, stream):
@@ -1018,7 +1018,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a9cb080&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cc65760&gt;
 operation_name = 'RegisterStreamConsumer'
 api_params = {'ConsumerName': 'consumer-list-test', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream'}
 
@@ -1109,8 +1109,8 @@ api_params = {'ConsumerName': 'consumer-list-test', 'StreamARN': 'arn:aws:kinesi
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_deregister_stream_consumer" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a047890&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a969280&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_deregister_stream_consumer" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2ff650&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc1fc50&gt;
 stream = 'test-compat-stream'
 
     def test_deregister_stream_consumer(self, kinesis, stream):
@@ -1132,7 +1132,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a969280&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cc1fc50&gt;
 operation_name = 'RegisterStreamConsumer'
 api_params = {'ConsumerName': 'consumer-to-delete', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream'}
 
@@ -1223,8 +1223,8 @@ api_params = {'ConsumerName': 'consumer-to-delete', 'StreamARN': 'arn:aws:kinesi
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_update_shard_count" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the UpdateShardCount operation: The operation UpdateShardCount is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a0475f0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa47980&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_update_shard_count" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the UpdateShardCount operation: The operation UpdateShardCount is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2c7fe0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce1f9e0&gt;
 stream = 'test-compat-stream'
 
     def test_update_shard_count(self, kinesis, stream):
@@ -1245,7 +1245,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa47980&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce1f9e0&gt;
 operation_name = 'UpdateShardCount'
 api_params = {'ScalingType': 'UNIFORM_SCALING', 'StreamName': 'test-compat-stream', 'TargetShardCount': 2}
 
@@ -1336,8 +1336,8 @@ api_params = {'ScalingType': 'UNIFORM_SCALING', 'StreamName': 'test-compat-strea
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the UpdateShardCount operation: The operation UpdateShardCount is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_shards_multiple_shards" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a046e10&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10adb5d60&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_shards_multiple_shards" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fef00&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ceb43e0&gt;
 
     def test_list_shards_multiple_shards(self, kinesis):
         """ListShards on a multi-shard stream returns all shards."""
@@ -1358,7 +1358,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10adb5d60&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ceb43e0&gt;
 operation_name = 'ListShards', api_params = {'StreamName': 'multi-shard-stream'}
 
     @with_current_context()
@@ -1448,8 +1448,8 @@ operation_name = 'ListShards', api_params = {'StreamName': 'multi-shard-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_split_shard" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a046540&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa61070&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_split_shard" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fe330&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce482f0&gt;
 
     def test_split_shard(self, kinesis):
         """SplitShard divides a shard into two."""
@@ -1470,7 +1470,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa61070&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce482f0&gt;
 operation_name = 'ListShards', api_params = {'StreamName': 'split-shard-stream'}
 
     @with_current_context()
@@ -1560,8 +1560,8 @@ operation_name = 'ListShards', api_params = {'StreamName': 'split-shard-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_merge_shards" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a045e20&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa1ed80&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_merge_shards" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fdb50&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce38290&gt;
 
     def test_merge_shards(self, kinesis):
         """MergeShards combines two adjacent shards."""
@@ -1582,7 +1582,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa1ed80&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce38290&gt;
 operation_name = 'ListShards', api_params = {'StreamName': 'merge-shard-stream'}
 
     @with_current_context()
@@ -1672,8 +1672,8 @@ operation_name = 'ListShards', api_params = {'StreamName': 'merge-shard-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_register_and_deregister_stream_consumer" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a045190&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a96b530&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_register_and_deregister_stream_consumer" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fd1f0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc529f0&gt;
 stream = 'test-compat-stream'
 
     def test_register_and_deregister_stream_consumer(self, kinesis, stream):
@@ -1698,9 +1698,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a96b530&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cc529f0&gt;
 operation_name = 'RegisterStreamConsumer'
-api_params = {'ConsumerName': 'consumer-6a6647d1', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream'}
+api_params = {'ConsumerName': 'consumer-d8380b4d', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1789,8 +1789,8 @@ api_params = {'ConsumerName': 'consumer-6a6647d1', 'StreamARN': 'arn:aws:kinesis
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_put_records_batch_all_succeed" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_latest_vs_trim_horizon_iterator" time="0.007"><failure message="KeyError: 'Shards'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a047e60&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10ad3ffe0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_put_records_batch_all_succeed" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_latest_vs_trim_horizon_iterator" time="0.007"><failure message="KeyError: 'Shards'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2ffc20&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cdf6210&gt;
 stream = 'test-compat-stream'
 
     def test_latest_vs_trim_horizon_iterator(self, kinesis, stream):
@@ -1803,8 +1803,8 @@ stream = 'test-compat-stream'
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Shards'
 
-tests/compatibility/test_kinesis_compat.py:433: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_start_and_stop_stream_encryption" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the StartStreamEncryption operation: The operation StartStreamEncryption is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a05c2c0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10ad2ac90&gt;
+tests/compatibility/test_kinesis_compat.py:433: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_start_and_stop_stream_encryption" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the StartStreamEncryption operation: The operation StartStreamEncryption is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c310080&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cae2660&gt;
 stream = 'test-compat-stream'
 
     def test_start_and_stop_stream_encryption(self, kinesis, stream):
@@ -1825,7 +1825,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10ad2ac90&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cae2660&gt;
 operation_name = 'StartStreamEncryption'
 api_params = {'EncryptionType': 'KMS', 'KeyId': 'alias/aws/kinesis', 'StreamName': 'test-compat-stream'}
 
@@ -1916,8 +1916,8 @@ api_params = {'EncryptionType': 'KMS', 'KeyId': 'alias/aws/kinesis', 'StreamName
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the StartStreamEncryption operation: The operation StartStreamEncryption is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_shards_multi_shard_stream" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a05c6e0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a96a0c0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_shards_multi_shard_stream" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c3104a0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ceff560&gt;
 
     def test_list_shards_multi_shard_stream(self, kinesis):
         """ListShards on a stream with multiple shards."""
@@ -1939,9 +1939,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a96a0c0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ceff560&gt;
 operation_name = 'ListShards'
-api_params = {'StreamName': 'multi-shard-30824682'}
+api_params = {'StreamName': 'multi-shard-b25a6ce8'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2030,8 +2030,8 @@ api_params = {'StreamName': 'multi-shard-30824682'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_increase_stream_retention_period_v2" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a05cb00&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aad28a0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_increase_stream_retention_period_v2" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c3108c0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce047a0&gt;
 stream = 'test-compat-stream'
 
     def test_increase_stream_retention_period_v2(self, kinesis, stream):
@@ -2048,7 +2048,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aad28a0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce047a0&gt;
 operation_name = 'IncreaseStreamRetentionPeriod'
 api_params = {'RetentionPeriodHours': 48, 'StreamName': 'test-compat-stream'}
 
@@ -2139,8 +2139,8 @@ api_params = {'RetentionPeriodHours': 48, 'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_decrease_stream_retention_period_v2" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a05cf20&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a977b00&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_decrease_stream_retention_period_v2" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c310ce0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce44890&gt;
 stream = 'test-compat-stream'
 
     def test_decrease_stream_retention_period_v2(self, kinesis, stream):
@@ -2157,7 +2157,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a977b00&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce44890&gt;
 operation_name = 'IncreaseStreamRetentionPeriod'
 api_params = {'RetentionPeriodHours': 48, 'StreamName': 'test-compat-stream'}
 
@@ -2248,8 +2248,8 @@ api_params = {'RetentionPeriodHours': 48, 'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_add_tags_to_stream" time="0.007"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a05d340&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aad26c0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_add_tags_to_stream" time="0.007"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c311100&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc66600&gt;
 stream = 'test-compat-stream'
 
     def test_add_tags_to_stream(self, kinesis, stream):
@@ -2263,8 +2263,8 @@ stream = 'test-compat-stream'
                ^^^^^^^^^^^
 E       KeyError: 'env'
 
-tests/compatibility/test_kinesis_compat.py:521: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_remove_tags_from_stream_v2" time="0.008"><failure message="AssertionError: assert 'keep' in []">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a05d760&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aad10a0&gt;
+tests/compatibility/test_kinesis_compat.py:521: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_remove_tags_from_stream_v2" time="0.008"><failure message="AssertionError: assert 'keep' in []">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c311520&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce469c0&gt;
 stream = 'test-compat-stream'
 
     def test_remove_tags_from_stream_v2(self, kinesis, stream):
@@ -2275,8 +2275,8 @@ stream = 'test-compat-stream'
 &gt;       assert "keep" in keys
 E       AssertionError: assert 'keep' in []
 
-tests/compatibility/test_kinesis_compat.py:529: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_describe_stream_summary_v2" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeStreamSummary operation: The operation DescribeStreamSummary is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a05db80&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9e94c0&gt;
+tests/compatibility/test_kinesis_compat.py:529: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_describe_stream_summary_v2" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeStreamSummary operation: The operation DescribeStreamSummary is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c311940&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cec3b60&gt;
 stream = 'test-compat-stream'
 
     def test_describe_stream_summary_v2(self, kinesis, stream):
@@ -2293,7 +2293,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a9e94c0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cec3b60&gt;
 operation_name = 'DescribeStreamSummary'
 api_params = {'StreamName': 'test-compat-stream'}
 
@@ -2384,8 +2384,8 @@ api_params = {'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeStreamSummary operation: The operation DescribeStreamSummary is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_streams_v2" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_put_record_explicit_hash_key" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_get_records_limit" time="0.009"><failure message="KeyError: 'Shards'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a045fa0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aabfce0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_streams_v2" time="0.007" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_put_record_explicit_hash_key" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_get_records_limit" time="0.009"><failure message="KeyError: 'Shards'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2fd700&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc64fe0&gt;
 stream = 'test-compat-stream'
 
     def test_get_records_limit(self, kinesis, stream):
@@ -2397,8 +2397,8 @@ stream = 'test-compat-stream'
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Shards'
 
-tests/compatibility/test_kinesis_compat.py:559: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_register_deregister_stream_consumer" time="0.009"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a046510&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa39ee0&gt;
+tests/compatibility/test_kinesis_compat.py:559: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_register_deregister_stream_consumer" time="0.009"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c2feae0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cbbaa80&gt;
 stream = 'test-compat-stream'
 
     def test_register_deregister_stream_consumer(self, kinesis, stream):
@@ -2420,9 +2420,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa39ee0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cbbaa80&gt;
 operation_name = 'RegisterStreamConsumer'
-api_params = {'ConsumerName': 'consumer-50d5c4ab', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream'}
+api_params = {'ConsumerName': 'consumer-939dd86d', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2511,8 +2511,8 @@ api_params = {'ConsumerName': 'consumer-50d5c4ab', 'StreamARN': 'arn:aws:kinesis
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_stream_consumers_v2" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListStreamConsumers operation: The operation ListStreamConsumers is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10a05df70&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aad1be0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisOperations" name="test_list_stream_consumers_v2" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListStreamConsumers operation: The operation ListStreamConsumers is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisOperations object at 0x10c311a60&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc1c590&gt;
 stream = 'test-compat-stream'
 
     def test_list_stream_consumers_v2(self, kinesis, stream):
@@ -2532,7 +2532,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aad1be0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cc1c590&gt;
 operation_name = 'ListStreamConsumers'
 api_params = {'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream'}
 
@@ -2623,8 +2623,8 @@ api_params = {'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-c
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListStreamConsumers operation: The operation ListStreamConsumers is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_create_stream_with_multiple_shards" time="0.006"><failure message="KeyError: 'Shards'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a05d430&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aabf380&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_create_stream_with_multiple_shards" time="0.007"><failure message="KeyError: 'Shards'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c311130&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce075f0&gt;
 
     def test_create_stream_with_multiple_shards(self, kinesis):
         """Create a stream with 5 shards and verify shard count."""
@@ -2638,8 +2638,8 @@ kinesis = &lt;botocore.client.Kinesis object at 0x10aabf380&gt;
                        ^^^^^^^^^^^^^^
 E           KeyError: 'Shards'
 
-tests/compatibility/test_kinesis_compat.py:607: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_describe_stream_all_fields" time="0.007"><failure message="KeyError: 'Shards'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a05c860&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9e5fa0&gt;
+tests/compatibility/test_kinesis_compat.py:607: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_describe_stream_all_fields" time="0.007"><failure message="KeyError: 'Shards'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c310cb0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x109bd9c40&gt;
 stream = 'test-compat-stream'
 
     def test_describe_stream_all_fields(self, kinesis, stream):
@@ -2652,8 +2652,8 @@ stream = 'test-compat-stream'
                           ^^^^^^^^^^^^^^
 E       KeyError: 'Shards'
 
-tests/compatibility/test_kinesis_compat.py:620: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_describe_stream_has_more_shards_false" time="0.006"><failure message="KeyError: 'HasMoreShards'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a05c110&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9ca3f0&gt;
+tests/compatibility/test_kinesis_compat.py:620: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_describe_stream_has_more_shards_false" time="0.006"><failure message="KeyError: 'HasMoreShards'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c310050&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce44bc0&gt;
 stream = 'test-compat-stream'
 
     def test_describe_stream_has_more_shards_false(self, kinesis, stream):
@@ -2663,8 +2663,8 @@ stream = 'test-compat-stream'
                ^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'HasMoreShards'
 
-tests/compatibility/test_kinesis_compat.py:631: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_list_streams_with_limit" time="0.009" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_list_streams_has_more_streams" time="0.009"><failure message="assert False is True">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a05ea50&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9b1b80&gt;
+tests/compatibility/test_kinesis_compat.py:631: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_list_streams_with_limit" time="0.010" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_list_streams_has_more_streams" time="0.010"><failure message="assert False is True">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c312840&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc7c350&gt;
 
     def test_list_streams_has_more_streams(self, kinesis):
         """ListStreams HasMoreStreams field is correct with pagination."""
@@ -2681,8 +2681,8 @@ kinesis = &lt;botocore.client.Kinesis object at 0x10a9b1b80&gt;
 &gt;           assert resp["HasMoreStreams"] is True
 E           assert False is True
 
-tests/compatibility/test_kinesis_compat.py:665: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_list_streams_exclusive_start" time="0.010"><failure message="AssertionError: assert 'page-85d78585' not in ['page-85d78585', 'page-926584da', 'page-1bd61c05']">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a05ee70&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aad05c0&gt;
+tests/compatibility/test_kinesis_compat.py:665: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_list_streams_exclusive_start" time="0.010"><failure message="AssertionError: assert 'page-e1177eac' not in ['page-e1177eac', 'page-197b70ba', 'page-aee765fd']">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c312c60&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce00b00&gt;
 
     def test_list_streams_exclusive_start(self, kinesis):
         """ListStreams with ExclusiveStartStreamName for pagination."""
@@ -2700,10 +2700,10 @@ kinesis = &lt;botocore.client.Kinesis object at 0x10aad05c0&gt;
             # Get next page starting after the first
             resp2 = kinesis.list_streams(Limit=100, ExclusiveStartStreamName=first_stream)
 &gt;           assert first_stream not in resp2["StreamNames"]
-E           AssertionError: assert 'page-85d78585' not in ['page-85d78585', 'page-926584da', 'page-1bd61c05']
+E           AssertionError: assert 'page-e1177eac' not in ['page-e1177eac', 'page-197b70ba', 'page-aee765fd']
 
-tests/compatibility/test_kinesis_compat.py:688: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_after_sequence_number_iterator" time="0.010"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a05f290&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9ab3b0&gt;
+tests/compatibility/test_kinesis_compat.py:688: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_after_sequence_number_iterator" time="0.009"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c313080&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cae3110&gt;
 stream = 'test-compat-stream'
 
     def test_after_sequence_number_iterator(self, kinesis, stream):
@@ -2728,8 +2728,8 @@ stream = 'test-compat-stream'
 E       assert 0 &gt;= 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_kinesis_compat.py:714: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_get_records_millis_behind_latest" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a05f6b0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aac0ec0&gt;
+tests/compatibility/test_kinesis_compat.py:714: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_get_records_millis_behind_latest" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c3134a0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ceb6c30&gt;
 stream = 'test-compat-stream'
 
     def test_get_records_millis_behind_latest(self, kinesis, stream):
@@ -2748,7 +2748,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aac0ec0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ceb6c30&gt;
 operation_name = 'ListShards', api_params = {'StreamName': 'test-compat-stream'}
 
     @with_current_context()
@@ -2838,8 +2838,8 @@ operation_name = 'ListShards', api_params = {'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_get_records_returns_next_shard_iterator" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a05fad0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aabe2a0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_get_records_returns_next_shard_iterator" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c3138c0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce86b10&gt;
 stream = 'test-compat-stream'
 
     def test_get_records_returns_next_shard_iterator(self, kinesis, stream):
@@ -2857,7 +2857,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aabe2a0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce86b10&gt;
 operation_name = 'ListShards', api_params = {'StreamName': 'test-compat-stream'}
 
     @with_current_context()
@@ -2947,8 +2947,8 @@ operation_name = 'ListShards', api_params = {'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_put_records_batch_with_explicit_hash_key" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_list_shards_with_max_results" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a080350&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9ca030&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_put_records_batch_with_explicit_hash_key" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_list_shards_with_max_results" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c334140&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc67dd0&gt;
 
     def test_list_shards_with_max_results(self, kinesis):
         """ListShards with MaxResults for pagination."""
@@ -2970,9 +2970,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a9ca030&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cc67dd0&gt;
 operation_name = 'ListShards'
-api_params = {'MaxResults': 2, 'StreamName': 'shardpage-05910b35'}
+api_params = {'MaxResults': 2, 'StreamName': 'shardpage-b1bf81fc'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3061,8 +3061,8 @@ api_params = {'MaxResults': 2, 'StreamName': 'shardpage-05910b35'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_list_shards_pagination_next_token" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a05fd40&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a905250&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_list_shards_pagination_next_token" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c313a70&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cdebce0&gt;
 
     def test_list_shards_pagination_next_token(self, kinesis):
         """ListShards pagination using NextToken."""
@@ -3084,9 +3084,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a905250&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cdebce0&gt;
 operation_name = 'ListShards'
-api_params = {'MaxResults': 2, 'StreamName': 'shardnext-e25e0a0d'}
+api_params = {'MaxResults': 2, 'StreamName': 'shardnext-def32498'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3175,8 +3175,8 @@ api_params = {'MaxResults': 2, 'StreamName': 'shardnext-e25e0a0d'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_create_stream_duplicate_name_error" time="0.006"><failure message="AssertionError: assert 'ResourceNotFoundException' == 'ResourceInUseException'&#10;  &#10;  - ResourceInUseException&#10;  ?         ^ ^^^&#10;  + ResourceNotFoundException&#10;  ?         ^^^^^^ ^">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a05f380&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa17080&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_create_stream_duplicate_name_error" time="0.007"><failure message="AssertionError: assert 'ResourceNotFoundException' == 'ResourceInUseException'&#10;  &#10;  - ResourceInUseException&#10;  ?         ^ ^^^&#10;  + ResourceNotFoundException&#10;  ?         ^^^^^^ ^">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c3131a0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce1e390&gt;
 stream = 'test-compat-stream'
 
     def test_create_stream_duplicate_name_error(self, kinesis, stream):
@@ -3191,8 +3191,8 @@ E         ?         ^ ^^^
 E         + ResourceNotFoundException
 E         ?         ^^^^^^ ^
 
-tests/compatibility/test_kinesis_compat.py:802: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_delete_nonexistent_stream_error" time="0.004" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_describe_nonexistent_stream_error" time="0.003" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_put_record_to_nonexistent_stream_error" time="0.003" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_add_multiple_tags_and_verify" time="0.007"><failure message="KeyError: 'key1'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a0465d0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9b01a0&gt;
+tests/compatibility/test_kinesis_compat.py:802: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_delete_nonexistent_stream_error" time="0.004" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_describe_nonexistent_stream_error" time="0.003" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_put_record_to_nonexistent_stream_error" time="0.004" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_add_multiple_tags_and_verify" time="0.008"><failure message="KeyError: 'key1'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c2fdf40&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cec32f0&gt;
 stream = 'test-compat-stream'
 
     def test_add_multiple_tags_and_verify(self, kinesis, stream):
@@ -3211,8 +3211,8 @@ stream = 'test-compat-stream'
                ^^^^^^^^^^^^^^^
 E       KeyError: 'key1'
 
-tests/compatibility/test_kinesis_compat.py:838: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_overwrite_tag_value" time="0.008"><failure message="KeyError: 'mykey'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a0805f0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa1d460&gt;
+tests/compatibility/test_kinesis_compat.py:838: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_overwrite_tag_value" time="0.009"><failure message="KeyError: 'mykey'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c3343e0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cefffb0&gt;
 stream = 'test-compat-stream'
 
     def test_overwrite_tag_value(self, kinesis, stream):
@@ -3225,18 +3225,18 @@ stream = 'test-compat-stream'
                ^^^^^^^^^^^^^^^^
 E       KeyError: 'mykey'
 
-tests/compatibility/test_kinesis_compat.py:848: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_list_tags_has_more_tags" time="0.006"><failure message="AssertionError: assert 'HasMoreTags' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...re', ...}, 'HTTPStatusCode': 200, 'RequestId': 'bbf94af2-1731-452c-8ce1-86979c8589e9', 'RetryAttempts': 0}, 'Tags': []}">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a080a10&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9b0470&gt;
+tests/compatibility/test_kinesis_compat.py:848: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_list_tags_has_more_tags" time="0.006"><failure message="AssertionError: assert 'HasMoreTags' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...re', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f241b8dd-c3db-40c7-9a9e-c1e2031b31ed', 'RetryAttempts': 0}, 'Tags': []}">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c334800&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cdebe90&gt;
 stream = 'test-compat-stream'
 
     def test_list_tags_has_more_tags(self, kinesis, stream):
         """ListTagsForStream HasMoreTags field."""
         response = kinesis.list_tags_for_stream(StreamName=stream)
 &gt;       assert "HasMoreTags" in response
-E       AssertionError: assert 'HasMoreTags' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...re', ...}, 'HTTPStatusCode': 200, 'RequestId': 'bbf94af2-1731-452c-8ce1-86979c8589e9', 'RetryAttempts': 0}, 'Tags': []}
+E       AssertionError: assert 'HasMoreTags' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...re', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f241b8dd-c3db-40c7-9a9e-c1e2031b31ed', 'RetryAttempts': 0}, 'Tags': []}
 
-tests/compatibility/test_kinesis_compat.py:853: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_describe_stream_consumer_by_arn" time="0.007"><failure message="UnboundLocalError: cannot access local variable 'consumer_arn' where it is not associated with a value">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a080e30&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9e5b80&gt;
+tests/compatibility/test_kinesis_compat.py:853: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_describe_stream_consumer_by_arn" time="0.007"><failure message="UnboundLocalError: cannot access local variable 'consumer_arn' where it is not associated with a value">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c334c20&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc1c710&gt;
 stream = 'test-compat-stream'
 
     def test_describe_stream_consumer_by_arn(self, kinesis, stream):
@@ -3258,9 +3258,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a9e5b80&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cc1c710&gt;
 operation_name = 'RegisterStreamConsumer'
-api_params = {'ConsumerName': 'consumer-e049bcfb', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream'}
+api_params = {'ConsumerName': 'consumer-056c6085', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3353,8 +3353,8 @@ E           botocore.errorfactory.ValidationException: An error occurred (Valida
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a080e30&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9e5b80&gt;
+self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c334c20&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc1c710&gt;
 stream = 'test-compat-stream'
 
     def test_describe_stream_consumer_by_arn(self, kinesis, stream):
@@ -3377,8 +3377,8 @@ stream = 'test-compat-stream'
                                                                ^^^^^^^^^^^^
 E               UnboundLocalError: cannot access local variable 'consumer_arn' where it is not associated with a value
 
-tests/compatibility/test_kinesis_compat.py:872: UnboundLocalError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_register_duplicate_consumer_error" time="0.009"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a081250&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10adb97f0&gt;
+tests/compatibility/test_kinesis_compat.py:872: UnboundLocalError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_register_duplicate_consumer_error" time="0.009"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c335040&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ced7e30&gt;
 stream = 'test-compat-stream'
 
     def test_register_duplicate_consumer_error(self, kinesis, stream):
@@ -3398,9 +3398,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10adb97f0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ced7e30&gt;
 operation_name = 'RegisterStreamConsumer'
-api_params = {'ConsumerName': 'dup-consumer-e854e35b', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream'}
+api_params = {'ConsumerName': 'dup-consumer-ab2cdf8e', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-compat-stream'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3489,8 +3489,8 @@ api_params = {'ConsumerName': 'dup-consumer-e854e35b', 'StreamARN': 'arn:aws:kin
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_describe_stream_summary_fields" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeStreamSummary operation: The operation DescribeStreamSummary is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a081670&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a906390&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_describe_stream_summary_fields" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeStreamSummary operation: The operation DescribeStreamSummary is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c335460&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x109bd9c40&gt;
 stream = 'test-compat-stream'
 
     def test_describe_stream_summary_fields(self, kinesis, stream):
@@ -3508,7 +3508,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a906390&gt;
+self = &lt;botocore.client.Kinesis object at 0x109bd9c40&gt;
 operation_name = 'DescribeStreamSummary'
 api_params = {'StreamName': 'test-compat-stream'}
 
@@ -3599,8 +3599,8 @@ api_params = {'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeStreamSummary operation: The operation DescribeStreamSummary is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_put_record_returns_encryption_type" time="0.006"><failure message="AssertionError: assert 'EncryptionType' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '173', 'content-type': 'application/x-amz-json-1.1', 'date': '...ceNumber': '4959033827149996696551807410074587034031434670931271810', 'ShardId': 'shardId-000000000000.0.000000000000'}">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a081a90&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9c9190&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_put_record_returns_encryption_type" time="0.007"><failure message="AssertionError: assert 'EncryptionType' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '173', 'content-type': 'application/x-amz-json-1.1', 'date': '...ceNumber': '4959033827149996696551807410074587034031434670931271810', 'ShardId': 'shardId-000000000000.0.000000000000'}">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c335880&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cf71670&gt;
 stream = 'test-compat-stream'
 
     def test_put_record_returns_encryption_type(self, kinesis, stream):
@@ -3609,8 +3609,8 @@ stream = 'test-compat-stream'
 &gt;       assert "EncryptionType" in resp
 E       AssertionError: assert 'EncryptionType' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '173', 'content-type': 'application/x-amz-json-1.1', 'date': '...ceNumber': '4959033827149996696551807410074587034031434670931271810', 'ShardId': 'shardId-000000000000.0.000000000000'}
 
-tests/compatibility/test_kinesis_compat.py:907: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_put_records_returns_encryption_type" time="0.032"><failure message="AssertionError: assert 'EncryptionType' in {'FailedRecordCount': 0, 'Records': [{'SequenceNumber': '4959033827149996696551807410074587034031434670931271811', 'Sh...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '1e157765-3a76-41ce-8bcf-2c7b28a4a6f9', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a081eb0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10acf7e00&gt;
+tests/compatibility/test_kinesis_compat.py:907: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_put_records_returns_encryption_type" time="0.033"><failure message="AssertionError: assert 'EncryptionType' in {'FailedRecordCount': 0, 'Records': [{'SequenceNumber': '4959033827149996696551807410074587034031434670931271811', 'Sh...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6bc1a557-9af5-4152-a4dd-453fc102e7bf', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c335ca0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x109bd9c40&gt;
 stream = 'test-compat-stream'
 
     def test_put_records_returns_encryption_type(self, kinesis, stream):
@@ -3618,10 +3618,10 @@ stream = 'test-compat-stream'
         records = [{"Data": b"enc-batch", "PartitionKey": "pk1"}]
         resp = kinesis.put_records(StreamName=stream, Records=records)
 &gt;       assert "EncryptionType" in resp
-E       AssertionError: assert 'EncryptionType' in {'FailedRecordCount': 0, 'Records': [{'SequenceNumber': '4959033827149996696551807410074587034031434670931271811', 'Sh...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '1e157765-3a76-41ce-8bcf-2c7b28a4a6f9', 'RetryAttempts': 0}}
+E       AssertionError: assert 'EncryptionType' in {'FailedRecordCount': 0, 'Records': [{'SequenceNumber': '4959033827149996696551807410074587034031434670931271811', 'Sh...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6bc1a557-9af5-4152-a4dd-453fc102e7bf', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kinesis_compat.py:914: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_shard_hash_key_range_covers_full_space" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a082300&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10acf7770&gt;
+tests/compatibility/test_kinesis_compat.py:914: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_shard_hash_key_range_covers_full_space" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c3360f0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ceaf680&gt;
 
     def test_shard_hash_key_range_covers_full_space(self, kinesis):
         """Shard hash key ranges cover the full 0 to 2^128-1 space."""
@@ -3643,8 +3643,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10acf7770&gt;
-operation_name = 'ListShards', api_params = {'StreamName': 'hashrange-c101893b'}
+self = &lt;botocore.client.Kinesis object at 0x10ceaf680&gt;
+operation_name = 'ListShards', api_params = {'StreamName': 'hashrange-4cc4df24'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3733,8 +3733,8 @@ operation_name = 'ListShards', api_params = {'StreamName': 'hashrange-c101893b'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_describe_stream_with_limit" time="0.006"><failure message="KeyError: 'Shards'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10a082750&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10adb6cf0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisExtended" name="test_describe_stream_with_limit" time="0.006"><failure message="KeyError: 'Shards'">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisExtended object at 0x10c336540&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cb1fe30&gt;
 
     def test_describe_stream_with_limit(self, kinesis):
         """DescribeStream with Limit returns partial shard list and HasMoreShards=True."""
@@ -3748,8 +3748,8 @@ kinesis = &lt;botocore.client.Kinesis object at 0x10adb6cf0&gt;
                        ^^^^^^^^^^^^^^
 E           KeyError: 'Shards'
 
-tests/compatibility/test_kinesis_compat.py:952: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisGapStubs" name="test_describe_limits" time="0.004"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeLimits operation: The operation DescribeLimits is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisGapStubs object at 0x10a0474a0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa155b0&gt;
+tests/compatibility/test_kinesis_compat.py:952: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisGapStubs" name="test_describe_limits" time="0.004"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeLimits operation: The operation DescribeLimits is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisGapStubs object at 0x10c311250&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc53b90&gt;
 
     def test_describe_limits(self, kinesis):
 &gt;       resp = kinesis.describe_limits()
@@ -3765,7 +3765,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa155b0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cc53b90&gt;
 operation_name = 'DescribeLimits', api_params = {}
 
     @with_current_context()
@@ -3855,8 +3855,8 @@ operation_name = 'DescribeLimits', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeLimits operation: The operation DescribeLimits is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisGapStubs" name="test_list_streams" time="0.003" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisAutoCoverage" name="test_describe_account_settings" time="0.003"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeAccountSettings operation: The operation DescribeAccountSettings is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisAutoCoverage object at 0x10a082870&gt;
-client = &lt;botocore.client.Kinesis object at 0x10a9c9160&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisGapStubs" name="test_list_streams" time="0.004" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisAutoCoverage" name="test_describe_account_settings" time="0.003"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeAccountSettings operation: The operation DescribeAccountSettings is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisAutoCoverage object at 0x10c336570&gt;
+client = &lt;botocore.client.Kinesis object at 0x10cec3da0&gt;
 
     def test_describe_account_settings(self, client):
         """DescribeAccountSettings returns a response."""
@@ -3873,7 +3873,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a9c9160&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cec3da0&gt;
 operation_name = 'DescribeAccountSettings', api_params = {}
 
     @with_current_context()
@@ -3963,9 +3963,9 @@ operation_name = 'DescribeAccountSettings', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeAccountSettings operation: The operation DescribeAccountSettings is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisResourcePolicy" name="test_put_resource_policy" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the PutResourcePolicy operation: The operation PutResourcePolicy is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisResourcePolicy object at 0x10a081be0&gt;
-client = &lt;botocore.client.Kinesis object at 0x10aa63bf0&gt;
-stream_arn = 'arn:aws:kinesis:us-east-1:123456789012:stream/rp-stream-48ed768a'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisResourcePolicy" name="test_put_resource_policy" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the PutResourcePolicy operation: The operation PutResourcePolicy is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisResourcePolicy object at 0x10c335a60&gt;
+client = &lt;botocore.client.Kinesis object at 0x10ce5d580&gt;
+stream_arn = 'arn:aws:kinesis:us-east-1:123456789012:stream/rp-stream-ef54bb02'
 
     def test_put_resource_policy(self, client, stream_arn):
         """PutResourcePolicy sets a policy on a stream."""
@@ -3997,9 +3997,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa63bf0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce5d580&gt;
 operation_name = 'PutResourcePolicy'
-api_params = {'Policy': '{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"AWS": "123456789012"}, "Action"...9012:stream/rp-stream-48ed768a"}]}', 'ResourceARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/rp-stream-48ed768a'}
+api_params = {'Policy': '{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"AWS": "123456789012"}, "Action"...9012:stream/rp-stream-ef54bb02"}]}', 'ResourceARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/rp-stream-ef54bb02'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4088,9 +4088,9 @@ api_params = {'Policy': '{"Version": "2012-10-17", "Statement": [{"Effect": "All
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the PutResourcePolicy operation: The operation PutResourcePolicy is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisResourcePolicy" name="test_get_resource_policy" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the PutResourcePolicy operation: The operation PutResourcePolicy is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisResourcePolicy object at 0x10a081280&gt;
-client = &lt;botocore.client.Kinesis object at 0x10aa161b0&gt;
-stream_arn = 'arn:aws:kinesis:us-east-1:123456789012:stream/rp-stream-cd5b0e60'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisResourcePolicy" name="test_get_resource_policy" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the PutResourcePolicy operation: The operation PutResourcePolicy is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisResourcePolicy object at 0x10c335160&gt;
+client = &lt;botocore.client.Kinesis object at 0x10cc53770&gt;
+stream_arn = 'arn:aws:kinesis:us-east-1:123456789012:stream/rp-stream-b0684cad'
 
     def test_get_resource_policy(self, client, stream_arn):
         """GetResourcePolicy retrieves a previously set policy."""
@@ -4121,9 +4121,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa161b0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cc53770&gt;
 operation_name = 'PutResourcePolicy'
-api_params = {'Policy': '{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"AWS": "123456789012"}, "Action"...9012:stream/rp-stream-cd5b0e60"}]}', 'ResourceARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/rp-stream-cd5b0e60'}
+api_params = {'Policy': '{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"AWS": "123456789012"}, "Action"...9012:stream/rp-stream-b0684cad"}]}', 'ResourceARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/rp-stream-b0684cad'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4212,9 +4212,9 @@ api_params = {'Policy': '{"Version": "2012-10-17", "Statement": [{"Effect": "All
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the PutResourcePolicy operation: The operation PutResourcePolicy is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisResourcePolicy" name="test_delete_resource_policy" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the PutResourcePolicy operation: The operation PutResourcePolicy is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisResourcePolicy object at 0x10a080c80&gt;
-client = &lt;botocore.client.Kinesis object at 0x10aa0cf20&gt;
-stream_arn = 'arn:aws:kinesis:us-east-1:123456789012:stream/rp-stream-2d1f8118'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisResourcePolicy" name="test_delete_resource_policy" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the PutResourcePolicy operation: The operation PutResourcePolicy is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisResourcePolicy object at 0x10c334950&gt;
+client = &lt;botocore.client.Kinesis object at 0x10ce48c80&gt;
+stream_arn = 'arn:aws:kinesis:us-east-1:123456789012:stream/rp-stream-36e53413'
 
     def test_delete_resource_policy(self, client, stream_arn):
         """DeleteResourcePolicy removes a policy from a stream."""
@@ -4245,9 +4245,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa0cf20&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce48c80&gt;
 operation_name = 'PutResourcePolicy'
-api_params = {'Policy': '{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"AWS": "123456789012"}, "Action"...9012:stream/rp-stream-2d1f8118"}]}', 'ResourceARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/rp-stream-2d1f8118'}
+api_params = {'Policy': '{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Principal": {"AWS": "123456789012"}, "Action"...9012:stream/rp-stream-36e53413"}]}', 'ResourceARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/rp-stream-36e53413'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4336,9 +4336,9 @@ api_params = {'Policy': '{"Version": "2012-10-17", "Statement": [{"Effect": "All
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the PutResourcePolicy operation: The operation PutResourcePolicy is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases" name="test_describe_stream_consumer_by_arn_only" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases object at 0x10a082c90&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a86b7a0&gt;
-stream_with_arn = ('cons-edge-3a8eb181', 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-3a8eb181')
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases" name="test_describe_stream_consumer_by_arn_only" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases object at 0x10c336a20&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cdf5df0&gt;
+stream_with_arn = ('cons-edge-8988633e', 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-8988633e')
 
     def test_describe_stream_consumer_by_arn_only(self, kinesis, stream_with_arn):
         """DescribeStreamConsumer using ConsumerARN without StreamARN."""
@@ -4357,9 +4357,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a86b7a0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cdf5df0&gt;
 operation_name = 'RegisterStreamConsumer'
-api_params = {'ConsumerName': 'arn-only-consumer', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-3a8eb181'}
+api_params = {'ConsumerName': 'arn-only-consumer', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-8988633e'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4448,9 +4448,9 @@ api_params = {'ConsumerName': 'arn-only-consumer', 'StreamARN': 'arn:aws:kinesis
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases" name="test_list_stream_consumers_multiple" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases object at 0x10a083080&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa17320&gt;
-stream_with_arn = ('cons-edge-2a623c2e', 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-2a623c2e')
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases" name="test_list_stream_consumers_multiple" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases object at 0x10c336e10&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cf35070&gt;
+stream_with_arn = ('cons-edge-898c419c', 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-898c419c')
 
     def test_list_stream_consumers_multiple(self, kinesis, stream_with_arn):
         """ListStreamConsumers returns all registered consumers."""
@@ -4468,9 +4468,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa17320&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cf35070&gt;
 operation_name = 'RegisterStreamConsumer'
-api_params = {'ConsumerName': 'multi-cons-0', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-2a623c2e'}
+api_params = {'ConsumerName': 'multi-cons-0', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-898c419c'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4559,9 +4559,9 @@ api_params = {'ConsumerName': 'multi-cons-0', 'StreamARN': 'arn:aws:kinesis:us-e
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases" name="test_register_consumer_returns_creation_timestamp" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases object at 0x10a083470&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa1eb40&gt;
-stream_with_arn = ('cons-edge-094ae9f6', 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-094ae9f6')
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases" name="test_register_consumer_returns_creation_timestamp" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases object at 0x10c337200&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce44c50&gt;
+stream_with_arn = ('cons-edge-8dd5420c', 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-8dd5420c')
 
     def test_register_consumer_returns_creation_timestamp(self, kinesis, stream_with_arn):
         """RegisterStreamConsumer response includes ConsumerCreationTimestamp."""
@@ -4579,9 +4579,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa1eb40&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce44c50&gt;
 operation_name = 'RegisterStreamConsumer'
-api_params = {'ConsumerName': 'ts-consumer', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-094ae9f6'}
+api_params = {'ConsumerName': 'ts-consumer', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-8dd5420c'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4670,9 +4670,9 @@ api_params = {'ConsumerName': 'ts-consumer', 'StreamARN': 'arn:aws:kinesis:us-ea
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases" name="test_deregister_consumer_by_name" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases object at 0x10a083860&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a82df70&gt;
-stream_with_arn = ('cons-edge-26fc76f4', 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-26fc76f4')
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases" name="test_deregister_consumer_by_name" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisConsumerEdgeCases object at 0x10c3375f0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce87e90&gt;
+stream_with_arn = ('cons-edge-9b0e7086', 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-9b0e7086')
 
     def test_deregister_consumer_by_name(self, kinesis, stream_with_arn):
         """DeregisterStreamConsumer using StreamARN + ConsumerName."""
@@ -4689,9 +4689,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a82df70&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce87e90&gt;
 operation_name = 'RegisterStreamConsumer'
-api_params = {'ConsumerName': 'dereg-by-name', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-26fc76f4'}
+api_params = {'ConsumerName': 'dereg-by-name', 'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/cons-edge-9b0e7086'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4780,9 +4780,9 @@ api_params = {'ConsumerName': 'dereg-by-name', 'StreamARN': 'arn:aws:kinesis:us-
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the RegisterStreamConsumer operation: The operation RegisterStreamConsumer is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails" name="test_put_record_returns_shard_id_and_sequence" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails" name="test_get_records_returns_millis_behind_latest" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails object at 0x10a08c170&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa1e510&gt;
-stream = 'rec-detail-526e4664'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails" name="test_put_record_returns_shard_id_and_sequence" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails" name="test_get_records_returns_millis_behind_latest" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails object at 0x10c337e90&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ceacef0&gt;
+stream = 'rec-detail-9c143d5a'
 
     def test_get_records_returns_millis_behind_latest(self, kinesis, stream):
         """GetRecords response includes MillisBehindLatest."""
@@ -4800,9 +4800,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa1e510&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ceacef0&gt;
 operation_name = 'ListShards'
-api_params = {'StreamName': 'rec-detail-526e4664'}
+api_params = {'StreamName': 'rec-detail-9c143d5a'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4891,9 +4891,9 @@ api_params = {'StreamName': 'rec-detail-526e4664'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails" name="test_get_records_record_fields" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails object at 0x10a08c530&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aabdfd0&gt;
-stream = 'rec-detail-96e5f6a7'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails" name="test_get_records_record_fields" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails object at 0x10c344290&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce03350&gt;
+stream = 'rec-detail-d71dcbee'
 
     def test_get_records_record_fields(self, kinesis, stream):
         """Records have SequenceNumber, ArrivalTimestamp, Data, PartitionKey."""
@@ -4911,9 +4911,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aabdfd0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce03350&gt;
 operation_name = 'ListShards'
-api_params = {'StreamName': 'rec-detail-96e5f6a7'}
+api_params = {'StreamName': 'rec-detail-d71dcbee'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -5002,9 +5002,9 @@ api_params = {'StreamName': 'rec-detail-96e5f6a7'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails" name="test_put_records_partial_failure_shape" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails" name="test_get_shard_iterator_after_sequence_number" time="0.009"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails object at 0x10a083e60&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a82fa10&gt;
-stream = 'rec-detail-f84c06d8'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails" name="test_put_records_partial_failure_shape" time="0.007" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails" name="test_get_shard_iterator_after_sequence_number" time="0.009"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisRecordDetails object at 0x10c337bf0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cf3dd90&gt;
+stream = 'rec-detail-c544d835'
 
     def test_get_shard_iterator_after_sequence_number(self, kinesis, stream):
         """AFTER_SEQUENCE_NUMBER iterator starts after the given sequence."""
@@ -5024,8 +5024,8 @@ stream = 'rec-detail-f84c06d8'
 E       assert 0 &gt;= 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_kinesis_compat.py:1217: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_describe_stream_has_retention_period" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_describe_stream_summary_enhanced_monitoring" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeStreamSummary operation: The operation DescribeStreamSummary is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10a082a80&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a86aed0&gt;
+tests/compatibility/test_kinesis_compat.py:1217: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_describe_stream_has_retention_period" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_describe_stream_summary_enhanced_monitoring" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeStreamSummary operation: The operation DescribeStreamSummary is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10c336de0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cf3fdd0&gt;
 
     def test_describe_stream_summary_enhanced_monitoring(self, kinesis):
         """DescribeStreamSummary includes EnhancedMonitoring field."""
@@ -5046,9 +5046,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a86aed0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cf3fdd0&gt;
 operation_name = 'DescribeStreamSummary'
-api_params = {'StreamName': 'enh-65538218'}
+api_params = {'StreamName': 'enh-67909844'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -5137,8 +5137,8 @@ api_params = {'StreamName': 'enh-65538218'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the DescribeStreamSummary operation: The operation DescribeStreamSummary is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_list_shards_with_shard_filter" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10a0817f0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a9cbb60&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_list_shards_with_shard_filter" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10c335130&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce028a0&gt;
 
     def test_list_shards_with_shard_filter(self, kinesis):
         """ListShards with ShardFilter to get only open shards."""
@@ -5161,9 +5161,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a9cbb60&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ce028a0&gt;
 operation_name = 'ListShards'
-api_params = {'ShardFilter': {'Type': 'AT_TRIM_HORIZON'}, 'StreamName': 'filt-3eeab06f'}
+api_params = {'ShardFilter': {'Type': 'AT_TRIM_HORIZON'}, 'StreamName': 'filt-58a52764'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -5252,8 +5252,8 @@ api_params = {'ShardFilter': {'Type': 'AT_TRIM_HORIZON'}, 'StreamName': 'filt-3e
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the ListShards operation: The operation ListShards is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_update_shard_count_response_fields" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the UpdateShardCount operation: The operation UpdateShardCount is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10a05f6e0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aad1190&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_update_shard_count_response_fields" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the UpdateShardCount operation: The operation UpdateShardCount is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10c312d80&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cd9d700&gt;
 
     def test_update_shard_count_response_fields(self, kinesis):
         """UpdateShardCount returns stream name and shard counts."""
@@ -5277,9 +5277,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aad1190&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cd9d700&gt;
 operation_name = 'UpdateShardCount'
-api_params = {'ScalingType': 'UNIFORM_SCALING', 'StreamName': 'upd-4c9160ca', 'TargetShardCount': 2}
+api_params = {'ScalingType': 'UNIFORM_SCALING', 'StreamName': 'upd-4b0d5809', 'TargetShardCount': 2}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -5368,8 +5368,8 @@ api_params = {'ScalingType': 'UNIFORM_SCALING', 'StreamName': 'upd-4c9160ca', 'T
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the UpdateShardCount operation: The operation UpdateShardCount is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_create_stream_on_demand_mode" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_enable_enhanced_monitoring" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the EnableEnhancedMonitoring operation: The operation EnableEnhancedMonitoring is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10a08cc20&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa38cb0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_create_stream_on_demand_mode" time="0.006" /><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_enable_enhanced_monitoring" time="0.006"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the EnableEnhancedMonitoring operation: The operation EnableEnhancedMonitoring is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10c344980&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cec3560&gt;
 stream = 'test-compat-stream'
 
     def test_enable_enhanced_monitoring(self, kinesis, stream):
@@ -5389,7 +5389,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa38cb0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cec3560&gt;
 operation_name = 'EnableEnhancedMonitoring'
 api_params = {'ShardLevelMetrics': ['IncomingBytes', 'OutgoingBytes'], 'StreamName': 'test-compat-stream'}
 
@@ -5480,8 +5480,8 @@ api_params = {'ShardLevelMetrics': ['IncomingBytes', 'OutgoingBytes'], 'StreamNa
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the EnableEnhancedMonitoring operation: The operation EnableEnhancedMonitoring is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_disable_enhanced_monitoring" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the EnableEnhancedMonitoring operation: The operation EnableEnhancedMonitoring is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10a08d010&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10acece00&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_disable_enhanced_monitoring" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the EnableEnhancedMonitoring operation: The operation EnableEnhancedMonitoring is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10c344d70&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cf3ee70&gt;
 stream = 'test-compat-stream'
 
     def test_disable_enhanced_monitoring(self, kinesis, stream):
@@ -5501,7 +5501,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10acece00&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cf3ee70&gt;
 operation_name = 'EnableEnhancedMonitoring'
 api_params = {'ShardLevelMetrics': ['IncomingBytes', 'OutgoingBytes'], 'StreamName': 'test-compat-stream'}
 
@@ -5592,8 +5592,8 @@ api_params = {'ShardLevelMetrics': ['IncomingBytes', 'OutgoingBytes'], 'StreamNa
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the EnableEnhancedMonitoring operation: The operation EnableEnhancedMonitoring is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_enable_enhanced_monitoring_all" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the EnableEnhancedMonitoring operation: The operation EnableEnhancedMonitoring is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10a08d400&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa3aa80&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_enable_enhanced_monitoring_all" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the EnableEnhancedMonitoring operation: The operation EnableEnhancedMonitoring is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10c345160&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cf34080&gt;
 stream = 'test-compat-stream'
 
     def test_enable_enhanced_monitoring_all(self, kinesis, stream):
@@ -5613,7 +5613,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa3aa80&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cf34080&gt;
 operation_name = 'EnableEnhancedMonitoring'
 api_params = {'ShardLevelMetrics': ['ALL'], 'StreamName': 'test-compat-stream'}
 
@@ -5704,8 +5704,8 @@ api_params = {'ShardLevelMetrics': ['ALL'], 'StreamName': 'test-compat-stream'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the EnableEnhancedMonitoring operation: The operation EnableEnhancedMonitoring is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_disable_enhanced_monitoring_all" time="0.008"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the EnableEnhancedMonitoring operation: The operation EnableEnhancedMonitoring is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10a08d7f0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a96a0c0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement" name="test_disable_enhanced_monitoring_all" time="0.007"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the EnableEnhancedMonitoring operation: The operation EnableEnhancedMonitoring is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisStreamManagement object at 0x10c345550&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cc52e40&gt;
 stream = 'test-compat-stream'
 
     def test_disable_enhanced_monitoring_all(self, kinesis, stream):
@@ -5725,7 +5725,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10a96a0c0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cc52e40&gt;
 operation_name = 'EnableEnhancedMonitoring'
 api_params = {'ShardLevelMetrics': ['IncomingBytes', 'OutgoingBytes'], 'StreamName': 'test-compat-stream'}
 
@@ -5816,7 +5816,7 @@ api_params = {'ShardLevelMetrics': ['IncomingBytes', 'OutgoingBytes'], 'StreamNa
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the EnableEnhancedMonitoring operation: The operation EnableEnhancedMonitoring is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisRetentionNoOp" name="test_increase_retention_same_value_succeeds" time="1.012"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisRetentionNoOp object at 0x10a08dca0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisRetentionNoOp" name="test_increase_retention_same_value_succeeds" time="1.012"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisRetentionNoOp object at 0x10c345a00&gt;
 
     def test_increase_retention_same_value_succeeds(self):
         client = make_client("kinesis")
@@ -5842,9 +5842,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aabf1a0&gt;
+self = &lt;botocore.client.Kinesis object at 0x10ceaf7a0&gt;
 operation_name = 'IncreaseStreamRetentionPeriod'
-api_params = {'RetentionPeriodHours': 24, 'StreamName': 'ret-stream-c5981db8'}
+api_params = {'RetentionPeriodHours': 24, 'StreamName': 'ret-stream-5e44d511'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -5933,8 +5933,8 @@ api_params = {'RetentionPeriodHours': 24, 'StreamName': 'ret-stream-c5981db8'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the IncreaseStreamRetentionPeriod operation: The operation IncreaseStreamRetentionPeriod is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisTagsForResource" name="test_list_tags_for_resource_nonexistent_stream" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisTagsForResource object at 0x10a08e0c0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa1eb40&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisTagsForResource" name="test_list_tags_for_resource_nonexistent_stream" time="0.005"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisTagsForResource object at 0x10c345e50&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ceffce0&gt;
 
     def test_list_tags_for_resource_nonexistent_stream(self, kinesis):
         """ListTagsForResource with nonexistent stream ARN raises ResourceNotFoundException."""
@@ -5950,8 +5950,8 @@ E
 E         - ResourceNotFoundException
 E         + ValidationException
 
-tests/compatibility/test_kinesis_compat.py:1384: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisNewOps" name="test_update_account_settings" time="0.004"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the UpdateAccountSettings operation: The operation UpdateAccountSettings is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisNewOps object at 0x10a08e4e0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10abe3170&gt;
+tests/compatibility/test_kinesis_compat.py:1384: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisNewOps" name="test_update_account_settings" time="0.004"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the UpdateAccountSettings operation: The operation UpdateAccountSettings is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisNewOps object at 0x10c3462a0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10d0b1f40&gt;
 
     def test_update_account_settings(self, kinesis):
         """UpdateAccountSettings returns 200."""
@@ -5969,7 +5969,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10abe3170&gt;
+self = &lt;botocore.client.Kinesis object at 0x10d0b1f40&gt;
 operation_name = 'UpdateAccountSettings'
 api_params = {'MinimumThroughputBillingCommitment': {'Status': 'DISABLED'}}
 
@@ -6060,9 +6060,9 @@ api_params = {'MinimumThroughputBillingCommitment': {'Status': 'DISABLED'}}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the UpdateAccountSettings operation: The operation UpdateAccountSettings is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisTagResourceAndStreamMode" name="test_tag_and_untag_resource" time="0.314"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisTagResourceAndStreamMode object at 0x10a08e9f0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10ae81a00&gt;
-stream_arn = 'arn:aws:kinesis:us-east-1:123456789012:stream/test-tag-stream-22998f60'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisTagResourceAndStreamMode" name="test_tag_and_untag_resource" time="0.313"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisTagResourceAndStreamMode object at 0x10c3467b0&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x108f327e0&gt;
+stream_arn = 'arn:aws:kinesis:us-east-1:123456789012:stream/test-tag-stream-3e78c157'
 
     def test_tag_and_untag_resource(self, kinesis, stream_arn):
         """TagResource and UntagResource work on a stream ARN."""
@@ -6078,9 +6078,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10ae81a00&gt;
+self = &lt;botocore.client.Kinesis object at 0x108f327e0&gt;
 operation_name = 'TagResource'
-api_params = {'ResourceARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-tag-stream-22998f60', 'Tags': {'App': 'myapp', 'Env': 'test'}}
+api_params = {'ResourceARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-tag-stream-3e78c157', 'Tags': {'App': 'myapp', 'Env': 'test'}}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -6169,9 +6169,9 @@ api_params = {'ResourceARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisTagResourceAndStreamMode" name="test_update_stream_mode" time="0.314"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the UpdateStreamMode operation: The operation UpdateStreamMode is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisTagResourceAndStreamMode object at 0x10a05cd10&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10aa0fd10&gt;
-stream_arn = 'arn:aws:kinesis:us-east-1:123456789012:stream/test-tag-stream-8412ca7d'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisTagResourceAndStreamMode" name="test_update_stream_mode" time="0.319"><failure message="botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the UpdateStreamMode operation: The operation UpdateStreamMode is not implemented">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisTagResourceAndStreamMode object at 0x10c313b30&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cb1c800&gt;
+stream_arn = 'arn:aws:kinesis:us-east-1:123456789012:stream/test-tag-stream-e06e710c'
 
     def test_update_stream_mode(self, kinesis, stream_arn):
         """UpdateStreamMode changes the stream mode."""
@@ -6189,9 +6189,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.Kinesis object at 0x10aa0fd10&gt;
+self = &lt;botocore.client.Kinesis object at 0x10cb1c800&gt;
 operation_name = 'UpdateStreamMode'
-api_params = {'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-tag-stream-8412ca7d', 'StreamModeDetails': {'StreamMode': 'ON_DEMAND'}}
+api_params = {'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-tag-stream-e06e710c', 'StreamModeDetails': {'StreamMode': 'ON_DEMAND'}}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -6280,8 +6280,8 @@ api_params = {'StreamARN': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-t
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.ValidationException: An error occurred (ValidationException) when calling the UpdateStreamMode operation: The operation UpdateStreamMode is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisNewGapOps" name="test_update_max_record_size_nonexistent" time="0.005"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisNewGapOps object at 0x10a082ea0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10a975c70&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ValidationException</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisNewGapOps" name="test_update_max_record_size_nonexistent" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisNewGapOps object at 0x10c336f60&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10ce5cad0&gt;
 
     def test_update_max_record_size_nonexistent(self, kinesis):
         """UpdateMaxRecordSize raises ResourceNotFoundException for a nonexistent stream."""
@@ -6294,8 +6294,8 @@ E
 E         - ResourceNotFoundException
 E         + ValidationException
 
-tests/compatibility/test_kinesis_compat.py:1442: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisNewGapOps" name="test_update_stream_warm_throughput_nonexistent" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisNewGapOps object at 0x10a08e0f0&gt;
-kinesis = &lt;botocore.client.Kinesis object at 0x10ad0e8a0&gt;
+tests/compatibility/test_kinesis_compat.py:1442: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisNewGapOps" name="test_update_stream_warm_throughput_nonexistent" time="0.003"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisNewGapOps object at 0x10c345580&gt;
+kinesis = &lt;botocore.client.Kinesis object at 0x10cd9c5c0&gt;
 
     def test_update_stream_warm_throughput_nonexistent(self, kinesis):
         """UpdateStreamWarmThroughput raises ResourceNotFoundException for a nonexistent stream."""
@@ -6308,8 +6308,8 @@ E
 E         - ResourceNotFoundException
 E         + ValidationException
 
-tests/compatibility/test_kinesis_compat.py:1449: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisSubscribeToShardGapOp" name="test_subscribe_to_shard_nonexistent_consumer_not_found" time="0.005"><failure message="AssertionError: assert 'ValidationException' in ('ResourceNotFoundException', 'LimitExceededException')">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisSubscribeToShardGapOp object at 0x10a08e2a0&gt;
-client = &lt;botocore.client.Kinesis object at 0x10ad3fc50&gt;
+tests/compatibility/test_kinesis_compat.py:1449: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kinesis_compat.TestKinesisSubscribeToShardGapOp" name="test_subscribe_to_shard_nonexistent_consumer_not_found" time="0.005"><failure message="AssertionError: assert 'ValidationException' in ('ResourceNotFoundException', 'LimitExceededException')">self = &lt;tests.compatibility.test_kinesis_compat.TestKinesisSubscribeToShardGapOp object at 0x10c3460c0&gt;
+client = &lt;botocore.client.Kinesis object at 0x10ce47b90&gt;
 
     def test_subscribe_to_shard_nonexistent_consumer_not_found(self, client):
         with pytest.raises(ClientError) as exc:
