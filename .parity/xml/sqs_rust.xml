@@ -1,0 +1,3078 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="44" skipped="0" tests="95" time="20.831" timestamp="2026-08-28T17:29:14.655599-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBasicOperations" name="test_create_queue" time="0.064" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBasicOperations" name="test_send_and_receive_message" time="0.006" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBasicOperations" name="test_delete_message" time="0.007" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBasicOperations" name="test_get_queue_attributes" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBasicOperations" name="test_list_queues" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBasicOperations" name="test_get_queue_url" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBasicOperations" name="test_purge_queue" time="0.006" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBasicOperations" name="test_set_queue_attributes" time="0.006" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBasicOperations" name="test_message_attributes" time="0.005"><failure message="KeyError: 'MD5OfMessageAttributes'">self = &lt;tests.compatibility.test_sqs_compat.TestSQSBasicOperations object at 0x10a685a00&gt;
+sqs = &lt;botocore.client.SQS object at 0x10adf7110&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-4f8d431b'
+
+    def test_message_attributes(self, sqs, queue_url):
+        message_attributes = {
+            "color": {"DataType": "String", "StringValue": "blue"},
+        }
+        response = sqs.send_message(
+            QueueUrl=queue_url,
+            MessageBody="with attrs",
+            MessageAttributes=message_attributes,
+        )
+&gt;       assert response["MD5OfMessageAttributes"] == _expected_message_attributes_md5(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            message_attributes
+        )
+E       KeyError: 'MD5OfMessageAttributes'
+
+tests/compatibility/test_sqs_compat.py:160: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBasicOperations" name="test_receive_message_attributes" time="0.006" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBatchOperations" name="test_send_message_batch" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSBatchOperations object at 0x10a6861b0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10aedc800&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-3181c560'
+
+    def test_send_message_batch(self, sqs, queue_url):
+&gt;       response = sqs.send_message_batch(
+            QueueUrl=queue_url,
+            Entries=[
+                {"Id": "msg1", "MessageBody": "batch message 1"},
+                {"Id": "msg2", "MessageBody": "batch message 2"},
+                {"Id": "msg3", "MessageBody": "batch message 3"},
+            ],
+        )
+
+tests/compatibility/test_sqs_compat.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10aedc800&gt;
+operation_name = 'SendMessageBatch'
+api_params = {'Entries': [{'Id': 'msg1', 'MessageBody': 'batch message 1'}, {'Id': 'msg2', 'MessageBody': 'batch message 2'}, {'Id'...tch message 3'}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-3181c560'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBatchOperations" name="test_delete_message_batch" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSBatchOperations object at 0x10a686570&gt;
+sqs = &lt;botocore.client.SQS object at 0x10adf61e0&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-d9a5bcc0'
+
+    def test_delete_message_batch(self, sqs, queue_url):
+&gt;       sqs.send_message_batch(
+            QueueUrl=queue_url,
+            Entries=[
+                {"Id": "msg1", "MessageBody": "batch del 1"},
+                {"Id": "msg2", "MessageBody": "batch del 2"},
+            ],
+        )
+
+tests/compatibility/test_sqs_compat.py:200: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10adf61e0&gt;
+operation_name = 'SendMessageBatch'
+api_params = {'Entries': [{'Id': 'msg1', 'MessageBody': 'batch del 1'}, {'Id': 'msg2', 'MessageBody': 'batch del 2'}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-d9a5bcc0'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBatchOperations" name="test_change_message_visibility_batch" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSBatchOperations object at 0x10a686960&gt;
+sqs = &lt;botocore.client.SQS object at 0x10ae86300&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-6bc0b043'
+
+    def test_change_message_visibility_batch(self, sqs, queue_url):
+        # Send multiple messages
+&gt;       sqs.send_message_batch(
+            QueueUrl=queue_url,
+            Entries=[
+                {"Id": "msg1", "MessageBody": "vis batch 1"},
+                {"Id": "msg2", "MessageBody": "vis batch 2"},
+            ],
+        )
+
+tests/compatibility/test_sqs_compat.py:217: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10ae86300&gt;
+operation_name = 'SendMessageBatch'
+api_params = {'Entries': [{'Id': 'msg1', 'MessageBody': 'vis batch 1'}, {'Id': 'msg2', 'MessageBody': 'vis batch 2'}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-6bc0b043'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBatchOperations" name="test_batch_receive_multiple" time="0.008" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSVisibilityTimeout" name="test_change_message_visibility" time="0.007" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSVisibilityTimeout" name="test_message_not_visible_during_timeout" time="0.006" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSVisibilityTimeout" name="test_message_returns_after_visibility_timeout" time="3.026"><failure message="AssertionError: assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10b1ea780&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10b1ea780&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sat, 29 Aug 2026 00:29:17 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sqs_compat.TestSQSVisibilityTimeout object at 0x10a687a40&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b27e3f0&gt;
+
+    def test_message_returns_after_visibility_timeout(self, sqs):
+        url = sqs.create_queue(
+            QueueName=_qname("test-vis-return"),
+            Attributes={"VisibilityTimeout": "1"},
+        )["QueueUrl"]
+        try:
+            sqs.send_message(QueueUrl=url, MessageBody="comeback")
+            recv1 = sqs.receive_message(QueueUrl=url)
+            assert len(recv1["Messages"]) == 1
+            # Wait for visibility timeout + background worker cycle
+            time.sleep(3)
+            recv2 = sqs.receive_message(QueueUrl=url, WaitTimeSeconds=1)
+&gt;           assert len(recv2.get("Messages", [])) == 1
+E           AssertionError: assert 0 == 1
+E            +  where 0 = len([])
+E            +    where [] = &lt;built-in method get of dict object at 0x10b1ea780&gt;('Messages', [])
+E            +      where &lt;built-in method get of dict object at 0x10b1ea780&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sat, 29 Aug 2026 00:29:17 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
+
+tests/compatibility/test_sqs_compat.py:285: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFIFO" name="test_fifo_queue_creation" time="0.007"><failure message="KeyError: 'FifoQueue'">self = &lt;tests.compatibility.test_sqs_compat.TestSQSFIFO object at 0x10a687ec0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b30d820&gt;
+fifo_queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-51b4ac70.fifo'
+
+    def test_fifo_queue_creation(self, sqs, fifo_queue_url):
+        attrs = sqs.get_queue_attributes(QueueUrl=fifo_queue_url, AttributeNames=["All"])
+&gt;       assert attrs["Attributes"]["FifoQueue"] == "true"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'FifoQueue'
+
+tests/compatibility/test_sqs_compat.py:294: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFIFO" name="test_fifo_message_ordering" time="0.015" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFIFO" name="test_fifo_deduplication" time="0.008"><failure message="AssertionError: assert 2 == 1&#10; +  where 2 = len([{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963358075', 'ApproximateReceiveCount': '1', 'SenderId': '123...e content', 'MD5OfBody': '793953ee398d864ec40252df9554c3e6', 'MessageId': '5a9adc40-b78a-4237-a9db-78489c909fa7', ...}])&#10; +    where [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963358075', 'ApproximateReceiveCount': '1', 'SenderId': '123...e content', 'MD5OfBody': '793953ee398d864ec40252df9554c3e6', 'MessageId': '5a9adc40-b78a-4237-a9db-78489c909fa7', ...}] = &lt;built-in method get of dict object at 0x10b1e7e40&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10b1e7e40&gt; = {'Messages': [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963358075', 'ApproximateReceiveCount': '1', 'Se....0', 'date': 'Sat, 29 Aug 2026 00:29:18 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sqs_compat.TestSQSFIFO object at 0x10a687230&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b27fb60&gt;
+fifo_queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-dbbbc844.fifo'
+
+    def test_fifo_deduplication(self, sqs, fifo_queue_url):
+        # Content-based dedup is enabled on the fixture
+        sqs.send_message(
+            QueueUrl=fifo_queue_url,
+            MessageBody="same content",
+            MessageGroupId="group1",
+        )
+        sqs.send_message(
+            QueueUrl=fifo_queue_url,
+            MessageBody="same content",
+            MessageGroupId="group1",
+        )
+        recv = sqs.receive_message(QueueUrl=fifo_queue_url, MaxNumberOfMessages=10)
+        # Should only get one message due to dedup
+&gt;       assert len(recv.get("Messages", [])) == 1
+E       AssertionError: assert 2 == 1
+E        +  where 2 = len([{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963358075', 'ApproximateReceiveCount': '1', 'SenderId': '123...e content', 'MD5OfBody': '793953ee398d864ec40252df9554c3e6', 'MessageId': '5a9adc40-b78a-4237-a9db-78489c909fa7', ...}])
+E        +    where [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963358075', 'ApproximateReceiveCount': '1', 'SenderId': '123...e content', 'MD5OfBody': '793953ee398d864ec40252df9554c3e6', 'MessageId': '5a9adc40-b78a-4237-a9db-78489c909fa7', ...}] = &lt;built-in method get of dict object at 0x10b1e7e40&gt;('Messages', [])
+E        +      where &lt;built-in method get of dict object at 0x10b1e7e40&gt; = {'Messages': [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963358075', 'ApproximateReceiveCount': '1', 'Se....0', 'date': 'Sat, 29 Aug 2026 00:29:18 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
+
+tests/compatibility/test_sqs_compat.py:329: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFIFO" name="test_fifo_sequence_number" time="0.007"><failure message="AssertionError: assert 'SequenceNumber' in {'ApproximateFirstReceiveTimestamp': '1787963358096', 'ApproximateReceiveCount': '1', 'SenderId': '123456789012', 'SentTimestamp': '1787963358095'}">self = &lt;tests.compatibility.test_sqs_compat.TestSQSFIFO object at 0x10a686d50&gt;
+sqs = &lt;botocore.client.SQS object at 0x10adf62a0&gt;
+fifo_queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-f20b991d.fifo'
+
+    def test_fifo_sequence_number(self, sqs, fifo_queue_url):
+        sqs.send_message(
+            QueueUrl=fifo_queue_url,
+            MessageBody="seq test",
+            MessageGroupId="group1",
+        )
+        recv = sqs.receive_message(QueueUrl=fifo_queue_url, AttributeNames=["All"])
+&gt;       assert "SequenceNumber" in recv["Messages"][0]["Attributes"]
+E       AssertionError: assert 'SequenceNumber' in {'ApproximateFirstReceiveTimestamp': '1787963358096', 'ApproximateReceiveCount': '1', 'SenderId': '123456789012', 'SentTimestamp': '1787963358095'}
+
+tests/compatibility/test_sqs_compat.py:338: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFIFO" name="test_fifo_message_group_id" time="0.006"><failure message="KeyError: 'MessageGroupId'">self = &lt;tests.compatibility.test_sqs_compat.TestSQSFIFO object at 0x10a685f40&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b2b15e0&gt;
+fifo_queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-69e8c902.fifo'
+
+    def test_fifo_message_group_id(self, sqs, fifo_queue_url):
+        sqs.send_message(
+            QueueUrl=fifo_queue_url,
+            MessageBody="group test",
+            MessageGroupId="mygroup",
+        )
+        recv = sqs.receive_message(QueueUrl=fifo_queue_url, AttributeNames=["All"])
+&gt;       assert recv["Messages"][0]["Attributes"]["MessageGroupId"] == "mygroup"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'MessageGroupId'
+
+tests/compatibility/test_sqs_compat.py:351: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSPermissions" name="test_add_and_remove_permission" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the AddPermission operation: Unknown operation: AddPermission">self = &lt;tests.compatibility.test_sqs_compat.TestSQSPermissions object at 0x10a684260&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b30d3a0&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-2a8d60dc'
+
+    def test_add_and_remove_permission(self, sqs, queue_url):
+&gt;       sqs.add_permission(
+            QueueUrl=queue_url,
+            Label="test-permission",
+            AWSAccountIds=["111111111111"],
+            Actions=["SendMessage"],
+        )
+
+tests/compatibility/test_sqs_compat.py:356: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10b30d3a0&gt;
+operation_name = 'AddPermission'
+api_params = {'AWSAccountIds': ['111111111111'], 'Actions': ['SendMessage'], 'Label': 'test-permission', 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-2a8d60dc'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the AddPermission operation: Unknown operation: AddPermission
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSDeadLetterQueue" name="test_dlq_redrive" time="6.047"><failure message="AssertionError: assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10b31dd00&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10b31dd00&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sat, 29 Aug 2026 00:29:24 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sqs_compat.TestSQSDeadLetterQueue object at 0x10a6a0170&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b27de20&gt;
+
+    def test_dlq_redrive(self, sqs):
+        # Create DLQ
+        dlq_url = sqs.create_queue(QueueName=_qname("test-dlq"))["QueueUrl"]
+        dlq_arn = sqs.get_queue_attributes(QueueUrl=dlq_url, AttributeNames=["QueueArn"])[
+            "Attributes"
+        ]["QueueArn"]
+    
+        # Create source queue with redrive policy
+        import json
+    
+        source_url = sqs.create_queue(
+            QueueName=_qname("test-dlq-source"),
+            Attributes={
+                "RedrivePolicy": json.dumps(
+                    {
+                        "deadLetterTargetArn": dlq_arn,
+                        "maxReceiveCount": "2",
+                    }
+                ),
+                "VisibilityTimeout": "1",
+            },
+        )["QueueUrl"]
+    
+        try:
+            sqs.send_message(QueueUrl=source_url, MessageBody="will fail")
+    
+            # Receive twice (exceeding maxReceiveCount)
+            for _ in range(3):
+                recv = sqs.receive_message(QueueUrl=source_url, WaitTimeSeconds=2)
+                if recv.get("Messages"):
+                    pass  # Just receive, don't delete
+                time.sleep(2)  # Wait for visibility timeout
+    
+            # Check DLQ has the message
+            dlq_recv = sqs.receive_message(QueueUrl=dlq_url, WaitTimeSeconds=3)
+&gt;           assert len(dlq_recv.get("Messages", [])) == 1
+E           AssertionError: assert 0 == 1
+E            +  where 0 = len([])
+E            +    where [] = &lt;built-in method get of dict object at 0x10b31dd00&gt;('Messages', [])
+E            +      where &lt;built-in method get of dict object at 0x10b31dd00&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sat, 29 Aug 2026 00:29:24 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
+
+tests/compatibility/test_sqs_compat.py:412: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFifoAdvanced" name="test_fifo_message_deduplication_id" time="0.010"><failure message="AssertionError: assert 2 == 1&#10; +  where 2 = len([{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963364243', 'ApproximateReceiveCount': '1', 'SenderId': '123...duplicate', 'MD5OfBody': '24f1b0a79473250c195c7fb84e393392', 'MessageId': 'ecbc9c88-56e3-47d7-aa0d-ba13940a8157', ...}])&#10; +    where [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963364243', 'ApproximateReceiveCount': '1', 'SenderId': '123...duplicate', 'MD5OfBody': '24f1b0a79473250c195c7fb84e393392', 'MessageId': 'ecbc9c88-56e3-47d7-aa0d-ba13940a8157', ...}] = &lt;built-in method get of dict object at 0x10ae53980&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10ae53980&gt; = {'Messages': [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963364243', 'ApproximateReceiveCount': '1', 'Se....0', 'date': 'Sat, 29 Aug 2026 00:29:24 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sqs_compat.TestSQSFifoAdvanced object at 0x10a6a0650&gt;
+sqs = &lt;botocore.client.SQS object at 0x10adf7d10&gt;
+
+    def test_fifo_message_deduplication_id(self, sqs):
+        """MessageDeduplicationId prevents duplicate delivery."""
+        uid = uuid.uuid4().hex[:8]
+        url = sqs.create_queue(
+            QueueName=f"test-fifo-dedup-{uid}.fifo",
+            Attributes={"FifoQueue": "true"},
+        )["QueueUrl"]
+        try:
+            dedup_id = f"dedup-{uid}"
+            sqs.send_message(
+                QueueUrl=url,
+                MessageBody="first",
+                MessageGroupId="g1",
+                MessageDeduplicationId=dedup_id,
+            )
+            sqs.send_message(
+                QueueUrl=url,
+                MessageBody="duplicate",
+                MessageGroupId="g1",
+                MessageDeduplicationId=dedup_id,
+            )
+            recv = sqs.receive_message(QueueUrl=url, MaxNumberOfMessages=10)
+&gt;           assert len(recv.get("Messages", [])) == 1
+E           AssertionError: assert 2 == 1
+E            +  where 2 = len([{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963364243', 'ApproximateReceiveCount': '1', 'SenderId': '123...duplicate', 'MD5OfBody': '24f1b0a79473250c195c7fb84e393392', 'MessageId': 'ecbc9c88-56e3-47d7-aa0d-ba13940a8157', ...}])
+E            +    where [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963364243', 'ApproximateReceiveCount': '1', 'SenderId': '123...duplicate', 'MD5OfBody': '24f1b0a79473250c195c7fb84e393392', 'MessageId': 'ecbc9c88-56e3-47d7-aa0d-ba13940a8157', ...}] = &lt;built-in method get of dict object at 0x10ae53980&gt;('Messages', [])
+E            +      where &lt;built-in method get of dict object at 0x10ae53980&gt; = {'Messages': [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963364243', 'ApproximateReceiveCount': '1', 'Se....0', 'date': 'Sat, 29 Aug 2026 00:29:24 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
+
+tests/compatibility/test_sqs_compat.py:444: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFifoAdvanced" name="test_fifo_different_dedup_ids_both_delivered" time="0.008" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFifoAdvanced" name="test_fifo_multiple_groups_ordering" time="0.013" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFifoAdvanced" name="test_fifo_content_based_dedup_attribute" time="0.006"><failure message="KeyError: 'ContentBasedDeduplication'">self = &lt;tests.compatibility.test_sqs_compat.TestSQSFifoAdvanced object at 0x10a6a12b0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10adf6de0&gt;
+
+    def test_fifo_content_based_dedup_attribute(self, sqs):
+        """ContentBasedDeduplication attribute is queryable."""
+        uid = uuid.uuid4().hex[:8]
+        url = sqs.create_queue(
+            QueueName=f"test-fifo-cbd-{uid}.fifo",
+            Attributes={
+                "FifoQueue": "true",
+                "ContentBasedDeduplication": "true",
+            },
+        )["QueueUrl"]
+        try:
+            attrs = sqs.get_queue_attributes(
+                QueueUrl=url, AttributeNames=["ContentBasedDeduplication"]
+            )
+&gt;           assert attrs["Attributes"]["ContentBasedDeduplication"] == "true"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'ContentBasedDeduplication'
+
+tests/compatibility/test_sqs_compat.py:526: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFifoAdvanced" name="test_fifo_send_message_batch" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSFifoAdvanced object at 0x10a6a16d0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b2a1400&gt;
+
+    def test_fifo_send_message_batch(self, sqs):
+        """SendMessageBatch works with FIFO queues."""
+        uid = uuid.uuid4().hex[:8]
+        url = sqs.create_queue(
+            QueueName=f"test-fifo-batch-{uid}.fifo",
+            Attributes={
+                "FifoQueue": "true",
+                "ContentBasedDeduplication": "true",
+            },
+        )["QueueUrl"]
+        try:
+&gt;           resp = sqs.send_message_batch(
+                QueueUrl=url,
+                Entries=[
+                    {"Id": "1", "MessageBody": "fifo-batch-1", "MessageGroupId": "g1"},
+                    {"Id": "2", "MessageBody": "fifo-batch-2", "MessageGroupId": "g1"},
+                    {"Id": "3", "MessageBody": "fifo-batch-3", "MessageGroupId": "g1"},
+                ],
+            )
+
+tests/compatibility/test_sqs_compat.py:541: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10b2a1400&gt;
+operation_name = 'SendMessageBatch'
+api_params = {'Entries': [{'Id': '1', 'MessageBody': 'fifo-batch-1', 'MessageGroupId': 'g1'}, {'Id': '2', 'MessageBody': 'fifo-batc... 'g1'}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-fifo-batch-b66af25d.fifo'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSDLQAdvanced" name="test_dlq_redrive_policy_attribute" time="0.008"><failure message="KeyError: 'RedrivePolicy'">self = &lt;tests.compatibility.test_sqs_compat.TestSQSDLQAdvanced object at 0x10a6a1b50&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b2afcb0&gt;
+
+    def test_dlq_redrive_policy_attribute(self, sqs):
+        """RedrivePolicy can be read back from queue attributes."""
+        uid = uuid.uuid4().hex[:8]
+        dlq_url = sqs.create_queue(QueueName=f"test-dlq-attr-dlq-{uid}")["QueueUrl"]
+        dlq_arn = sqs.get_queue_attributes(QueueUrl=dlq_url, AttributeNames=["QueueArn"])[
+            "Attributes"
+        ]["QueueArn"]
+        policy = json.dumps({"deadLetterTargetArn": dlq_arn, "maxReceiveCount": "3"})
+        source_url = sqs.create_queue(
+            QueueName=f"test-dlq-attr-src-{uid}",
+            Attributes={"RedrivePolicy": policy},
+        )["QueueUrl"]
+        try:
+            attrs = sqs.get_queue_attributes(QueueUrl=source_url, AttributeNames=["RedrivePolicy"])
+&gt;           returned_policy = json.loads(attrs["Attributes"]["RedrivePolicy"])
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'RedrivePolicy'
+
+tests/compatibility/test_sqs_compat.py:574: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSDLQAdvanced" name="test_dlq_message_body_preserved" time="5.029"><failure message="AssertionError: assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10b15fd00&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10b15fd00&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sat, 29 Aug 2026 00:29:29 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sqs_compat.TestSQSDLQAdvanced object at 0x10a6a1f70&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b2b18b0&gt;
+
+    def test_dlq_message_body_preserved(self, sqs):
+        """Message body and attributes are preserved when moved to DLQ."""
+        uid = uuid.uuid4().hex[:8]
+        dlq_url = sqs.create_queue(QueueName=f"test-dlq-body-dlq-{uid}")["QueueUrl"]
+        dlq_arn = sqs.get_queue_attributes(QueueUrl=dlq_url, AttributeNames=["QueueArn"])[
+            "Attributes"
+        ]["QueueArn"]
+        source_url = sqs.create_queue(
+            QueueName=f"test-dlq-body-src-{uid}",
+            Attributes={
+                "RedrivePolicy": json.dumps(
+                    {"deadLetterTargetArn": dlq_arn, "maxReceiveCount": "1"}
+                ),
+                "VisibilityTimeout": "1",
+            },
+        )["QueueUrl"]
+        try:
+            sqs.send_message(QueueUrl=source_url, MessageBody="dlq-preserve-test")
+            # Receive once (maxReceiveCount=1), then let it expire
+            sqs.receive_message(QueueUrl=source_url, WaitTimeSeconds=1)
+            time.sleep(3)
+            # Receive again to trigger DLQ move
+            sqs.receive_message(QueueUrl=source_url, WaitTimeSeconds=1)
+            time.sleep(2)
+            dlq_recv = sqs.receive_message(QueueUrl=dlq_url, WaitTimeSeconds=3)
+&gt;           assert len(dlq_recv.get("Messages", [])) == 1
+E           AssertionError: assert 0 == 1
+E            +  where 0 = len([])
+E            +    where [] = &lt;built-in method get of dict object at 0x10b15fd00&gt;('Messages', [])
+E            +      where &lt;built-in method get of dict object at 0x10b15fd00&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sat, 29 Aug 2026 00:29:29 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
+
+tests/compatibility/test_sqs_compat.py:606: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageAttributes" name="test_string_attribute" time="0.007"><failure message="KeyError: 'MessageAttributes'">self = &lt;tests.compatibility.test_sqs_compat.TestSQSMessageAttributes object at 0x10a6a23c0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10a589010&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-a4087f1b'
+
+    def test_string_attribute(self, sqs, queue_url):
+        sqs.send_message(
+            QueueUrl=queue_url,
+            MessageBody="str-attr",
+            MessageAttributes={
+                "Name": {"DataType": "String", "StringValue": "Alice"},
+            },
+        )
+        recv = sqs.receive_message(QueueUrl=queue_url, MessageAttributeNames=["All"])
+&gt;       attr = recv["Messages"][0]["MessageAttributes"]["Name"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'MessageAttributes'
+
+tests/compatibility/test_sqs_compat.py:625: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageAttributes" name="test_number_attribute" time="0.006"><failure message="KeyError: 'MessageAttributes'">self = &lt;tests.compatibility.test_sqs_compat.TestSQSMessageAttributes object at 0x10a684cb0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b27f3b0&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-b4854379'
+
+    def test_number_attribute(self, sqs, queue_url):
+        sqs.send_message(
+            QueueUrl=queue_url,
+            MessageBody="num-attr",
+            MessageAttributes={
+                "Count": {"DataType": "Number", "StringValue": "42"},
+            },
+        )
+        recv = sqs.receive_message(QueueUrl=queue_url, MessageAttributeNames=["All"])
+&gt;       attr = recv["Messages"][0]["MessageAttributes"]["Count"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'MessageAttributes'
+
+tests/compatibility/test_sqs_compat.py:638: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageAttributes" name="test_binary_attribute" time="0.007"><failure message="KeyError: 'MessageAttributes'">self = &lt;tests.compatibility.test_sqs_compat.TestSQSMessageAttributes object at 0x10a686660&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b289190&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-2a345af5'
+
+    def test_binary_attribute(self, sqs, queue_url):
+        sqs.send_message(
+            QueueUrl=queue_url,
+            MessageBody="bin-attr",
+            MessageAttributes={
+                "Data": {"DataType": "Binary", "BinaryValue": b"\x00\x01\x02\x03"},
+            },
+        )
+        recv = sqs.receive_message(QueueUrl=queue_url, MessageAttributeNames=["All"])
+&gt;       attr = recv["Messages"][0]["MessageAttributes"]["Data"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'MessageAttributes'
+
+tests/compatibility/test_sqs_compat.py:651: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageAttributes" name="test_multiple_attributes" time="0.006"><failure message="KeyError: 'MessageAttributes'">self = &lt;tests.compatibility.test_sqs_compat.TestSQSMessageAttributes object at 0x10a687bf0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b2a3350&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-34d1944b'
+
+    def test_multiple_attributes(self, sqs, queue_url):
+        sqs.send_message(
+            QueueUrl=queue_url,
+            MessageBody="multi-attr",
+            MessageAttributes={
+                "Color": {"DataType": "String", "StringValue": "red"},
+                "Size": {"DataType": "Number", "StringValue": "10"},
+                "Blob": {"DataType": "Binary", "BinaryValue": b"\xff"},
+            },
+        )
+        recv = sqs.receive_message(QueueUrl=queue_url, MessageAttributeNames=["All"])
+&gt;       attrs = recv["Messages"][0]["MessageAttributes"]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'MessageAttributes'
+
+tests/compatibility/test_sqs_compat.py:666: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageAttributes" name="test_all_attributes_with_all_request" time="0.006"><failure message="AssertionError: assert 'X' in {}">self = &lt;tests.compatibility.test_sqs_compat.TestSQSMessageAttributes object at 0x10a6a20f0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b27e690&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-a5e6a8dc'
+
+    def test_all_attributes_with_all_request(self, sqs, queue_url):
+        """Requesting 'All' returns all message attributes."""
+        sqs.send_message(
+            QueueUrl=queue_url,
+            MessageBody="all-attr-req",
+            MessageAttributes={
+                "X": {"DataType": "String", "StringValue": "val-x"},
+                "Y": {"DataType": "String", "StringValue": "val-y"},
+            },
+        )
+        recv = sqs.receive_message(QueueUrl=queue_url, MessageAttributeNames=["All"])
+        attrs = recv["Messages"][0].get("MessageAttributes", {})
+&gt;       assert "X" in attrs
+E       AssertionError: assert 'X' in {}
+
+tests/compatibility/test_sqs_compat.py:683: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageAttributes" name="test_custom_data_type" time="0.006"><failure message="KeyError: 'MessageAttributes'">self = &lt;tests.compatibility.test_sqs_compat.TestSQSMessageAttributes object at 0x10a6a1af0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b29c0e0&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-8aa9b0f4'
+
+    def test_custom_data_type(self, sqs, queue_url):
+        """Custom data types like String.email are supported."""
+        sqs.send_message(
+            QueueUrl=queue_url,
+            MessageBody="custom-type",
+            MessageAttributes={
+                "Email": {"DataType": "String.email", "StringValue": "a@b.com"},
+            },
+        )
+        recv = sqs.receive_message(QueueUrl=queue_url, MessageAttributeNames=["All"])
+&gt;       attr = recv["Messages"][0]["MessageAttributes"]["Email"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'MessageAttributes'
+
+tests/compatibility/test_sqs_compat.py:701: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBatchAdvanced" name="test_send_batch_with_attributes" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSBatchAdvanced object at 0x10a6a0bf0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b28b5c0&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-21e7e9fb'
+
+    def test_send_batch_with_attributes(self, sqs, queue_url):
+        """SendMessageBatch entries can have different attributes."""
+&gt;       resp = sqs.send_message_batch(
+            QueueUrl=queue_url,
+            Entries=[
+                {
+                    "Id": "m1",
+                    "MessageBody": "batch-a",
+                    "MessageAttributes": {
+                        "Key": {"DataType": "String", "StringValue": "val1"},
+                    },
+                },
+                {
+                    "Id": "m2",
+                    "MessageBody": "batch-b",
+                    "MessageAttributes": {
+                        "Key": {"DataType": "String", "StringValue": "val2"},
+                    },
+                },
+            ],
+        )
+
+tests/compatibility/test_sqs_compat.py:711: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10b28b5c0&gt;
+operation_name = 'SendMessageBatch'
+api_params = {'Entries': [{'Id': 'm1', 'MessageAttributes': {'Key': {'DataType': 'String', 'StringValue': 'val1'}}, 'MessageBody': ...dy': 'batch-b'}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-21e7e9fb'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBatchAdvanced" name="test_send_batch_with_delay" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSBatchAdvanced object at 0x10a6a0410&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b2af680&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-a3b6265a'
+
+    def test_send_batch_with_delay(self, sqs, queue_url):
+        """SendMessageBatch entries can have per-message DelaySeconds."""
+&gt;       resp = sqs.send_message_batch(
+            QueueUrl=queue_url,
+            Entries=[
+                {"Id": "m1", "MessageBody": "no-delay", "DelaySeconds": 0},
+                {"Id": "m2", "MessageBody": "delayed", "DelaySeconds": 1},
+            ],
+        )
+
+tests/compatibility/test_sqs_compat.py:734: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10b2af680&gt;
+operation_name = 'SendMessageBatch'
+api_params = {'Entries': [{'DelaySeconds': 0, 'Id': 'm1', 'MessageBody': 'no-delay'}, {'DelaySeconds': 1, 'Id': 'm2', 'MessageBody': 'delayed'}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-a3b6265a'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBatchAdvanced" name="test_delete_batch_returns_ids" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSBatchAdvanced object at 0x10a6a2b70&gt;
+sqs = &lt;botocore.client.SQS object at 0x10ae17020&gt;
+queue_url = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-f433873d'
+
+    def test_delete_batch_returns_ids(self, sqs, queue_url):
+        """DeleteMessageBatch returns the Ids of successfully deleted messages."""
+&gt;       sqs.send_message_batch(
+            QueueUrl=queue_url,
+            Entries=[
+                {"Id": "a", "MessageBody": "del-batch-1"},
+                {"Id": "b", "MessageBody": "del-batch-2"},
+            ],
+        )
+
+tests/compatibility/test_sqs_compat.py:748: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10ae17020&gt;
+operation_name = 'SendMessageBatch'
+api_params = {'Entries': [{'Id': 'a', 'MessageBody': 'del-batch-1'}, {'Id': 'b', 'MessageBody': 'del-batch-2'}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-compat-f433873d'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributes" name="test_set_and_get_delay_seconds" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributes" name="test_set_and_get_maximum_message_size" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributes" name="test_set_and_get_message_retention_period" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributes" name="test_set_and_get_receive_wait_time" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributes" name="test_update_visibility_timeout" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributes" name="test_queue_arn_format" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributes" name="test_get_all_attributes" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSPurgeQueue" name="test_purge_removes_all_messages" time="0.033" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSPurgeQueue" name="test_purge_empty_queue" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSChangeVisibility" name="test_change_visibility_to_zero" time="0.007" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSChangeVisibility" name="test_change_visibility_multiple_messages" time="0.008" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSChangeVisibility" name="test_change_visibility_extends_timeout" time="3.017" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSLongPolling" name="test_long_poll_no_messages_returns_quickly" time="0.012" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSLongPolling" name="test_long_poll_returns_immediately_with_messages" time="0.010" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSLongPolling" name="test_queue_level_wait_time" time="0.007" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueTags" name="test_tag_queue" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagQueue operation: Unknown operation: TagQueue">self = &lt;tests.compatibility.test_sqs_compat.TestSQSQueueTags object at 0x10a6b9460&gt;
+sqs = &lt;botocore.client.SQS object at 0x10aede750&gt;
+
+    def test_tag_queue(self, sqs):
+        uid = uuid.uuid4().hex[:8]
+        url = sqs.create_queue(QueueName=f"test-tag-{uid}")["QueueUrl"]
+        try:
+&gt;           sqs.tag_queue(QueueUrl=url, Tags={"env": "test", "team": "backend"})
+
+tests/compatibility/test_sqs_compat.py:1007: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10aede750&gt;, operation_name = 'TagQueue'
+api_params = {'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-tag-64e0e948', 'Tags': {'env': 'test', 'team': 'backend'}}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagQueue operation: Unknown operation: TagQueue
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueTags" name="test_untag_queue" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagQueue operation: Unknown operation: TagQueue">self = &lt;tests.compatibility.test_sqs_compat.TestSQSQueueTags object at 0x10a6b9880&gt;
+sqs = &lt;botocore.client.SQS object at 0x10ae86db0&gt;
+
+    def test_untag_queue(self, sqs):
+        uid = uuid.uuid4().hex[:8]
+        url = sqs.create_queue(QueueName=f"test-untag-{uid}")["QueueUrl"]
+        try:
+&gt;           sqs.tag_queue(QueueUrl=url, Tags={"a": "1", "b": "2", "c": "3"})
+
+tests/compatibility/test_sqs_compat.py:1019: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10ae86db0&gt;, operation_name = 'TagQueue'
+api_params = {'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-untag-30bd54c3', 'Tags': {'a': '1', 'b': '2', 'c': '3'}}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagQueue operation: Unknown operation: TagQueue
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueTags" name="test_list_queue_tags_empty" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListQueueTags operation: Unknown operation: ListQueueTags">self = &lt;tests.compatibility.test_sqs_compat.TestSQSQueueTags object at 0x10a6b9ca0&gt;
+sqs = &lt;botocore.client.SQS object at 0x1092b3440&gt;
+
+    def test_list_queue_tags_empty(self, sqs):
+        uid = uuid.uuid4().hex[:8]
+        url = sqs.create_queue(QueueName=f"test-notags-{uid}")["QueueUrl"]
+        try:
+&gt;           resp = sqs.list_queue_tags(QueueUrl=url)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sqs_compat.py:1033: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x1092b3440&gt;
+operation_name = 'ListQueueTags'
+api_params = {'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-notags-8e8e5cff'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListQueueTags operation: Unknown operation: ListQueueTags
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueTags" name="test_overwrite_tags" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagQueue operation: Unknown operation: TagQueue">self = &lt;tests.compatibility.test_sqs_compat.TestSQSQueueTags object at 0x10a6ba0c0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10ae85bb0&gt;
+
+    def test_overwrite_tags(self, sqs):
+        """Tagging with same key overwrites the value."""
+        uid = uuid.uuid4().hex[:8]
+        url = sqs.create_queue(QueueName=f"test-overwrite-tag-{uid}")["QueueUrl"]
+        try:
+&gt;           sqs.tag_queue(QueueUrl=url, Tags={"key": "old"})
+
+tests/compatibility/test_sqs_compat.py:1043: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10ae85bb0&gt;, operation_name = 'TagQueue'
+api_params = {'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-overwrite-tag-cc835c0b', 'Tags': {'key': 'old'}}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagQueue operation: Unknown operation: TagQueue
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSSystemAttributes" name="test_sent_timestamp" time="0.006" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSSystemAttributes" name="test_approximate_receive_count" time="2.009"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_sqs_compat.TestSQSSystemAttributes object at 0x10a6ba960&gt;
+sqs = &lt;botocore.client.SQS object at 0x10a6a1400&gt;
+
+    def test_approximate_receive_count(self, sqs):
+        """ApproximateReceiveCount increments on each receive."""
+        uid = uuid.uuid4().hex[:8]
+        url = sqs.create_queue(
+            QueueName=f"test-recv-count-{uid}",
+            Attributes={"VisibilityTimeout": "1"},
+        )["QueueUrl"]
+        try:
+            sqs.send_message(QueueUrl=url, MessageBody="count-me")
+            # First receive
+            recv1 = sqs.receive_message(QueueUrl=url, AttributeNames=["ApproximateReceiveCount"])
+            count1 = int(recv1["Messages"][0]["Attributes"]["ApproximateReceiveCount"])
+            assert count1 == 1
+            # Wait for visibility timeout
+            time.sleep(2)
+            # Second receive
+            recv2 = sqs.receive_message(
+                QueueUrl=url,
+                AttributeNames=["ApproximateReceiveCount"],
+                WaitTimeSeconds=2,
+            )
+&gt;           count2 = int(recv2["Messages"][0]["Attributes"]["ApproximateReceiveCount"])
+                         ^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+tests/compatibility/test_sqs_compat.py:1084: IndexError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSSystemAttributes" name="test_approximate_first_receive_timestamp" time="0.008" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSSystemAttributes" name="test_sender_id_present" time="0.007" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSSystemAttributes" name="test_md5_of_body" time="0.006" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSSystemAttributes" name="test_md5_of_message_attributes_absent_without_attributes" time="0.006" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSSystemAttributes" name="test_list_dead_letter_source_queues" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListDeadLetterSourceQueues operation: Unknown operation: ListDeadLetterSourceQueues">self = &lt;tests.compatibility.test_sqs_compat.TestSQSSystemAttributes object at 0x10a6b98b0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b30e6f0&gt;
+
+    def test_list_dead_letter_source_queues(self, sqs):
+        import json
+    
+        # Create DLQ
+        dlq_url = sqs.create_queue(QueueName=_qname("test-list-dlq-target"))["QueueUrl"]
+        dlq_arn = sqs.get_queue_attributes(QueueUrl=dlq_url, AttributeNames=["QueueArn"])[
+            "Attributes"
+        ]["QueueArn"]
+    
+        # Create two source queues pointing to this DLQ
+        source1_url = sqs.create_queue(
+            QueueName=_qname("test-list-dlq-source1"),
+            Attributes={
+                "RedrivePolicy": json.dumps(
+                    {"deadLetterTargetArn": dlq_arn, "maxReceiveCount": "3"}
+                )
+            },
+        )["QueueUrl"]
+        source2_url = sqs.create_queue(
+            QueueName=_qname("test-list-dlq-source2"),
+            Attributes={
+                "RedrivePolicy": json.dumps(
+                    {"deadLetterTargetArn": dlq_arn, "maxReceiveCount": "3"}
+                )
+            },
+        )["QueueUrl"]
+    
+        try:
+&gt;           response = sqs.list_dead_letter_source_queues(QueueUrl=dlq_url)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sqs_compat.py:1153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10b30e6f0&gt;
+operation_name = 'ListDeadLetterSourceQueues'
+api_params = {'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-list-dlq-target-2483cfde'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListDeadLetterSourceQueues operation: Unknown operation: ListDeadLetterSourceQueues
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBatchOperationsExtended" name="test_send_message_batch" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSBatchOperationsExtended object at 0x10a6b8e00&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b288d10&gt;
+
+    def test_send_message_batch(self, sqs):
+        url = sqs.create_queue(QueueName=_qname("batch-send-q"))["QueueUrl"]
+        try:
+&gt;           resp = sqs.send_message_batch(
+                QueueUrl=url,
+                Entries=[
+                    {"Id": "msg1", "MessageBody": "body-1"},
+                    {"Id": "msg2", "MessageBody": "body-2"},
+                    {"Id": "msg3", "MessageBody": "body-3"},
+                ],
+            )
+
+tests/compatibility/test_sqs_compat.py:1168: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10b288d10&gt;
+operation_name = 'SendMessageBatch'
+api_params = {'Entries': [{'Id': 'msg1', 'MessageBody': 'body-1'}, {'Id': 'msg2', 'MessageBody': 'body-2'}, {'Id': 'msg3', 'MessageBody': 'body-3'}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/batch-send-q-f70977d4'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBatchOperationsExtended" name="test_send_message_batch_md5" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSBatchOperationsExtended object at 0x10a6b85f0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10ae158e0&gt;
+
+    def test_send_message_batch_md5(self, sqs):
+        url = sqs.create_queue(QueueName=_qname("batch-md5-q"))["QueueUrl"]
+        try:
+&gt;           resp = sqs.send_message_batch(
+                QueueUrl=url,
+                Entries=[{"Id": "m1", "MessageBody": "hello-batch"}],
+            )
+
+tests/compatibility/test_sqs_compat.py:1185: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10ae158e0&gt;
+operation_name = 'SendMessageBatch'
+api_params = {'Entries': [{'Id': 'm1', 'MessageBody': 'hello-batch'}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/batch-md5-q-5a7f6d5d'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBatchOperationsExtended" name="test_send_message_batch_attribute_md5" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSBatchOperationsExtended object at 0x10a6bb110&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b288bf0&gt;
+
+    def test_send_message_batch_attribute_md5(self, sqs):
+        url = sqs.create_queue(QueueName=_qname("batch-attrs-md5-q"))["QueueUrl"]
+        entries = [
+            {
+                "Id": "m1",
+                "MessageBody": "hello-batch",
+                "MessageAttributes": {
+                    "color": {"DataType": "String", "StringValue": "blue"},
+                },
+            },
+            {
+                "Id": "m2",
+                "MessageBody": "binary-batch",
+                "MessageAttributes": {
+                    "blob": {"DataType": "Binary", "BinaryValue": b"\x00\x01"},
+                },
+            },
+            {
+                "Id": "m3",
+                "MessageBody": "no-attrs",
+            },
+        ]
+        try:
+&gt;           resp = sqs.send_message_batch(QueueUrl=url, Entries=entries)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sqs_compat.py:1217: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10b288bf0&gt;
+operation_name = 'SendMessageBatch'
+api_params = {'Entries': [{'Id': 'm1', 'MessageAttributes': {'color': {'DataType': 'String', 'StringValue': 'blue'}}, 'MessageBody'...o-attrs'}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/batch-attrs-md5-q-7790a002'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBatchOperationsExtended" name="test_delete_message_batch" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSBatchOperationsExtended object at 0x10a6bb530&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b28b800&gt;
+
+    def test_delete_message_batch(self, sqs):
+        url = sqs.create_queue(QueueName=_qname("batch-del-q"))["QueueUrl"]
+        try:
+&gt;           sqs.send_message_batch(
+                QueueUrl=url,
+                Entries=[
+                    {"Id": "d1", "MessageBody": "del-1"},
+                    {"Id": "d2", "MessageBody": "del-2"},
+                ],
+            )
+
+tests/compatibility/test_sqs_compat.py:1232: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10b28b800&gt;
+operation_name = 'SendMessageBatch'
+api_params = {'Entries': [{'Id': 'd1', 'MessageBody': 'del-1'}, {'Id': 'd2', 'MessageBody': 'del-2'}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/batch-del-q-cda63ffb'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSBatchOperationsExtended" name="test_change_message_visibility_batch" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ChangeMessageVisibilityBatch operation: Unknown operation: ChangeMessageVisibilityBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSBatchOperationsExtended object at 0x10a6bb950&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b2b22d0&gt;
+
+    def test_change_message_visibility_batch(self, sqs):
+        url = sqs.create_queue(QueueName=_qname("batch-vis-q"))["QueueUrl"]
+        try:
+            sqs.send_message(QueueUrl=url, MessageBody="vis-test")
+            recv = sqs.receive_message(QueueUrl=url)
+            handle = recv["Messages"][0]["ReceiptHandle"]
+&gt;           resp = sqs.change_message_visibility_batch(
+                QueueUrl=url,
+                Entries=[{"Id": "e1", "ReceiptHandle": handle, "VisibilityTimeout": 0}],
+            )
+
+tests/compatibility/test_sqs_compat.py:1255: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10b2b22d0&gt;
+operation_name = 'ChangeMessageVisibilityBatch'
+api_params = {'Entries': [{'Id': 'e1', 'ReceiptHandle': 'M2MxYzA3NDMtM2RiYS00MTQ1LTg2NWQtNThmYjk1NTliY2EzIGh0dHA6Ly9zcXMudXMtZWFzdC...ityTimeout': 0}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/batch-vis-q-c9b35a90'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ChangeMessageVisibilityBatch operation: Unknown operation: ChangeMessageVisibilityBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributesExtended" name="test_set_get_queue_attributes" time="0.006" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributesExtended" name="test_delay_seconds_attribute" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributesExtended" name="test_max_message_size_attribute" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributesExtended" name="test_message_retention_period" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributesExtended" name="test_receive_message_wait_time" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributesExtended" name="test_approximate_message_counts" time="0.006" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributesExtended" name="test_queue_url_format" time="0.004" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributesExtended" name="test_get_queue_url" time="0.004" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributesExtended" name="test_list_queues" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSQueueAttributesExtended" name="test_list_queues_prefix_filter" time="0.007" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageAttributesExtended" name="test_send_with_message_attributes" time="0.006"><failure message="KeyError: 'MessageAttributes'">self = &lt;tests.compatibility.test_sqs_compat.TestSQSMessageAttributesExtended object at 0x10a6d07a0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b2a0e90&gt;
+
+    def test_send_with_message_attributes(self, sqs):
+        url = sqs.create_queue(QueueName=_qname("msgattr-q"))["QueueUrl"]
+        try:
+            sqs.send_message(
+                QueueUrl=url,
+                MessageBody="attr-body",
+                MessageAttributes={
+                    "MyAttr": {"DataType": "String", "StringValue": "hello"},
+                    "NumAttr": {"DataType": "Number", "StringValue": "42"},
+                },
+            )
+            recv = sqs.receive_message(
+                QueueUrl=url,
+                MessageAttributeNames=["All"],
+            )
+&gt;           attrs = recv["Messages"][0]["MessageAttributes"]
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'MessageAttributes'
+
+tests/compatibility/test_sqs_compat.py:1398: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageAttributesExtended" name="test_send_with_delay_seconds" time="0.006" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageAttributesExtended" name="test_send_message_returns_message_id" time="0.005" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageAttributesExtended" name="test_receive_max_number_of_messages" time="0.008" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageAttributesExtended" name="test_receive_empty_queue" time="0.004" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFIFOExtended" name="test_fifo_message_group_ordering" time="0.010" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFIFOExtended" name="test_fifo_dedup_by_content" time="0.006"><failure message="AssertionError: assert 2 == 1&#10; +  where 2 = len([{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963375254', 'ApproximateReceiveCount': '1', 'SenderId': '123...y': 'same', 'MD5OfBody': '51037a4a37730f52c8732586d3aaa316', 'MessageId': 'e96da26b-b066-4664-8c47-ba3024a64e89', ...}])&#10; +    where [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963375254', 'ApproximateReceiveCount': '1', 'SenderId': '123...y': 'same', 'MD5OfBody': '51037a4a37730f52c8732586d3aaa316', 'MessageId': 'e96da26b-b066-4664-8c47-ba3024a64e89', ...}] = &lt;built-in method get of dict object at 0x10b3e0180&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10b3e0180&gt; = {'Messages': [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963375254', 'ApproximateReceiveCount': '1', 'Se....0', 'date': 'Sat, 29 Aug 2026 00:29:35 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sqs_compat.TestSQSFIFOExtended object at 0x10a6d2600&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b2b2960&gt;
+
+    def test_fifo_dedup_by_content(self, sqs):
+        url = sqs.create_queue(
+            QueueName=f"fifo-dedup-{uuid.uuid4().hex[:6]}.fifo",
+            Attributes={"FifoQueue": "true", "ContentBasedDeduplication": "true"},
+        )["QueueUrl"]
+        try:
+            sqs.send_message(QueueUrl=url, MessageBody="same", MessageGroupId="g1")
+            sqs.send_message(QueueUrl=url, MessageBody="same", MessageGroupId="g1")
+            recv = sqs.receive_message(QueueUrl=url, MaxNumberOfMessages=10)
+&gt;           assert len(recv.get("Messages", [])) == 1
+E           AssertionError: assert 2 == 1
+E            +  where 2 = len([{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963375254', 'ApproximateReceiveCount': '1', 'SenderId': '123...y': 'same', 'MD5OfBody': '51037a4a37730f52c8732586d3aaa316', 'MessageId': 'e96da26b-b066-4664-8c47-ba3024a64e89', ...}])
+E            +    where [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963375254', 'ApproximateReceiveCount': '1', 'SenderId': '123...y': 'same', 'MD5OfBody': '51037a4a37730f52c8732586d3aaa316', 'MessageId': 'e96da26b-b066-4664-8c47-ba3024a64e89', ...}] = &lt;built-in method get of dict object at 0x10b3e0180&gt;('Messages', [])
+E            +      where &lt;built-in method get of dict object at 0x10b3e0180&gt; = {'Messages': [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963375254', 'ApproximateReceiveCount': '1', 'Se....0', 'date': 'Sat, 29 Aug 2026 00:29:35 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
+
+tests/compatibility/test_sqs_compat.py:1475: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFIFOExtended" name="test_fifo_dedup_by_explicit_id" time="0.007"><failure message="AssertionError: assert 2 == 1&#10; +  where 2 = len([{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963375275', 'ApproximateReceiveCount': '1', 'SenderId': '123...Body': 'b', 'MD5OfBody': '92eb5ffee6ae2fec3ad71c777531578f', 'MessageId': '617c74c0-2830-415a-852b-87562feffd69', ...}])&#10; +    where [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963375275', 'ApproximateReceiveCount': '1', 'SenderId': '123...Body': 'b', 'MD5OfBody': '92eb5ffee6ae2fec3ad71c777531578f', 'MessageId': '617c74c0-2830-415a-852b-87562feffd69', ...}] = &lt;built-in method get of dict object at 0x10b1dd900&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10b1dd900&gt; = {'Messages': [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963375275', 'ApproximateReceiveCount': '1', 'Se....0', 'date': 'Sat, 29 Aug 2026 00:29:35 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sqs_compat.TestSQSFIFOExtended object at 0x10a6d2a20&gt;
+sqs = &lt;botocore.client.SQS object at 0x10afc4680&gt;
+
+    def test_fifo_dedup_by_explicit_id(self, sqs):
+        url = sqs.create_queue(
+            QueueName=f"fifo-eid-{uuid.uuid4().hex[:6]}.fifo",
+            Attributes={"FifoQueue": "true"},
+        )["QueueUrl"]
+        try:
+            sqs.send_message(
+                QueueUrl=url,
+                MessageBody="a",
+                MessageGroupId="g1",
+                MessageDeduplicationId="dedup-1",
+            )
+            sqs.send_message(
+                QueueUrl=url,
+                MessageBody="b",
+                MessageGroupId="g1",
+                MessageDeduplicationId="dedup-1",
+            )
+            recv = sqs.receive_message(QueueUrl=url, MaxNumberOfMessages=10)
+&gt;           assert len(recv.get("Messages", [])) == 1
+E           AssertionError: assert 2 == 1
+E            +  where 2 = len([{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963375275', 'ApproximateReceiveCount': '1', 'SenderId': '123...Body': 'b', 'MD5OfBody': '92eb5ffee6ae2fec3ad71c777531578f', 'MessageId': '617c74c0-2830-415a-852b-87562feffd69', ...}])
+E            +    where [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963375275', 'ApproximateReceiveCount': '1', 'SenderId': '123...Body': 'b', 'MD5OfBody': '92eb5ffee6ae2fec3ad71c777531578f', 'MessageId': '617c74c0-2830-415a-852b-87562feffd69', ...}] = &lt;built-in method get of dict object at 0x10b1dd900&gt;('Messages', [])
+E            +      where &lt;built-in method get of dict object at 0x10b1dd900&gt; = {'Messages': [{'Attributes': {'ApproximateFirstReceiveTimestamp': '1787963375275', 'ApproximateReceiveCount': '1', 'Se....0', 'date': 'Sat, 29 Aug 2026 00:29:35 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
+
+tests/compatibility/test_sqs_compat.py:1498: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFIFOExtended" name="test_fifo_different_groups" time="0.008" /><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFIFOExtended" name="test_fifo_send_message_batch" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch">self = &lt;tests.compatibility.test_sqs_compat.TestSQSFIFOExtended object at 0x10a6d3260&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b2ad430&gt;
+
+    def test_fifo_send_message_batch(self, sqs):
+        url = sqs.create_queue(
+            QueueName=f"fifo-batch-{uuid.uuid4().hex[:6]}.fifo",
+            Attributes={"FifoQueue": "true", "ContentBasedDeduplication": "true"},
+        )["QueueUrl"]
+        try:
+&gt;           resp = sqs.send_message_batch(
+                QueueUrl=url,
+                Entries=[
+                    {"Id": "1", "MessageBody": "b1", "MessageGroupId": "g1"},
+                    {"Id": "2", "MessageBody": "b2", "MessageGroupId": "g1"},
+                ],
+            )
+
+tests/compatibility/test_sqs_compat.py:1526: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10b2ad430&gt;
+operation_name = 'SendMessageBatch'
+api_params = {'Entries': [{'Id': '1', 'MessageBody': 'b1', 'MessageGroupId': 'g1'}, {'Id': '2', 'MessageBody': 'b2', 'MessageGroupId': 'g1'}], 'QueueUrl': 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/fifo-batch-b4b74e.fifo'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the SendMessageBatch operation: Unknown operation: SendMessageBatch
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSFIFOExtended" name="test_fifo_sequence_number" time="0.006"><failure message="AssertionError: assert 'SequenceNumber' in {'MD5OfMessageBody': '5a02827ae134ca2e326fc06f4d508a2b', 'MessageId': '0eb671d7-28a3-460f-bf62-99fe7619abd6', 'Respons....0', 'date': 'Sat, 29 Aug 2026 00:29:35 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_sqs_compat.TestSQSFIFOExtended object at 0x10a6b9580&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b30cbc0&gt;
+
+    def test_fifo_sequence_number(self, sqs):
+        url = sqs.create_queue(
+            QueueName=f"fifo-seq-{uuid.uuid4().hex[:6]}.fifo",
+            Attributes={"FifoQueue": "true", "ContentBasedDeduplication": "true"},
+        )["QueueUrl"]
+        try:
+            resp = sqs.send_message(QueueUrl=url, MessageBody="seq-test", MessageGroupId="g1")
+&gt;           assert "SequenceNumber" in resp
+E           AssertionError: assert 'SequenceNumber' in {'MD5OfMessageBody': '5a02827ae134ca2e326fc06f4d508a2b', 'MessageId': '0eb671d7-28a3-460f-bf62-99fe7619abd6', 'Respons....0', 'date': 'Sat, 29 Aug 2026 00:29:35 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}
+
+tests/compatibility/test_sqs_compat.py:1544: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageMoveTasks" name="test_start_message_move_task" time="0.011"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the StartMessageMoveTask operation: Unknown operation: StartMessageMoveTask">self = &lt;tests.compatibility.test_sqs_compat.TestSQSMessageMoveTasks object at 0x10a6bb230&gt;
+sqs = &lt;botocore.client.SQS object at 0x10af842f0&gt;
+
+    def test_start_message_move_task(self, sqs):
+        suffix = uuid.uuid4().hex[:6]
+        src_name = f"mmt-src-{suffix}"
+        dlq_name = f"mmt-dlq-{suffix}"
+        # Create DLQ first
+        dlq_resp = sqs.create_queue(QueueName=dlq_name)
+        dlq_url = dlq_resp["QueueUrl"]
+        dlq_arn = sqs.get_queue_attributes(QueueUrl=dlq_url, AttributeNames=["QueueArn"])[
+            "Attributes"
+        ]["QueueArn"]
+        # Create source queue with redrive policy pointing to DLQ
+        src_resp = sqs.create_queue(
+            QueueName=src_name,
+            Attributes={
+                "RedrivePolicy": json.dumps(
+                    {"deadLetterTargetArn": dlq_arn, "maxReceiveCount": "1"}
+                )
+            },
+        )
+        src_url = src_resp["QueueUrl"]
+        try:
+            # Send a message and force it to DLQ by receiving without deleting
+            sqs.send_message(QueueUrl=src_url, MessageBody="move-me")
+            for _ in range(3):
+                sqs.receive_message(QueueUrl=src_url, VisibilityTimeout=0)
+            # Start move task from DLQ back to source
+&gt;           resp = sqs.start_message_move_task(SourceArn=dlq_arn)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sqs_compat.py:1581: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10af842f0&gt;
+operation_name = 'StartMessageMoveTask'
+api_params = {'SourceArn': 'arn:aws:sqs:us-east-1:123456789012:mmt-dlq-846c35'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the StartMessageMoveTask operation: Unknown operation: StartMessageMoveTask
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageMoveTasks" name="test_list_message_move_tasks" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListMessageMoveTasks operation: Unknown operation: ListMessageMoveTasks">self = &lt;tests.compatibility.test_sqs_compat.TestSQSMessageMoveTasks object at 0x10a6d2b40&gt;
+sqs = &lt;botocore.client.SQS object at 0x10aedf980&gt;
+
+    def test_list_message_move_tasks(self, sqs):
+        suffix = uuid.uuid4().hex[:6]
+        src_name = f"mmt-list-src-{suffix}"
+        dlq_name = f"mmt-list-dlq-{suffix}"
+        dlq_resp = sqs.create_queue(QueueName=dlq_name)
+        dlq_url = dlq_resp["QueueUrl"]
+        dlq_arn = sqs.get_queue_attributes(QueueUrl=dlq_url, AttributeNames=["QueueArn"])[
+            "Attributes"
+        ]["QueueArn"]
+        src_resp = sqs.create_queue(
+            QueueName=src_name,
+            Attributes={
+                "RedrivePolicy": json.dumps(
+                    {"deadLetterTargetArn": dlq_arn, "maxReceiveCount": "1"}
+                )
+            },
+        )
+        src_url = src_resp["QueueUrl"]
+        try:
+            # List tasks on a queue with no active tasks
+&gt;           resp = sqs.list_message_move_tasks(SourceArn=dlq_arn)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sqs_compat.py:1610: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10aedf980&gt;
+operation_name = 'ListMessageMoveTasks'
+api_params = {'SourceArn': 'arn:aws:sqs:us-east-1:123456789012:mmt-list-dlq-c909fd'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListMessageMoveTasks operation: Unknown operation: ListMessageMoveTasks
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sqs_compat.TestSQSMessageMoveTasks" name="test_cancel_message_move_task" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the StartMessageMoveTask operation: Unknown operation: StartMessageMoveTask">self = &lt;tests.compatibility.test_sqs_compat.TestSQSMessageMoveTasks object at 0x10a6d2210&gt;
+sqs = &lt;botocore.client.SQS object at 0x10b2ae750&gt;
+
+    def test_cancel_message_move_task(self, sqs):
+        suffix = uuid.uuid4().hex[:6]
+        src_name = f"mmt-cancel-src-{suffix}"
+        dlq_name = f"mmt-cancel-dlq-{suffix}"
+        dlq_resp = sqs.create_queue(QueueName=dlq_name)
+        dlq_url = dlq_resp["QueueUrl"]
+        dlq_arn = sqs.get_queue_attributes(QueueUrl=dlq_url, AttributeNames=["QueueArn"])[
+            "Attributes"
+        ]["QueueArn"]
+        src_resp = sqs.create_queue(
+            QueueName=src_name,
+            Attributes={
+                "RedrivePolicy": json.dumps(
+                    {"deadLetterTargetArn": dlq_arn, "maxReceiveCount": "1"}
+                )
+            },
+        )
+        src_url = src_resp["QueueUrl"]
+        try:
+            sqs.send_message(QueueUrl=src_url, MessageBody="cancel-me")
+            for _ in range(3):
+                sqs.receive_message(QueueUrl=src_url, VisibilityTimeout=0)
+&gt;           start_resp = sqs.start_message_move_task(SourceArn=dlq_arn)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sqs_compat.py:1639: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.SQS object at 0x10b2ae750&gt;
+operation_name = 'StartMessageMoveTask'
+api_params = {'SourceArn': 'arn:aws:sqs:us-east-1:123456789012:mmt-cancel-dlq-c5908f'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the StartMessageMoveTask operation: Unknown operation: StartMessageMoveTask
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase></testsuite></testsuites>

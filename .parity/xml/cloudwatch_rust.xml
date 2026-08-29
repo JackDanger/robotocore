@@ -1,0 +1,4082 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="56" skipped="0" tests="67" time="1.509" timestamp="2026-08-28T17:25:22.854801-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_data" time="0.074" /><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_list_metrics" time="0.005" /><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_alarm" time="0.004"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d88f140&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10d853470&gt;
+
+    def test_put_metric_alarm(self, cw):
+        cw.put_metric_alarm(
+            AlarmName="test-alarm",
+            Namespace="TestNS",
+            MetricName="TestMetric",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Average",
+            Threshold=90.0,
+        )
+        response = cw.describe_alarms(AlarmNames=["test-alarm"])
+&gt;       assert len(response["MetricAlarms"]) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests/compatibility/test_cloudwatch_compat.py:52: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_describe_alarms" time="0.005"><failure message="AssertionError: assert 'desc-alarm' in []">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d88f500&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e18ce90&gt;
+
+    def test_describe_alarms(self, cw):
+        cw.put_metric_alarm(
+            AlarmName="desc-alarm",
+            Namespace="DescNS",
+            MetricName="M1",
+            ComparisonOperator="LessThanThreshold",
+            EvaluationPeriods=1,
+            Period=300,
+            Statistic="Sum",
+            Threshold=10.0,
+        )
+        response = cw.describe_alarms()
+        names = [a["AlarmName"] for a in response["MetricAlarms"]]
+&gt;       assert "desc-alarm" in names
+E       AssertionError: assert 'desc-alarm' in []
+
+tests/compatibility/test_cloudwatch_compat.py:69: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_get_metric_statistics" time="0.004" /><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_set_alarm_state" time="0.006"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d88fc80&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e187d70&gt;
+
+    def test_set_alarm_state(self, cw):
+        cw.put_metric_alarm(
+            AlarmName="state-alarm",
+            Namespace="StateNS",
+            MetricName="M1",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Average",
+            Threshold=50.0,
+        )
+        cw.set_alarm_state(
+            AlarmName="state-alarm",
+            StateValue="ALARM",
+            StateReason="Testing",
+        )
+        response = cw.describe_alarms(AlarmNames=["state-alarm"])
+&gt;       assert response["MetricAlarms"][0]["StateValue"] == "ALARM"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/compatibility/test_cloudwatch_compat.py:108: IndexError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_alarm_with_sns_action" time="0.010"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bc080&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10d850170&gt;
+
+    def test_put_metric_alarm_with_sns_action(self, cw):
+        """Create an alarm with an SNS topic ARN as an action."""
+        sns = make_client("sns")
+        topic = sns.create_topic(Name="alarm-notifications")
+        topic_arn = topic["TopicArn"]
+    
+        cw.put_metric_alarm(
+            AlarmName="sns-alarm",
+            Namespace="SNSAlarmNS",
+            MetricName="Errors",
+            ComparisonOperator="GreaterThanOrEqualToThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Sum",
+            Threshold=1.0,
+            AlarmActions=[topic_arn],
+            OKActions=[topic_arn],
+            InsufficientDataActions=[topic_arn],
+            AlarmDescription="Alarm with SNS integration",
+        )
+        response = cw.describe_alarms(AlarmNames=["sns-alarm"])
+&gt;       alarm = response["MetricAlarms"][0]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/compatibility/test_cloudwatch_compat.py:132: IndexError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_describe_alarms_multiple" time="0.006"><failure message="AssertionError: assert set() == {'multi-alarm...ulti-alarm-3'}&#10;  &#10;  Extra items in the right set:&#10;  'multi-alarm-2'&#10;  'multi-alarm-1'&#10;  'multi-alarm-3'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bc440&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e24b7a0&gt;
+
+    def test_describe_alarms_multiple(self, cw):
+        """Create multiple alarms and list/filter them."""
+        alarm_names = ["multi-alarm-1", "multi-alarm-2", "multi-alarm-3"]
+        for name in alarm_names:
+            cw.put_metric_alarm(
+                AlarmName=name,
+                Namespace="MultiNS",
+                MetricName="Load",
+                ComparisonOperator="GreaterThanThreshold",
+                EvaluationPeriods=1,
+                Period=60,
+                Statistic="Average",
+                Threshold=80.0,
+            )
+    
+        # Describe all by name
+        response = cw.describe_alarms(AlarmNames=alarm_names)
+        returned_names = {a["AlarmName"] for a in response["MetricAlarms"]}
+&gt;       assert returned_names == set(alarm_names)
+E       AssertionError: assert set() == {'multi-alarm...ulti-alarm-3'}
+E         
+E         Extra items in the right set:
+E         'multi-alarm-2'
+E         'multi-alarm-1'
+E         'multi-alarm-3'
+E         Use -v to get more diff
+
+tests/compatibility/test_cloudwatch_compat.py:169: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_set_alarm_state_transitions" time="0.005"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bc800&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e41f860&gt;
+
+    def test_set_alarm_state_transitions(self, cw):
+        """Test transitioning alarm through multiple states."""
+        cw.put_metric_alarm(
+            AlarmName="transition-alarm",
+            Namespace="TransNS",
+            MetricName="Health",
+            ComparisonOperator="LessThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Minimum",
+            Threshold=1.0,
+        )
+    
+        for state in ["ALARM", "OK", "INSUFFICIENT_DATA", "ALARM"]:
+            cw.set_alarm_state(
+                AlarmName="transition-alarm",
+                StateValue=state,
+                StateReason=f"Transitioning to {state}",
+            )
+            response = cw.describe_alarms(AlarmNames=["transition-alarm"])
+&gt;           assert response["MetricAlarms"][0]["StateValue"] == state
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+tests/compatibility/test_cloudwatch_compat.py:204: IndexError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_data_with_dimensions" time="0.005"><failure message="AssertionError: assert 'Service' in []">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bcbc0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10d7f7980&gt;
+
+    def test_put_metric_data_with_dimensions(self, cw):
+        """Put metric data with dimensions and verify listing."""
+        now = datetime.now(UTC)
+        cw.put_metric_data(
+            Namespace="DimTest",
+            MetricData=[
+                {
+                    "MetricName": "RequestCount",
+                    "Dimensions": [
+                        {"Name": "Service", "Value": "WebApp"},
+                        {"Name": "Environment", "Value": "Production"},
+                    ],
+                    "Value": 100.0,
+                    "Unit": "Count",
+                    "Timestamp": now,
+                },
+                {
+                    "MetricName": "RequestCount",
+                    "Dimensions": [
+                        {"Name": "Service", "Value": "API"},
+                        {"Name": "Environment", "Value": "Production"},
+                    ],
+                    "Value": 200.0,
+                    "Unit": "Count",
+                    "Timestamp": now,
+                },
+            ],
+        )
+    
+        # List metrics filtered by dimension
+        response = cw.list_metrics(
+            Namespace="DimTest",
+            MetricName="RequestCount",
+            Dimensions=[{"Name": "Service", "Value": "WebApp"}],
+        )
+        assert len(response["Metrics"]) &gt;= 1
+        metric = response["Metrics"][0]
+        dim_names = [d["Name"] for d in metric["Dimensions"]]
+&gt;       assert "Service" in dim_names
+E       AssertionError: assert 'Service' in []
+
+tests/compatibility/test_cloudwatch_compat.py:247: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_get_metric_statistics_with_period" time="0.006" /><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_delete_alarms" time="0.005"><failure message="assert 0 == 2&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d88fa70&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e0aeff0&gt;
+
+    def test_delete_alarms(self, cw):
+        """Create alarms and verify they are deleted."""
+        names = ["del-alarm-1", "del-alarm-2"]
+        for name in names:
+            cw.put_metric_alarm(
+                AlarmName=name,
+                Namespace="DelNS",
+                MetricName="M",
+                ComparisonOperator="GreaterThanThreshold",
+                EvaluationPeriods=1,
+                Period=60,
+                Statistic="Average",
+                Threshold=50.0,
+            )
+    
+        # Verify they exist
+        response = cw.describe_alarms(AlarmNames=names)
+&gt;       assert len(response["MetricAlarms"]) == 2
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests/compatibility/test_cloudwatch_compat.py:308: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_data_multiple_datapoints_then_stats" time="0.005"><failure message="assert 0.0 == 10.0">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d88f170&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e3d6b70&gt;
+
+    def test_put_metric_data_multiple_datapoints_then_stats(self, cw):
+        """Put multiple datapoints for the same metric and retrieve statistics."""
+        import uuid
+    
+        ns = f"MultiDP-{uuid.uuid4().hex[:8]}"
+        now = datetime.now(UTC)
+        cw.put_metric_data(
+            Namespace=ns,
+            MetricData=[
+                {"MetricName": "Temp", "Value": 10.0, "Unit": "None", "Timestamp": now},
+                {"MetricName": "Temp", "Value": 20.0, "Unit": "None", "Timestamp": now},
+                {"MetricName": "Temp", "Value": 30.0, "Unit": "None", "Timestamp": now},
+                {"MetricName": "Temp", "Value": 40.0, "Unit": "None", "Timestamp": now},
+                {"MetricName": "Temp", "Value": 50.0, "Unit": "None", "Timestamp": now},
+            ],
+        )
+        response = cw.get_metric_statistics(
+            Namespace=ns,
+            MetricName="Temp",
+            StartTime=now - timedelta(minutes=5),
+            EndTime=now + timedelta(minutes=5),
+            Period=300,
+            Statistics=["Average", "Sum", "Minimum", "Maximum", "SampleCount"],
+        )
+        assert len(response["Datapoints"]) &gt;= 1
+        dp = response["Datapoints"][0]
+&gt;       assert dp["Minimum"] == 10.0
+E       assert 0.0 == 10.0
+
+tests/compatibility/test_cloudwatch_compat.py:352: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_data_dimensions_query" time="0.006"><failure message="assert False&#10; +  where False = any(&lt;generator object TestCloudWatchOperations.test_put_metric_data_dimensions_query.&lt;locals&gt;.&lt;genexpr&gt; at 0x10e0caf60&gt;)">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d88e750&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10bbc30b0&gt;
+
+    def test_put_metric_data_dimensions_query(self, cw):
+        """Put metrics with dimensions and query by specific dimension values."""
+        import uuid
+    
+        ns = f"DimQuery-{uuid.uuid4().hex[:8]}"
+        now = datetime.now(UTC)
+        cw.put_metric_data(
+            Namespace=ns,
+            MetricData=[
+                {
+                    "MetricName": "Requests",
+                    "Dimensions": [{"Name": "Env", "Value": "prod"}],
+                    "Value": 100.0,
+                    "Unit": "Count",
+                    "Timestamp": now,
+                },
+                {
+                    "MetricName": "Requests",
+                    "Dimensions": [{"Name": "Env", "Value": "staging"}],
+                    "Value": 50.0,
+                    "Unit": "Count",
+                    "Timestamp": now,
+                },
+            ],
+        )
+        # Query by prod dimension
+        response = cw.list_metrics(
+            Namespace=ns,
+            Dimensions=[{"Name": "Env", "Value": "prod"}],
+        )
+        assert len(response["Metrics"]) &gt;= 1
+        dims = response["Metrics"][0]["Dimensions"]
+&gt;       assert any(d["Value"] == "prod" for d in dims)
+E       assert False
+E        +  where False = any(&lt;generator object TestCloudWatchOperations.test_put_metric_data_dimensions_query.&lt;locals&gt;.&lt;genexpr&gt; at 0x10e0caf60&gt;)
+
+tests/compatibility/test_cloudwatch_compat.py:390: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_composite_alarm" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutCompositeAlarm operation: The operation PutCompositeAlarm is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bc590&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10d81f770&gt;
+
+    def test_put_composite_alarm(self, cw):
+        """PutCompositeAlarm succeeds without error."""
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        alarm1 = f"comp-metric-{suffix}-1"
+        alarm2 = f"comp-metric-{suffix}-2"
+        composite = f"comp-composite-{suffix}"
+    
+        for name in [alarm1, alarm2]:
+            cw.put_metric_alarm(
+                AlarmName=name,
+                Namespace="CompNS",
+                MetricName="Load",
+                ComparisonOperator="GreaterThanThreshold",
+                EvaluationPeriods=1,
+                Period=60,
+                Statistic="Average",
+                Threshold=80.0,
+            )
+    
+&gt;       response = cw.put_composite_alarm(
+            AlarmName=composite,
+            AlarmRule=f'ALARM("{alarm1}") OR ALARM("{alarm2}")',
+        )
+
+tests/compatibility/test_cloudwatch_compat.py:420: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10d81f770&gt;
+operation_name = 'PutCompositeAlarm'
+api_params = {'AlarmName': 'comp-composite-3ee36633', 'AlarmRule': 'ALARM("comp-metric-3ee36633-1") OR ALARM("comp-metric-3ee36633-2")'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutCompositeAlarm operation: The operation PutCompositeAlarm is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_alarm_tags" time="0.005"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bd100&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e41d7c0&gt;
+
+    def test_alarm_tags(self, cw):
+        """Tag, untag, and list tags on a metric alarm."""
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        alarm_name = f"tag-alarm-{suffix}"
+        cw.put_metric_alarm(
+            AlarmName=alarm_name,
+            Namespace="TagNS",
+            MetricName="M",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Average",
+            Threshold=50.0,
+            Tags=[
+                {"Key": "env", "Value": "test"},
+                {"Key": "team", "Value": "backend"},
+            ],
+        )
+    
+        # Get alarm ARN
+        response = cw.describe_alarms(AlarmNames=[alarm_name])
+&gt;       alarm_arn = response["MetricAlarms"][0]["AlarmArn"]
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/compatibility/test_cloudwatch_compat.py:451: IndexError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_alarm_comparison_operators" time="0.007"><failure message="KeyError: 'op-alarm-6cb463e0-0'">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bd520&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e3b9ee0&gt;
+
+    def test_alarm_comparison_operators(self, cw):
+        """Create alarms with different comparison operators."""
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        operators = [
+            "GreaterThanThreshold",
+            "GreaterThanOrEqualToThreshold",
+            "LessThanThreshold",
+            "LessThanOrEqualToThreshold",
+        ]
+        alarm_names = []
+        for i, op in enumerate(operators):
+            name = f"op-alarm-{suffix}-{i}"
+            alarm_names.append(name)
+            cw.put_metric_alarm(
+                AlarmName=name,
+                Namespace="OpNS",
+                MetricName="Val",
+                ComparisonOperator=op,
+                EvaluationPeriods=1,
+                Period=60,
+                Statistic="Average",
+                Threshold=50.0,
+            )
+    
+        response = cw.describe_alarms(AlarmNames=alarm_names)
+        returned_ops = {a["AlarmName"]: a["ComparisonOperator"] for a in response["MetricAlarms"]}
+        for i, op in enumerate(operators):
+            name = f"op-alarm-{suffix}-{i}"
+&gt;           assert returned_ops[name] == op
+                   ^^^^^^^^^^^^^^^^^^
+E           KeyError: 'op-alarm-6cb463e0-0'
+
+tests/compatibility/test_cloudwatch_compat.py:503: KeyError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_set_alarm_state_and_describe_alarm_history" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeAlarmHistory operation: The operation DescribeAlarmHistory is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bd940&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10d88f1d0&gt;
+
+    def test_set_alarm_state_and_describe_alarm_history(self, cw):
+        """SetAlarmState and verify DescribeAlarmHistory records the change."""
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        alarm_name = f"history-alarm-{suffix}"
+        cw.put_metric_alarm(
+            AlarmName=alarm_name,
+            Namespace="HistNS",
+            MetricName="M",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Average",
+            Threshold=50.0,
+        )
+    
+        cw.set_alarm_state(
+            AlarmName=alarm_name,
+            StateValue="ALARM",
+            StateReason="Testing history",
+        )
+    
+&gt;       response = cw.describe_alarm_history(AlarmName=alarm_name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:530: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10d88f1d0&gt;
+operation_name = 'DescribeAlarmHistory'
+api_params = {'AlarmName': 'history-alarm-49f0c3a7'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeAlarmHistory operation: The operation DescribeAlarmHistory is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_disable_enable_alarm_actions" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableAlarmActions operation: The operation DisableAlarmActions is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bdd60&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e0ad430&gt;
+
+    def test_disable_enable_alarm_actions(self, cw):
+        """Disable and re-enable alarm actions."""
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        alarm_name = f"actions-alarm-{suffix}"
+        cw.put_metric_alarm(
+            AlarmName=alarm_name,
+            Namespace="ActionsNS",
+            MetricName="M",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Average",
+            Threshold=50.0,
+        )
+    
+&gt;       cw.disable_alarm_actions(AlarmNames=[alarm_name])
+
+tests/compatibility/test_cloudwatch_compat.py:552: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e0ad430&gt;
+operation_name = 'DisableAlarmActions'
+api_params = {'AlarmNames': ['actions-alarm-e4f3cb85']}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableAlarmActions operation: The operation DisableAlarmActions is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_get_list_delete_dashboard" time="0.006"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8be180&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10bbc30b0&gt;
+
+    def test_put_get_list_delete_dashboard(self, cw):
+        """Full dashboard lifecycle: put, get, list, delete."""
+        import json
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        dash_name = f"test-dash-{suffix}"
+        dash_body = json.dumps(
+            {
+                "widgets": [
+                    {
+                        "type": "metric",
+                        "x": 0,
+                        "y": 0,
+                        "width": 12,
+                        "height": 6,
+                        "properties": {
+                            "metrics": [["TestNS", "TestMetric"]],
+                            "period": 300,
+                            "stat": "Average",
+                            "region": "us-east-1",
+                            "title": "Test Dashboard",
+                        },
+                    }
+                ]
+            }
+        )
+    
+        # Put
+&gt;       response = cw.put_dashboard(DashboardName=dash_name, DashboardBody=dash_body)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:591: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:267: in parse
+    parsed = self._do_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:1092: in _do_parse
+    self._inject_response_metadata(parsed, response['headers'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.JSONParser object at 0x10d8e76e0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '3d0ede77-8e29-4d13-8bae-b0...re-request-id': 'ff925282-7cb6-4e8a-8629-8d3778b83e23', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 00:25:23 GMT'}
+
+    def _inject_response_metadata(self, parsed, headers):
+        if 'x-amzn-requestid' in headers:
+&gt;           parsed.setdefault('ResponseMetadata', {})['RequestId'] = headers[
+            ^^^^^^^^^^^^^^^^^
+                'x-amzn-requestid'
+            ]
+E           AttributeError: 'NoneType' object has no attribute 'setdefault'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_list_metrics_namespace_filter" time="0.005" /><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_get_metric_data_with_math" time="0.004" /><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_list_metrics_metric_name_filter" time="0.004" /><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_alarm_with_datapoints_to_alarm" time="0.005"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bf200&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e453800&gt;
+
+    def test_put_metric_alarm_with_datapoints_to_alarm(self, cw):
+        """Create an alarm with DatapointsToAlarm set."""
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        alarm_name = f"dp-alarm-{suffix}"
+        cw.put_metric_alarm(
+            AlarmName=alarm_name,
+            Namespace="DPNS",
+            MetricName="Errors",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=5,
+            DatapointsToAlarm=3,
+            Period=60,
+            Statistic="Sum",
+            Threshold=10.0,
+        )
+        response = cw.describe_alarms(AlarmNames=[alarm_name])
+&gt;       alarm = response["MetricAlarms"][0]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/compatibility/test_cloudwatch_compat.py:710: IndexError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_alarm_treat_missing_data" time="0.004"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bf650&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e39e3f0&gt;
+
+    def test_put_metric_alarm_treat_missing_data(self, cw):
+        """Create alarm with TreatMissingData setting."""
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        alarm_name = f"missing-alarm-{suffix}"
+        cw.put_metric_alarm(
+            AlarmName=alarm_name,
+            Namespace="MissingNS",
+            MetricName="M",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Average",
+            Threshold=50.0,
+            TreatMissingData="notBreaching",
+        )
+        response = cw.describe_alarms(AlarmNames=[alarm_name])
+&gt;       assert response["MetricAlarms"][0]["TreatMissingData"] == "notBreaching"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/compatibility/test_cloudwatch_compat.py:734: IndexError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_describe_alarms_for_metric" time="0.004"><failure message="AssertionError: assert 'for-metric-07e5c0eb' in []">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d7f5c70&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10d81d190&gt;
+
+    def test_describe_alarms_for_metric(self, cw):
+        """DescribeAlarmsForMetric returns alarms for a specific metric."""
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        ns = f"ForMetric-{suffix}"
+        alarm_name = f"for-metric-{suffix}"
+        cw.put_metric_alarm(
+            AlarmName=alarm_name,
+            Namespace=ns,
+            MetricName="CPUUsage",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Average",
+            Threshold=90.0,
+        )
+        response = cw.describe_alarms_for_metric(
+            Namespace=ns,
+            MetricName="CPUUsage",
+        )
+        names = [a["AlarmName"] for a in response["MetricAlarms"]]
+&gt;       assert alarm_name in names
+E       AssertionError: assert 'for-metric-07e5c0eb' in []
+
+tests/compatibility/test_cloudwatch_compat.py:760: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_data_with_statistics_values" time="0.004"><failure message="assert 0 == 10.0">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d88fc50&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e2ac260&gt;
+
+    def test_put_metric_data_with_statistics_values(self, cw):
+        """PutMetricData using StatisticValues instead of Value."""
+        import uuid
+    
+        ns = f"StatVal-{uuid.uuid4().hex[:8]}"
+        now = datetime.now(UTC)
+        cw.put_metric_data(
+            Namespace=ns,
+            MetricData=[
+                {
+                    "MetricName": "AggMetric",
+                    "StatisticValues": {
+                        "SampleCount": 10.0,
+                        "Sum": 500.0,
+                        "Minimum": 10.0,
+                        "Maximum": 100.0,
+                    },
+                    "Unit": "Count",
+                    "Timestamp": now,
+                }
+            ],
+        )
+        response = cw.get_metric_statistics(
+            Namespace=ns,
+            MetricName="AggMetric",
+            StartTime=now - timedelta(minutes=5),
+            EndTime=now + timedelta(minutes=5),
+            Period=300,
+            Statistics=["Average", "Sum", "SampleCount", "Minimum", "Maximum"],
+        )
+        assert len(response["Datapoints"]) &gt;= 1
+        dp = response["Datapoints"][0]
+&gt;       assert dp["SampleCount"] == 10.0
+E       assert 0 == 10.0
+
+tests/compatibility/test_cloudwatch_compat.py:796: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_describe_alarms_with_alarm_name_prefix" time="0.006"><failure message="AssertionError: assert 'pfx-99c743e1-a' in []">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bf230&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e18ee70&gt;
+
+    def test_describe_alarms_with_alarm_name_prefix(self, cw):
+        """DescribeAlarms with AlarmNamePrefix."""
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        prefix = f"pfx-{suffix}"
+        names = [f"{prefix}-a", f"{prefix}-b"]
+        for name in names:
+            cw.put_metric_alarm(
+                AlarmName=name,
+                Namespace="PfxNS",
+                MetricName="M",
+                ComparisonOperator="GreaterThanThreshold",
+                EvaluationPeriods=1,
+                Period=60,
+                Statistic="Average",
+                Threshold=50.0,
+            )
+    
+        response = cw.describe_alarms(AlarmNamePrefix=prefix)
+        returned = [a["AlarmName"] for a in response["MetricAlarms"]]
+        for name in names:
+&gt;           assert name in returned
+E           AssertionError: assert 'pfx-99c743e1-a' in []
+
+tests/compatibility/test_cloudwatch_compat.py:821: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_data_multiple_metrics_and_dimensions" time="0.005" /><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_get_metric_statistics_all_stats" time="0.004" /><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_list_metrics_filter_by_namespace_and_name" time="0.004" /><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_describe_alarm_history" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeAlarmHistory operation: The operation DescribeAlarmHistory is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bc7d0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e2ea390&gt;
+
+    def test_describe_alarm_history(self, cw):
+        """Test DescribeAlarmHistory."""
+        cw.put_metric_alarm(
+            AlarmName="history-alarm",
+            Namespace="HistNS",
+            MetricName="M1",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Average",
+            Threshold=50.0,
+        )
+        try:
+            cw.set_alarm_state(
+                AlarmName="history-alarm",
+                StateValue="ALARM",
+                StateReason="Testing history",
+            )
+&gt;           response = cw.describe_alarm_history(AlarmName="history-alarm")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:921: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e2ea390&gt;
+operation_name = 'DescribeAlarmHistory'
+api_params = {'AlarmName': 'history-alarm'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeAlarmHistory operation: The operation DescribeAlarmHistory is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_set_alarm_state_and_verify" time="0.006"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bfc80&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e24aae0&gt;
+
+    def test_set_alarm_state_and_verify(self, cw):
+        """Test SetAlarmState and verify with DescribeAlarms."""
+        alarm_name = f"verify-state-alarm-{uuid.uuid4().hex[:8]}"
+        cw.put_metric_alarm(
+            AlarmName=alarm_name,
+            Namespace="VerifyNS",
+            MetricName="M1",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Average",
+            Threshold=50.0,
+        )
+        try:
+            cw.set_alarm_state(
+                AlarmName=alarm_name,
+                StateValue="OK",
+                StateReason="Manually set to OK",
+            )
+            response = cw.describe_alarms(AlarmNames=[alarm_name])
+&gt;           alarm = response["MetricAlarms"][0]
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+tests/compatibility/test_cloudwatch_compat.py:946: IndexError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_get_delete_dashboard" time="0.005"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8cc0e0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e39fcb0&gt;
+
+    def test_put_get_delete_dashboard(self, cw):
+        """Test PutDashboard, GetDashboard, DeleteDashboards, ListDashboards."""
+        dashboard_body = '{"widgets":[{"type":"metric","properties":{"metrics":[["NS","M"]]}}]}'
+        try:
+&gt;           cw.put_dashboard(DashboardName="test-dashboard", DashboardBody=dashboard_body)
+
+tests/compatibility/test_cloudwatch_compat.py:956: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:267: in parse
+    parsed = self._do_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:1092: in _do_parse
+    self._inject_response_metadata(parsed, response['headers'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.JSONParser object at 0x10e2af7d0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '8016b8d4-926a-4d93-900b-00...re-request-id': 'cd02e9e6-b908-4327-8669-0f4bdf990c9e', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 00:25:23 GMT'}
+
+    def _inject_response_metadata(self, parsed, headers):
+        if 'x-amzn-requestid' in headers:
+&gt;           parsed.setdefault('ResponseMetadata', {})['RequestId'] = headers[
+            ^^^^^^^^^^^^^^^^^
+                'x-amzn-requestid'
+            ]
+E           AttributeError: 'NoneType' object has no attribute 'setdefault'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_tag_untag_alarm" time="0.006"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8cc500&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e298620&gt;
+
+    def test_tag_untag_alarm(self, cw):
+        """Test TagResource, UntagResource, ListTagsForResource on alarms."""
+        cw.put_metric_alarm(
+            AlarmName="tag-alarm",
+            Namespace="TagNS",
+            MetricName="M1",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Average",
+            Threshold=50.0,
+        )
+        try:
+            # Get alarm ARN
+            desc = cw.describe_alarms(AlarmNames=["tag-alarm"])
+&gt;           alarm_arn = desc["MetricAlarms"][0]["AlarmArn"]
+                        ^^^^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+tests/compatibility/test_cloudwatch_compat.py:992: IndexError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_enable_disable_alarm_actions" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableAlarmActions operation: The operation DisableAlarmActions is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8cc920&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10d45ede0&gt;
+
+    def test_enable_disable_alarm_actions(self, cw):
+        """Test EnableAlarmActions and DisableAlarmActions."""
+        cw.put_metric_alarm(
+            AlarmName="actions-alarm",
+            Namespace="ActionsNS",
+            MetricName="M1",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Average",
+            Threshold=50.0,
+        )
+        try:
+&gt;           cw.disable_alarm_actions(AlarmNames=["actions-alarm"])
+
+tests/compatibility/test_cloudwatch_compat.py:1027: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10d45ede0&gt;
+operation_name = 'DisableAlarmActions'
+api_params = {'AlarmNames': ['actions-alarm']}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableAlarmActions operation: The operation DisableAlarmActions is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_alarm_comparison_operators" time="0.006"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8ccd40&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10d8539b0&gt;
+
+    def test_put_metric_alarm_comparison_operators(self, cw):
+        """Test PutMetricAlarm with different comparison operators."""
+        alarms = [
+            ("gt-alarm", "GreaterThanThreshold", 90.0),
+            ("lt-alarm", "LessThanThreshold", 10.0),
+        ]
+        try:
+            for name, op, threshold in alarms:
+                cw.put_metric_alarm(
+                    AlarmName=name,
+                    Namespace="CompOpNS",
+                    MetricName="TestMetric",
+                    ComparisonOperator=op,
+                    EvaluationPeriods=1,
+                    Period=60,
+                    Statistic="Average",
+                    Threshold=threshold,
+                )
+    
+            for name, op, threshold in alarms:
+                desc = cw.describe_alarms(AlarmNames=[name])
+&gt;               alarm = desc["MetricAlarms"][0]
+                        ^^^^^^^^^^^^^^^^^^^^^^^
+E               IndexError: list index out of range
+
+tests/compatibility/test_cloudwatch_compat.py:1058: IndexError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_alarm_with_actions" time="0.004"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8cd160&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e33d790&gt;
+
+    def test_put_metric_alarm_with_actions(self, cw):
+        """PutMetricAlarm with alarm, OK, and insufficient data actions."""
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        alarm_name = f"action-alarm-{suffix}"
+        sns_arn = f"arn:aws:sns:us-east-1:123456789012:alarm-topic-{suffix}"
+        cw.put_metric_alarm(
+            AlarmName=alarm_name,
+            Namespace="ActionNS",
+            MetricName="Errors",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Sum",
+            Threshold=5.0,
+            AlarmActions=[sns_arn],
+            OKActions=[sns_arn],
+            InsufficientDataActions=[sns_arn],
+        )
+        desc = cw.describe_alarms(AlarmNames=[alarm_name])
+&gt;       alarm = desc["MetricAlarms"][0]
+                ^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/compatibility/test_cloudwatch_compat.py:1085: IndexError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_alarm_with_dimensions" time="0.004"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8cd580&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10a6ca420&gt;
+
+    def test_put_metric_alarm_with_dimensions(self, cw):
+        """PutMetricAlarm scoped to a dimension."""
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        alarm_name = f"dim-alarm-{suffix}"
+        cw.put_metric_alarm(
+            AlarmName=alarm_name,
+            Namespace="DimNS",
+            MetricName="CPUUtilization",
+            Dimensions=[{"Name": "InstanceId", "Value": "i-12345"}],
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=300,
+            Statistic="Average",
+            Threshold=80.0,
+        )
+        desc = cw.describe_alarms(AlarmNames=[alarm_name])
+&gt;       alarm = desc["MetricAlarms"][0]
+                ^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/compatibility/test_cloudwatch_compat.py:1109: IndexError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_metric_data_with_dimensions_v2" time="0.004" /><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_composite_alarm_v2" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutCompositeAlarm operation: The operation PutCompositeAlarm is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bfe00&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e33a5a0&gt;
+
+    def test_put_composite_alarm_v2(self, cw):
+        """PutCompositeAlarm creates a composite alarm from metric alarms."""
+        import uuid
+    
+        suffix = uuid.uuid4().hex[:8]
+        child_name = f"child-{suffix}"
+        composite_name = f"composite-{suffix}"
+        try:
+            cw.put_metric_alarm(
+                AlarmName=child_name,
+                Namespace="CompNS",
+                MetricName="M",
+                ComparisonOperator="GreaterThanThreshold",
+                EvaluationPeriods=1,
+                Period=60,
+                Statistic="Average",
+                Threshold=50.0,
+            )
+&gt;           cw.put_composite_alarm(
+                AlarmName=composite_name,
+                AlarmRule=f'ALARM("{child_name}")',
+            )
+
+tests/compatibility/test_cloudwatch_compat.py:1159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e33a5a0&gt;
+operation_name = 'PutCompositeAlarm'
+api_params = {'AlarmName': 'composite-0c64972a', 'AlarmRule': 'ALARM("child-0c64972a")'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutCompositeAlarm operation: The operation PutCompositeAlarm is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_list_metrics_with_dimensions_filter" time="0.005"><failure message="AssertionError: assert '/api/v1' in []">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8bd910&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e2cefc0&gt;
+
+    def test_list_metrics_with_dimensions_filter(self, cw):
+        """ListMetrics filtered by Dimensions."""
+        import uuid
+    
+        ns = f"DimFilter-{uuid.uuid4().hex[:8]}"
+        cw.put_metric_data(
+            Namespace=ns,
+            MetricData=[
+                {
+                    "MetricName": "Requests",
+                    "Dimensions": [{"Name": "Endpoint", "Value": "/api/v1"}],
+                    "Value": 100.0,
+                    "Unit": "Count",
+                },
+                {
+                    "MetricName": "Requests",
+                    "Dimensions": [{"Name": "Endpoint", "Value": "/api/v2"}],
+                    "Value": 50.0,
+                    "Unit": "Count",
+                },
+            ],
+        )
+        resp = cw.list_metrics(
+            Namespace=ns,
+            MetricName="Requests",
+            Dimensions=[{"Name": "Endpoint", "Value": "/api/v1"}],
+        )
+        assert len(resp["Metrics"]) &gt;= 1
+        for m in resp["Metrics"]:
+            dim_vals = [d["Value"] for d in m["Dimensions"] if d["Name"] == "Endpoint"]
+&gt;           assert "/api/v1" in dim_vals
+E           AssertionError: assert '/api/v1' in []
+
+tests/compatibility/test_cloudwatch_compat.py:1201: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_get_metric_statistics_extended_stats" time="0.010"><failure message="AssertionError: assert 'ExtendedStatistics' in {'Average': 55.0, 'Maximum': 100.0, 'Minimum': 0.0, 'SampleCount': 10, ...}">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8beab0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e33b740&gt;
+
+    def test_get_metric_statistics_extended_stats(self, cw):
+        """GetMetricStatistics with ExtendedStatistics (percentiles)."""
+        import uuid
+    
+        ns = f"ExtStat-{uuid.uuid4().hex[:8]}"
+        now = datetime.now(UTC)
+        for v in [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]:
+            cw.put_metric_data(
+                Namespace=ns,
+                MetricData=[
+                    {
+                        "MetricName": "Latency",
+                        "Value": float(v),
+                        "Unit": "Milliseconds",
+                        "Timestamp": now,
+                    }
+                ],
+            )
+        resp = cw.get_metric_statistics(
+            Namespace=ns,
+            MetricName="Latency",
+            StartTime=now - timedelta(minutes=5),
+            EndTime=now + timedelta(minutes=5),
+            Period=300,
+            ExtendedStatistics=["p50", "p99"],
+        )
+        assert "Datapoints" in resp
+        if resp["Datapoints"]:
+            dp = resp["Datapoints"][0]
+&gt;           assert "ExtendedStatistics" in dp
+E           AssertionError: assert 'ExtendedStatistics' in {'Average': 55.0, 'Maximum': 100.0, 'Minimum': 0.0, 'SampleCount': 10, ...}
+
+tests/compatibility/test_cloudwatch_compat.py:1232: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_list_tags_for_resource" time="0.005"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10c28e330&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e083920&gt;
+
+    def test_list_tags_for_resource(self, cw):
+        """ListTagsForResource returns tags for an alarm."""
+        import uuid
+    
+        alarm_name = f"tag-res-{uuid.uuid4().hex[:8]}"
+        cw.put_metric_alarm(
+            AlarmName=alarm_name,
+            Namespace="TagResNS",
+            MetricName="M1",
+            ComparisonOperator="GreaterThanThreshold",
+            EvaluationPeriods=1,
+            Period=60,
+            Statistic="Average",
+            Threshold=50.0,
+            Tags=[
+                {"Key": "env", "Value": "test"},
+                {"Key": "team", "Value": "platform"},
+            ],
+        )
+        try:
+            alarms = cw.describe_alarms(AlarmNames=[alarm_name])
+&gt;           alarm_arn = alarms["MetricAlarms"][0]["AlarmArn"]
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+tests/compatibility/test_cloudwatch_compat.py:1256: IndexError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_put_describe_delete_insight_rules" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutInsightRule operation: The operation PutInsightRule is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8cd700&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e33c170&gt;
+
+    def test_put_describe_delete_insight_rules(self, cw):
+        """PutInsightRule, DescribeInsightRules, DeleteInsightRules lifecycle."""
+        import uuid
+    
+        rule_name = f"rule-{uuid.uuid4().hex[:8]}"
+        rule_def = (
+            '{"Schema":{"Name":"CloudWatchLogRule","Version":1},'
+            '"LogGroupNames":["/test"],'
+            '"Contributions":{"Filters":[],"Keys":["$.key"],"ValueOf":"$.value"}}'
+        )
+        # Create rule
+&gt;       resp = cw.put_insight_rule(RuleName=rule_name, RuleDefinition=rule_def, RuleState="ENABLED")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:1276: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e33c170&gt;
+operation_name = 'PutInsightRule'
+api_params = {'RuleDefinition': '{"Schema":{"Name":"CloudWatchLogRule","Version":1},"LogGroupNames":["/test"],"Contributions":{"Filters":[],"Keys":["$.key"],"ValueOf":"$.value"}}', 'RuleName': 'rule-3e7dd4cb', 'RuleState': 'ENABLED'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutInsightRule operation: The operation PutInsightRule is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations" name="test_disable_enable_insight_rules" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutInsightRule operation: The operation PutInsightRule is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchOperations object at 0x10d8ccf20&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10df1fc20&gt;
+
+    def test_disable_enable_insight_rules(self, cw):
+        """DisableInsightRules and EnableInsightRules toggle state."""
+        import uuid
+    
+        rule_name = f"toggle-{uuid.uuid4().hex[:8]}"
+        rule_def = (
+            '{"Schema":{"Name":"CloudWatchLogRule","Version":1},'
+            '"LogGroupNames":["/test"],'
+            '"Contributions":{"Filters":[],"Keys":["$.key"],"ValueOf":"$.value"}}'
+        )
+&gt;       cw.put_insight_rule(RuleName=rule_name, RuleDefinition=rule_def, RuleState="ENABLED")
+
+tests/compatibility/test_cloudwatch_compat.py:1302: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10df1fc20&gt;
+operation_name = 'PutInsightRule'
+api_params = {'RuleDefinition': '{"Schema":{"Name":"CloudWatchLogRule","Version":1},"LogGroupNames":["/test"],"Contributions":{"Filters":[],"Keys":["$.key"],"ValueOf":"$.value"}}', 'RuleName': 'toggle-cbe9049c', 'RuleState': 'ENABLED'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutInsightRule operation: The operation PutInsightRule is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchGapStubs" name="test_describe_anomaly_detectors" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeAnomalyDetectors operation: The operation DescribeAnomalyDetectors is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchGapStubs object at 0x10d8cc8c0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e33b440&gt;
+
+    def test_describe_anomaly_detectors(self, cw):
+&gt;       resp = cw.describe_anomaly_detectors()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:1319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e33b440&gt;
+operation_name = 'DescribeAnomalyDetectors', api_params = {}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeAnomalyDetectors operation: The operation DescribeAnomalyDetectors is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchGapStubs" name="test_list_metric_streams" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListMetricStreams operation: The operation ListMetricStreams is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchGapStubs object at 0x10d8cdf70&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e3d6180&gt;
+
+    def test_list_metric_streams(self, cw):
+&gt;       resp = cw.list_metric_streams()
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:1323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e3d6180&gt;
+operation_name = 'ListMetricStreams', api_params = {}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListMetricStreams operation: The operation ListMetricStreams is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchGapStubs" name="test_list_managed_insight_rules" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListManagedInsightRules operation: The operation ListManagedInsightRules is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchGapStubs object at 0x10d8ce390&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e3385c0&gt;
+
+    def test_list_managed_insight_rules(self, cw):
+&gt;       resp = cw.list_managed_insight_rules(
+            ResourceARN="arn:aws:ec2:us-east-1:123456789012:instance/i-1234567890abcdef0"
+        )
+
+tests/compatibility/test_cloudwatch_compat.py:1327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e3385c0&gt;
+operation_name = 'ListManagedInsightRules'
+api_params = {'ResourceARN': 'arn:aws:ec2:us-east-1:123456789012:instance/i-1234567890abcdef0'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListManagedInsightRules operation: The operation ListManagedInsightRules is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudwatchAutoCoverage" name="test_delete_anomaly_detector" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DeleteAnomalyDetector operation: The operation DeleteAnomalyDetector is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudwatchAutoCoverage object at 0x10d8ce810&gt;
+client = &lt;botocore.client.CloudWatch object at 0x10e29a750&gt;
+
+    def test_delete_anomaly_detector(self, client):
+        """DeleteAnomalyDetector returns a 200 response."""
+&gt;       resp = client.delete_anomaly_detector()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:1342: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e29a750&gt;
+operation_name = 'DeleteAnomalyDetector', api_params = {}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DeleteAnomalyDetector operation: The operation DeleteAnomalyDetector is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudwatchAutoCoverage" name="test_list_alarm_mute_rules" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListAlarmMuteRules operation: The operation ListAlarmMuteRules is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudwatchAutoCoverage object at 0x10d8cec00&gt;
+client = &lt;botocore.client.CloudWatch object at 0x10e3391f0&gt;
+
+    def test_list_alarm_mute_rules(self, client):
+        """ListAlarmMuteRules returns a response."""
+&gt;       resp = client.list_alarm_mute_rules()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:1347: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e3391f0&gt;
+operation_name = 'ListAlarmMuteRules', api_params = {}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListAlarmMuteRules operation: The operation ListAlarmMuteRules is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudwatchAutoCoverage" name="test_anomaly_detector_lifecycle" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutAnomalyDetector operation: The operation PutAnomalyDetector is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudwatchAutoCoverage object at 0x10d8ceff0&gt;
+client = &lt;botocore.client.CloudWatch object at 0x10e384140&gt;
+
+    def test_anomaly_detector_lifecycle(self, client):
+        """PutAnomalyDetector → DescribeAnomalyDetectors → DeleteAnomalyDetector."""
+        import uuid
+    
+        ns = f"ADLife-{uuid.uuid4().hex[:8]}"
+        metric = "ADMetric"
+        stat = "Average"
+    
+        # Put
+&gt;       resp = client.put_anomaly_detector(Namespace=ns, MetricName=metric, Stat=stat)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:1359: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e384140&gt;
+operation_name = 'PutAnomalyDetector'
+api_params = {'MetricName': 'ADMetric', 'Namespace': 'ADLife-e4f3f1fd', 'Stat': 'Average'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutAnomalyDetector operation: The operation PutAnomalyDetector is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchManagedInsightRules" name="test_list_managed_insight_rules" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListManagedInsightRules operation: The operation ListManagedInsightRules is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchManagedInsightRules object at 0x10d8cf4a0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e186150&gt;
+
+    def test_list_managed_insight_rules(self, cw):
+        """ListManagedInsightRules returns a list for a resource ARN."""
+&gt;       resp = cw.list_managed_insight_rules(
+            ResourceARN="arn:aws:ec2:us-east-1:123456789012:instance/i-fake"
+        )
+
+tests/compatibility/test_cloudwatch_compat.py:1386: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e186150&gt;
+operation_name = 'ListManagedInsightRules'
+api_params = {'ResourceARN': 'arn:aws:ec2:us-east-1:123456789012:instance/i-fake'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListManagedInsightRules operation: The operation ListManagedInsightRules is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchMetricStreams" name="test_list_metric_streams" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListMetricStreams operation: The operation ListMetricStreams is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchMetricStreams object at 0x10d8cf890&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e339520&gt;
+
+    def test_list_metric_streams(self, cw):
+        """ListMetricStreams returns entries list."""
+&gt;       resp = cw.list_metric_streams()
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:1397: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e339520&gt;
+operation_name = 'ListMetricStreams', api_params = {}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListMetricStreams operation: The operation ListMetricStreams is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchMetricStreams" name="test_metric_stream_lifecycle" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutMetricStream operation: The operation PutMetricStream is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchMetricStreams object at 0x10d7f74a0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e2eb320&gt;
+
+    def test_metric_stream_lifecycle(self, cw):
+        """PutMetricStream, GetMetricStream, ListMetricStreams, DeleteMetricStream."""
+        stream_name = f"test-stream-{uuid.uuid4().hex[:8]}"
+        firehose_arn = "arn:aws:firehose:us-east-1:123456789012:deliverystream/test"
+        role_arn = "arn:aws:iam::123456789012:role/cw-stream-role"
+    
+        # Put
+&gt;       resp = cw.put_metric_stream(
+            Name=stream_name,
+            FirehoseArn=firehose_arn,
+            RoleArn=role_arn,
+            OutputFormat="json",
+        )
+
+tests/compatibility/test_cloudwatch_compat.py:1407: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e2eb320&gt;
+operation_name = 'PutMetricStream'
+api_params = {'FirehoseArn': 'arn:aws:firehose:us-east-1:123456789012:deliverystream/test', 'Name': 'test-stream-f30a51d9', 'OutputFormat': 'json', 'RoleArn': 'arn:aws:iam::123456789012:role/cw-stream-role'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutMetricStream operation: The operation PutMetricStream is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchMetricStreams" name="test_stop_and_start_metric_streams" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutMetricStream operation: The operation PutMetricStream is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchMetricStreams object at 0x10d8be6c0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e2988f0&gt;
+
+    def test_stop_and_start_metric_streams(self, cw):
+        """StopMetricStreams and StartMetricStreams toggle state."""
+        stream_name = f"toggle-stream-{uuid.uuid4().hex[:8]}"
+&gt;       cw.put_metric_stream(
+            Name=stream_name,
+            FirehoseArn="arn:aws:firehose:us-east-1:123456789012:deliverystream/test",
+            RoleArn="arn:aws:iam::123456789012:role/test",
+            OutputFormat="json",
+        )
+
+tests/compatibility/test_cloudwatch_compat.py:1442: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e2988f0&gt;
+operation_name = 'PutMetricStream'
+api_params = {'FirehoseArn': 'arn:aws:firehose:us-east-1:123456789012:deliverystream/test', 'Name': 'toggle-stream-f63f45e2', 'OutputFormat': 'json', 'RoleArn': 'arn:aws:iam::123456789012:role/test'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutMetricStream operation: The operation PutMetricStream is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchMetricStreams" name="test_put_metric_stream_with_include_filters" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutMetricStream operation: The operation PutMetricStream is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchMetricStreams object at 0x10d8cf9b0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e3b9940&gt;
+
+    def test_put_metric_stream_with_include_filters(self, cw):
+        """PutMetricStream with IncludeFilters."""
+        stream_name = f"filter-stream-{uuid.uuid4().hex[:8]}"
+&gt;       cw.put_metric_stream(
+            Name=stream_name,
+            FirehoseArn="arn:aws:firehose:us-east-1:123456789012:deliverystream/test",
+            RoleArn="arn:aws:iam::123456789012:role/test",
+            OutputFormat="json",
+            IncludeFilters=[{"Namespace": "AWS/EC2"}],
+        )
+
+tests/compatibility/test_cloudwatch_compat.py:1466: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e3b9940&gt;
+operation_name = 'PutMetricStream'
+api_params = {'FirehoseArn': 'arn:aws:firehose:us-east-1:123456789012:deliverystream/test', 'IncludeFilters': [{'Namespace': 'AWS/EC2'}], 'Name': 'filter-stream-a6205a10', 'OutputFormat': 'json', ...}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutMetricStream operation: The operation PutMetricStream is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchMetricStreams" name="test_delete_nonexistent_metric_stream" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DeleteMetricStream operation: The operation DeleteMetricStream is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchMetricStreams object at 0x10d8cf170&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10c43a930&gt;
+
+    def test_delete_nonexistent_metric_stream(self, cw):
+        """DeleteMetricStream on nonexistent stream does not error."""
+&gt;       resp = cw.delete_metric_stream(Name="nonexistent-stream")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:1482: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10c43a930&gt;
+operation_name = 'DeleteMetricStream'
+api_params = {'Name': 'nonexistent-stream'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DeleteMetricStream operation: The operation DeleteMetricStream is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchMetricStreams" name="test_put_metric_stream_opentelemetry_format" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutMetricStream operation: The operation PutMetricStream is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchMetricStreams object at 0x10d8ce5d0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e2484a0&gt;
+
+    def test_put_metric_stream_opentelemetry_format(self, cw):
+        """PutMetricStream with opentelemetry1.0 output format."""
+        stream_name = f"otel-stream-{uuid.uuid4().hex[:8]}"
+&gt;       cw.put_metric_stream(
+            Name=stream_name,
+            FirehoseArn="arn:aws:firehose:us-east-1:123456789012:deliverystream/test",
+            RoleArn="arn:aws:iam::123456789012:role/test",
+            OutputFormat="opentelemetry1.0",
+        )
+
+tests/compatibility/test_cloudwatch_compat.py:1488: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e2484a0&gt;
+operation_name = 'PutMetricStream'
+api_params = {'FirehoseArn': 'arn:aws:firehose:us-east-1:123456789012:deliverystream/test', 'Name': 'otel-stream-40fed536', 'OutputFormat': 'opentelemetry1.0', 'RoleArn': 'arn:aws:iam::123456789012:role/test'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutMetricStream operation: The operation PutMetricStream is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchGapOps" name="test_get_metric_widget_image" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the GetMetricWidgetImage operation: The operation GetMetricWidgetImage is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchGapOps object at 0x10d8cc200&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10d852ff0&gt;
+
+    def test_get_metric_widget_image(self, cw):
+        """GetMetricWidgetImage returns image bytes."""
+        import json
+    
+&gt;       resp = cw.get_metric_widget_image(
+            MetricWidget=json.dumps(
+                {
+                    "metrics": [["AWS/EC2", "CPUUtilization", "InstanceId", "i-12345"]],
+                    "period": 300,
+                }
+            )
+        )
+
+tests/compatibility/test_cloudwatch_compat.py:1508: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10d852ff0&gt;
+operation_name = 'GetMetricWidgetImage'
+api_params = {'MetricWidget': '{"metrics": [["AWS/EC2", "CPUUtilization", "InstanceId", "i-12345"]], "period": 300}'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the GetMetricWidgetImage operation: The operation GetMetricWidgetImage is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchGapOps" name="test_get_insight_rule_report" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutInsightRule operation: The operation PutInsightRule is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchGapOps object at 0x10d8ccec0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e2cd580&gt;
+
+    def test_get_insight_rule_report(self, cw):
+        """GetInsightRuleReport returns report after creating a rule."""
+        rule_name = f"report-rule-{uuid.uuid4().hex[:8]}"
+        rule_def = (
+            '{"Schema":{"Name":"CloudWatchLogRule","Version":1},'
+            '"LogGroupNames":["/test"],'
+            '"Contributions":{"Filters":[],"Keys":["$.key"],"ValueOf":"$.value"}}'
+        )
+&gt;       cw.put_insight_rule(RuleName=rule_name, RuleDefinition=rule_def, RuleState="ENABLED")
+
+tests/compatibility/test_cloudwatch_compat.py:1528: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e2cd580&gt;
+operation_name = 'PutInsightRule'
+api_params = {'RuleDefinition': '{"Schema":{"Name":"CloudWatchLogRule","Version":1},"LogGroupNames":["/test"],"Contributions":{"Filters":[],"Keys":["$.key"],"ValueOf":"$.value"}}', 'RuleName': 'report-rule-22d95dd5', 'RuleState': 'ENABLED'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutInsightRule operation: The operation PutInsightRule is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchGapOps" name="test_put_managed_insight_rules" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutManagedInsightRules operation: The operation PutManagedInsightRules is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchGapOps object at 0x10d8e4080&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e41d070&gt;
+
+    def test_put_managed_insight_rules(self, cw):
+        """PutManagedInsightRules returns empty failures list."""
+&gt;       resp = cw.put_managed_insight_rules(
+            ManagedRules=[
+                {
+                    "TemplateName": "DynamoDBContributorInsights",
+                    "ResourceARN": "arn:aws:dynamodb:us-east-1:123456789012:table/test",
+                    "Tags": [],
+                }
+            ]
+        )
+
+tests/compatibility/test_cloudwatch_compat.py:1545: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e41d070&gt;
+operation_name = 'PutManagedInsightRules'
+api_params = {'ManagedRules': [{'ResourceARN': 'arn:aws:dynamodb:us-east-1:123456789012:table/test', 'Tags': [], 'TemplateName': 'DynamoDBContributorInsights'}]}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutManagedInsightRules operation: The operation PutManagedInsightRules is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchAlarmMuteRules" name="test_describe_alarm_contributors" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeAlarmContributors operation: The operation DescribeAlarmContributors is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchAlarmMuteRules object at 0x10d8e4500&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e0839b0&gt;
+
+    def test_describe_alarm_contributors(self, cw):
+        """DescribeAlarmContributors returns AlarmContributors list."""
+&gt;       resp = cw.describe_alarm_contributors(AlarmName="nonexistent-alarm")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:1563: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e0839b0&gt;
+operation_name = 'DescribeAlarmContributors'
+api_params = {'AlarmName': 'nonexistent-alarm'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeAlarmContributors operation: The operation DescribeAlarmContributors is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchAlarmMuteRules" name="test_get_alarm_mute_rule_nonexistent" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchAlarmMuteRules object at 0x10d8e4920&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e39d6a0&gt;
+
+    def test_get_alarm_mute_rule_nonexistent(self, cw):
+        """GetAlarmMuteRule with nonexistent name raises ResourceNotFoundException."""
+        from botocore.exceptions import ClientError
+    
+        with pytest.raises(ClientError) as exc:
+            cw.get_alarm_mute_rule(AlarmMuteRuleName="nonexistent-mute-rule-xyz")
+&gt;       assert exc.value.response["Error"]["Code"] == "ResourceNotFoundException"
+E       AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'
+E         
+E         - ResourceNotFoundException
+E         + ValidationException
+
+tests/compatibility/test_cloudwatch_compat.py:1572: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchAlarmMuteRules" name="test_list_alarm_mute_rules" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListAlarmMuteRules operation: The operation ListAlarmMuteRules is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchAlarmMuteRules object at 0x10d8e4d40&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e272510&gt;
+
+    def test_list_alarm_mute_rules(self, cw):
+        """ListAlarmMuteRules returns 200."""
+&gt;       resp = cw.list_alarm_mute_rules()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:1576: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e272510&gt;
+operation_name = 'ListAlarmMuteRules', api_params = {}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListAlarmMuteRules operation: The operation ListAlarmMuteRules is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchMuteRuleCRUD" name="test_put_and_delete_alarm_mute_rule" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutAlarmMuteRule operation: The operation PutAlarmMuteRule is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchMuteRuleCRUD object at 0x10d8e51c0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e2988f0&gt;
+
+    def test_put_and_delete_alarm_mute_rule(self, cw):
+        """PutAlarmMuteRule creates a rule and DeleteAlarmMuteRule removes it."""
+        name = f"mute-rule-{uuid.uuid4().hex[:8]}"
+&gt;       cw.put_alarm_mute_rule(
+            Name=name,
+            Rule={"Schedule": {"Expression": "cron(0 0 * * ? *)", "Duration": "PT1H"}},
+        )
+
+tests/compatibility/test_cloudwatch_compat.py:1590: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e2988f0&gt;
+operation_name = 'PutAlarmMuteRule'
+api_params = {'Name': 'mute-rule-a114e7e1', 'Rule': {'Schedule': {'Duration': 'PT1H', 'Expression': 'cron(0 0 * * ? *)'}}}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutAlarmMuteRule operation: The operation PutAlarmMuteRule is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_cloudwatch_compat.TestCloudWatchMuteRuleCRUD" name="test_delete_alarm_mute_rule_nonexistent" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DeleteAlarmMuteRule operation: The operation DeleteAlarmMuteRule is not implemented">self = &lt;tests.compatibility.test_cloudwatch_compat.TestCloudWatchMuteRuleCRUD object at 0x10d8e55b0&gt;
+cw = &lt;botocore.client.CloudWatch object at 0x10e39e660&gt;
+
+    def test_delete_alarm_mute_rule_nonexistent(self, cw):
+        """DeleteAlarmMuteRule with nonexistent name returns 200."""
+&gt;       resp = cw.delete_alarm_mute_rule(AlarmMuteRuleName="nonexistent-mute-rule-xyz")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_cloudwatch_compat.py:1599: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.CloudWatch object at 0x10e39e660&gt;
+operation_name = 'DeleteAlarmMuteRule'
+api_params = {'AlarmMuteRuleName': 'nonexistent-mute-rule-xyz'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DeleteAlarmMuteRule operation: The operation DeleteAlarmMuteRule is not implemented
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase></testsuite></testsuites>

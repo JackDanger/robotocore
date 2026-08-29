@@ -1,0 +1,3185 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="40" skipped="0" tests="49" time="2.430" timestamp="2026-08-28T17:30:18.300384-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_get_caller_identity" time="0.056" /><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_get_session_token" time="0.026"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetSessionToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x109777e30&gt;
+xml_string = b'{"error":"Unknown STS operation: GetSessionToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSOperations object at 0x10980d880&gt;
+sts = &lt;botocore.client.STS object at 0x109878290&gt;
+
+    def test_get_session_token(self, sts):
+&gt;       response = sts.get_session_token()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sts_compat.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x109777e30&gt;
+xml_string = b'{"error":"Unknown STS operation: GetSessionToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetSessionToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_assume_role" time="0.013"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRole&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a13e3c0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSOperations object at 0x10980dc10&gt;
+sts = &lt;botocore.client.STS object at 0x1097bc590&gt;
+
+    def test_assume_role(self, sts):
+        import uuid
+    
+        role_name = f"test-sts-role-{uuid.uuid4().hex[:8]}"
+        iam = make_client("iam")
+        trust_policy = (
+            '{"Version":"2012-10-17","Statement":'
+            '[{"Effect":"Allow","Principal":{"AWS":"*"},'
+            '"Action":"sts:AssumeRole"}]}'
+        )
+        role = iam.create_role(
+            RoleName=role_name,
+            AssumeRolePolicyDocument=trust_policy,
+        )
+        role_arn = role["Role"]["Arn"]
+&gt;       response = sts.assume_role(
+            RoleArn=role_arn,
+            RoleSessionName="test-session",
+        )
+
+tests/compatibility/test_sts_compat.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a13e3c0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRole"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_assume_role_session_credentials" time="0.007"><failure message="botocore.errorfactory.EntityAlreadyExistsException: An error occurred (EntityAlreadyExists) when calling the CreateRole operation: Role with name test-creds-role already exists.">self = &lt;tests.compatibility.test_sts_compat.TestSTSOperations object at 0x10980dfd0&gt;
+sts = &lt;botocore.client.STS object at 0x1097a34a0&gt;
+
+    def test_assume_role_session_credentials(self, sts):
+        """Verify assumed-role credentials contain all required fields."""
+        iam = make_client("iam")
+        trust_policy = (
+            '{"Version":"2012-10-17","Statement":'
+            '[{"Effect":"Allow","Principal":{"AWS":"*"},'
+            '"Action":"sts:AssumeRole"}]}'
+        )
+&gt;       role = iam.create_role(
+            RoleName="test-creds-role",
+            AssumeRolePolicyDocument=trust_policy,
+        )
+
+tests/compatibility/test_sts_compat.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.client.IAM object at 0x10a5cbaa0&gt;
+operation_name = 'CreateRole'
+api_params = {'AssumeRolePolicyDocument': '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"AWS":"*"},"Action":"sts:AssumeRole"}]}', 'RoleName': 'test-creds-role'}
+
+    @with_current_context()
+    def _make_api_call(self, operation_name, api_params):
+        operation_model = self._service_model.operation_model(operation_name)
+        service_name = self._service_model.service_name
+        history_recorder.record(
+            'API_CALL',
+            {
+                'service': service_name,
+                'operation': operation_name,
+                'params': api_params,
+            },
+        )
+        if operation_model.deprecated:
+            logger.debug(
+                'Warning: %s.%s() is deprecated', service_name, operation_name
+            )
+        request_context = {
+            'client_region': self.meta.region_name,
+            'client_config': self.meta.config,
+            'has_streaming_input': operation_model.has_streaming_input,
+            'auth_type': operation_model.resolved_auth_type,
+            'unsigned_payload': operation_model.unsigned_payload,
+            'auth_options': self._service_model.metadata.get('auth'),
+        }
+    
+        api_params = self._emit_api_params(
+            api_params=api_params,
+            operation_model=operation_model,
+            context=request_context,
+        )
+        (
+            endpoint_url,
+            additional_headers,
+            properties,
+        ) = self._resolve_endpoint_ruleset(
+            operation_model, api_params, request_context
+        )
+        if properties:
+            # Pass arbitrary endpoint info with the Request
+            # for use during construction.
+            request_context['endpoint_properties'] = properties
+        request_dict = self._convert_to_request_dict(
+            api_params=api_params,
+            operation_model=operation_model,
+            endpoint_url=endpoint_url,
+            context=request_context,
+            headers=additional_headers,
+        )
+        resolve_checksum_context(request_dict, operation_model, api_params)
+    
+        service_id = self._service_model.service_id.hyphenize()
+        handler, event_response = self.meta.events.emit_until_response(
+            f'before-call.{service_id}.{operation_name}',
+            model=operation_model,
+            params=request_dict,
+            request_signer=self._request_signer,
+            context=request_context,
+        )
+    
+        if event_response is not None:
+            http, parsed_response = event_response
+        else:
+            maybe_compress_request(
+                self.meta.config, request_dict, operation_model
+            )
+            apply_request_checksum(request_dict)
+            http, parsed_response = self._make_request(
+                operation_model, request_dict, request_context
+            )
+    
+        self.meta.events.emit(
+            f'after-call.{service_id}.{operation_name}',
+            http_response=http,
+            parsed=parsed_response,
+            model=operation_model,
+            context=request_context,
+        )
+    
+        if http.status_code &gt;= 300:
+            error_info = parsed_response.get("Error", {})
+            error_code = request_context.get(
+                'error_code_override'
+            ) or error_info.get("Code")
+            error_class = self.exceptions.from_code(error_code)
+&gt;           raise error_class(parsed_response, operation_name)
+E           botocore.errorfactory.EntityAlreadyExistsException: An error occurred (EntityAlreadyExists) when calling the CreateRole operation: Role with name test-creds-role already exists.
+
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: EntityAlreadyExistsException</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_get_access_key_info" time="0.004" /><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_assume_role_with_tags" time="0.007"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRole&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a521490&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSOperations object at 0x10980e750&gt;
+sts = &lt;botocore.client.STS object at 0x10a5016d0&gt;
+
+    def test_assume_role_with_tags(self, sts):
+        """Assume role with session tags."""
+        import uuid
+    
+        role_name = f"test-tags-role-{uuid.uuid4().hex[:8]}"
+        iam = make_client("iam")
+        trust_policy = (
+            '{"Version":"2012-10-17","Statement":'
+            '[{"Effect":"Allow","Principal":{"AWS":"*"},'
+            '"Action":"sts:AssumeRole"}]}'
+        )
+        role = iam.create_role(
+            RoleName=role_name,
+            AssumeRolePolicyDocument=trust_policy,
+        )
+        role_arn = role["Role"]["Arn"]
+&gt;       response = sts.assume_role(
+            RoleArn=role_arn,
+            RoleSessionName="tag-session",
+            Tags=[
+                {"Key": "env", "Value": "test"},
+                {"Key": "team", "Value": "platform"},
+            ],
+        )
+
+tests/compatibility/test_sts_compat.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a521490&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRole"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_get_federation_token" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetFederationToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a4e8e30&gt;
+xml_string = b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSOperations object at 0x10980eb10&gt;
+sts = &lt;botocore.client.STS object at 0x10a522870&gt;
+
+    def test_get_federation_token(self, sts):
+&gt;       response = sts.get_federation_token(Name="testuser")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sts_compat.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a4e8e30&gt;
+xml_string = b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_decode_authorization_message" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: DecodeAuthorizationMessage&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a56cb30&gt;
+xml_string = b'{"error":"Unknown STS operation: DecodeAuthorizationMessage"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSOperations object at 0x10980eed0&gt;
+sts = &lt;botocore.client.STS object at 0x10a4ebb00&gt;
+
+    def test_decode_authorization_message(self, sts):
+        """Call decode_authorization_message with a dummy encoded message."""
+        try:
+&gt;           sts.decode_authorization_message(EncodedMessage="dummy-encoded-message")
+
+tests/compatibility/test_sts_compat.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a56cb30&gt;
+xml_string = b'{"error":"Unknown STS operation: DecodeAuthorizationMessage"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: DecodeAuthorizationMessage"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_assume_role_with_duration" time="0.009"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRole&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a42d910&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSOperations object at 0x10980f290&gt;
+sts = &lt;botocore.client.STS object at 0x10a56ddf0&gt;
+
+    def test_assume_role_with_duration(self, sts):
+        """AssumeRole with DurationSeconds."""
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"dur-role-{uuid.uuid4().hex[:8]}"
+        trust_policy = (
+            '{"Version":"2012-10-17","Statement":'
+            '[{"Effect":"Allow","Principal":{"AWS":"*"},'
+            '"Action":"sts:AssumeRole"}]}'
+        )
+        role = iam.create_role(
+            RoleName=role_name,
+            AssumeRolePolicyDocument=trust_policy,
+        )
+        role_arn = role["Role"]["Arn"]
+        try:
+&gt;           response = sts.assume_role(
+                RoleArn=role_arn,
+                RoleSessionName="dur-session",
+                DurationSeconds=3600,
+            )
+
+tests/compatibility/test_sts_compat.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a42d910&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRole"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_assume_role_with_inline_policy" time="0.009"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRole&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a56fcb0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSOperations object at 0x10980f650&gt;
+sts = &lt;botocore.client.STS object at 0x10a42f320&gt;
+
+    def test_assume_role_with_inline_policy(self, sts):
+        """AssumeRole with an inline session Policy."""
+        import json
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"pol-role-{uuid.uuid4().hex[:8]}"
+        trust_policy = (
+            '{"Version":"2012-10-17","Statement":'
+            '[{"Effect":"Allow","Principal":{"AWS":"*"},'
+            '"Action":"sts:AssumeRole"}]}'
+        )
+        role = iam.create_role(
+            RoleName=role_name,
+            AssumeRolePolicyDocument=trust_policy,
+        )
+        role_arn = role["Role"]["Arn"]
+        session_policy = json.dumps(
+            {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": "s3:GetObject",
+                        "Resource": "arn:aws:s3:::my-bucket/*",
+                    }
+                ],
+            }
+        )
+        try:
+&gt;           response = sts.assume_role(
+                RoleArn=role_arn,
+                RoleSessionName="policy-session",
+                Policy=session_policy,
+            )
+
+tests/compatibility/test_sts_compat.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a56fcb0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRole"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_get_session_token_with_duration" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetSessionToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a42d790&gt;
+xml_string = b'{"error":"Unknown STS operation: GetSessionToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSOperations object at 0x10980fa10&gt;
+sts = &lt;botocore.client.STS object at 0x10a4c6120&gt;
+
+    def test_get_session_token_with_duration(self, sts):
+        """GetSessionToken with DurationSeconds."""
+&gt;       response = sts.get_session_token(DurationSeconds=900)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sts_compat.py:200: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a42d790&gt;
+xml_string = b'{"error":"Unknown STS operation: GetSessionToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetSessionToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_caller_identity_account_format" time="0.005" /><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_caller_identity_arn_format" time="0.004" /><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_assume_role_assumed_role_user_fields" time="0.008"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRole&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a4673e0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSOperations object at 0x109834620&gt;
+sts = &lt;botocore.client.STS object at 0x10a4966f0&gt;
+
+    def test_assume_role_assumed_role_user_fields(self, sts):
+        """AssumedRoleUser has Arn and AssumedRoleId."""
+        iam = make_client("iam")
+        role_name = f"aru-role-{uuid.uuid4().hex[:8]}"
+        trust = json.dumps(
+            {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {"Effect": "Allow", "Principal": {"AWS": "*"}, "Action": "sts:AssumeRole"}
+                ],
+            }
+        )
+        role = iam.create_role(RoleName=role_name, AssumeRolePolicyDocument=trust)
+        try:
+&gt;           resp = sts.assume_role(RoleArn=role["Role"]["Arn"], RoleSessionName="aru-session")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sts_compat.py:232: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a4673e0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRole"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_get_federation_token_with_policy" time="0.005"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetFederationToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a4ba960&gt;
+xml_string = b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSOperations object at 0x10980fb90&gt;
+sts = &lt;botocore.client.STS object at 0x10a497170&gt;
+
+    def test_get_federation_token_with_policy(self, sts):
+        """GetFederationToken with an inline Policy."""
+        policy = json.dumps(
+            {
+                "Version": "2012-10-17",
+                "Statement": [{"Effect": "Allow", "Action": "s3:*", "Resource": "*"}],
+            }
+        )
+&gt;       response = sts.get_federation_token(Name="poluser", Policy=policy)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sts_compat.py:248: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a4ba960&gt;
+xml_string = b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSOperations" name="test_get_federation_token_credentials_fields" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetFederationToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a4866f0&gt;
+xml_string = b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSOperations object at 0x10980f620&gt;
+sts = &lt;botocore.client.STS object at 0x10a485040&gt;
+
+    def test_get_federation_token_credentials_fields(self, sts):
+        """GetFederationToken credentials have all required fields."""
+&gt;       response = sts.get_federation_token(Name="fielduser")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sts_compat.py:254: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a4866f0&gt;
+xml_string = b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_get_caller_identity_account_format" time="0.004" /><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_get_caller_identity_arn_format" time="0.003" /><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_get_caller_identity_userid_present" time="0.004" /><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_with_external_id" time="0.009"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRole&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a224740&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x1098341d0&gt;
+sts = &lt;botocore.client.STS object at 0x10a4b9b80&gt;
+
+    def test_assume_role_with_external_id(self, sts):
+        """AssumeRole with ExternalId parameter."""
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"extid-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        try:
+&gt;           response = sts.assume_role(
+                RoleArn=role_arn,
+                RoleSessionName="extid-session",
+                ExternalId="my-external-id-12345",
+            )
+
+tests/compatibility/test_sts_compat.py:306: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a224740&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRole"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_assumed_role_user_arn" time="0.010"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRole&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a282420&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109834cb0&gt;
+sts = &lt;botocore.client.STS object at 0x10a227ad0&gt;
+
+    def test_assume_role_assumed_role_user_arn(self, sts):
+        """Verify AssumedRoleUser.Arn contains session name."""
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"arn-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        try:
+&gt;           response = sts.assume_role(
+                RoleArn=role_arn,
+                RoleSessionName="my-unique-session",
+            )
+
+tests/compatibility/test_sts_compat.py:324: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a282420&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRole"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_assumed_role_user_id" time="0.009"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRole&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a1dc2c0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x1098350d0&gt;
+sts = &lt;botocore.client.STS object at 0x10a281e20&gt;
+
+    def test_assume_role_assumed_role_user_id(self, sts):
+        """Verify AssumedRoleUser.AssumedRoleId contains session name."""
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"arid-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        try:
+&gt;           response = sts.assume_role(
+                RoleArn=role_arn,
+                RoleSessionName="session-id-check",
+            )
+
+tests/compatibility/test_sts_compat.py:342: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a1dc2c0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRole"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_with_transitive_tag_keys" time="0.008"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRole&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a7a9970&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x1098354f0&gt;
+sts = &lt;botocore.client.STS object at 0x10a4bb3b0&gt;
+
+    def test_assume_role_with_transitive_tag_keys(self, sts):
+        """AssumeRole with Tags and TransitiveTagKeys."""
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"ttk-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        try:
+&gt;           response = sts.assume_role(
+                RoleArn=role_arn,
+                RoleSessionName="ttk-session",
+                Tags=[
+                    {"Key": "Project", "Value": "robotocore"},
+                    {"Key": "Department", "Value": "eng"},
+                ],
+                TransitiveTagKeys=["Project"],
+            )
+
+tests/compatibility/test_sts_compat.py:359: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a7a9970&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRole"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_with_policy_arns" time="0.010"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRole&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a494380&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109835910&gt;
+sts = &lt;botocore.client.STS object at 0x10a485640&gt;
+
+    def test_assume_role_with_policy_arns(self, sts):
+        """AssumeRole with managed PolicyArns for session."""
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"parns-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        try:
+&gt;           response = sts.assume_role(
+                RoleArn=role_arn,
+                RoleSessionName="parns-session",
+                PolicyArns=[
+                    {"arn": "arn:aws:iam::aws:policy/ReadOnlyAccess"},
+                ],
+            )
+
+tests/compatibility/test_sts_compat.py:381: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a494380&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRole"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_credential_access_key_format" time="0.009"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRole&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a52eed0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109835d30&gt;
+sts = &lt;botocore.client.STS object at 0x10a56c290&gt;
+
+    def test_assume_role_credential_access_key_format(self, sts):
+        """Verify AccessKeyId from assume_role starts with ASIA."""
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"akfmt-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        try:
+&gt;           response = sts.assume_role(
+                RoleArn=role_arn,
+                RoleSessionName="akfmt-session",
+            )
+
+tests/compatibility/test_sts_compat.py:401: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a52eed0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRole"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_expiration_is_datetime" time="0.009"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRole&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a56ed50&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109836150&gt;
+sts = &lt;botocore.client.STS object at 0x10a500890&gt;
+
+    def test_assume_role_expiration_is_datetime(self, sts):
+        """Verify Expiration is a datetime object (parsed by botocore)."""
+        import datetime
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"expdt-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        try:
+&gt;           response = sts.assume_role(
+                RoleArn=role_arn,
+                RoleSessionName="expdt-session",
+            )
+
+tests/compatibility/test_sts_compat.py:419: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a56ed50&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRole"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRole"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_get_session_token_credential_format" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetSessionToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a52c740&gt;
+xml_string = b'{"error":"Unknown STS operation: GetSessionToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109836570&gt;
+sts = &lt;botocore.client.STS object at 0x10a52d910&gt;
+
+    def test_get_session_token_credential_format(self, sts):
+        """Verify GetSessionToken returns properly formatted temporary credentials."""
+&gt;       response = sts.get_session_token()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sts_compat.py:430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a52c740&gt;
+xml_string = b'{"error":"Unknown STS operation: GetSessionToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetSessionToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_get_session_token_expiration_is_datetime" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetSessionToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a4c58b0&gt;
+xml_string = b'{"error":"Unknown STS operation: GetSessionToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109836990&gt;
+sts = &lt;botocore.client.STS object at 0x10a5020c0&gt;
+
+    def test_get_session_token_expiration_is_datetime(self, sts):
+        """Verify GetSessionToken Expiration is a datetime."""
+        import datetime
+    
+&gt;       response = sts.get_session_token()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sts_compat.py:443: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a4c58b0&gt;
+xml_string = b'{"error":"Unknown STS operation: GetSessionToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetSessionToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_get_federation_token_with_policy" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetFederationToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a56e690&gt;
+xml_string = b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109836db0&gt;
+sts = &lt;botocore.client.STS object at 0x10a4eb200&gt;
+
+    def test_get_federation_token_with_policy(self, sts):
+        """GetFederationToken with an inline policy."""
+        import json
+        import uuid
+    
+        name = f"feduser-{uuid.uuid4().hex[:8]}"
+        policy = json.dumps(
+            {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": "s3:GetObject",
+                        "Resource": "*",
+                    }
+                ],
+            }
+        )
+&gt;       response = sts.get_federation_token(Name=name, Policy=policy)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sts_compat.py:465: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a56e690&gt;
+xml_string = b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_get_federation_token_with_duration" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetFederationToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a5c8710&gt;
+xml_string = b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x10980e480&gt;
+sts = &lt;botocore.client.STS object at 0x10a5cbbc0&gt;
+
+    def test_get_federation_token_with_duration(self, sts):
+        """GetFederationToken with DurationSeconds."""
+        import uuid
+    
+        name = f"feduser-{uuid.uuid4().hex[:8]}"
+&gt;       response = sts.get_federation_token(
+            Name=name,
+            DurationSeconds=900,
+        )
+
+tests/compatibility/test_sts_compat.py:475: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a5c8710&gt;
+xml_string = b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_get_federation_token_federated_user_arn" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetFederationToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a503d40&gt;
+xml_string = b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x10980f830&gt;
+sts = &lt;botocore.client.STS object at 0x10a4ea8d0&gt;
+
+    def test_get_federation_token_federated_user_arn(self, sts):
+        """Verify FederatedUser.Arn contains the user name."""
+        import uuid
+    
+        name = f"fedarn-{uuid.uuid4().hex[:8]}"
+&gt;       response = sts.get_federation_token(Name=name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sts_compat.py:488: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a503d40&gt;
+xml_string = b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetFederationToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_packed_policy_too_large" time="0.010" /><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_with_web_identity" time="0.011"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRoleWithWebIdentity&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a522f90&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithWebIdentity"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109835d60&gt;
+sts = &lt;botocore.client.STS object at 0x10a4eb110&gt;
+
+    def test_assume_role_with_web_identity(self, sts):
+        """AssumeRoleWithWebIdentity with a dummy token."""
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"webid-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        try:
+&gt;           response = sts.assume_role_with_web_identity(
+                RoleArn=role_arn,
+                RoleSessionName="webid-session",
+                WebIdentityToken="dummy-oidc-token",
+            )
+
+tests/compatibility/test_sts_compat.py:530: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a522f90&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithWebIdentity"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRoleWithWebIdentity"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_with_saml" time="0.009"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRoleWithSAML&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a1de600&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x1098358e0&gt;
+sts = &lt;botocore.client.STS object at 0x10a5a31d0&gt;
+
+    def test_assume_role_with_saml(self, sts):
+        """AssumeRoleWithSAML with dummy parameters."""
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"saml-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        try:
+&gt;           response = sts.assume_role_with_saml(
+                RoleArn=role_arn,
+                PrincipalArn="arn:aws:iam::123456789012:saml-provider/MyProvider",
+                SAMLAssertion="PHNhbWw+ZHVtbXk8L3NhbWw+",
+            )
+
+tests/compatibility/test_sts_compat.py:547: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a1de600&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_with_saml_credential_fields" time="0.009"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRoleWithSAML&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a13fcb0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109834aa0&gt;
+sts = &lt;botocore.client.STS object at 0x10a1ded20&gt;
+
+    def test_assume_role_with_saml_credential_fields(self, sts):
+        """AssumeRoleWithSAML returns all required credential fields."""
+        import datetime
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"samlcf-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        try:
+&gt;           response = sts.assume_role_with_saml(
+                RoleArn=role_arn,
+                PrincipalArn="arn:aws:iam::123456789012:saml-provider/MyProvider",
+                SAMLAssertion="PHNhbWw+ZHVtbXk8L3NhbWw+",
+            )
+
+tests/compatibility/test_sts_compat.py:565: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a13fcb0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_with_saml_assumed_role_user" time="0.009"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRoleWithSAML&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a4f15e0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109837050&gt;
+sts = &lt;botocore.client.STS object at 0x10a5a3740&gt;
+
+    def test_assume_role_with_saml_assumed_role_user(self, sts):
+        """AssumeRoleWithSAML returns AssumedRoleUser with Arn and AssumedRoleId."""
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"samlaru-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        try:
+&gt;           response = sts.assume_role_with_saml(
+                RoleArn=role_arn,
+                PrincipalArn="arn:aws:iam::123456789012:saml-provider/MyProvider",
+                SAMLAssertion="PHNhbWw+ZHVtbXk8L3NhbWw+",
+            )
+
+tests/compatibility/test_sts_compat.py:587: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a4f15e0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_with_saml_with_policy" time="0.008"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRoleWithSAML&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a5872f0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109837470&gt;
+sts = &lt;botocore.client.STS object at 0x10a4bb320&gt;
+
+    def test_assume_role_with_saml_with_policy(self, sts):
+        """AssumeRoleWithSAML with an inline session policy."""
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"samlpol-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        policy = json.dumps(
+            {
+                "Version": "2012-10-17",
+                "Statement": [{"Effect": "Allow", "Action": "s3:GetObject", "Resource": "*"}],
+            }
+        )
+        try:
+&gt;           response = sts.assume_role_with_saml(
+                RoleArn=role_arn,
+                PrincipalArn="arn:aws:iam::123456789012:saml-provider/MyProvider",
+                SAMLAssertion="PHNhbWw+ZHVtbXk8L3NhbWw+",
+                Policy=policy,
+            )
+
+tests/compatibility/test_sts_compat.py:613: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a5872f0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_root" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRoot&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a4ff530&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoot"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109837890&gt;
+sts = &lt;botocore.client.STS object at 0x10a4fd340&gt;
+
+    def test_assume_root(self, sts):
+        """AssumeRoot returns temporary credentials for a target principal."""
+&gt;       response = sts.assume_root(
+            TargetPrincipal="arn:aws:organizations::123456789012:account/o-test/123456789012",
+            TaskPolicyArn={"arn": "arn:aws:iam::aws:policy/root-task/IAMAuditRootUserCredentials"},
+        )
+
+tests/compatibility/test_sts_compat.py:626: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a4ff530&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoot"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRoot"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_get_delegated_access_token" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetDelegatedAccessToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a573590&gt;
+xml_string = b'{"error":"Unknown STS operation: GetDelegatedAccessToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x109837cb0&gt;
+sts = &lt;botocore.client.STS object at 0x10a571b20&gt;
+
+    def test_get_delegated_access_token(self, sts):
+        """GetDelegatedAccessToken returns temporary credentials."""
+&gt;       response = sts.get_delegated_access_token(TradeInToken="dummy-trade-in-token")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/compatibility/test_sts_compat.py:638: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a573590&gt;
+xml_string = b'{"error":"Unknown STS operation: GetDelegatedAccessToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetDelegatedAccessToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSExtended" name="test_assume_role_with_saml_with_duration" time="0.009"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRoleWithSAML&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a7ae7e0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSExtended object at 0x10984c110&gt;
+sts = &lt;botocore.client.STS object at 0x10a5736b0&gt;
+
+    def test_assume_role_with_saml_with_duration(self, sts):
+        """AssumeRoleWithSAML with DurationSeconds."""
+        import uuid
+    
+        iam = make_client("iam")
+        role_name = f"samldur-role-{uuid.uuid4().hex[:8]}"
+        role_arn = self._create_role(iam, role_name)
+        try:
+&gt;           response = sts.assume_role_with_saml(
+                RoleArn=role_arn,
+                PrincipalArn="arn:aws:iam::123456789012:saml-provider/MyProvider",
+                SAMLAssertion="PHNhbWw+ZHVtbXk8L3NhbWw+",
+                DurationSeconds=3600,
+            )
+
+tests/compatibility/test_sts_compat.py:654: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a7ae7e0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken" name="test_get_web_identity_token_basic" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetWebIdentityToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a752390&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken object at 0x10984c5c0&gt;
+sts = &lt;botocore.client.STS object at 0x10a753bf0&gt;
+
+    def test_get_web_identity_token_basic(self, sts):
+        """GetWebIdentityToken returns a token and expiration."""
+&gt;       response = sts.get_web_identity_token(
+            Audience=["gitops-promoter"],
+            SigningAlgorithm="ES384",
+        )
+
+tests/compatibility/test_sts_compat.py:671: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a752390&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken" name="test_get_web_identity_token_rs256" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetWebIdentityToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a10b800&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken object at 0x10984c9e0&gt;
+sts = &lt;botocore.client.STS object at 0x10a10aed0&gt;
+
+    def test_get_web_identity_token_rs256(self, sts):
+        """GetWebIdentityToken accepts RS256 signing algorithm."""
+&gt;       response = sts.get_web_identity_token(
+            Audience=["my-app"],
+            SigningAlgorithm="RS256",
+        )
+
+tests/compatibility/test_sts_compat.py:681: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a10b800&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken" name="test_get_web_identity_token_with_duration" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetWebIdentityToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a4663c0&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken object at 0x10984ce00&gt;
+sts = &lt;botocore.client.STS object at 0x10a467260&gt;
+
+    def test_get_web_identity_token_with_duration(self, sts):
+        """GetWebIdentityToken respects DurationSeconds."""
+&gt;       response = sts.get_web_identity_token(
+            Audience=["my-app"],
+            SigningAlgorithm="ES384",
+            DurationSeconds=60,
+        )
+
+tests/compatibility/test_sts_compat.py:690: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a4663c0&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken" name="test_get_web_identity_token_multiple_audiences" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetWebIdentityToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a108800&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken object at 0x10984d220&gt;
+sts = &lt;botocore.client.STS object at 0x10a10b380&gt;
+
+    def test_get_web_identity_token_multiple_audiences(self, sts):
+        """GetWebIdentityToken accepts multiple audience values."""
+&gt;       response = sts.get_web_identity_token(
+            Audience=["aud-1", "aud-2", "aud-3"],
+            SigningAlgorithm="RS256",
+        )
+
+tests/compatibility/test_sts_compat.py:700: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a108800&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken" name="test_get_web_identity_token_is_jwt_format" time="0.004"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetWebIdentityToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a0e57c0&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken object at 0x1098375f0&gt;
+sts = &lt;botocore.client.STS object at 0x1097be2d0&gt;
+
+    def test_get_web_identity_token_is_jwt_format(self, sts):
+        """Token has three dot-separated parts (JWT header.payload.signature)."""
+&gt;       response = sts.get_web_identity_token(
+            Audience=["test"],
+            SigningAlgorithm="ES384",
+        )
+
+tests/compatibility/test_sts_compat.py:708: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a0e57c0&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken" name="test_get_web_identity_token_expiration_is_datetime" time="0.006"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetWebIdentityToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a48a120&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken object at 0x109834c50&gt;
+sts = &lt;botocore.client.STS object at 0x10a0e4dd0&gt;
+
+    def test_get_web_identity_token_expiration_is_datetime(self, sts):
+        """Expiration is parsed as a datetime by botocore."""
+        import datetime
+    
+&gt;       response = sts.get_web_identity_token(
+            Audience=["test"],
+            SigningAlgorithm="RS256",
+        )
+
+tests/compatibility/test_sts_compat.py:720: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a48a120&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken" name="test_get_web_identity_token_max_duration" time="0.005"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: GetWebIdentityToken&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a0e77a0&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken object at 0x109835520&gt;
+sts = &lt;botocore.client.STS object at 0x1097be210&gt;
+
+    def test_get_web_identity_token_max_duration(self, sts):
+        """GetWebIdentityToken with max duration (3600s)."""
+&gt;       response = sts.get_web_identity_token(
+            Audience=["test"],
+            SigningAlgorithm="ES384",
+            DurationSeconds=3600,
+        )
+
+tests/compatibility/test_sts_compat.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a0e77a0&gt;
+xml_string = b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: GetWebIdentityToken"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase><testcase classname="tests.compatibility.test_sts_compat.TestSTSGetWebIdentityToken" name="test_put_role_policy_with_get_web_identity_token_action" time="0.011" /><testcase classname="tests.compatibility.test_sts_compat.TestSTSAdditionalOps" name="test_assume_role_with_saml_minimal" time="0.014"><failure message="botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:&#10;b'{&quot;error&quot;:&quot;Unknown STS operation: AssumeRoleWithSAML&quot;}'">self = &lt;botocore.parsers.QueryParser object at 0x10a13fcb0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+&gt;           parser.feed(xml_string)
+E           xml.etree.ElementTree.ParseError: not well-formed (invalid token): line 1, column 0
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:547: ParseError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.compatibility.test_sts_compat.TestSTSAdditionalOps object at 0x10984cfb0&gt;
+client = &lt;botocore.client.STS object at 0x10a109340&gt;
+
+    def test_assume_role_with_saml_minimal(self, client):
+        """AssumeRoleWithSAML with minimal fake assertion returns credentials."""
+        iam = make_client("iam")
+        role_name = f"saml-add-{uuid.uuid4().hex[:8]}"
+        trust_policy = json.dumps(
+            {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {"Federated": "*"},
+                        "Action": "sts:AssumeRoleWithSAML",
+                    }
+                ],
+            }
+        )
+        role = iam.create_role(
+            RoleName=role_name,
+            AssumeRolePolicyDocument=trust_policy,
+        )
+        role_arn = role["Role"]["Arn"]
+        try:
+&gt;           resp = client.assume_role_with_saml(
+                RoleArn=role_arn,
+                PrincipalArn="arn:aws:iam::123456789012:saml-provider/TestProv",
+                SAMLAssertion="PHNhbWw+ZHVtbXk8L3NhbWw+",
+            )
+
+tests/compatibility/test_sts_compat.py:824: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/client.py:1060: in _make_api_call
+    http, parsed_response = self._make_request(
+.venv/lib/python3.12/site-packages/botocore/client.py:1084: in _make_request
+    return self._endpoint.make_request(operation_model, request_dict)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:119: in make_request
+    return self._send_request(request_dict, operation_model)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:197: in _send_request
+    success_response, exception = self._get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:239: in _get_response
+    success_response, exception = self._do_get_response(
+.venv/lib/python3.12/site-packages/botocore/endpoint.py:313: in _do_get_response
+    parsed_response = parser.parse(
+.venv/lib/python3.12/site-packages/botocore/parsers.py:265: in parse
+    parsed = self._do_error_parse(response, shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/botocore/parsers.py:600: in _do_error_parse
+    root = self._parse_xml_string_to_dom(xml_contents)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;botocore.parsers.QueryParser object at 0x10a13fcb0&gt;
+xml_string = b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+    def _parse_xml_string_to_dom(self, xml_string):
+        try:
+            parser = ETree.XMLParser(
+                target=ETree.TreeBuilder(), encoding=self.DEFAULT_ENCODING
+            )
+            parser.feed(xml_string)
+            root = parser.close()
+        except XMLParseError as e:
+&gt;           raise ResponseParserError(
+                f"Unable to parse response ({e}), "
+                f"invalid XML received. Further retries may succeed:\n{xml_string}"
+            )
+E           botocore.parsers.ResponseParserError: Unable to parse response (not well-formed (invalid token): line 1, column 0), invalid XML received. Further retries may succeed:
+E           b'{"error":"Unknown STS operation: AssumeRoleWithSAML"}'
+
+.venv/lib/python3.12/site-packages/botocore/parsers.py:550: ResponseParserError</failure></testcase></testsuite></testsuites>
