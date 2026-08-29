@@ -501,6 +501,21 @@ impl DynamoDbHandler {
             "MaxGlobalSecondaryIndexesPerTable": 100
         }))
     }
+    // ---- JSON stub helpers ----
+    fn json_empty(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, serde_json::json!({}))
+    }
+    fn json_stub(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        let mut obj = serde_json::Map::new();
+        obj.insert(field.to_string(), serde_json::json!({}));
+        AwsResponse::json(200, serde_json::Value::Object(obj))
+    }
+    fn json_stub_list(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        let mut obj = serde_json::Map::new();
+        obj.insert(field.to_string(), serde_json::json!([]));
+        AwsResponse::json(200, serde_json::Value::Object(obj))
+    }
+
 }
 
 impl Default for DynamoDbHandler {
