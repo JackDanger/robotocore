@@ -821,9 +821,15 @@ pub async fn catch_all_handler(
         }
     };
 
+    // Add the path to headers for REST operation resolution
+    let mut headers_with_path = headers.clone();
+    if let Ok(path_val) = HeaderValue::from_str(uri.path()) {
+        headers_with_path.insert("x-robotocore-path", path_val);
+    }
+
     // Determine operation (may be empty for REST services like S3 where
     // the operation is derived from method + path + query params)
-    let operation = match extract_operation(&method, &headers, &body_bytes, &service) {
+    let operation = match extract_operation(&method, &headers_with_path, &body_bytes, &service) {
         Ok(o) => o,
         Err(_) => String::new(),
     };

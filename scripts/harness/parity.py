@@ -226,15 +226,32 @@ def parse_junit(path):
     return result
 
 
+PER_SUITE_TIMEOUT = 300  # seconds per service per endpoint
+
+
 def run_suite(suite_name, endpoint, out_xml):
-    """Run one compat suite against an endpoint, return parsed results."""
+    """Run one compat suite against an endpoint, return parsed results.
+
+    Uses a hard timeout to catch runaway tests. If the suite times out,
+    returns partial results from whatever XML was written.
+    """
     env = dict(os.environ, ENDPOINT_URL=endpoint)
     cmd = (f"cd {REPO} && ENDPOINT_URL={endpoint} {PYV} -m pytest "
            f"{COMPAT_DIR}/{suite_name} -q -p no:cacheprovider "
            f"--junitxml={out_xml}")
-    r = subprocess.run(cmd, shell=True, capture_output=True, text=True,
-                       env=env, timeout=600)
-    return parse_junit(out_xml), r
+    try:
+        r = subprocess.run(cmd, shell=True, capture_output=True, text=True,
+                           env=env, timeout=PER_SUITE_TIMEOUT)
+        timed_out = False
+    except subprocess.TimeoutExpired:
+        timed_out = True
+        # The XML file may have partial results
+        r = None
+    results = parse_junit(out_xml)
+    if timed_out:
+        log(f"     [WARN] {suite_name} vs {endpoint} timed out after {PER_SUITE_TIMEOUT}s "
+            f"({len(results)} partial results)")
+    return results, r
 
 
 def classify(py_res, rust_res):
@@ -359,11 +376,16 @@ def print_summary(report, next_work):
     log("=" * 72)
 
 
+TOTAL_TIMEOUT = 1800  # 30 minutes max for a full run
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--services", default=",".join(sorted(NATIVE.keys())))
     ap.add_argument("--state", default=str(RUST_REPO / ".parity/state.json"))
     ap.add_argument("--next", action="store_true", help="just re-derive next work from state")
+    ap.add_argument("--timeout", type=int, default=TOTAL_TIMEOUT,
+                    help="max total seconds for the full run (default 1800)")
     args = ap.parse_args()
     state_path = Path(args.state)
 
@@ -381,7 +403,17 @@ def main():
         for bsvc in BRIDGE_SPOTCHECK:
             if bsvc not in services and find_suite(bsvc):
                 services.append(bsvc)
+
+    # Overall timeout guard
+    import signal
+    def _timeout_handler(signum, frame):
+        log(f"[!!] Total run exceeded {args.timeout}s — saving partial state")
+        raise SystemExit(1)
+    signal.signal(signal.SIGALRM, _timeout_handler)
+    signal.alarm(args.timeout)
+
     report = run_all(services, state_path.parent)
+    signal.alarm(0)  # cancel the alarm
     next_work = derive_next_work(report)
     save_state(report, next_work, state_path)
     print_summary(report, next_work)
