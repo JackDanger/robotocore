@@ -20,3 +20,5 @@ pub mod state;
 pub use account::{parse_account_from_key, AccountRegion};
 pub use server::{build_router, ServiceRegistry};
 pub use state::StateStore;
+
+pub mod rest_ops;

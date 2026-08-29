@@ -254,13 +254,98 @@ pub fn extract_operation(
     // we check the x-robotocore-path header)
     if let Some(path) = headers.get("x-robotocore-path") {
         let path_str = path.to_str()?;
-        let op = resolve_rest_operation(service, method.as_str(), path_str);
-        if let Some(op) = op {
+        // Try hand-rolled resolver first
+        if let Some(op) = resolve_rest_operation(service, method.as_str(), path_str) {
+            return Ok(op.to_string());
+        }
+        // Try spec-driven resolver
+        if let Some(op) = resolve_rest_op_from_spec(service, method.as_str(), path_str) {
             return Ok(op.to_string());
         }
     }
 
     Err("Could not determine operation".into())
+}
+
+/// Resolve a REST operation using the spec-driven op table.
+///
+/// Matches the request path against the botocore spec's requestUri templates.
+/// The path is version-agnostic: the first segment (API version) is stripped.
+fn resolve_rest_op_from_spec(
+    service: &str,
+    method: &str,
+    path: &str,
+) -> Option<&'static str> {
+    let p = path.trim_start_matches('/').trim_end_matches('/');
+    // Strip the version prefix (first segment)
+    let rest = if let Some(idx) = p.find('/') {
+        &p[idx + 1..]
+    } else {
+        p
+    };
+
+    match service {
+        "lambda" => {
+            for (spec_method, spec_uri, op) in crate::core::rest_ops::lambda_rest_ops() {
+                if *spec_method != method {
+                    continue;
+                }
+                // Strip version from spec URI
+                let spec_rest = spec_uri.trim_start_matches('/');
+                let spec_rest = if let Some(idx) = spec_rest.find('/') {
+                    &spec_rest[idx + 1..]
+                } else {
+                    spec_rest
+                };
+                // Match: replace {ParamName} with .* and check
+                let mut pattern = String::new();
+                let mut i = 0;
+                while i < spec_rest.len() {
+                    if spec_rest[i..].starts_with('{') {
+                        if let Some(end) = spec_rest[i..].find('}') {
+                            pattern.push_str(".*");
+                            i += end + 1;
+                            continue;
+                        }
+                    }
+                    let c = spec_rest.as_bytes()[i] as char;
+                    // Escape regex special chars
+                    i += 1;
+                }
+                // Strip trailing / from pattern
+                let pattern = pattern.trim_end_matches('/');
+                let rest_no_slash = rest.trim_end_matches('/');
+                if rest_no_slash == pattern || (rest_no_slash.starts_with(pattern) && pattern.ends_with(".*")) {
+                    return Some(op);
+                }
+                // Simple contains check for path params
+                if rest_no_slash.contains('/') && pattern.contains(".*") {
+                    // Check segment by segment
+                    let spec_parts: Vec<&str> = spec_rest.split('/').filter(|s| !s.is_empty() && !s.starts_with('{')).collect();
+                    let req_parts: Vec<&str> = rest_no_slash.split('/').filter(|s| !s.is_empty()).collect();
+                    if spec_parts.len() <= req_parts.len() {
+                        let mut match_ok = true;
+                        for (i, sp) in spec_parts.iter().enumerate() {
+                            if i < req_parts.len() && *sp != req_parts[i] {
+                                match_ok = false;
+                                break;
+                            }
+                        }
+                        if match_ok {
+                            return Some(op);
+                        }
+                    }
+                }
+            }
+            None
+        }
+        "s3" => {
+            // S3 is handled specially - the operation is derived from
+            // method + path structure, not from a spec table
+            None
+        }
+        _ => None,
+    }
 }
 
 /// Resolve a REST operation from service + method + path.
