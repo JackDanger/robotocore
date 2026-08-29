@@ -1,7 +1,7 @@
 //! IAM in-memory state models.
 
 use parking_lot::RwLock;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
 /// An IAM user.
@@ -182,6 +182,13 @@ pub struct IamState {
     pub policies: Arc<RwLock<HashMap<String, Arc<Policy>>>>,
     pub account_alias: Arc<RwLock<Option<String>>>,
     pub password_policy: Arc<RwLock<Option<serde_json::Value>>>,
+    pub saml_providers: Arc<RwLock<HashMap<String, String>>>,
+    pub oidc_providers: Arc<RwLock<HashMap<String, String>>>,
+    pub mfa_devices: Arc<RwLock<Vec<serde_json::Value>>>,
+    pub instance_profiles: Arc<RwLock<HashMap<String, Vec<String>>>>,
+    pub ssh_keys: Arc<RwLock<HashMap<String, Vec<String>>>>,
+    pub server_certs: Arc<RwLock<Vec<String>>>,
+    pub login_profiles: Arc<RwLock<HashSet<String>>>,
 }
 
 impl IamState {
@@ -193,6 +200,13 @@ impl IamState {
             policies: Arc::new(RwLock::new(HashMap::new())),
             account_alias: Arc::new(RwLock::new(None)),
             password_policy: Arc::new(RwLock::new(None)),
+            saml_providers: Arc::new(RwLock::new(HashMap::new())),
+            oidc_providers: Arc::new(RwLock::new(HashMap::new())),
+            mfa_devices: Arc::new(RwLock::new(Vec::new())),
+            instance_profiles: Arc::new(RwLock::new(HashMap::new())),
+            ssh_keys: Arc::new(RwLock::new(HashMap::new())),
+            server_certs: Arc::new(RwLock::new(Vec::new())),
+            login_profiles: Arc::new(RwLock::new(HashSet::new())),
         }
     }
 
@@ -212,6 +226,93 @@ impl IamState {
         let policies = self.policies.read();
         if let Some(p) = policies.get(arn_or_name) { return Some(p.clone()); }
         policies.values().find(|p| p.arn == arn_or_name).cloned()
+    }
+
+    // SAML/OIDC
+    pub fn create_saml_provider(&self, name: &str, doc: &str) {
+        self.saml_providers.write().insert(name.to_string(), doc.to_string());
+    }
+    pub fn delete_saml_provider(&self, name: &str) {
+        self.saml_providers.write().remove(name);
+    }
+    pub fn list_saml_providers(&self) -> Vec<serde_json::Value> {
+        self.saml_providers.read().keys().map(|n| serde_json::json!({
+            "Arn": format!("arn:aws:iam::123456789012:saml-provider/{}", n),
+            "Name": n,
+        })).collect()
+    }
+    pub fn update_saml_provider(&self, name: &str, doc: &str) {
+        self.saml_providers.write().insert(name.to_string(), doc.to_string());
+    }
+    pub fn create_oidc_provider(&self, url: &str, client: &str) {
+        self.oidc_providers.write().insert(url.to_string(), client.to_string());
+    }
+    pub fn delete_oidc_provider(&self, url: &str) {
+        self.oidc_providers.write().remove(url);
+    }
+    pub fn list_oidc_providers(&self) -> Vec<serde_json::Value> {
+        self.oidc_providers.read().keys().map(|u| serde_json::json!({
+            "Arn": format!("arn:aws:iam::123456789012:oidc-provider/{}", u),
+            "Url": u,
+        })).collect()
+    }
+
+    // Instance Profiles
+    pub fn create_instance_profile(&self, name: &str) {
+        self.instance_profiles.write().entry(name.to_string()).or_insert_with(Vec::new);
+    }
+    pub fn delete_instance_profile(&self, name: &str) {
+        self.instance_profiles.write().remove(name);
+    }
+    pub fn list_instance_profiles(&self) -> Vec<serde_json::Value> {
+        self.instance_profiles.read().iter().map(|(name, roles)| serde_json::json!({
+            "InstanceProfileName": name,
+            "InstanceProfileArn": format!("arn:aws:iam::123456789012:instance-profile/{}", name),
+            "Path": "/",
+            "CreateDate": "2024-01-01T00:00:00Z",
+            "Roles": roles.iter().map(|r| serde_json::json!({
+                "RoleName": r,
+                "RoleArn": format!("arn:aws:iam::123456789012:role/{}", r),
+            })).collect::<Vec<_>>(),
+        })).collect()
+    }
+    pub fn add_role_to_instance_profile(&self, profile: &str, role: &str) {
+        self.instance_profiles.write().entry(profile.to_string()).or_insert_with(Vec::new).push(role.to_string());
+    }
+    pub fn remove_role_from_instance_profile(&self, profile: &str, role: &str) {
+        if let Some(roles) = self.instance_profiles.write().get_mut(profile) {
+            roles.retain(|r| r != role);
+        }
+    }
+
+    // SSH Keys
+    pub fn upload_ssh_public_key(&self, user: &str, name: &str) {
+        self.ssh_keys.write().entry(user.to_string()).or_insert_with(Vec::new).push(name.to_string());
+    }
+    pub fn list_ssh_public_keys(&self, user: &str) -> Vec<serde_json::Value> {
+        self.ssh_keys.read().get(user).map(|keys| keys.iter().map(|k| serde_json::json!({
+            "SSHPublicKeyId": format!("{}-{}", user, k),
+            "SSHPublicKeyName": k,
+            "UserName": user,
+            "Status": "Active",
+            "CreatedDate": "2024-01-01T00:00:00Z",
+        })).collect()).unwrap_or_default()
+    }
+
+    // Server Certs
+    pub fn upload_server_certificate(&self, name: &str) {
+        self.server_certs.write().push(name.to_string());
+    }
+    pub fn delete_server_certificate(&self, name: &str) {
+        self.server_certs.write().retain(|c| c != name);
+    }
+
+    // Login Profiles
+    pub fn create_login_profile(&self, user: &str) {
+        self.login_profiles.write().insert(user.to_string());
+    }
+    pub fn delete_login_profile(&self, user: &str) {
+        self.login_profiles.write().remove(user);
     }
 }
 

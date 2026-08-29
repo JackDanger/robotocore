@@ -114,6 +114,56 @@ impl IamHandler {
             "GetAccessKeyLastUsed" => self.get_access_key_last_used(&req),
             "SimulateCustomPolicy" => self.simulate_custom_policy(&req),
             "SimulatePrincipalPolicy" => self.simulate_principal_policy(&req),
+            // SAML/OIDC/MFA/InstanceProfile/SSH/Cert/LoginProfile/AuthDetails
+            "CreateSAMLProvider" => self.xml_empty(&req, "CreateSAMLProvider"),
+            "GetSAMLProvider" => self.xml_saml_get(&req),
+            "DeleteSAMLProvider" => self.xml_empty(&req, "DeleteSAMLProvider"),
+            "ListSAMLProviders" => self.xml_empty(&req, "ListSAMLProviders"),
+            "UpdateSAMLProvider" => self.xml_empty(&req, "UpdateSAMLProvider"),
+            "CreateOpenIDConnectProvider" => self.xml_oidc_create(&req),
+            "GetOpenIDConnectProvider" => self.xml_empty(&req, "GetOpenIDConnectProvider"),
+            "DeleteOpenIDConnectProvider" => self.xml_empty(&req, "DeleteOpenIDConnectProvider"),
+            "ListOpenIDConnectProviders" => self.xml_empty(&req, "ListOpenIDConnectProviders"),
+            "UpdateOpenIDConnectProvider" => self.xml_empty(&req, "UpdateOpenIDConnectProvider"),
+            "CreateVirtualMFADevice" => self.xml_mfa_create(&req),
+            "ListVirtualMFADevices" => self.xml_empty(&req, "ListVirtualMFADevices"),
+            "TagVirtualMFADevice" => self.xml_empty(&req, "TagVirtualMFADevice"),
+            "UntagVirtualMFADevice" => self.xml_empty(&req, "UntagVirtualMFADevice"),
+            "ListVirtualMFADeviceTags" => self.xml_empty(&req, "ListVirtualMFADeviceTags"),
+            "DeactivateMFADevice" => self.xml_empty(&req, "DeactivateMFADevice"),
+            "EnableMFADevice" => self.xml_empty(&req, "EnableMFADevice"),
+            "ListMFADevices" => self.xml_empty(&req, "ListMFADevices"),
+            "CreateInstanceProfile" => self.xml_ip_create(&req),
+            "GetInstanceProfile" => self.xml_ip_get(&req),
+            "DeleteInstanceProfile" => self.xml_empty(&req, "DeleteInstanceProfile"),
+            "ListInstanceProfiles" => self.xml_empty(&req, "ListInstanceProfiles"),
+            "AddRoleToInstanceProfile" => self.xml_empty(&req, "AddRoleToInstanceProfile"),
+            "RemoveRoleFromInstanceProfile" => self.xml_empty(&req, "RemoveRoleFromInstanceProfile"),
+            "TagInstanceProfile" => self.xml_empty(&req, "TagInstanceProfile"),
+            "UntagInstanceProfile" => self.xml_empty(&req, "UntagInstanceProfile"),
+            "ListInstanceProfileTags" => self.xml_empty(&req, "ListInstanceProfileTags"),
+            "UploadSSHPublicKey" => self.xml_ssh_upload(&req),
+            "ImportSSHPublicKey" => self.xml_ssh_upload(&req),
+            "GetSSHPublicKey" => self.xml_ssh_get(&req),
+            "UpdateSSHPublicKey" => self.xml_empty(&req, "UpdateSSHPublicKey"),
+            "DeleteSSHPublicKey" => self.xml_empty(&req, "DeleteSSHPublicKey"),
+            "ListSSHPublicKeys" => self.xml_empty(&req, "ListSSHPublicKeys"),
+            "UploadServerCertificate" => self.xml_cert_upload(&req),
+            "GetServerCertificate" => self.xml_cert_get(&req),
+            "DeleteServerCertificate" => self.xml_empty(&req, "DeleteServerCertificate"),
+            "ListServerCertificates" => self.xml_empty(&req, "ListServerCertificates"),
+            "ListCertificates" => self.xml_empty(&req, "ListCertificates"),
+            "CreateLoginProfile" => self.xml_login_create(&req),
+            "GetLoginProfile" => self.xml_empty(&req, "GetLoginProfile"),
+            "UpdateLoginProfile" => self.xml_empty(&req, "UpdateLoginProfile"),
+            "DeleteLoginProfile" => self.xml_empty(&req, "DeleteLoginProfile"),
+            "GetAccountAuthorizationDetails" => self.xml_empty(&req, "GetAccountAuthorizationDetails"),
+            "GenerateCredentialReport" => self.xml_empty(&req, "GenerateCredentialReport"),
+            "GetCredentialReport" => self.xml_empty(&req, "GetCredentialReport"),
+            "GetContextKeyPolicy" => self.xml_empty(&req, "GetContextKeyPolicy"),
+            "CreateContextKey" => self.xml_empty(&req, "CreateContextKey"),
+            "DeleteContextKey" => self.xml_empty(&req, "DeleteContextKey"),
+            "PutContextKey" => self.xml_empty(&req, "PutContextKey"),
             other => AwsResponse::error(400, "InvalidParameterValue",
                 &format!("The operation {} is not implemented", other)),
         }
@@ -1199,6 +1249,81 @@ impl IamHandler {
             </EvaluationResults>"
         ))
     }
+    // ---- Stub operations (return empty XML for compatibility) ----
+    fn xml_empty(&self, req: &AwsRequest, op: &str) -> AwsResponse {
+        let root = format!("{}Result", op);
+        AwsResponse::xml(200, op, format!("<{}/>", root))
+    }
+    fn xml_saml_get(&self, req: &AwsRequest) -> AwsResponse {
+        let name = get_param(req, "SAMLProviderName").unwrap_or_else(|| "unknown".into());
+        AwsResponse::xml(200, "GetSAMLProvider", format!(
+            "<GetSAMLProviderResult><SAMLProviderArn>arn:aws:iam::{}:saml-provider/{}&lt;/SAMLProviderArn></GetSAMLProviderResult>",
+            req.account, name
+        ))
+    }
+    fn xml_oidc_create(&self, req: &AwsRequest) -> AwsResponse {
+        let url = get_param(req, "Url").unwrap_or_else(|| "https://unknown".into());
+        AwsResponse::xml(200, "CreateOpenIDConnectProvider", format!(
+            "<CreateOpenIDConnectProviderResult><OpenIDConnectProviderArn>arn:aws:iam::{}:oidc-provider/{}&lt;/OpenIDConnectProviderArn></CreateOpenIDConnectProviderResult>",
+            req.account, url
+        ))
+    }
+    fn xml_mfa_create(&self, req: &AwsRequest) -> AwsResponse {
+        let name = get_param(req, "VirtualMFADeviceName").unwrap_or_else(|| "unknown".into());
+        AwsResponse::xml(200, "CreateVirtualMFADevice", format!(
+            "<CreateVirtualMFADeviceResult><VirtualMFADevice><SerialNumber>arn:aws:iam::{}:mfa/{}&lt;/SerialNumber><VirtualMFADeviceName>{}</VirtualMFADeviceName></VirtualMFADevice><Base32StringSeed>ABCDEF123456</Base32StringSeed><QRCodePNGBase64>iVBORw0KGgo=</QRCodePNGBase64></CreateVirtualMFADeviceResult>",
+            req.account, name, name
+        ))
+    }
+    fn xml_ip_create(&self, req: &AwsRequest) -> AwsResponse {
+        let name = get_param(req, "InstanceProfileName").unwrap_or_else(|| "unknown".into());
+        AwsResponse::xml(200, "CreateInstanceProfile", format!(
+            "<CreateInstanceProfileResult><InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>arn:aws:iam::{}:instance-profile/{}&lt;/InstanceProfileArn><Path>/</Path><Roles/></InstanceProfile></CreateInstanceProfileResult>",
+            name, req.account, name
+        ))
+    }
+    fn xml_ip_get(&self, req: &AwsRequest) -> AwsResponse {
+        let name = get_param(req, "InstanceProfileName").unwrap_or_else(|| "unknown".into());
+        AwsResponse::xml(200, "GetInstanceProfile", format!(
+            "<GetInstanceProfileResult><InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>arn:aws:iam::{}:instance-profile/{}&lt;/InstanceProfileArn><Path>/</Path><Roles/></InstanceProfile></GetInstanceProfileResult>",
+            name, req.account, name
+        ))
+    }
+    fn xml_ssh_upload(&self, req: &AwsRequest) -> AwsResponse {
+        let name = get_param(req, "SSHPublicKeyName").unwrap_or_else(|| "unknown".into());
+        let user = get_param(req, "UserName").unwrap_or_else(|| "unknown".into());
+        AwsResponse::xml(200, "UploadSSHPublicKey", format!(
+            "<UploadSSHPublicKeyResult><SSHPublicKey><SSHPublicKeyId>{}-{}</SSHPublicKeyId><SSHPublicKeyName>{}</SSHPublicKeyName><UserName>{}</UserName><Status>Active</Status></SSHPublicKey></UploadSSHPublicKeyResult>",
+            user, name, name, user
+        ))
+    }
+    fn xml_ssh_get(&self, req: &AwsRequest) -> AwsResponse {
+        let name = get_param(req, "SSHPublicKeyName").unwrap_or_else(|| "unknown".into());
+        let user = get_param(req, "UserName").unwrap_or_else(|| "unknown".into());
+        AwsResponse::xml(200, "GetSSHPublicKey", format!(
+            "<GetSSHPublicKeyResult><SSHPublicKey><SSHPublicKeyId>{}-{}</SSHPublicKeyId><SSHPublicKeyName>{}</SSHPublicKeyName><UserName>{}</UserName><Status>Active</Status><SSHPublicKeyBody>ssh-rsa AAAAB3NzaC1yc2E=</SSHPublicKeyBody></SSHPublicKey></GetSSHPublicKeyResult>",
+            user, name, name, user
+        ))
+    }
+    fn xml_cert_upload(&self, req: &AwsRequest) -> AwsResponse {
+        let name = get_param(req, "ServerCertificateName").unwrap_or_else(|| "unknown".into());
+        AwsResponse::xml(200, "UploadServerCertificate", format!(
+            "<UploadServerCertificateResult><ServerCertificateMetadata><ServerCertificateName>{}</ServerCertificateName><ServerCertificateId>cert-{}&lt;/ServerCertificateId><Arn>arn:aws:iam::{}:server-certificate/{}&lt;/Arn></ServerCertificateMetadata></UploadServerCertificateResult>",
+            name, name, req.account, name
+        ))
+    }
+    fn xml_cert_get(&self, req: &AwsRequest) -> AwsResponse {
+        let name = get_param(req, "ServerCertificateName").unwrap_or_else(|| "unknown".into());
+        AwsResponse::xml(200, "GetServerCertificate", format!(
+            "<GetServerCertificateResult><ServerCertificateMetadata><ServerCertificateName>{}</ServerCertificateName><ServerCertificateId>cert-{}&lt;/ServerCertificateId><Arn>arn:aws:iam::{}:server-certificate/{}&lt;/Arn></ServerCertificateMetadata></GetServerCertificateResult>",
+            name, name, req.account, name
+        ))
+    }
+    fn xml_login_create(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::xml(200, "CreateLoginProfile",
+            "<CreateLoginProfileResult><Password>TempPassword123!</Password><PasswordResetRequired>true</PasswordResetRequired></CreateLoginProfileResult>".into())
+    }
+
 }
 
 impl Default for IamHandler {
