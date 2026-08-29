@@ -14,7 +14,36 @@ pub async fn handle_sts_request(
     match req.operation.as_str() {
         "GetCallerIdentity" => handle_get_caller_identity(req),
         "GetAccessKeyInfo" => handle_get_access_key_info(req),
-        _ => Err(format!("Unknown STS operation: {}", req.operation).into()),
+        "GetSessionToken" => handle_get_session_token(req),
+        "GetFederationToken" => handle_get_federation_token(req),
+        "AssumeRole" => handle_assume_role(req),
+        "AssumeRoleWithWebIdentity" => handle_assume_role(req),
+        "AssumeRoleWithSAML" => handle_assume_role(req),
+        "GetWebIdentityToken" => handle_get_web_identity_token(req),
+        "DecodeAuthorizationMessage" => handle_decode_auth_message(req),
+        "DecodeAWSAccountId" => handle_decode_aws_account_id(req),
+        "GetAccessKeyLastUsed" => handle_get_access_key_last_used(req),
+        _ => Ok(ParsedResponse {
+            status: StatusCode::NOT_FOUND,
+            headers: {
+                let mut h = std::collections::HashMap::new();
+                h.insert("Content-Type".to_string(), "text/xml".to_string());
+                h
+            },
+            body: json!({}),
+            raw: Some(format!(
+                r#"<?xml version="1.0" encoding="UTF-8"?>
+<ErrorResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+    <Error>
+        <Type>Sender</Type>
+        <Code>InvalidAction</Code>
+        <Message>Unknown STS operation: {}</Message>
+    </Error>
+    <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
+</ErrorResponse>"#,
+                req.operation
+            )),
+        }),
     }
 }
 
@@ -81,6 +110,179 @@ fn handle_get_access_key_info(
         body,
         raw: None,
     })
+}
+
+
+/// GetSessionToken operation.
+fn handle_get_session_token(
+    req: &ParsedRequest,
+) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+    let account = req.account;
+    let body = format!(
+        r#"<?xml version="1.0" encoding="UTF-8"?>
+<GetSessionTokenResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+    <GetSessionTokenResult>
+        <Credentials>
+            <AccessKeyId>AKIAIOSFODNN7EXAMPLE</AccessKeyId>
+            <SecretAccessKey>wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</SecretAccessKey>
+            <SessionToken>session-token-001</SessionToken>
+            <Expiration>2024-12-31T23:59:59Z</Expiration>
+        </Credentials>
+    </GetSessionTokenResult>
+    <ResponseMetadata>
+        <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
+    </ResponseMetadata>
+</GetSessionTokenResponse>"#
+    );
+    Ok(xml_response(&body))
+}
+
+/// GetFederationToken operation.
+fn handle_get_federation_token(
+    req: &ParsedRequest,
+) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+    let account = req.account;
+    let name = req.params.get("Name").and_then(|v| v.as_str()).unwrap_or("federation-user");
+    let body = format!(
+        r#"<?xml version="1.0" encoding="UTF-8"?>
+<GetFederationTokenResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+    <GetFederationTokenResult>
+        <FederatedUser>
+            <Arn>arn:aws:sts::{}:federated-user/{}</Arn>
+            <FederatedUserId>{}/{}-1234567890</FederatedUserId>
+        </FederatedUser>
+        <Credentials>
+            <AccessKeyId>AKIAIOSFODNN7EXAMPLE</AccessKeyId>
+            <SecretAccessKey>wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</SecretAccessKey>
+            <SessionToken>session-token-001</SessionToken>
+            <Expiration>2024-12-31T23:59:59Z</Expiration>
+        </Credentials>
+    </GetFederationTokenResult>
+    <ResponseMetadata>
+        <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
+    </ResponseMetadata>
+</GetFederationTokenResponse>"#,
+        account, name, account, name
+    );
+    Ok(xml_response(&body))
+}
+
+/// AssumeRole / AssumeRoleWithWebIdentity / AssumeRoleWithSAML.
+fn handle_assume_role(
+    req: &ParsedRequest,
+) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+    let account = req.account;
+    let role_arn = req.params.get("RoleArn")
+        .and_then(|v| v.as_str())
+        .map(|s| s.to_string())
+        .unwrap_or_else(|| format!("arn:aws:iam::{}:role/lambda-role", account));
+    let body = format!(
+        r#"<?xml version="1.0" encoding="UTF-8"?>
+<AssumeRoleResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+    <AssumeRoleResult>
+        <Credentials>
+            <AccessKeyId>AKIAIOSFODNN7EXAMPLE</AccessKeyId>
+            <SecretAccessKey>wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</SecretAccessKey>
+            <SessionToken>session-token-001</SessionToken>
+            <Expiration>2024-12-31T23:59:59Z</Expiration>
+        </Credentials>
+        <AssumedRoleUser>
+            <Arn>{}</Arn>
+            <AssumedRoleId>AROA1234567890:session</AssumedRoleId>
+        </AssumedRoleUser>
+    </AssumeRoleResult>
+    <ResponseMetadata>
+        <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
+    </ResponseMetadata>
+</AssumeRoleResponse>"#,
+        role_arn
+    );
+    Ok(xml_response(&body))
+}
+
+/// GetWebIdentityToken operation.
+fn handle_get_web_identity_token(
+    req: &ParsedRequest,
+) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+    let body = r#"<?xml version="1.0" encoding="UTF-8"?>
+<GetWebIdentityTokenResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+    <GetWebIdentityTokenResult>
+        <Token>web-identity-token-001</Token>
+    </GetWebIdentityTokenResult>
+    <ResponseMetadata>
+        <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
+    </ResponseMetadata>
+</GetWebIdentityTokenResponse>"#;
+    Ok(xml_response(body))
+}
+
+/// DecodeAuthorizationMessage operation.
+fn handle_decode_auth_message(
+    _req: &ParsedRequest,
+) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+    let body = r#"<?xml version="1.0" encoding="UTF-8"?>
+<DecodeAuthorizationMessageResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+    <DecodeAuthorizationMessageResult>
+        <DecodedMessage>{"account":"123456789012"}</DecodedMessage>
+    </DecodeAuthorizationMessageResult>
+    <ResponseMetadata>
+        <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
+    </ResponseMetadata>
+</DecodeAuthorizationMessageResponse>"#;
+    Ok(xml_response(body))
+}
+
+/// DecodeAWSAccountId operation.
+fn handle_decode_aws_account_id(
+    _req: &ParsedRequest,
+) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+    let body = r#"<?xml version="1.0" encoding="UTF-8"?>
+<DecodeAWSAccountIdResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+    <DecodeAWSAccountIdResult>
+        <AccountId>123456789012</AccountId>
+    </DecodeAWSAccountIdResult>
+    <ResponseMetadata>
+        <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
+    </ResponseMetadata>
+</DecodeAWSAccountIdResponse>"#;
+    Ok(xml_response(body))
+}
+
+/// GetAccessKeyLastUsed operation.
+fn handle_get_access_key_last_used(
+    req: &ParsedRequest,
+) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+    let account = req.account;
+    let body = format!(
+        r#"<?xml version="1.0" encoding="UTF-8"?>
+<GetAccessKeyLastUsedResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+    <GetAccessKeyLastUsedResult>
+        <AccessKeyLastUsed>
+            <LastUsedDate>2024-01-01T00:00:00Z</LastUsedDate>
+            <ServiceName>sts</ServiceName>
+            <Region>us-east-1</Region>
+        </AccessKeyLastUsed>
+    </GetAccessKeyLastUsedResult>
+    <ResponseMetadata>
+        <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
+    </ResponseMetadata>
+</GetAccessKeyLastUsedResponse>"#
+    );
+    Ok(xml_response(&body))
+}
+
+/// Helper: build a ParsedResponse from raw XML.
+fn xml_response(body: &str) -> ParsedResponse {
+    ParsedResponse {
+        status: StatusCode::OK,
+        headers: {
+            let mut h = std::collections::HashMap::new();
+            h.insert("Content-Type".to_string(), "text/xml".to_string());
+            h
+        },
+        body: json!({}),
+        raw: Some(body.to_string()),
+    }
 }
 
 #[cfg(test)]
