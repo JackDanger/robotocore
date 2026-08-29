@@ -903,10 +903,38 @@ pub async fn catch_all_handler(
         }
     };
 
-    // Handle request
-    match handler.handle_sync(&parsed_req) {
-        Ok(resp) => response_from_parsed(resp, &service, &parsed_req.operation),
-        Err(e) => error_response(StatusCode::INTERNAL_SERVER_ERROR, &e.to_string()),
+    // Handle request with a timeout to catch runaway tasks
+    let handler = handler.clone();
+    let parsed_req = std::sync::Arc::new(parsed_req);
+    let service = service.clone();
+    let timeout_secs: u64 = 30;
+
+    let result = tokio::time::timeout(
+        std::time::Duration::from_secs(timeout_secs),
+        tokio::task::spawn_blocking(move || {
+            let req = parsed_req.as_ref();
+            match handler.handle_sync(req) {
+                Ok(resp) => Ok((resp, req.operation.clone())),
+                Err(e) => Err(e.to_string()),
+            }
+        }),
+    )
+    .await;
+
+    match result {
+        Ok(Ok(Ok((resp, op)))) => response_from_parsed(resp, &service, &op),
+        Ok(Ok(Err(e))) => error_response(StatusCode::INTERNAL_SERVER_ERROR, &e),
+        Ok(Err(e)) => error_response(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            &format!("Handler task failed: {}", e),
+        ),
+        Err(_) => {
+            tracing::warn!("Request timed out after {}s: {} {}", timeout_secs, method, uri);
+            error_response(
+                StatusCode::GATEWAY_TIMEOUT,
+                "Request timed out",
+            )
+        }
     }
 }
 
