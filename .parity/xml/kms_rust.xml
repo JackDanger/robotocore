@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="59" skipped="0" tests="81" time="1.786" timestamp="2026-08-29T07:21:30.932792-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key" time="0.080" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_keys" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt" time="0.005"><failure message="AssertionError: assert b'decrypted' == b'secret data'&#10;  &#10;  At index 0 diff: b'd' != b's'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10bfe72c0&gt;
-kms = &lt;botocore.client.KMS object at 0x10c84cb60&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="59" skipped="0" tests="81" time="1.769" timestamp="2026-08-29T08:00:34.562431-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key" time="0.079" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_keys" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt" time="0.005"><failure message="AssertionError: assert b'decrypted' == b'secret data'&#10;  &#10;  At index 0 diff: b'd' != b's'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d8011f0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e02b320&gt;
 
     def test_encrypt_decrypt(self, kms):
         key = kms.create_key(Description="encrypt key")
@@ -15,8 +15,8 @@ E
 E         At index 0 diff: b'd' != b's'
 E         Use -v to get more diff
 
-tests/compatibility/test_kms_compat.py:35: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_data_key" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_alias" time="0.006"><failure message="AssertionError: assert 'alias/test-alias' in []">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10bfe7e00&gt;
-kms = &lt;botocore.client.KMS object at 0x10c84e780&gt;
+tests/compatibility/test_kms_compat.py:35: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_data_key" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_alias" time="0.006"><failure message="AssertionError: assert 'alias/test-alias' in []">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d801d30&gt;
+kms = &lt;botocore.client.KMS object at 0x10e1208f0&gt;
 
     def test_create_alias(self, kms):
         key = kms.create_key(Description="alias key")
@@ -28,8 +28,8 @@ kms = &lt;botocore.client.KMS object at 0x10c84e780&gt;
 &gt;       assert "alias/test-alias" in alias_names
 E       AssertionError: assert 'alias/test-alias' in []
 
-tests/compatibility/test_kms_compat.py:59: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_with_alias" time="0.007"><failure message="botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the Encrypt operation: Key not found">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c0205c0&gt;
-kms = &lt;botocore.client.KMS object at 0x10c8b5850&gt;
+tests/compatibility/test_kms_compat.py:59: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_with_alias" time="0.007"><failure message="botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the Encrypt operation: Key not found">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d8024b0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e06f2c0&gt;
 
     def test_encrypt_with_alias(self, kms):
         key = kms.create_key(Description="alias encrypt")
@@ -49,7 +49,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c8b5850&gt;, operation_name = 'Encrypt'
+self = &lt;botocore.client.KMS object at 0x10e06f2c0&gt;, operation_name = 'Encrypt'
 api_params = {'KeyId': 'alias/enc-test', 'Plaintext': b'test data'}
 
     @with_current_context()
@@ -139,8 +139,8 @@ api_params = {'KeyId': 'alias/enc-test', 'Plaintext': b'test data'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the Encrypt operation: Key not found
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: NotFoundException</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_key_rotation_status" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetKeyRotationStatus operation: The operation GetKeyRotationStatus is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c020980&gt;
-kms = &lt;botocore.client.KMS object at 0x10bf76c60&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: NotFoundException</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_key_rotation_status" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetKeyRotationStatus operation: The operation GetKeyRotationStatus is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d802870&gt;
+kms = &lt;botocore.client.KMS object at 0x10e1a4080&gt;
 
     def test_get_key_rotation_status(self, kms):
         key = kms.create_key(Description="rotation status key")
@@ -159,9 +159,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10bf76c60&gt;
+self = &lt;botocore.client.KMS object at 0x10e1a4080&gt;
 operation_name = 'GetKeyRotationStatus'
-api_params = {'KeyId': 'e38e591d4a784da1b31ab27717297a11'}
+api_params = {'KeyId': '0ad061c0c66a4ddda374f29a0c144573'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -250,8 +250,8 @@ api_params = {'KeyId': 'e38e591d4a784da1b31ab27717297a11'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetKeyRotationStatus operation: The operation GetKeyRotationStatus is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_key_enable_disable" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_key" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListResourceTags operation: The operation ListResourceTags is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c021100&gt;
-kms = &lt;botocore.client.KMS object at 0x10c7cb6e0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_key_enable_disable" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_key" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListResourceTags operation: The operation ListResourceTags is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d802ff0&gt;
+kms = &lt;botocore.client.KMS object at 0x10d77f6e0&gt;
 
     def test_tag_key(self, kms):
         key = kms.create_key(Description="tag key", Tags=[{"TagKey": "env", "TagValue": "test"}])
@@ -270,9 +270,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c7cb6e0&gt;
+self = &lt;botocore.client.KMS object at 0x10d77f6e0&gt;
 operation_name = 'ListResourceTags'
-api_params = {'KeyId': '1b972549384346d49eaee51763885cbb'}
+api_params = {'KeyId': '7058176295c344c391faab4250b55d17'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -361,8 +361,8 @@ api_params = {'KeyId': '1b972549384346d49eaee51763885cbb'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListResourceTags operation: The operation ListResourceTags is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_key_rotation" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the EnableKeyRotation operation: The operation EnableKeyRotation is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10bfe7ec0&gt;
-kms = &lt;botocore.client.KMS object at 0x10c84ea50&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_key_rotation" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the EnableKeyRotation operation: The operation EnableKeyRotation is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d803200&gt;
+kms = &lt;botocore.client.KMS object at 0x10d77f440&gt;
 
     def test_enable_key_rotation(self, kms):
         key = kms.create_key(Description="rotation key")
@@ -380,9 +380,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c84ea50&gt;
+self = &lt;botocore.client.KMS object at 0x10d77f440&gt;
 operation_name = 'EnableKeyRotation'
-api_params = {'KeyId': '985cc33fd0874668b561c096b4bd4a8f'}
+api_params = {'KeyId': '5e04e0cd910d44e6808a3afcdde8a39e'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -471,8 +471,8 @@ api_params = {'KeyId': '985cc33fd0874668b561c096b4bd4a8f'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the EnableKeyRotation operation: The operation EnableKeyRotation is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_aliases_for_key" time="0.006"><failure message="AssertionError: assert 'alias/list-test-1' in []">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10bfe7440&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb1f020&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_aliases_for_key" time="0.007"><failure message="AssertionError: assert 'alias/list-test-1' in []">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d802630&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2dd5b0&gt;
 
     def test_list_aliases_for_key(self, kms):
         key = kms.create_key(Description="alias list key")
@@ -485,8 +485,8 @@ kms = &lt;botocore.client.KMS object at 0x10cb1f020&gt;
 &gt;       assert "alias/list-test-1" in alias_names
 E       AssertionError: assert 'alias/list-test-1' in []
 
-tests/compatibility/test_kms_compat.py:135: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_update_alias" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the UpdateAlias operation: The operation UpdateAlias is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10bfe68d0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb4c980&gt;
+tests/compatibility/test_kms_compat.py:135: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_update_alias" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the UpdateAlias operation: The operation UpdateAlias is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d801d60&gt;
+kms = &lt;botocore.client.KMS object at 0x10e36c1a0&gt;
 
     def test_update_alias(self, kms):
         key1 = kms.create_key(Description="alias update key 1")
@@ -507,9 +507,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cb4c980&gt;
+self = &lt;botocore.client.KMS object at 0x10e36c1a0&gt;
 operation_name = 'UpdateAlias'
-api_params = {'AliasName': 'alias/update-test', 'TargetKeyId': 'a563e7fd2e37492f93689a231db02b48'}
+api_params = {'AliasName': 'alias/update-test', 'TargetKeyId': '57a5f558356445bd873e5925f7be754f'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -598,8 +598,8 @@ api_params = {'AliasName': 'alias/update-test', 'TargetKeyId': 'a563e7fd2e37492f
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the UpdateAlias operation: The operation UpdateAlias is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_untag_resource" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListResourceTags operation: The operation ListResourceTags is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c020ad0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb1c650&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_untag_resource" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListResourceTags operation: The operation ListResourceTags is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d801340&gt;
+kms = &lt;botocore.client.KMS object at 0x10e02bbc0&gt;
 
     def test_tag_untag_resource(self, kms):
         key = kms.create_key(Description="tag untag key")
@@ -625,9 +625,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cb1c650&gt;
+self = &lt;botocore.client.KMS object at 0x10e02bbc0&gt;
 operation_name = 'ListResourceTags'
-api_params = {'KeyId': '9957f6e35ea8477d9b9ebd8b2fea9770'}
+api_params = {'KeyId': 'd5c1d3ce130c4ffeb8d973a0b13c96de'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -716,8 +716,8 @@ api_params = {'KeyId': '9957f6e35ea8477d9b9ebd8b2fea9770'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListResourceTags operation: The operation ListResourceTags is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_key_policy" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_key_policies" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyPolicies operation: The operation ListKeyPolicies is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c0216a0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb5f8c0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_key_policy" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_key_policies" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyPolicies operation: The operation ListKeyPolicies is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d803590&gt;
+kms = &lt;botocore.client.KMS object at 0x10e3344d0&gt;
 
     def test_list_key_policies(self, kms):
         key = kms.create_key(Description="list policy key")
@@ -736,9 +736,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cb5f8c0&gt;
+self = &lt;botocore.client.KMS object at 0x10e3344d0&gt;
 operation_name = 'ListKeyPolicies'
-api_params = {'KeyId': '7714076a79e047b4a7ac79ae1b4685d0'}
+api_params = {'KeyId': '0c074b9dcb8c479492ebcae2ad03451a'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -827,8 +827,8 @@ api_params = {'KeyId': '7714076a79e047b4a7ac79ae1b4685d0'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyPolicies operation: The operation ListKeyPolicies is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt_with_context" time="0.005"><failure message="AssertionError: assert b'decrypted' == b'context secret'&#10;  &#10;  At index 0 diff: b'd' != b'c'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c021ac0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb1f560&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt_with_context" time="0.006"><failure message="AssertionError: assert b'decrypted' == b'context secret'&#10;  &#10;  At index 0 diff: b'd' != b'c'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d8039b0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e11f260&gt;
 
     def test_encrypt_decrypt_with_context(self, kms):
         key = kms.create_key(Description="context enc key")
@@ -847,8 +847,8 @@ E
 E         At index 0 diff: b'd' != b'c'
 E         Use -v to get more diff
 
-tests/compatibility/test_kms_compat.py:203: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_data_key_without_plaintext_basic" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyWithoutPlaintext operation: The operation GenerateDataKeyWithoutPlaintext is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c021ee0&gt;
-kms = &lt;botocore.client.KMS object at 0x10c84cc80&gt;
+tests/compatibility/test_kms_compat.py:203: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_data_key_without_plaintext_basic" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyWithoutPlaintext operation: The operation GenerateDataKeyWithoutPlaintext is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d803dd0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2de2a0&gt;
 
     def test_generate_data_key_without_plaintext_basic(self, kms):
         key = kms.create_key(Description="data key no pt")
@@ -867,9 +867,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c84cc80&gt;
+self = &lt;botocore.client.KMS object at 0x10e2de2a0&gt;
 operation_name = 'GenerateDataKeyWithoutPlaintext'
-api_params = {'KeyId': 'b1b543af2908403fb2b3758a7a78124e', 'KeySpec': 'AES_256'}
+api_params = {'KeyId': '65bccddaadb84b939f89b6e681f1ffdd', 'KeySpec': 'AES_256'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -958,8 +958,8 @@ api_params = {'KeyId': 'b1b543af2908403fb2b3758a7a78124e', 'KeySpec': 'AES_256'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyWithoutPlaintext operation: The operation GenerateDataKeyWithoutPlaintext is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_re_encrypt" time="0.008"><failure message="AssertionError: assert b'decrypted' == b'reencrypt me'&#10;  &#10;  At index 0 diff: b'd' != b'r'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c022300&gt;
-kms = &lt;botocore.client.KMS object at 0x10c04b0b0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_re_encrypt" time="0.008"><failure message="AssertionError: assert b'decrypted' == b'reencrypt me'&#10;  &#10;  At index 0 diff: b'd' != b'r'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d830230&gt;
+kms = &lt;botocore.client.KMS object at 0x10e11e000&gt;
 
     def test_re_encrypt(self, kms):
         key1 = kms.create_key(Description="reencrypt src")
@@ -981,8 +981,8 @@ E
 E         At index 0 diff: b'd' != b'r'
 E         Use -v to get more diff
 
-tests/compatibility/test_kms_compat.py:227: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key_with_alias" time="0.006"><failure message="botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the DescribeKey operation: The operation references an alias that does not exist">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c022720&gt;
-kms = &lt;botocore.client.KMS object at 0x10cba6450&gt;
+tests/compatibility/test_kms_compat.py:227: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key_with_alias" time="0.006"><failure message="botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the DescribeKey operation: The operation references an alias that does not exist">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d830650&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2bc620&gt;
 
     def test_describe_key_with_alias(self, kms):
         key = kms.create_key(Description="alias desc key")
@@ -1002,7 +1002,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cba6450&gt;
+self = &lt;botocore.client.KMS object at 0x10e2bc620&gt;
 operation_name = 'DescribeKey', api_params = {'KeyId': 'alias/desc-test'}
 
     @with_current_context()
@@ -1092,8 +1092,8 @@ operation_name = 'DescribeKey', api_params = {'KeyId': 'alias/desc-test'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the DescribeKey operation: The operation references an alias that does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: NotFoundException</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_schedule_and_cancel_key_deletion" time="0.005"><failure message="AssertionError: assert 'Enabled' == 'PendingDeletion'&#10;  &#10;  - PendingDeletion&#10;  + Enabled">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c022b40&gt;
-kms = &lt;botocore.client.KMS object at 0x10ca247d0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: NotFoundException</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_schedule_and_cancel_key_deletion" time="0.006"><failure message="AssertionError: assert 'Enabled' == 'PendingDeletion'&#10;  &#10;  - PendingDeletion&#10;  + Enabled">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d830a70&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2c0710&gt;
 
     def test_schedule_and_cancel_key_deletion(self, kms):
         key = kms.create_key(Description="delete cancel key")
@@ -1109,8 +1109,8 @@ E
 E         - PendingDeletion
 E         + Enabled
 
-tests/compatibility/test_kms_compat.py:248: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_grant" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateGrant operation: The operation CreateGrant is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c022f60&gt;
-kms = &lt;botocore.client.KMS object at 0x10c8b5be0&gt;
+tests/compatibility/test_kms_compat.py:248: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_grant" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateGrant operation: The operation CreateGrant is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d830e90&gt;
+kms = &lt;botocore.client.KMS object at 0x10e121610&gt;
 
     def test_create_grant(self, kms):
         key = kms.create_key(Description="grant key")
@@ -1132,9 +1132,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c8b5be0&gt;
+self = &lt;botocore.client.KMS object at 0x10e121610&gt;
 operation_name = 'CreateGrant'
-api_params = {'GranteePrincipal': 'arn:aws:iam::123456789012:root', 'KeyId': 'e2f55361273644caad53b4ed8e1258a2', 'Operations': ['Encrypt', 'Decrypt']}
+api_params = {'GranteePrincipal': 'arn:aws:iam::123456789012:root', 'KeyId': 'cc1d426f55ad4918940607036e559b9a', 'Operations': ['Encrypt', 'Decrypt']}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1223,8 +1223,8 @@ api_params = {'GranteePrincipal': 'arn:aws:iam::123456789012:root', 'KeyId': 'e2
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateGrant operation: The operation CreateGrant is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_put_key_policy" time="0.006"><failure message="KeyError: 'Id'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c023380&gt;
-kms = &lt;botocore.client.KMS object at 0x10cba7a10&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_put_key_policy" time="0.005"><failure message="KeyError: 'Id'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d8312b0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2bd280&gt;
 
     def test_put_key_policy(self, kms):
         """PutKeyPolicy sets a key policy and GetKeyPolicy retrieves it."""
@@ -1256,8 +1256,8 @@ kms = &lt;botocore.client.KMS object at 0x10cba7a10&gt;
                ^^^^^^^^^^^^^^^
 E       KeyError: 'Id'
 
-tests/compatibility/test_kms_compat.py:301: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_key_rotation_status" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetKeyRotationStatus operation: The operation GetKeyRotationStatus is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c0237d0&gt;
-kms = &lt;botocore.client.KMS object at 0x10ca55dc0&gt;
+tests/compatibility/test_kms_compat.py:301: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_key_rotation_status" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetKeyRotationStatus operation: The operation GetKeyRotationStatus is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d831700&gt;
+kms = &lt;botocore.client.KMS object at 0x10e471580&gt;
 
     def test_key_rotation_status(self, kms):
         """Enable, check, and disable key rotation."""
@@ -1278,9 +1278,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10ca55dc0&gt;
+self = &lt;botocore.client.KMS object at 0x10e471580&gt;
 operation_name = 'GetKeyRotationStatus'
-api_params = {'KeyId': 'f837fdfeb7154aea9a51224fb06217ff'}
+api_params = {'KeyId': '9a88a8ca7ed1454e9d5833b70a1a526b'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1369,8 +1369,8 @@ api_params = {'KeyId': 'f837fdfeb7154aea9a51224fb06217ff'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetKeyRotationStatus operation: The operation GetKeyRotationStatus is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_random" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key_symmetric_default" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key_rsa_2048" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key_all_fields" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_update_delete_alias" time="0.009"><failure message="AssertionError: assert 'alias/compat-alias-crud' in []">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c022450&gt;
-kms = &lt;botocore.client.KMS object at 0x10c9afda0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_random" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key_symmetric_default" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key_rsa_2048" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key_all_fields" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_update_delete_alias" time="0.008"><failure message="AssertionError: assert 'alias/compat-alias-crud' in []">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d831910&gt;
+kms = &lt;botocore.client.KMS object at 0x10e4b2cf0&gt;
 
     def test_create_update_delete_alias(self, kms):
         """Test CreateAlias, ListAliases, UpdateAlias, DeleteAlias."""
@@ -1386,8 +1386,8 @@ kms = &lt;botocore.client.KMS object at 0x10c9afda0&gt;
 &gt;           assert alias_name in alias_names
 E           AssertionError: assert 'alias/compat-alias-crud' in []
 
-tests/compatibility/test_kms_compat.py:385: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt_roundtrip" time="0.007"><failure message="AssertionError: assert b'decrypted' == b'hello'&#10;  &#10;  At index 0 diff: b'd' != b'h'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c021e80&gt;
-kms = &lt;botocore.client.KMS object at 0x10c9ad250&gt;
+tests/compatibility/test_kms_compat.py:385: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt_roundtrip" time="0.006"><failure message="AssertionError: assert b'decrypted' == b'hello'&#10;  &#10;  At index 0 diff: b'd' != b'h'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d830fe0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e459760&gt;
 
     def test_encrypt_decrypt_roundtrip(self, kms):
         """Test Encrypt/Decrypt round-trip with various plaintext."""
@@ -1403,8 +1403,8 @@ E
 E                 At index 0 diff: b'd' != b'h'
 E                 Use -v to get more diff
 
-tests/compatibility/test_kms_compat.py:417: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key_rotation" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetKeyRotationStatus operation: The operation GetKeyRotationStatus is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c021370&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb8d0d0&gt;
+tests/compatibility/test_kms_compat.py:417: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key_rotation" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetKeyRotationStatus operation: The operation GetKeyRotationStatus is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d830a10&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2be990&gt;
 
     def test_enable_disable_key_rotation(self, kms):
         """Test EnableKeyRotation, GetKeyRotationStatus, DisableKeyRotation."""
@@ -1424,9 +1424,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cb8d0d0&gt;
+self = &lt;botocore.client.KMS object at 0x10e2be990&gt;
 operation_name = 'GetKeyRotationStatus'
-api_params = {'KeyId': '6d0c6f0deabc4864a54249e3cc1227af'}
+api_params = {'KeyId': '600328b32fe9491999f500df3b27b3c5'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1515,8 +1515,8 @@ api_params = {'KeyId': '6d0c6f0deabc4864a54249e3cc1227af'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetKeyRotationStatus operation: The operation GetKeyRotationStatus is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key_state" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_untag_list_resource_tags" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListResourceTags operation: The operation ListResourceTags is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c034320&gt;
-kms = &lt;botocore.client.KMS object at 0x10cc26d20&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key_state" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_untag_list_resource_tags" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListResourceTags operation: The operation ListResourceTags is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d832210&gt;
+kms = &lt;botocore.client.KMS object at 0x10e61b6e0&gt;
 
     def test_tag_untag_list_resource_tags(self, kms):
         """Test TagResource, UntagResource, ListResourceTags."""
@@ -1543,9 +1543,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cc26d20&gt;
+self = &lt;botocore.client.KMS object at 0x10e61b6e0&gt;
 operation_name = 'ListResourceTags'
-api_params = {'KeyId': '5bfe3aebc6164c4cbf49e33ab0819ce7'}
+api_params = {'KeyId': '0cc5f46eaba04b69ab13ea1db263ff6a'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1634,8 +1634,8 @@ api_params = {'KeyId': '5bfe3aebc6164c4cbf49e33ab0819ce7'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListResourceTags operation: The operation ListResourceTags is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_sign_verify_rsa" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the Sign operation: The operation Sign is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c034740&gt;
-kms = &lt;botocore.client.KMS object at 0x10c9adfd0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_sign_verify_rsa" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the Sign operation: The operation Sign is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d832630&gt;
+kms = &lt;botocore.client.KMS object at 0x10e457d70&gt;
 
     def test_sign_verify_rsa(self, kms):
         """Test Sign and Verify with an RSA key."""
@@ -1664,8 +1664,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c9adfd0&gt;, operation_name = 'Sign'
-api_params = {'KeyId': 'f1fb6747e0a2452398a1c3f548957e06', 'Message': b'message to sign', 'MessageType': 'RAW', 'SigningAlgorithm': 'RSASSA_PKCS1_V1_5_SHA_256'}
+self = &lt;botocore.client.KMS object at 0x10e457d70&gt;, operation_name = 'Sign'
+api_params = {'KeyId': '5c360f561b544c3ca4c4638d3be4f668', 'Message': b'message to sign', 'MessageType': 'RAW', 'SigningAlgorithm': 'RSASSA_PKCS1_V1_5_SHA_256'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1754,8 +1754,8 @@ api_params = {'KeyId': 'f1fb6747e0a2452398a1c3f548957e06', 'Message': b'message 
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the Sign operation: The operation Sign is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_update_key_description" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_put_key_policy" time="0.034"><failure message="AssertionError: assert 'Statement' in {}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c034f80&gt;
-kms = &lt;botocore.client.KMS object at 0x10c04ad20&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_update_key_description" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_put_key_policy" time="0.030"><failure message="AssertionError: assert 'Statement' in {}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d832e70&gt;
+kms = &lt;botocore.client.KMS object at 0x10e4b3dd0&gt;
 
     def test_get_put_key_policy(self, kms):
         """Test GetKeyPolicy and PutKeyPolicy."""
@@ -1770,8 +1770,8 @@ kms = &lt;botocore.client.KMS object at 0x10c04ad20&gt;
 &gt;           assert "Statement" in parsed
 E           AssertionError: assert 'Statement' in {}
 
-tests/compatibility/test_kms_compat.py:529: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_public_key" time="0.006"><failure message="AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f9a99a4f-19bb-4df6-b556-30ac77a3f265', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c0353a0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cac8b30&gt;
+tests/compatibility/test_kms_compat.py:529: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_public_key" time="0.005"><failure message="AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '3ec3ff23-fef9-4a63-815b-54ca3589d204', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d833290&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2c1820&gt;
 
     def test_get_public_key(self, kms):
         """Test GetPublicKey for an asymmetric key."""
@@ -1785,10 +1785,10 @@ kms = &lt;botocore.client.KMS object at 0x10cac8b30&gt;
             resp = kms.get_public_key(KeyId=key_id)
             assert "PublicKey" in resp
 &gt;           assert "KeyId" in resp
-E           AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f9a99a4f-19bb-4df6-b556-30ac77a3f265', 'RetryAttempts': 0}}
+E           AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '3ec3ff23-fef9-4a63-815b-54ca3589d204', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:565: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_retire_grant" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateGrant operation: The operation CreateGrant is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c0357c0&gt;
-kms = &lt;botocore.client.KMS object at 0x10c84d8e0&gt;
+tests/compatibility/test_kms_compat.py:565: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_retire_grant" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateGrant operation: The operation CreateGrant is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d8336b0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2df7d0&gt;
 
     def test_retire_grant(self, kms):
         """Test RetireGrant removes a grant."""
@@ -1811,9 +1811,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c84d8e0&gt;
+self = &lt;botocore.client.KMS object at 0x10e2df7d0&gt;
 operation_name = 'CreateGrant'
-api_params = {'GranteePrincipal': 'arn:aws:iam::123456789012:root', 'KeyId': 'd2f8107d27c44dfbabf9f89d99cd7e3f', 'Operations': ['Encrypt', 'Decrypt']}
+api_params = {'GranteePrincipal': 'arn:aws:iam::123456789012:root', 'KeyId': 'f13910aa72364b549e1e712b6f21e5c8', 'Operations': ['Encrypt', 'Decrypt']}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1902,8 +1902,8 @@ api_params = {'GranteePrincipal': 'arn:aws:iam::123456789012:root', 'KeyId': 'd2
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateGrant operation: The operation CreateGrant is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_mac_and_verify_mac" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateMac operation: The operation GenerateMac is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c035be0&gt;
-kms = &lt;botocore.client.KMS object at 0x10bfaa9f0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_mac_and_verify_mac" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateMac operation: The operation GenerateMac is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10d833ad0&gt;
+kms = &lt;botocore.client.KMS object at 0x109644c50&gt;
 
     def test_generate_mac_and_verify_mac(self, kms):
         """Test GenerateMac and VerifyMac with HMAC key."""
@@ -1931,9 +1931,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10bfaa9f0&gt;
+self = &lt;botocore.client.KMS object at 0x109644c50&gt;
 operation_name = 'GenerateMac'
-api_params = {'KeyId': '066cc1648cb046a5b90d1a9a4f9fea45', 'MacAlgorithm': 'HMAC_SHA_256', 'Message': b'message to authenticate'}
+api_params = {'KeyId': '50ae0e4f28e14412985ba7d4af6ce505', 'MacAlgorithm': 'HMAC_SHA_256', 'Message': b'message to authenticate'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2022,8 +2022,8 @@ api_params = {'KeyId': '066cc1648cb046a5b90d1a9a4f9fea45', 'MacAlgorithm': 'HMAC
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateMac operation: The operation GenerateMac is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_data_key" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_data_key_without_plaintext" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyWithoutPlaintext operation: The operation GenerateDataKeyWithoutPlaintext is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10c021880&gt;
-kms = &lt;botocore.client.KMS object at 0x10c0223f0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_data_key" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_data_key_without_plaintext" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyWithoutPlaintext operation: The operation GenerateDataKeyWithoutPlaintext is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10d801370&gt;
+kms = &lt;botocore.client.KMS object at 0x10e06fbf0&gt;
 
     def test_generate_data_key_without_plaintext(self, kms):
         key = kms.create_key()
@@ -2042,9 +2042,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c0223f0&gt;
+self = &lt;botocore.client.KMS object at 0x10e06fbf0&gt;
 operation_name = 'GenerateDataKeyWithoutPlaintext'
-api_params = {'KeyId': 'fcab7b9f1dae438ebcbccc86b46211a9', 'KeySpec': 'AES_256'}
+api_params = {'KeyId': '0e56f98e892843a38c5fb88d203122ec', 'KeySpec': 'AES_256'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2133,8 +2133,8 @@ api_params = {'KeyId': 'fcab7b9f1dae438ebcbccc86b46211a9', 'KeySpec': 'AES_256'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyWithoutPlaintext operation: The operation GenerateDataKeyWithoutPlaintext is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_random" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_keys" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_aliases" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_update_key_description" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_enable_disable_key" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_key_policies" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyPolicies operation: The operation ListKeyPolicies is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10c034080&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb4c9b0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_random" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_keys" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_aliases" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_update_key_description" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_enable_disable_key" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_key_policies" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyPolicies operation: The operation ListKeyPolicies is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10d831850&gt;
+kms = &lt;botocore.client.KMS object at 0x10df4f8f0&gt;
 
     def test_list_key_policies(self, kms):
         key = kms.create_key()
@@ -2153,9 +2153,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cb4c9b0&gt;
+self = &lt;botocore.client.KMS object at 0x10df4f8f0&gt;
 operation_name = 'ListKeyPolicies'
-api_params = {'KeyId': 'd89c8fd0f0e241c688eaafeac7b1d900'}
+api_params = {'KeyId': '041e73bfc1c34a1798058fc96f3c49ab'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2244,8 +2244,8 @@ api_params = {'KeyId': 'd89c8fd0f0e241c688eaafeac7b1d900'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyPolicies operation: The operation ListKeyPolicies is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_create_grant" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateGrant operation: The operation CreateGrant is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10c036420&gt;
-kms = &lt;botocore.client.KMS object at 0x10cabe690&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_create_grant" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateGrant operation: The operation CreateGrant is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10d840380&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2c1af0&gt;
 
     def test_create_grant(self, kms):
         key = kms.create_key()
@@ -2267,9 +2267,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cabe690&gt;
+self = &lt;botocore.client.KMS object at 0x10e2c1af0&gt;
 operation_name = 'CreateGrant'
-api_params = {'GranteePrincipal': 'arn:aws:iam::123456789012:root', 'KeyId': 'e5d59dd62a9e4e1282a4a325c30787cc', 'Operations': ['Encrypt', 'Decrypt']}
+api_params = {'GranteePrincipal': 'arn:aws:iam::123456789012:root', 'KeyId': 'a1e2b586325c415e950f6cfbae382cbb', 'Operations': ['Encrypt', 'Decrypt']}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2358,8 +2358,8 @@ api_params = {'GranteePrincipal': 'arn:aws:iam::123456789012:root', 'KeyId': 'e5
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateGrant operation: The operation CreateGrant is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_encrypt_decrypt_roundtrip" time="0.007"><failure message="AssertionError: assert b'decrypted' == b'Hello KMS World!'&#10;  &#10;  At index 0 diff: b'd' != b'H'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10c036810&gt;
-kms = &lt;botocore.client.KMS object at 0x10cba5280&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_encrypt_decrypt_roundtrip" time="0.008"><failure message="AssertionError: assert b'decrypted' == b'Hello KMS World!'&#10;  &#10;  At index 0 diff: b'd' != b'H'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10d840770&gt;
+kms = &lt;botocore.client.KMS object at 0x10e029dc0&gt;
 
     def test_encrypt_decrypt_roundtrip(self, kms):
         key = kms.create_key()
@@ -2376,8 +2376,8 @@ E
 E             At index 0 diff: b'd' != b'H'
 E             Use -v to get more diff
 
-tests/compatibility/test_kms_compat.py:736: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_re_encrypt" time="0.009"><failure message="AssertionError: assert b'decrypted' == b're-encrypt test'&#10;  &#10;  At index 0 diff: b'd' != b'r'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10c036c00&gt;
-kms = &lt;botocore.client.KMS object at 0x10caca750&gt;
+tests/compatibility/test_kms_compat.py:736: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_re_encrypt" time="0.009"><failure message="AssertionError: assert b'decrypted' == b're-encrypt test'&#10;  &#10;  At index 0 diff: b'd' != b'r'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10d840b60&gt;
+kms = &lt;botocore.client.KMS object at 0x10e36f1a0&gt;
 
     def test_re_encrypt(self, kms):
         key1 = kms.create_key()
@@ -2399,8 +2399,8 @@ E
 E             At index 0 diff: b'd' != b'r'
 E             Use -v to get more diff
 
-tests/compatibility/test_kms_compat.py:754: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_describe_custom_key_stores" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the DescribeCustomKeyStores operation: The operation DescribeCustomKeyStores is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c037050&gt;
-kms = &lt;botocore.client.KMS object at 0x10ca271a0&gt;
+tests/compatibility/test_kms_compat.py:754: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_describe_custom_key_stores" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the DescribeCustomKeyStores operation: The operation DescribeCustomKeyStores is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d840f50&gt;
+kms = &lt;botocore.client.KMS object at 0x10e456c60&gt;
 
     def test_describe_custom_key_stores(self, kms):
         """DescribeCustomKeyStores returns a list (possibly empty)."""
@@ -2417,7 +2417,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10ca271a0&gt;
+self = &lt;botocore.client.KMS object at 0x10e456c60&gt;
 operation_name = 'DescribeCustomKeyStores', api_params = {}
 
     @with_current_context()
@@ -2507,8 +2507,8 @@ operation_name = 'DescribeCustomKeyStores', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the DescribeCustomKeyStores operation: The operation DescribeCustomKeyStores is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_grants" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListGrants operation: The operation ListGrants is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c037470&gt;
-kms = &lt;botocore.client.KMS object at 0x10cacb350&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_grants" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListGrants operation: The operation ListGrants is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d841370&gt;
+kms = &lt;botocore.client.KMS object at 0x10e36d310&gt;
 
     def test_list_grants(self, kms):
         """ListGrants returns grants for a key (empty when none created)."""
@@ -2528,9 +2528,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cacb350&gt;
+self = &lt;botocore.client.KMS object at 0x10e36d310&gt;
 operation_name = 'ListGrants'
-api_params = {'KeyId': '4c519a28d3f344808e2c22845892d86d'}
+api_params = {'KeyId': '5374b558c9b24939bfca941efd31019c'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2619,8 +2619,8 @@ api_params = {'KeyId': '4c519a28d3f344808e2c22845892d86d'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListGrants operation: The operation ListGrants is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_retirable_grants" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListRetirableGrants operation: The operation ListRetirableGrants is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c037890&gt;
-kms = &lt;botocore.client.KMS object at 0x10c9afaa0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_retirable_grants" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListRetirableGrants operation: The operation ListRetirableGrants is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d841790&gt;
+kms = &lt;botocore.client.KMS object at 0x10e41cd10&gt;
 
     def test_list_retirable_grants(self, kms):
         """ListRetirableGrants returns grants for a principal (possibly empty)."""
@@ -2638,7 +2638,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c9afaa0&gt;
+self = &lt;botocore.client.KMS object at 0x10e41cd10&gt;
 operation_name = 'ListRetirableGrants'
 api_params = {'RetiringPrincipal': 'arn:aws:iam::123456789012:root'}
 
@@ -2729,8 +2729,8 @@ api_params = {'RetiringPrincipal': 'arn:aws:iam::123456789012:root'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListRetirableGrants operation: The operation ListRetirableGrants is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_rotate_key_on_demand" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the RotateKeyOnDemand operation: The operation RotateKeyOnDemand is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c037cb0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cacae10&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_rotate_key_on_demand" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the RotateKeyOnDemand operation: The operation RotateKeyOnDemand is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d841bb0&gt;
+kms = &lt;botocore.client.KMS object at 0x10c508fb0&gt;
 
     def test_rotate_key_on_demand(self, kms):
         """RotateKeyOnDemand triggers an on-demand rotation."""
@@ -2750,9 +2750,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cacae10&gt;
+self = &lt;botocore.client.KMS object at 0x10c508fb0&gt;
 operation_name = 'RotateKeyOnDemand'
-api_params = {'KeyId': '4b3271ceac7c4735879e17c7ee2dcc17'}
+api_params = {'KeyId': '019c7645deae47eea5e15beda0d11255'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2841,8 +2841,8 @@ api_params = {'KeyId': '4b3271ceac7c4735879e17c7ee2dcc17'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the RotateKeyOnDemand operation: The operation RotateKeyOnDemand is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_key_rotations" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyRotations operation: The operation ListKeyRotations is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c048110&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb33350&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_key_rotations" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyRotations operation: The operation ListKeyRotations is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d841fd0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e3870b0&gt;
 
     def test_list_key_rotations(self, kms):
         """ListKeyRotations returns rotation history for a key."""
@@ -2862,9 +2862,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cb33350&gt;
+self = &lt;botocore.client.KMS object at 0x10e3870b0&gt;
 operation_name = 'ListKeyRotations'
-api_params = {'KeyId': 'f3ba7a2bd648406689c5fc6aa7f40cee'}
+api_params = {'KeyId': 'b54ba8a7280449e7b1217a733f78580b'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2953,8 +2953,8 @@ api_params = {'KeyId': 'f3ba7a2bd648406689c5fc6aa7f40cee'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyRotations operation: The operation ListKeyRotations is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_replicate_key" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ReplicateKey operation: The operation ReplicateKey is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c037680&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb8f9e0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_replicate_key" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ReplicateKey operation: The operation ReplicateKey is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d832360&gt;
+kms = &lt;botocore.client.KMS object at 0x10d8333e0&gt;
 
     def test_replicate_key(self, kms):
         """ReplicateKey replicates a multi-region key to another region."""
@@ -2979,9 +2979,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cb8f9e0&gt;
+self = &lt;botocore.client.KMS object at 0x10d8333e0&gt;
 operation_name = 'ReplicateKey'
-api_params = {'KeyId': '9433c52b6f4c4a75984e5034e72433b0', 'ReplicaRegion': 'eu-west-1'}
+api_params = {'KeyId': '1f25a90cd959447b86086eea2684a9ba', 'ReplicaRegion': 'eu-west-1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3070,8 +3070,8 @@ api_params = {'KeyId': '9433c52b6f4c4a75984e5034e72433b0', 'ReplicaRegion': 'eu-
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ReplicateKey operation: The operation ReplicateKey is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_multi_region" time="0.005"><failure message="KeyError: 'MultiRegion'">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c036d50&gt;
-kms = &lt;botocore.client.KMS object at 0x10c8b76e0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_multi_region" time="0.005"><failure message="KeyError: 'MultiRegion'">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d833650&gt;
+kms = &lt;botocore.client.KMS object at 0x10e61af30&gt;
 
     def test_create_key_multi_region(self, kms):
         """CreateKey with MultiRegion=True sets the flag."""
@@ -3082,8 +3082,8 @@ kms = &lt;botocore.client.KMS object at 0x10c8b76e0&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'MultiRegion'
 
-tests/compatibility/test_kms_compat.py:834: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_external_origin" time="0.005"><failure message="AssertionError: assert 'AWS_KMS' == 'EXTERNAL'&#10;  &#10;  - EXTERNAL&#10;  + AWS_KMS">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c036450&gt;
-kms = &lt;botocore.client.KMS object at 0x10c9be690&gt;
+tests/compatibility/test_kms_compat.py:834: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_external_origin" time="0.005"><failure message="AssertionError: assert 'AWS_KMS' == 'EXTERNAL'&#10;  &#10;  - EXTERNAL&#10;  + AWS_KMS">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d800fe0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2be120&gt;
 
     def test_create_key_external_origin(self, kms):
         """CreateKey with Origin=EXTERNAL creates a key with EXTERNAL origin."""
@@ -3097,8 +3097,8 @@ E
 E             - EXTERNAL
 E             + AWS_KMS
 
-tests/compatibility/test_kms_compat.py:846: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_grant_with_constraints" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateGrant operation: The operation CreateGrant is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c034110&gt;
-kms = &lt;botocore.client.KMS object at 0x10c8b6a80&gt;
+tests/compatibility/test_kms_compat.py:846: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_grant_with_constraints" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateGrant operation: The operation CreateGrant is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d841910&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2f20c0&gt;
 
     def test_grant_with_constraints(self, kms):
         """CreateGrant with EncryptionContextSubset constraint."""
@@ -3124,9 +3124,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c8b6a80&gt;
+self = &lt;botocore.client.KMS object at 0x10e2f20c0&gt;
 operation_name = 'CreateGrant'
-api_params = {'Constraints': {'EncryptionContextSubset': {'env': 'test'}}, 'GranteePrincipal': 'arn:aws:iam::123456789012:root', 'KeyId': 'd2882335eaba4b458703567b24a1bceb', 'Operations': ['Encrypt', 'Decrypt']}
+api_params = {'Constraints': {'EncryptionContextSubset': {'env': 'test'}}, 'GranteePrincipal': 'arn:aws:iam::123456789012:root', 'KeyId': '80ee7aa4e5824eacab7bff2cae03da57', 'Operations': ['Encrypt', 'Decrypt']}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3215,8 +3215,8 @@ api_params = {'Constraints': {'EncryptionContextSubset': {'env': 'test'}}, 'Gran
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateGrant operation: The operation CreateGrant is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_generate_random_various_sizes" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_ecc" time="0.006"><failure message="AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '71e12449-aab0-4b8b-b165-41846b495ccd', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c0234a0&gt;
-kms = &lt;botocore.client.KMS object at 0x10caa4410&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_generate_random_various_sizes" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_ecc" time="0.006"><failure message="AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e3e96ba5-ce85-40b4-b769-b1fdaae48c21', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d8407a0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e6180e0&gt;
 
     def test_create_key_ecc(self, kms):
         """CreateKey with ECC_NIST_P256 for sign/verify."""
@@ -3231,10 +3231,10 @@ kms = &lt;botocore.client.KMS object at 0x10caa4410&gt;
             pub = kms.get_public_key(KeyId=key_id)
             assert "PublicKey" in pub
 &gt;           assert "KeyId" in pub
-E           AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '71e12449-aab0-4b8b-b165-41846b495ccd', 'RetryAttempts': 0}}
+E           AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e3e96ba5-ce85-40b4-b769-b1fdaae48c21', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:894: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_encrypt_decrypt_with_algorithm" time="0.008"><failure message="AssertionError: assert b'decrypted' == b'algorithm test'&#10;  &#10;  At index 0 diff: b'd' != b'a'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c048260&gt;
-kms = &lt;botocore.client.KMS object at 0x10cc79970&gt;
+tests/compatibility/test_kms_compat.py:894: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_encrypt_decrypt_with_algorithm" time="0.008"><failure message="AssertionError: assert b'decrypted' == b'algorithm test'&#10;  &#10;  At index 0 diff: b'd' != b'a'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d842120&gt;
+kms = &lt;botocore.client.KMS object at 0x10e480200&gt;
 
     def test_encrypt_decrypt_with_algorithm(self, kms):
         """Encrypt/Decrypt specifying EncryptionAlgorithm explicitly."""
@@ -3259,8 +3259,8 @@ E
 E             At index 0 diff: b'd' != b'a'
 E             Use -v to get more diff
 
-tests/compatibility/test_kms_compat.py:915: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_re_encrypt_with_context" time="0.009"><failure message="AssertionError: assert b'decrypted' == b'context reencrypt'&#10;  &#10;  At index 0 diff: b'd' != b'c'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c048680&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb90650&gt;
+tests/compatibility/test_kms_compat.py:915: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_re_encrypt_with_context" time="0.009"><failure message="AssertionError: assert b'decrypted' == b'context reencrypt'&#10;  &#10;  At index 0 diff: b'd' != b'c'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d842540&gt;
+kms = &lt;botocore.client.KMS object at 0x10d832750&gt;
 
     def test_re_encrypt_with_context(self, kms):
         """ReEncrypt preserving encryption context."""
@@ -3293,8 +3293,8 @@ E
 E             At index 0 diff: b'd' != b'c'
 E             Use -v to get more diff
 
-tests/compatibility/test_kms_compat.py:944: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_sign_verify_ecc" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the Sign operation: The operation Sign is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c048aa0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cc256d0&gt;
+tests/compatibility/test_kms_compat.py:944: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_sign_verify_ecc" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the Sign operation: The operation Sign is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d842960&gt;
+kms = &lt;botocore.client.KMS object at 0x10e4808c0&gt;
 
     def test_sign_verify_ecc(self, kms):
         """Sign and Verify with ECC key."""
@@ -3323,8 +3323,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cc256d0&gt;, operation_name = 'Sign'
-api_params = {'KeyId': '2540fd708e4f4e15b3e556c6fa8a2f7b', 'Message': b'ecc sign test', 'MessageType': 'RAW', 'SigningAlgorithm': 'ECDSA_SHA_256'}
+self = &lt;botocore.client.KMS object at 0x10e4808c0&gt;, operation_name = 'Sign'
+api_params = {'KeyId': 'ed7534669e2548a0b17bf6594a387a50', 'Message': b'ecc sign test', 'MessageType': 'RAW', 'SigningAlgorithm': 'ECDSA_SHA_256'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3413,8 +3413,8 @@ api_params = {'KeyId': '2540fd708e4f4e15b3e556c6fa8a2f7b', 'Message': b'ecc sign
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the Sign operation: The operation Sign is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_generate_data_key_number_of_bytes" time="0.007"><failure message="AssertionError: assert 32 == 64&#10; +  where 32 = len(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c048ec0&gt;
-kms = &lt;botocore.client.KMS object at 0x10c7cb2f0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_generate_data_key_number_of_bytes" time="0.006"><failure message="AssertionError: assert 32 == 64&#10; +  where 32 = len(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10d842d80&gt;
+kms = &lt;botocore.client.KMS object at 0x10e4b1520&gt;
 
     def test_generate_data_key_number_of_bytes(self, kms):
         """GenerateDataKey with NumberOfBytes instead of KeySpec."""
@@ -3426,8 +3426,8 @@ kms = &lt;botocore.client.KMS object at 0x10c7cb2f0&gt;
 E           AssertionError: assert 32 == 64
 E            +  where 32 = len(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
 
-tests/compatibility/test_kms_compat.py:985: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_random_fixed" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_random_min_max" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_rsa" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPair operation: The operation GenerateDataKeyPair is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c049af0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cca1100&gt;
+tests/compatibility/test_kms_compat.py:985: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_random_fixed" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_random_min_max" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_rsa" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPair operation: The operation GenerateDataKeyPair is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d8439b0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e4d3b30&gt;
 
     def test_generate_data_key_pair_rsa(self, kms):
         """GenerateDataKeyPair with RSA_2048 returns key pair components."""
@@ -3449,9 +3449,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cca1100&gt;
+self = &lt;botocore.client.KMS object at 0x10e4d3b30&gt;
 operation_name = 'GenerateDataKeyPair'
-api_params = {'KeyId': 'c76802a888e34ba29e2fab695d0cd613', 'KeyPairSpec': 'RSA_2048'}
+api_params = {'KeyId': 'a3ed2eadef01439f8a7366f46b5ec4dc', 'KeyPairSpec': 'RSA_2048'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3540,8 +3540,8 @@ api_params = {'KeyId': 'c76802a888e34ba29e2fab695d0cd613', 'KeyPairSpec': 'RSA_2
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPair operation: The operation GenerateDataKeyPair is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_ecc" time="0.038"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPair operation: The operation GenerateDataKeyPair is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c049ee0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a5b3c80&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_ecc" time="0.036"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPair operation: The operation GenerateDataKeyPair is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d843da0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e576540&gt;
 
     def test_generate_data_key_pair_ecc(self, kms):
         """GenerateDataKeyPair with ECC_NIST_P256."""
@@ -3563,9 +3563,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10a5b3c80&gt;
+self = &lt;botocore.client.KMS object at 0x10e576540&gt;
 operation_name = 'GenerateDataKeyPair'
-api_params = {'KeyId': 'cbb97239fa034b6aaec0811f98b441b5', 'KeyPairSpec': 'ECC_NIST_P256'}
+api_params = {'KeyId': '86de165cf4604a24aa2f90fa42928ead', 'KeyPairSpec': 'ECC_NIST_P256'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3654,8 +3654,8 @@ api_params = {'KeyId': 'cbb97239fa034b6aaec0811f98b441b5', 'KeyPairSpec': 'ECC_N
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPair operation: The operation GenerateDataKeyPair is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_without_plaintext_rsa" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPairWithoutPlaintext operation: The operation GenerateDataKeyPairWithoutPlaintext is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c04a2d0&gt;
-kms = &lt;botocore.client.KMS object at 0x10c8b6e70&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_without_plaintext_rsa" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPairWithoutPlaintext operation: The operation GenerateDataKeyPairWithoutPlaintext is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d8581d0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e350950&gt;
 
     def test_generate_data_key_pair_without_plaintext_rsa(self, kms):
         """GenerateDataKeyPairWithoutPlaintext omits private key plaintext."""
@@ -3677,9 +3677,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c8b6e70&gt;
+self = &lt;botocore.client.KMS object at 0x10e350950&gt;
 operation_name = 'GenerateDataKeyPairWithoutPlaintext'
-api_params = {'KeyId': 'a0ebb0cc358e4013a6fe6e4eb893bc5a', 'KeyPairSpec': 'RSA_2048'}
+api_params = {'KeyId': 'a01a91f215ad406d8a21b40abe076646', 'KeyPairSpec': 'RSA_2048'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3768,8 +3768,8 @@ api_params = {'KeyId': 'a0ebb0cc358e4013a6fe6e4eb893bc5a', 'KeyPairSpec': 'RSA_2
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPairWithoutPlaintext operation: The operation GenerateDataKeyPairWithoutPlaintext is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_without_plaintext_ecc" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPairWithoutPlaintext operation: The operation GenerateDataKeyPairWithoutPlaintext is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c0350a0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a27d8e0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_without_plaintext_ecc" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPairWithoutPlaintext operation: The operation GenerateDataKeyPairWithoutPlaintext is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d843d70&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2c0140&gt;
 
     def test_generate_data_key_pair_without_plaintext_ecc(self, kms):
         """GenerateDataKeyPairWithoutPlaintext with ECC_NIST_P256."""
@@ -3791,9 +3791,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10a27d8e0&gt;
+self = &lt;botocore.client.KMS object at 0x10e2c0140&gt;
 operation_name = 'GenerateDataKeyPairWithoutPlaintext'
-api_params = {'KeyId': '7ec999210ad248b7bb4250aea734df37', 'KeyPairSpec': 'ECC_NIST_P256'}
+api_params = {'KeyId': 'f1ae7ace82644229a397ee46d75bc5ae', 'KeyPairSpec': 'ECC_NIST_P256'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3882,8 +3882,8 @@ api_params = {'KeyId': '7ec999210ad248b7bb4250aea734df37', 'KeyPairSpec': 'ECC_N
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPairWithoutPlaintext operation: The operation GenerateDataKeyPairWithoutPlaintext is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_custom_key_store_lifecycle" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c036930&gt;
-kms = &lt;botocore.client.KMS object at 0x10cc7b5c0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_custom_key_store_lifecycle" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d8432f0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e456b70&gt;
 
     def test_custom_key_store_lifecycle(self, kms):
         """CreateCustomKeyStore, DescribeCustomKeyStores, DeleteCustomKeyStore."""
@@ -3918,7 +3918,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cc7b5c0&gt;
+self = &lt;botocore.client.KMS object at 0x10e456b70&gt;
 operation_name = 'CreateCustomKeyStore'
 api_params = {'CloudHsmClusterId': 'cluster-1234567890abc', 'CustomKeyStoreName': 'test-cks', 'KeyStorePassword': 'kmsP@ssw0rd!', '...H/\nMA0GCSqGSIb3DQEBCwUAA0EAYiWXhZk9WsP46PqFi+sJlBFVKs7v\nEHrJKVHRw/SRZAmLYv3aGMi/0BXk2Q==\n-----END CERTIFICATE-----'}
 
@@ -4009,8 +4009,8 @@ api_params = {'CloudHsmClusterId': 'cluster-1234567890abc', 'CustomKeyStoreName'
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_get_parameters_for_import" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetParametersForImport operation: The operation GetParametersForImport is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c037e30&gt;
-kms = &lt;botocore.client.KMS object at 0x10caa7110&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_get_parameters_for_import" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetParametersForImport operation: The operation GetParametersForImport is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d842750&gt;
+kms = &lt;botocore.client.KMS object at 0x10e351be0&gt;
 
     def test_get_parameters_for_import(self, kms):
         """GetParametersForImport returns wrapping key and import token."""
@@ -4033,9 +4033,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10caa7110&gt;
+self = &lt;botocore.client.KMS object at 0x10e351be0&gt;
 operation_name = 'GetParametersForImport'
-api_params = {'KeyId': 'ad60201060164d9d907c520c0038222f', 'WrappingAlgorithm': 'RSAES_OAEP_SHA_256', 'WrappingKeySpec': 'RSA_2048'}
+api_params = {'KeyId': 'abb8e88cfeea4350aeffaac567d3e964', 'WrappingAlgorithm': 'RSAES_OAEP_SHA_256', 'WrappingKeySpec': 'RSA_2048'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4124,8 +4124,8 @@ api_params = {'KeyId': 'ad60201060164d9d907c520c0038222f', 'WrappingAlgorithm': 
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetParametersForImport operation: The operation GetParametersForImport is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_import_key_material_and_delete" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetParametersForImport operation: The operation GetParametersForImport is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c049ca0&gt;
-kms = &lt;botocore.client.KMS object at 0x10c9431d0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_import_key_material_and_delete" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetParametersForImport operation: The operation GetParametersForImport is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d8404a0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e3776e0&gt;
 
     def test_import_key_material_and_delete(self, kms):
         """Full key import flow: create EXTERNAL key, get params, import, delete material."""
@@ -4153,9 +4153,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c9431d0&gt;
+self = &lt;botocore.client.KMS object at 0x10e3776e0&gt;
 operation_name = 'GetParametersForImport'
-api_params = {'KeyId': 'dc21c61f0eec4c3988525428034270d9', 'WrappingAlgorithm': 'RSAES_OAEP_SHA_256', 'WrappingKeySpec': 'RSA_2048'}
+api_params = {'KeyId': '2cb9115ddca540d3b3ac4a128c1c0f56', 'WrappingAlgorithm': 'RSAES_OAEP_SHA_256', 'WrappingKeySpec': 'RSA_2048'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4244,8 +4244,8 @@ api_params = {'KeyId': 'dc21c61f0eec4c3988525428034270d9', 'WrappingAlgorithm': 
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetParametersForImport operation: The operation GetParametersForImport is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_delete_custom_key_store_nonexistent" time="0.004"><failure message="AssertionError: assert 'InvalidException' in ('CustomKeyStoreNotFoundException', 'NotFoundException')">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c049520&gt;
-kms = &lt;botocore.client.KMS object at 0x10c9ad7f0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_delete_custom_key_store_nonexistent" time="0.004"><failure message="AssertionError: assert 'InvalidException' in ('CustomKeyStoreNotFoundException', 'NotFoundException')">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d841580&gt;
+kms = &lt;botocore.client.KMS object at 0x10e386510&gt;
 
     def test_delete_custom_key_store_nonexistent(self, kms):
         """DeleteCustomKeyStore with fake ID raises an error."""
@@ -4258,8 +4258,8 @@ kms = &lt;botocore.client.KMS object at 0x10c9ad7f0&gt;
         )
 E       AssertionError: assert 'InvalidException' in ('CustomKeyStoreNotFoundException', 'NotFoundException')
 
-tests/compatibility/test_kms_compat.py:1187: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_get_parameters_for_import_wrong_origin" time="0.006"><failure message="AssertionError: assert 'InvalidException' in ('UnsupportedOperationException', 'ValidationException')">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c048bc0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cc7e120&gt;
+tests/compatibility/test_kms_compat.py:1187: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_get_parameters_for_import_wrong_origin" time="0.007"><failure message="AssertionError: assert 'InvalidException' in ('UnsupportedOperationException', 'ValidationException')">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d8334a0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2bffb0&gt;
 
     def test_get_parameters_for_import_wrong_origin(self, kms):
         """GetParametersForImport on a non-EXTERNAL key raises error."""
@@ -4276,8 +4276,8 @@ kms = &lt;botocore.client.KMS object at 0x10cc7e120&gt;
 &gt;           assert err_code in ("UnsupportedOperationException", "ValidationException")
 E           AssertionError: assert 'InvalidException' in ('UnsupportedOperationException', 'ValidationException')
 
-tests/compatibility/test_kms_compat.py:1204: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_connect_disconnect_custom_key_store" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c0483b0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb5ed20&gt;
+tests/compatibility/test_kms_compat.py:1204: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_connect_disconnect_custom_key_store" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d831070&gt;
+kms = &lt;botocore.client.KMS object at 0x10e55cc20&gt;
 
     def test_connect_disconnect_custom_key_store(self, kms):
         """ConnectCustomKeyStore and DisconnectCustomKeyStore lifecycle."""
@@ -4312,7 +4312,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cb5ed20&gt;
+self = &lt;botocore.client.KMS object at 0x10e55cc20&gt;
 operation_name = 'CreateCustomKeyStore'
 api_params = {'CloudHsmClusterId': 'cluster-1234567890abc', 'CustomKeyStoreName': 'connect-test-cks', 'KeyStorePassword': 'kmsP@ssw...H/\nMA0GCSqGSIb3DQEBCwUAA0EAYiWXhZk9WsP46PqFi+sJlBFVKs7v\nEHrJKVHRw/SRZAmLYv3aGMi/0BXk2Q==\n-----END CERTIFICATE-----'}
 
@@ -4403,8 +4403,8 @@ api_params = {'CloudHsmClusterId': 'cluster-1234567890abc', 'CustomKeyStoreName'
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_update_custom_key_store" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c04a6c0&gt;
-kms = &lt;botocore.client.KMS object at 0x10c9add60&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_update_custom_key_store" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d8585c0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2f1ac0&gt;
 
     def test_update_custom_key_store(self, kms):
         """UpdateCustomKeyStore changes the store name."""
@@ -4439,7 +4439,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10c9add60&gt;
+self = &lt;botocore.client.KMS object at 0x10e2f1ac0&gt;
 operation_name = 'CreateCustomKeyStore'
 api_params = {'CloudHsmClusterId': 'cluster-1234567890abc', 'CustomKeyStoreName': 'update-cks-orig', 'KeyStorePassword': 'kmsP@ssw0...H/\nMA0GCSqGSIb3DQEBCwUAA0EAYiWXhZk9WsP46PqFi+sJlBFVKs7v\nEHrJKVHRw/SRZAmLYv3aGMi/0BXk2Q==\n-----END CERTIFICATE-----'}
 
@@ -4530,8 +4530,8 @@ api_params = {'CloudHsmClusterId': 'cluster-1234567890abc', 'CustomKeyStoreName'
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_derive_shared_secret" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the DeriveSharedSecret operation: The operation DeriveSharedSecret is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c04aab0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cc7c440&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_derive_shared_secret" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the DeriveSharedSecret operation: The operation DeriveSharedSecret is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d8589b0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e2bfaa0&gt;
 
     def test_derive_shared_secret(self, kms):
         """DeriveSharedSecret with ECC KEY_AGREEMENT key."""
@@ -4559,9 +4559,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cc7c440&gt;
+self = &lt;botocore.client.KMS object at 0x10e2bfaa0&gt;
 operation_name = 'DeriveSharedSecret'
-api_params = {'KeyAgreementAlgorithm': 'ECDH', 'KeyId': '53a15e0ffe6a479cbfd276be991880aa', 'PublicKey': b'\x00\x00\x00\x00\x00\x00...0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'}
+api_params = {'KeyAgreementAlgorithm': 'ECDH', 'KeyId': '4745b82b8cdd4615a5f6bff33a56493c', 'PublicKey': b'\x00\x00\x00\x00\x00\x00...0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4650,8 +4650,8 @@ api_params = {'KeyAgreementAlgorithm': 'ECDH', 'KeyId': '53a15e0ffe6a479cbfd276b
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the DeriveSharedSecret operation: The operation DeriveSharedSecret is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_update_primary_region" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the UpdatePrimaryRegion operation: The operation UpdatePrimaryRegion is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c04aea0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb334d0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_update_primary_region" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the UpdatePrimaryRegion operation: The operation UpdatePrimaryRegion is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10d858da0&gt;
+kms = &lt;botocore.client.KMS object at 0x10e06f650&gt;
 
     def test_update_primary_region(self, kms):
         """UpdatePrimaryRegion on a multi-region key."""
@@ -4673,9 +4673,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cb334d0&gt;
+self = &lt;botocore.client.KMS object at 0x10e06f650&gt;
 operation_name = 'UpdatePrimaryRegion'
-api_params = {'KeyId': 'c1c4e2adb03a42b8b0eed190208d0336', 'PrimaryRegion': 'eu-west-1'}
+api_params = {'KeyId': '703a395bea29492e88c85d1b66c63dff', 'PrimaryRegion': 'eu-west-1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
