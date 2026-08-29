@@ -356,12 +356,30 @@ async def health(request: Request) -> Response:
     )
 
 
+async def echo_debug(request: Request) -> Response:
+    """Debug: dump exactly what the sidecar receives."""
+    body = await request.body()
+    info = {
+        "path": request.url.path,
+        "query": str(request.url.query),
+        "method": request.method,
+        "service_header": request.headers.get("x-robotocore-service"),
+        "content_type": request.headers.get("content-type"),
+        "authorization": request.headers.get("authorization"),
+        "x_amz_target": request.headers.get("x-amz-target"),
+        "body_len": len(body),
+        "body_preview": body[:300].decode("utf-8", "replace"),
+    }
+    return Response(content=json.dumps(info), media_type="application/json")
+
+
 def create_app() -> Starlette:
     """Create the Starlette ASGI application."""
     all_methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
     return Starlette(
         routes=[
             Route("/_sidecar/health", health, methods=["GET"]),
+            Route("/_sidecar/echo", echo_debug, methods=["GET", "POST"]),
             Route("/{service:path}", moto_handler, methods=all_methods),
         ],
     )

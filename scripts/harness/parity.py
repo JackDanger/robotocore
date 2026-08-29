@@ -31,8 +31,8 @@ RUST_REPO = Path("/Users/jackdanger/www/robotocore-rust")
 PYV = str(REPO / ".venv/bin/python")
 PY_PORT = "4566"
 RUST_PORT = "4567"
-PY_URL = f"http://localhost:{PY_PORT}"
-RUST_URL = f"http://localhost:{RUST_PORT}"
+PY_URL = f"http://127.0.0.1:{PY_PORT}"
+RUST_URL = f"http://127.0.0.1:{RUST_PORT}"
 RUST_BIN = str(RUST_REPO / "target/release/robotocore-rust")
 COMPAT_DIR = REPO / "tests/compatibility"
 
@@ -98,23 +98,98 @@ def ensure_python_server():
     return False
 
 
-def ensure_rust_server():
-    r = sh(f"curl -sf --max-time 3 {RUST_URL}/_robotocore/health", timeout=10)
+SIDECAR_URL = "http://127.0.0.1:4568"
+SIDECAR_HEALTH = f"{SIDECAR_URL}/_sidecar/health"
+SIDECAR_SCRIPT = str(RUST_REPO / "scripts/moto_sidecar.py")
+state_dir_global = Path("/tmp/parity")
+
+
+def ensure_sidecar():
+    """Verify the moto sidecar daemon is up."""
+    r = sh(f"curl -sf --max-time 3 {SIDECAR_HEALTH}", timeout=10)
     if r.returncode == 0:
-        log(f"[ok] Rust server up at {RUST_URL}")
+        log(f"[ok] moto sidecar up at {SIDECAR_URL}")
         return True
-    log("[..] Building + starting Rust server...")
+    log("[!!] moto sidecar not running. Start it with: bash scripts/start_parity_servers.sh")
+    return False
+
+
+def _bridge_ready():
+    """Probe the bridge with a real EC2 call."""
+    r = sh(
+        f"curl -s -X POST {RUST_URL}/ --max-time 10 "
+        f"-H 'Content-Type: application/x-www-form-urlencoded' "
+        f"-H 'Authorization: AWS4-HMAC-SHA256 Credential=123456789012/20240101/us-east-1/ec2/aws4_request' "
+        f"-H 'X-Amz-Date: 20240101T000000Z' "
+        f"-d 'Action=DescribeInstances&Version=2016-11-15' 2>/dev/null",
+        timeout=15,
+    )
+    return r.returncode == 0 and "<DescribeInstancesResponse" in r.stdout
+
+
+def ensure_rust_server():
+    """Verify the Rust server daemon is up with a working bridge."""
+    r = sh(f"curl -sf --max-time 3 {RUST_URL}/_robotocore/health", timeout=10)
+    if r.returncode != 0:
+        log("[!!] Rust server not running. Start it with: bash scripts/start_parity_servers.sh")
+        return False
+    log("[ok] Rust server up at " + RUST_URL)
+    for _ in range(15):
+        if _bridge_ready():
+            log("[ok] Bridge working")
+            return True
+        time.sleep(2)
+    log("[!!] Bridge not working. Check /tmp/parity_rust.log")
+    return False
+
+
+def _bridge_ready():
+    """Probe the bridge with a real EC2 call. Returns True when it works."""
+    r = sh(
+        f"curl -s -X POST {RUST_URL}/ --max-time 10 "
+        f"-H 'Content-Type: application/x-www-form-urlencoded' "
+        f"-H 'Authorization: AWS4-HMAC-SHA256 Credential=123456789012/20240101/us-east-1/ec2/aws4_request' "
+        f"-H 'X-Amz-Date: 20240101T000000Z' "
+        f"-d 'Action=DescribeInstances&Version=2016-11-15' 2>/dev/null",
+        timeout=15,
+    )
+    return r.returncode == 0 and "<DescribeInstancesResponse" in r.stdout
+
+
+def ensure_rust_server():
+    """Ensure the Rust server is up WITH a WORKING moto bridge."""
+    ensure_sidecar()
+    log("[..] (Re)starting Rust server with moto bridge...")
     sh(f"cd {RUST_REPO} && cargo build --release", timeout=600)
     sh(f"pkill -f robotocore-rust 2>/dev/null; true", timeout=10)
-    subprocess.Popen([RUST_BIN, "--port", RUST_PORT],
+    subprocess.Popen([RUST_BIN, "--port", RUST_PORT, "--moto-url", SIDECAR_URL],
                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    for _ in range(15):
+    # Wait for the server to be up
+    for _ in range(20):
         time.sleep(1)
         r = sh(f"curl -sf --max-time 3 {RUST_URL}/_robotocore/health", timeout=10)
         if r.returncode == 0:
-            log(f"[ok] Rust server up at {RUST_URL}")
+            break
+    # Wait for the BRIDGE to actually work (sidecar may still be loading backends)
+    for attempt in range(30):
+        # Check sidecar is still alive
+        sc = sh(f"curl -sf --max-time 3 {SIDECAR_HEALTH}", timeout=10)
+        if sc.returncode != 0:
+            log(f"[!!] sidecar died during bridge wait (attempt {attempt})")
+            # Restart sidecar
+            sh("pkill -9 -f moto_sidecar 2>/dev/null; true", timeout=10)
+            time.sleep(1)
+            subprocess.Popen([PYV, SIDECAR_SCRIPT, "--port", "4568"],
+                             stdout=open("/tmp/parity_sidecar.log", "w"),
+                             stderr=subprocess.STDOUT, cwd=str(RUST_REPO),
+                             start_new_session=True)
+            time.sleep(5)
+            continue
+        if _bridge_ready():
+            log(f"[ok] Rust server (with working bridge) up at {RUST_URL}")
             return True
-    log("[!!] Rust server failed to start")
+        time.sleep(2)
+    log("[!!] Rust server up but bridge not working")
     return False
 
 
