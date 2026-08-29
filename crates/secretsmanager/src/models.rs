@@ -12,7 +12,7 @@ pub struct SecretVersion {
     pub secret_string: Option<String>,
     pub secret_binary: Option<String>,
     pub stages: Vec<String>,
-    pub created_date: u64,
+    pub created_date: f64,
 }
 
 /// A secret.
@@ -22,11 +22,11 @@ pub struct Secret {
     pub arn: String,
     pub owner: u64,
     pub region: String,
-    pub created_date: u64,
+    pub created_date: f64,
     pub versions: RwLock<HashMap<String, SecretVersion>>,
     pub tags: RwLock<Vec<Value>>,
     pub description: RwLock<Option<String>>,
-    pub deletion_date: RwLock<Option<u64>>,
+    pub deletion_date: RwLock<Option<f64>>,
     pub removed: RwLock<bool>,
 }
 
@@ -38,7 +38,7 @@ impl Secret {
             arn,
             owner: account,
             region,
-            created_date: chrono::Utc::now().timestamp_millis() as u64,
+            created_date: chrono::Utc::now().timestamp() as f64,
             versions: RwLock::new(HashMap::new()),
             tags: RwLock::new(Vec::new()),
             description: RwLock::new(None),

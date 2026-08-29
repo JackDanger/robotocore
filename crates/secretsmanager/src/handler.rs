@@ -80,7 +80,7 @@ impl SecretsManagerHandler {
             secret_string,
             secret_binary,
             stages: vec!["AWSCURRENT".to_string()],
-            created_date: chrono::Utc::now().timestamp_millis() as u64,
+            created_date: chrono::Utc::now().timestamp() as f64,
         };
         secret.versions.write().insert(version_id.clone(), version);
 
@@ -94,7 +94,7 @@ impl SecretsManagerHandler {
             "ARN": secret.arn,
             "Name": secret.name,
             "VersionId": version_id,
-            "CreatedDate": secret.created_date as f64
+            "CreatedDate": secret.created_date
         }))
     }
 
@@ -124,7 +124,7 @@ impl SecretsManagerHandler {
             "ARN": secret.arn,
             "Name": secret.name,
             "VersionId": version.version_id,
-            "CreatedDate": version.created_date as f64
+            "CreatedDate": version.created_date
         });
         if let Some(ref s) = version.secret_string {
             resp.as_object_mut().unwrap().insert("SecretString".into(), json!(s));
@@ -160,7 +160,7 @@ impl SecretsManagerHandler {
             }
         }
 
-        let created_date = chrono::Utc::now().timestamp_millis() as u64;
+        let created_date = chrono::Utc::now().timestamp() as f64;
         let version = SecretVersion {
             version_id: version_id.clone(),
             secret_string,
@@ -174,7 +174,7 @@ impl SecretsManagerHandler {
             "ARN": secret.arn,
             "Name": secret.name,
             "VersionId": version_id,
-            "CreatedDate": created_date as f64
+            "CreatedDate": created_date
         }))
     }
 
@@ -201,7 +201,7 @@ impl SecretsManagerHandler {
             }
         }
 
-        let created_date = chrono::Utc::now().timestamp_millis() as u64;
+        let created_date = chrono::Utc::now().timestamp() as f64;
         let version = SecretVersion {
             version_id: version_id.clone(),
             secret_string,
@@ -219,7 +219,7 @@ impl SecretsManagerHandler {
             "ARN": secret.arn,
             "Name": secret.name,
             "VersionId": version_id,
-            "CreatedDate": created_date as f64
+            "CreatedDate": created_date
         }))
     }
 
@@ -235,13 +235,13 @@ impl SecretsManagerHandler {
         };
 
         *secret.removed.write() = true;
-        let deletion_date = chrono::Utc::now().timestamp_millis() as u64 + 7 * 24 * 60 * 60 * 1000;
+        let deletion_date = chrono::Utc::now().timestamp() as f64 + 7.0 * 24.0 * 60.0 * 60.0;
         *secret.deletion_date.write() = Some(deletion_date);
 
         AwsResponse::json(200, json!({
             "ARN": secret.arn,
             "Name": secret.name,
-            "DeletionDate": deletion_date as f64
+            "DeletionDate": deletion_date
         }))
     }
 
@@ -282,8 +282,8 @@ impl SecretsManagerHandler {
         let mut resp = json!({
             "ARN": secret.arn,
             "Name": secret.name,
-            "CreatedDate": secret.created_date as f64,
-            "LastChangedDate": secret.created_date as f64,
+            "CreatedDate": secret.created_date,
+            "LastChangedDate": secret.created_date,
             "Tags": *secret.tags.read(),
             "VersionIdsToStages": {
                 "AWSCURRENT": current.map(|v| v.version_id.clone()).unwrap_or_default()
@@ -304,8 +304,8 @@ impl SecretsManagerHandler {
             let mut obj = json!({
                 "ARN": s.arn,
                 "Name": s.name,
-                "CreatedDate": s.created_date as f64,
-                "LastChangedDate": s.created_date as f64,
+                "CreatedDate": s.created_date,
+                "LastChangedDate": s.created_date,
                 "Tags": *s.tags.read()
             });
             if let Some(ref desc) = *s.description.read() {

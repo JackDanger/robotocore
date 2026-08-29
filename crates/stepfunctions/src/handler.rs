@@ -50,10 +50,10 @@ impl StepfunctionsHandler {
     }
 
     fn create_sm(&self, req: &AwsRequest) -> AwsResponse {
-        let name = req.params.get("stateMachineName")
+        let name = req.params.get("name").or_else(|| req.params.get("stateMachineName"))
             .and_then(|v| v.as_str()).unwrap_or_default().to_string();
         if name.is_empty() {
-            return AwsResponse::error(400, "ValidationException", "stateMachineName required");
+            return AwsResponse::error(400, "ValidationException", "name required");
         }
         let state = self.get_state(req.account, &req.region);
         let mut sms = state.state_machines.write();
@@ -115,7 +115,17 @@ impl StepfunctionsHandler {
     fn list_sms(&self, req: &AwsRequest) -> AwsResponse {
         let state = self.get_state(req.account, &req.region);
         let sms = state.state_machines.read();
-        let items: Vec<Value> = sms.values().cloned().collect();
+        let items: Vec<Value> = sms.iter().map(|(name, sm)| {
+            json!({
+                "stateMachineArn": sm.get("arn").cloned().unwrap_or(Value::Null),
+                "name": name,
+                "type": sm.get("type").cloned().unwrap_or(json!("STANDARD")),
+                "creationDate": sm.get("creationDate").cloned().unwrap_or(Value::Null),
+                "status": sm.get("status").cloned().unwrap_or(json!("ACTIVE")),
+                "roleArn": sm.get("roleArn").cloned().unwrap_or(Value::Null),
+                "definition": sm.get("definition").cloned().unwrap_or(Value::Null),
+            })
+        }).collect();
         let next_token = req.params.get("nextToken").cloned().unwrap_or(Value::Null);
         AwsResponse::json(200, json!({
             "stateMachines": items,
