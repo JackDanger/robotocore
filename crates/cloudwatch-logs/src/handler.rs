@@ -123,13 +123,13 @@ impl LogsHandler {
         if let Some(g) = state.get_log_group(name) {
             *g.retention_in_days.write() = Some(days);
         }
-        AwsResponse::json(200, json!({}))
+        AwsResponse::json(200, json!({ "logGroupName": name }))
     }
 
     fn stream_value(s: &LogStream, group_name: &str) -> Value {
         json!({
             "arn": s.arn,
-            "name": s.name,
+            "logStreamName": s.name,
             "creationTime": s.created,
             "firstEventTimestamp": s.first_event_time,
             "lastEventTimestamp": s.last_event_time,

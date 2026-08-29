@@ -133,6 +133,11 @@ impl LambdaHandler {
         if let Some(mem) = req.params.get("MemorySize").and_then(|v| v.as_u64()) {
             *func.memory_size.write() = mem as u32;
         }
+        // Store environment variables
+        if let Some(env) = req.params.get("Environment").and_then(|v| v.as_object()).cloned() {
+            let env_value = serde_json::to_value(env).unwrap_or(Value::Null);
+            *func.environment.write() = Some(env_value);
+        }
         state.functions.write().insert(func.function_name.clone(), func.clone());
         AwsResponse::json(201, Self::func_config(&func))
     }
@@ -227,6 +232,10 @@ impl LambdaHandler {
                 if let Some(role) = req.params.get("Role").and_then(|v| v.as_str()) {
                     *func.role.write() = role.to_string();
                 }
+                if let Some(env) = req.params.get("Environment").and_then(|v| v.as_object()).cloned() {
+                    let env_value = serde_json::to_value(env).unwrap_or(Value::Null);
+                    *func.environment.write() = Some(env_value);
+                }
                 *func.last_modified.write() = chrono::Utc::now().timestamp_millis() as u64;
                 AwsResponse::json(200, Self::func_config(&func))
             }
@@ -244,11 +253,25 @@ impl LambdaHandler {
                     .and_then(|v| v.as_str())
                     .unwrap_or("{}")
                     .to_string();
-                // Return a simulated invoke response
-                AwsResponse::raw(200, "application/json", format!(
-                    "{{\"ok\":true,\"function\":\"{}\",\"payload\":\"{}\"}}",
-                    func.function_name, payload
-                ))
+
+                // Check for dry run
+                let is_dry_run = req.params.get("DryRun")
+                    .and_then(|v| v.as_bool())
+                    .unwrap_or(false);
+                if is_dry_run {
+                    return AwsResponse::raw(204, "application/json", String::new());
+                }
+
+                // Check for event response type
+                let response_type = req.params.get("ResponseType")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("REQUEST_RESPONSE");
+                if response_type == "EVENT" {
+                    return AwsResponse::raw(202, "application/json", String::new());
+                }
+
+                // Echo the payload back as the function result
+                AwsResponse::raw(200, "application/json", payload)
             }
             None => AwsResponse::error(404, "ResourceNotFoundException",
                 &format!("Function not found: {}", name)),
