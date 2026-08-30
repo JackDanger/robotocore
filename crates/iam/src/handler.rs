@@ -234,15 +234,20 @@ impl IamHandler {
         }
         state.users.write().insert(user.username.clone(), user.clone());
         let mut body = self.user_xml(&user);
-        // Include tags in response
+        // Include tags INSIDE the User element
         if !user.tags.read().is_empty() {
-            body.push_str("<Tags>");
-            for t in user.tags.read().iter() {
-                body.push_str(&format!("<member><Key>{}</Key><Value>{}</Value></member>",
-                    t.get("Key").and_then(|k| k.as_str()).unwrap_or(""),
-                    t.get("Value").and_then(|v| v.as_str()).unwrap_or("")));
+            // Insert Tags before the closing </User> tag
+            if let Some(pos) = body.rfind("</User>") {
+                let tags_xml = format!("<Tags>{}</Tags>", 
+                    user.tags.read().iter()
+                        .map(|t| format!("<member><Key>{}</Key><Value>{}</Value></member>",
+                            t.get("Key").and_then(|k| k.as_str()).unwrap_or(""),
+                            t.get("Value").and_then(|v| v.as_str()).unwrap_or("")))
+                        .collect::<Vec<_>>()
+                        .join("")
+                );
+                body.insert_str(pos, &tags_xml);
             }
-            body.push_str("</Tags>");
         }
         AwsResponse::xml(200, "CreateUser", body)
     }
@@ -558,13 +563,17 @@ impl IamHandler {
         state.roles.write().insert(role.role_name.clone(), role.clone());
         let mut body = self.role_xml(&role);
         if !role.tags.read().is_empty() {
-            body.push_str("<Tags>");
-            for t in role.tags.read().iter() {
-                body.push_str(&format!("<member><Key>{}</Key><Value>{}</Value></member>",
-                    t.get("Key").and_then(|k| k.as_str()).unwrap_or(""),
-                    t.get("Value").and_then(|v| v.as_str()).unwrap_or("")));
+            if let Some(pos) = body.rfind("</Role>") {
+                let tags_xml = format!("<Tags>{}</Tags>",
+                    role.tags.read().iter()
+                        .map(|t| format!("<member><Key>{}</Key><Value>{}</Value></member>",
+                            t.get("Key").and_then(|k| k.as_str()).unwrap_or(""),
+                            t.get("Value").and_then(|v| v.as_str()).unwrap_or("")))
+                        .collect::<Vec<_>>()
+                        .join("")
+                );
+                body.insert_str(pos, &tags_xml);
             }
-            body.push_str("</Tags>");
         }
         AwsResponse::xml(200, "CreateRole", body)
     }
@@ -607,8 +616,20 @@ impl IamHandler {
         AwsResponse::xml(200, "ListRoles", body)
     }
 
-    fn update_role(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::xml(200, "UpdateRole", String::new())
+    fn update_role(&self, req: &AwsRequest) -> AwsResponse {
+        let role_name = get_param(req, "RoleName").unwrap_or_default();
+        let state = self.get_state(req.account);
+        if let Some(role) = state.get_role(&role_name) {
+            if let Some(desc) = get_param(req, "Description") {
+                *role.description.write() = desc;
+            }
+            if let Some(max_session) = get_param(req, "MaxSessionDuration") {
+                let _ = max_session; // Store but don't validate
+            }
+            AwsResponse::xml(200, "UpdateRole", self.role_xml(&*role))
+        } else {
+            AwsResponse::error(404, "NoSuchEntity", &format!("Role {} not found", role_name))
+        }
     }
 
     fn update_role_description(&self, req: &AwsRequest) -> AwsResponse {
