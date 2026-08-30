@@ -325,7 +325,7 @@ def derive_next_work(report):
                 blind.append((9999, f"write compat suite for native {svc} (zero coverage)"))
             continue
         if d.get("crate") == "bridge":
-            if d.get("rust_pass", 0) == 0:
+            if d.get("rust_pass", 0) == 0 and svc not in {"rds"}:
                 infra.append((d["rust_gap"], f"FIX BRIDGE: {svc} has 0 passing tests — moto sidecar not routing (infra, not porting)"))
             elif d.get("fidelity_pct") is not None and d["fidelity_pct"] < 80:
                 gaps.append((d["rust_gap"], f"port {svc} to native (bridge fidelity {d['fidelity_pct']}%)"))

@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="16" failures="36" skipped="0" tests="54" time="2.286" timestamp="2026-08-29T16:30:28.501874-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_create_delivery_stream" time="0.092"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bbe7140&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10a83ca70&gt;
-s3 = &lt;botocore.client.S3 object at 0x10c883110&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="16" failures="36" skipped="0" tests="54" time="2.100" timestamp="2026-08-29T17:39:53.343364-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_create_delivery_stream" time="0.086"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c102e40&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10a4e1c10&gt;
+s3 = &lt;botocore.client.S3 object at 0x10bdee480&gt;
 
     def test_create_delivery_stream(self, firehose, s3):
         s3.create_bucket(Bucket="fh-create-test")
@@ -43,8 +43,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10c8de690&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '87fa15ca-d4c6-4f94-bec3-9d...re-request-id': 'f3fbc80a-6efc-4b54-a935-17a9322f6cfc', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:28 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10ce21f70&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '35c0afab-c4b0-4a4c-9feb-6d...re-request-id': 'a5327d56-778c-4d21-a01e-6135ebbde86a', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:53 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -54,8 +54,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_describe_delivery_stream" time="0.011"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10c94c4d0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10c99b650&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_describe_delivery_stream" time="0.010"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10ce93da0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cedf500&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -102,8 +102,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10c95ac00&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '0d8d74ec-6795-4b43-a163-03...re-request-id': 'e0be6dc6-3bf7-40cc-b24c-0814df97532b', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:28 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10cea6cc0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'c21687e1-c8fe-4edf-afe4-96a12e78d9b0', 'server': '...re-request-id': '83393af0-1074-42bf-ad83-2995b6938630', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:53 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -113,8 +113,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_list_delivery_streams" time="0.010"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10caec410&gt;
-s3 = &lt;botocore.client.S3 object at 0x10c487f50&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_list_delivery_streams" time="0.009"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cedfc20&gt;
+s3 = &lt;botocore.client.S3 object at 0x10bd7b0e0&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -161,8 +161,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cb33e00&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'ea51fafb-1486-438f-804b-9f89ddf96781', 'server': '...re-request-id': '464b96ce-3bbd-4806-b450-561fa859c9bd', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:28 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d077bc0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '3d620228-e044-4999-a386-693884e80a9b', 'server': '...re-request-id': 'c7c123d5-cf70-46b0-8a78-0b47f160e5c1', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:53 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -172,8 +172,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'ea
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record" time="0.010"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10c97d640&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cb8c080&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record" time="0.009"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cebd220&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ceafe00&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -220,8 +220,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10c97c470&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'c125fb9a-f704-4391-888b-4b...re-request-id': '4bc24158-e5cb-48f7-959b-5ec7312e759c', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:28 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10cebc350&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'ccea77ed-745c-4949-bd5a-5aaf02b55a8a', 'server': '...re-request-id': '38ea86cd-9024-43b5-8585-3adfb421dde3', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:53 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -231,8 +231,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch" time="0.008"><failure message="KeyError: 'RequestResponses'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bcdb170&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10c94f320&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch" time="0.008"><failure message="KeyError: 'RequestResponses'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c21f110&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10ce92720&gt;
 delivery_stream = 'test-delivery-stream'
 
     def test_put_record_batch(self, firehose, delivery_stream):
@@ -249,8 +249,8 @@ delivery_stream = 'test-delivery-stream'
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'RequestResponses'
 
-tests/compatibility/test_firehose_compat.py:103: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10c94f320&gt;
-s3 = &lt;botocore.client.S3 object at 0x10c96bb90&gt;
+tests/compatibility/test_firehose_compat.py:103: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10ce92720&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cec3ce0&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -297,8 +297,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cb9f380&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '7d9f2185-5767-4e83-967f-9b9dfb940c6c', 'server': '...re-request-id': '3453cb92-b323-4072-b28a-e40ce54fe646', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:28 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10cff2ae0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '3652b92b-bd37-48d6-ad12-4718b9fe1a6e', 'server': '...re-request-id': 'b154b3d9-5279-4a28-8c89-3dd06070130f', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:53 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -308,9 +308,9 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '7d
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_delete_delivery_stream" time="0.008"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bcdb560&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cb79100&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cb7fcb0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_delete_delivery_stream" time="0.008"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c21f500&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d0d0d40&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d0bf8f0&gt;
 
     def test_delete_delivery_stream(self, firehose, s3):
         s3.create_bucket(Bucket="fh-delete-test")
@@ -352,8 +352,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cc82c60&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '1f749d7e-d10a-4980-a6ca-057f53f19314', 'server': '...re-request-id': 'ef96b500-af6e-4097-b338-b4aecc1aede3', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:28 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d147290&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '1aa4446a-76cf-464e-aecf-29df3e325949', 'server': '...re-request-id': '0065b455-39c6-46ca-9867-a4efc37b66d2', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:53 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -363,9 +363,9 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '1f
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_create_with_buffering_hints_and_compression" time="0.009"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bcdb920&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cbaccb0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cc8b710&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_create_with_buffering_hints_and_compression" time="0.009"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c21f8c0&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d154830&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d15b3b0&gt;
 
     def test_create_with_buffering_hints_and_compression(self, firehose, s3):
         """Create delivery stream with BufferingHints and CompressionFormat."""
@@ -394,8 +394,8 @@ s3 = &lt;botocore.client.S3 object at 0x10cc8b710&gt;
                ^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Destinations'
 
-tests/compatibility/test_firehose_compat.py:142: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch_multiple_records" time="0.008"><failure message="KeyError: 'RequestResponses'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bcdbce0&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cc20560&gt;
+tests/compatibility/test_firehose_compat.py:142: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch_multiple_records" time="0.008"><failure message="KeyError: 'RequestResponses'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c21fc80&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d1203b0&gt;
 delivery_stream = 'test-delivery-stream'
 
     def test_put_record_batch_multiple_records(self, firehose, delivery_stream):
@@ -410,8 +410,8 @@ delivery_stream = 'test-delivery-stream'
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'RequestResponses'
 
-tests/compatibility/test_firehose_compat.py:159: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch_multiple_records" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cc20560&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cd23e60&gt;
+tests/compatibility/test_firehose_compat.py:159: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch_multiple_records" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10d1203b0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d2c3cb0&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -458,8 +458,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cd15e20&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '72c3881c-c116-48a3-9562-a1892a229765', 'server': '...re-request-id': 'f9b0c7e5-bedb-433e-b4eb-3a6e17c872b2', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d2c9e50&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '25c09288-85db-42a1-bbef-0c...re-request-id': 'e93831c1-5337-4aa4-a552-91f48b5369bb', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:53 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -469,8 +469,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '72
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_update_destination" time="0.009"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bd00110&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cd14ec0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_update_destination" time="0.008"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c2440b0&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d1bf320&gt;
 delivery_stream = 'test-delivery-stream'
 
     def test_update_destination(self, firehose, delivery_stream):
@@ -482,8 +482,8 @@ delivery_stream = 'test-delivery-stream'
                   ^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Destinations'
 
-tests/compatibility/test_firehose_compat.py:168: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_update_destination" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cd14ec0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cd677d0&gt;
+tests/compatibility/test_firehose_compat.py:168: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_update_destination" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10d1bf320&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d2a7740&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -530,8 +530,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10ccd60c0&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '227d0894-4317-4425-b7d1-08df840b8fcb', 'server': '...re-request-id': 'bec66b64-47ed-4f3f-adfd-e9e264a7ffa9', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d2aa1e0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '3beea88f-60d0-4c90-a3a5-31...re-request-id': '07790d66-08cd-4b8f-b3a1-b61db6713712', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:53 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -541,8 +541,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '22
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_tag_delivery_stream" time="0.009"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bd00500&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cd937a0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_tag_delivery_stream" time="0.008"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c2444a0&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d2d4650&gt;
 delivery_stream = 'test-delivery-stream'
 
     def test_tag_delivery_stream(self, firehose, delivery_stream):
@@ -584,8 +584,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cd1d9d0&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '7ffefb49-1a53-47e8-825b-5c...re-request-id': '01a4a1fa-0713-4ed4-8cb5-8ab2ebfb04b8', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d256d80&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '9b9e9d83-664a-4bb2-8d20-b3...re-request-id': '99211ba4-4bca-4c08-b81a-de26018372d2', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:53 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -595,8 +595,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_tag_delivery_stream" time="0.002"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cd937a0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cf57d10&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_tag_delivery_stream" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10d2d4650&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d41fec0&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -643,8 +643,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10ccd6540&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '7b85b3cd-04d3-42f9-ac04-78...re-request-id': 'db62e921-5f6a-44b3-989f-924e12b68529', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d239490&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '7eaa17b0-177a-4090-80cd-44...re-request-id': 'ca03bb05-74eb-442b-a406-03af85c0227b', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:53 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -654,8 +654,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_untag_delivery_stream" time="0.010"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bd008f0&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cd16930&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_untag_delivery_stream" time="0.008"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c244890&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d2cb200&gt;
 delivery_stream = 'test-delivery-stream'
 
     def test_untag_delivery_stream(self, firehose, delivery_stream):
@@ -694,8 +694,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cf8dc10&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '82b47019-1427-4596-95fe-71280fd92f3a', 'server': '...re-request-id': 'ee7292de-13ef-4119-ab54-9a9d0c7e5312', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d45d490&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '1168457f-12a0-428d-96cb-4159b5b16e48', 'server': '...re-request-id': 'd454e2f1-aef4-4494-8ad3-7b155539446e', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -705,8 +705,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '82
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_untag_delivery_stream" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cd16930&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cf2eed0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_untag_delivery_stream" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10d2cb200&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d48b0b0&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -753,8 +753,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cf8fb00&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'f8fb553e-ca57-435e-925d-efe52117cb25', 'server': '...re-request-id': '982a350c-1641-42e7-b93c-b5652e2a3130', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d45fd40&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '762cf90d-b580-4195-99bd-e38de342f921', 'server': '...re-request-id': 'bb0cafa4-1878-4942-9229-c1ec5b082af3', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -764,9 +764,9 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'f8
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_list_delivery_streams_with_pagination" time="0.018"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bd00ce0&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cf14bc0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10ca9bdd0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_list_delivery_streams_with_pagination" time="0.013"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c244c80&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d490ce0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cf53e90&gt;
 
     def test_list_delivery_streams_with_pagination(self, firehose, s3):
         """ListDeliveryStreams with ExclusiveStartDeliveryStreamName for pagination."""
@@ -799,15 +799,15 @@ s3 = &lt;botocore.client.S3 object at 0x10ca9bdd0&gt;
                 ExclusiveStartDeliveryStreamName=first_name,
             )
 &gt;           assert first_name not in resp2["DeliveryStreamNames"]
-E           AssertionError: assert 'pagination-stream-0' not in ['pagination-stream-0', 'pagination-stream-2', 'pagination-stream-1', 'buffered-stream']
+E           AssertionError: assert 'pagination-stream-0' not in ['buffered-stream', 'pagination-stream-1', 'pagination-stream-0', 'pagination-stream-2']
 
 tests/compatibility/test_firehose_compat.py:247: AssertionError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bd00ce0&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cf14bc0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10ca9bdd0&gt;
+self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c244c80&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d490ce0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cf53e90&gt;
 
     def test_list_delivery_streams_with_pagination(self, firehose, s3):
         """ListDeliveryStreams with ExclusiveStartDeliveryStreamName for pagination."""
@@ -873,8 +873,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10ca363f0&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'e2463007-0623-44f6-ac11-53...re-request-id': '754e8ab6-3cb0-4c53-b094-f795c860b25d', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10cf5e7e0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'cbe63eff-071c-42fe-b99c-9b835f8913b0', 'server': '...re-request-id': '1f3f8b69-f40c-4cbe-9bec-a63bdd3da739', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -884,8 +884,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_list_delivery_streams_with_type_filter" time="0.047"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10ca37e90&gt;
-s3 = &lt;botocore.client.S3 object at 0x10ca3a9c0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_list_delivery_streams_with_type_filter" time="0.037"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cfc95b0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cfc6b70&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -932,8 +932,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cf9a120&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'ee771cff-4277-4539-8bb0-b1...re-request-id': '3dfc3641-7286-459e-9dd2-f596cb943e4c', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d40a600&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'cc338322-58b6-4fbf-a101-093e31b595fa', 'server': '...re-request-id': 'ebe81372-d8c1-4562-ab4a-ff832d6b66b3', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -943,8 +943,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_describe_delivery_stream_destination_details" time="0.009"><failure message="AssertionError: assert 'standard' == 'DirectPut'&#10;  &#10;  - DirectPut&#10;  + standard">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bcdbef0&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cf9b9e0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_describe_delivery_stream_destination_details" time="0.008"><failure message="AssertionError: assert 'standard' == 'DirectPut'&#10;  &#10;  - DirectPut&#10;  + standard">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c21fe90&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d40b8c0&gt;
 delivery_stream = 'test-delivery-stream'
 
     def test_describe_delivery_stream_destination_details(self, firehose, delivery_stream):
@@ -958,8 +958,8 @@ E
 E         - DirectPut
 E         + standard
 
-tests/compatibility/test_firehose_compat.py:263: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_describe_delivery_stream_destination_details" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cf9b9e0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cd1fb30&gt;
+tests/compatibility/test_firehose_compat.py:263: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_describe_delivery_stream_destination_details" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10d40b8c0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d23bad0&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -1006,8 +1006,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10ca60440&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '09062fa5-d5e2-4929-a574-834f721d9a0a', 'server': '...re-request-id': 'e99aa80f-bc05-425f-b263-c6e18561b8c8', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10cfc8530&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'a3a97737-6a73-4b51-88ab-af...re-request-id': '2a9b5627-c4f8-4ae2-ba7b-f020c3bc5741', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1017,8 +1017,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '09
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_nonexistent_stream" time="0.004"><failure message="AssertionError: assert '400' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bcdb710&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cd0c560&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_nonexistent_stream" time="0.004"><failure message="AssertionError: assert '400' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c21f680&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d2d5790&gt;
 
     def test_put_record_nonexistent_stream(self, firehose):
         """PutRecord to nonexistent stream raises error."""
@@ -1033,8 +1033,8 @@ E
 E         - ResourceNotFoundException
 E         + 400
 
-tests/compatibility/test_firehose_compat.py:279: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch_nonexistent_stream" time="0.004"><failure message="AssertionError: assert '400' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bcdade0&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cf99d60&gt;
+tests/compatibility/test_firehose_compat.py:279: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch_nonexistent_stream" time="0.003"><failure message="AssertionError: assert '400' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c21ee70&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d409700&gt;
 
     def test_put_record_batch_nonexistent_stream(self, firehose):
         """PutRecordBatch to nonexistent stream raises error."""
@@ -1049,8 +1049,8 @@ E
 E         - ResourceNotFoundException
 E         + 400
 
-tests/compatibility/test_firehose_compat.py:288: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_delete_nonexistent_stream" time="0.004"><failure message="AssertionError: assert '400' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bcda1b0&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cc87770&gt;
+tests/compatibility/test_firehose_compat.py:288: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_delete_nonexistent_stream" time="0.003"><failure message="AssertionError: assert '400' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c21e630&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d14ec30&gt;
 
     def test_delete_nonexistent_stream(self, firehose):
         """Deleting a nonexistent delivery stream raises error."""
@@ -1062,8 +1062,8 @@ E
 E         - ResourceNotFoundException
 E         + 400
 
-tests/compatibility/test_firehose_compat.py:294: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_start_and_stop_encryption" time="0.008"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bd00d10&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cc8b1d0&gt;
+tests/compatibility/test_firehose_compat.py:294: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_start_and_stop_encryption" time="0.008"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c244cb0&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d14ddc0&gt;
 delivery_stream = 'test-delivery-stream'
 
     def test_start_and_stop_encryption(self, firehose, delivery_stream):
@@ -1104,8 +1104,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cb7ad20&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'ca2fa0a7-b1db-4e01-9135-d60868f03124', 'server': '...re-request-id': '03ae8402-6c8a-4c1e-9537-ec5d389b6265', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d032e40&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '689ac09d-aed6-4825-ac8a-c9fde9a2f398', 'server': '...re-request-id': '1444d5e3-c55b-479a-a2c3-195d9fe44cc6', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1115,8 +1115,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'ca
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_start_and_stop_encryption" time="0.002"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cc8b1d0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cd0cb90&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_start_and_stop_encryption" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10d14ddc0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d2d4bf0&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -1163,8 +1163,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10c96bc20&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '7be1cd17-8a32-4a9d-ab89-e2...re-request-id': 'f7925f64-3a36-4bb8-aec5-294b048a72b0', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10cec0d70&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '01bb9cbc-dd88-4502-a1f7-4a...re-request-id': '3c9c5a99-8883-4755-89a0-dc4ceb5040c8', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1174,9 +1174,9 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_multiple_streams_list_and_filter" time="0.011"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bd00320&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cc8a990&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cb30ec0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_multiple_streams_list_and_filter" time="0.010"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c2442c0&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d14d640&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cd91c70&gt;
 
     def test_multiple_streams_list_and_filter(self, firehose, s3):
         """Create multiple delivery streams, list them, verify filtering."""
@@ -1230,8 +1230,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10c9583b0&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'ac9fe211-0042-4bcd-bd1d-fba227ef0473', 'server': '...re-request-id': 'bec793c9-72ba-43c6-aac9-2677ef4479ff', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10cea7b30&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'f2d88532-7b87-4496-8e8d-1a756a48a9cb', 'server': '...re-request-id': 'a51bdae6-f064-4aa0-a3b5-d6639be304ff', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1241,8 +1241,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'ac
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_list_tags_for_delivery_stream_empty" time="0.010"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10c95b7d0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10c882ed0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_list_tags_for_delivery_stream_empty" time="0.009"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cedf9b0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cdc9130&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -1289,8 +1289,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cec6420&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'c33d32e9-c2f9-4380-8a42-b5c4e92f6522', 'server': '...re-request-id': 'd47c02f2-4cc0-4497-aef7-3cb6dd54cdd4', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d449a60&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '985b4ced-598d-467c-bbe6-c868d79fe7bf', 'server': '...re-request-id': 'b6f28374-1115-4561-9620-3b68af3bf868', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1300,8 +1300,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'c3
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_tag_and_untag_delivery_stream" time="0.009"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bd01c70&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cec6e40&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_tag_and_untag_delivery_stream" time="0.008"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c245c10&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d44b1d0&gt;
 delivery_stream = 'test-delivery-stream'
 
     def test_tag_and_untag_delivery_stream(self, firehose, delivery_stream):
@@ -1343,8 +1343,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10c8a39e0&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'fb2b77ef-e2b5-4995-874a-e7bd905db653', 'server': '...re-request-id': '25d29a75-1daf-4d74-8874-636998074824', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10cde6cc0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'ec3ced36-8c4f-4ff7-912a-fc...re-request-id': '570e288b-1571-4eae-9a0e-65e4b39512ea', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1354,8 +1354,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'fb
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_tag_and_untag_delivery_stream" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cec6e40&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cd14290&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_tag_and_untag_delivery_stream" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10d44b1d0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10c148cb0&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -1402,8 +1402,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cf8cc80&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'c9f1d687-8921-4b9d-8ce7-30...re-request-id': '09592284-db45-4258-8270-b2fc10b7857f', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10c12ba40&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '4963ce44-7e7d-4d06-92ec-524433aa4d70', 'server': '...re-request-id': '6876ce18-a640-4261-baee-7c8cf57a4f71', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1413,8 +1413,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_returns_record_id" time="0.010"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10c880a70&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cf8d970&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_returns_record_id" time="0.009"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cdc8da0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10c129700&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -1461,8 +1461,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cb60290&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'df1241de-a89c-4d51-a4f8-1c7d689f0145', 'server': '...re-request-id': '16808fdd-7711-4514-b54f-7056db14b099', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10cedf1d0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'b1470dd3-0160-4344-98ad-5f...re-request-id': '8f11ab4d-4e67-4f13-8910-3c990935401d', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1472,8 +1472,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'df
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch_returns_record_ids" time="0.009"><failure message="KeyError: 'RequestResponses'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bd02510&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cb61070&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch_returns_record_ids" time="0.008"><failure message="KeyError: 'RequestResponses'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c2464b0&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d147320&gt;
 delivery_stream = 'test-delivery-stream'
 
     def test_put_record_batch_returns_record_ids(self, firehose, delivery_stream):
@@ -1491,8 +1491,8 @@ delivery_stream = 'test-delivery-stream'
                    ^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'RequestResponses'
 
-tests/compatibility/test_firehose_compat.py:386: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch_returns_record_ids" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cb61070&gt;
-s3 = &lt;botocore.client.S3 object at 0x10ca96210&gt;
+tests/compatibility/test_firehose_compat.py:386: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_put_record_batch_returns_record_ids" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10d147320&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d4da270&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -1539,8 +1539,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10cb8dd60&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'ce631882-7461-4846-9b9b-86360988a45d', 'server': '...re-request-id': '492be3c6-17a3-441b-bcd2-3f9c232f54f8', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:29 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10cdc8260&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '66b328a8-f7d3-44fa-b622-17...re-request-id': '54d87da2-58c7-4859-83d7-644895c1471d', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1550,8 +1550,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'ce
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_describe_delivery_stream_fields" time="0.008"><failure message="AssertionError: assert 'Destinations' in {'DeliveryStreamARN': 'arn:aws:firehose:us-east-1:123456789012:deliverystream/test-delivery-stream', 'DeliveryStreamName': 'test-delivery-stream', 'DeliveryStreamStatus': 'ACTIVE', 'DeliveryStreamType': 'standard'}">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10bd02960&gt;
-firehose = &lt;botocore.client.Firehose object at 0x10cb8cb60&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_describe_delivery_stream_fields" time="0.008"><failure message="AssertionError: assert 'Destinations' in {'DeliveryStreamARN': 'arn:aws:firehose:us-east-1:123456789012:deliverystream/test-delivery-stream', 'DeliveryStreamName': 'test-delivery-stream', 'DeliveryStreamStatus': 'ACTIVE', 'DeliveryStreamType': 'standard'}">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseOperations object at 0x10c246900&gt;
+firehose = &lt;botocore.client.Firehose object at 0x10d04fa10&gt;
 delivery_stream = 'test-delivery-stream'
 
     def test_describe_delivery_stream_fields(self, firehose, delivery_stream):
@@ -1565,8 +1565,8 @@ delivery_stream = 'test-delivery-stream'
 &gt;       assert "Destinations" in desc
 E       AssertionError: assert 'Destinations' in {'DeliveryStreamARN': 'arn:aws:firehose:us-east-1:123456789012:deliverystream/test-delivery-stream', 'DeliveryStreamName': 'test-delivery-stream', 'DeliveryStreamStatus': 'ACTIVE', 'DeliveryStreamType': 'standard'}
 
-tests/compatibility/test_firehose_compat.py:398: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_describe_delivery_stream_fields" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10cb8cb60&gt;
-s3 = &lt;botocore.client.S3 object at 0x10cb61ca0&gt;
+tests/compatibility/test_firehose_compat.py:398: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_describe_delivery_stream_fields" time="0.001"><error message="failed on teardown with &quot;AttributeError: 'NoneType' object has no attribute 'setdefault'&quot;">firehose = &lt;botocore.client.Firehose object at 0x10d04fa10&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cedd340&gt;
 
     @pytest.fixture
     def delivery_stream(firehose, s3):
@@ -1613,8 +1613,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10ca807d0&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '35073a34-e8b0-47b2-9d64-bdd8cf8ef714', 'server': '...re-request-id': 'e04f9835-ed74-4368-afb8-11e87b40fded', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:30 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10a4e1c10&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'ec7a5656-d9ae-4f77-83ef-4e...re-request-id': '5af65fdd-8e2b-4014-b88a-6de8788e0f4b', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1624,7 +1624,7 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '35
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_list_delivery_streams_with_limit" time="0.004" /><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_stream_returns_valid_arn_format" time="0.010" /><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_describe_stream_has_all_required_fields" time="0.011"><failure message="AssertionError: assert 'VersionId' in {'DeliveryStreamARN': 'arn:aws:firehose:us-east-1:123456789012:deliverystream/desc-fields-b9a5cec8', 'DeliveryStreamName': 'desc-fields-b9a5cec8', 'DeliveryStreamStatus': 'ACTIVE', 'DeliveryStreamType': 'standard'}">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd03710&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</error></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseOperations" name="test_list_delivery_streams_with_limit" time="0.003" /><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_stream_returns_valid_arn_format" time="0.009" /><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_describe_stream_has_all_required_fields" time="0.010"><failure message="AssertionError: assert 'VersionId' in {'DeliveryStreamARN': 'arn:aws:firehose:us-east-1:123456789012:deliverystream/desc-fields-bb842478', 'DeliveryStreamName': 'desc-fields-bb842478', 'DeliveryStreamStatus': 'ACTIVE', 'DeliveryStreamType': 'standard'}">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c247620&gt;
 
     def test_describe_stream_has_all_required_fields(self):
         """DescribeDeliveryStream response contains all required top-level fields."""
@@ -1640,9 +1640,9 @@ E           AttributeError: 'NoneType' object has no attribute 'setdefault'
             assert "DeliveryStreamARN" in desc
             assert desc["DeliveryStreamStatus"] == "ACTIVE"
 &gt;           assert "VersionId" in desc
-E           AssertionError: assert 'VersionId' in {'DeliveryStreamARN': 'arn:aws:firehose:us-east-1:123456789012:deliverystream/desc-fields-b9a5cec8', 'DeliveryStreamName': 'desc-fields-b9a5cec8', 'DeliveryStreamStatus': 'ACTIVE', 'DeliveryStreamType': 'standard'}
+E           AssertionError: assert 'VersionId' in {'DeliveryStreamARN': 'arn:aws:firehose:us-east-1:123456789012:deliverystream/desc-fields-bb842478', 'DeliveryStreamName': 'desc-fields-bb842478', 'DeliveryStreamStatus': 'ACTIVE', 'DeliveryStreamType': 'standard'}
 
-tests/compatibility/test_firehose_compat.py:472: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_describe_nonexistent_stream_raises_not_found" time="0.006"><failure message="AssertionError: assert '400' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd03b30&gt;
+tests/compatibility/test_firehose_compat.py:472: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_describe_nonexistent_stream_raises_not_found" time="0.005"><failure message="AssertionError: assert '400' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c247a40&gt;
 
     def test_describe_nonexistent_stream_raises_not_found(self):
         """DescribeDeliveryStream for a nonexistent stream raises ResourceNotFoundException."""
@@ -1656,7 +1656,7 @@ E
 E         - ResourceNotFoundException
 E         + 400
 
-tests/compatibility/test_firehose_compat.py:487: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_duplicate_stream_raises_error" time="0.011"><failure message="AssertionError: assert '400' == 'ResourceInUseException'&#10;  &#10;  - ResourceInUseException&#10;  + 400">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bcdb290&gt;
+tests/compatibility/test_firehose_compat.py:487: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_duplicate_stream_raises_error" time="0.010"><failure message="AssertionError: assert '400' == 'ResourceInUseException'&#10;  &#10;  - ResourceInUseException&#10;  + 400">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c21f2f0&gt;
 
     def test_create_duplicate_stream_raises_error(self):
         """Creating a stream with an existing name raises an error."""
@@ -1673,7 +1673,7 @@ E
 E             - ResourceInUseException
 E             + 400
 
-tests/compatibility/test_firehose_compat.py:498: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_with_s3_destination_configuration" time="0.050" /><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_with_snappy_compression" time="0.012"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd030e0&gt;
+tests/compatibility/test_firehose_compat.py:498: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_with_s3_destination_configuration" time="0.042" /><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_with_snappy_compression" time="0.011"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c246ff0&gt;
 
     def test_create_with_snappy_compression(self):
         """CreateDeliveryStream with SNAPPY compression."""
@@ -1689,7 +1689,7 @@ tests/compatibility/test_firehose_compat.py:498: AssertionError</failure></testc
                    ^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'Destinations'
 
-tests/compatibility/test_firehose_compat.py:535: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_with_zip_compression" time="0.012"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd02660&gt;
+tests/compatibility/test_firehose_compat.py:535: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_with_zip_compression" time="0.011"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c246600&gt;
 
     def test_create_with_zip_compression(self):
         """CreateDeliveryStream with ZIP compression."""
@@ -1705,7 +1705,7 @@ tests/compatibility/test_firehose_compat.py:535: KeyError</failure></testcase><t
                    ^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'Destinations'
 
-tests/compatibility/test_firehose_compat.py:551: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_with_uncompressed" time="0.011"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd01ee0&gt;
+tests/compatibility/test_firehose_compat.py:551: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_with_uncompressed" time="0.010"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c245e80&gt;
 
     def test_create_with_uncompressed(self):
         """CreateDeliveryStream with UNCOMPRESSED explicitly set."""
@@ -1721,7 +1721,7 @@ tests/compatibility/test_firehose_compat.py:551: KeyError</failure></testcase><t
                    ^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'Destinations'
 
-tests/compatibility/test_firehose_compat.py:567: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_with_prefix_and_error_prefix" time="0.012"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd00260&gt;
+tests/compatibility/test_firehose_compat.py:567: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_with_prefix_and_error_prefix" time="0.011"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c244200&gt;
 
     def test_create_with_prefix_and_error_prefix(self):
         """CreateDeliveryStream with Prefix and ErrorOutputPrefix."""
@@ -1742,7 +1742,7 @@ tests/compatibility/test_firehose_compat.py:567: KeyError</failure></testcase><t
                    ^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'Destinations'
 
-tests/compatibility/test_firehose_compat.py:588: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_list_streams_limit" time="0.014" /><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_list_streams_has_more_flag" time="0.006" /><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_tag_multiple_then_list" time="0.011"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd14650&gt;
+tests/compatibility/test_firehose_compat.py:588: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_list_streams_limit" time="0.012" /><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_list_streams_has_more_flag" time="0.005" /><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_tag_multiple_then_list" time="0.010"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c258560&gt;
 
     def test_tag_multiple_then_list(self):
         """Tag a stream with multiple tags and verify all are returned."""
@@ -1783,8 +1783,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10ced1b50&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '1592d456-cf71-4857-9e39-fea74f344317', 'server': '...re-request-id': '62cb5b9f-ed28-4463-9575-acc67c45e6f3', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:30 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d3edd30&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'a6aba946-daf8-4117-a74b-68...re-request-id': 'f5893aeb-6e10-4982-aff1-5e982509755f', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:54 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1794,7 +1794,7 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '15
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_tag_overwrite_existing" time="0.012"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd14a70&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_tag_overwrite_existing" time="0.010"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c258980&gt;
 
     def test_tag_overwrite_existing(self):
         """Tagging with an existing key overwrites the value."""
@@ -1837,8 +1837,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10ce5de80&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'c2340020-23fb-4e20-b3ae-e1b0ebf9e91f', 'server': '...re-request-id': 'd72ac678-a4fb-4ece-98d0-9dcc35bf3a6c', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:30 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d3121e0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '41b304a1-5300-4c4a-aa7b-a9...re-request-id': '02a96bd4-7834-4a53-a93c-e5a526163c1f', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:55 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1848,7 +1848,7 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'c2
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_untag_nonexistent_key_is_noop" time="0.012"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd14e90&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_untag_nonexistent_key_is_noop" time="0.011"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c258da0&gt;
 
     def test_untag_nonexistent_key_is_noop(self):
         """UntagDeliveryStream with a key that does not exist does not raise."""
@@ -1892,8 +1892,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10d27a450&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '515263fe-abb9-4289-8b84-73...re-request-id': '0631678a-c658-4e3d-8fcc-b7c94b40588c', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:30 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10d712540&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'f1e18664-c9f2-4201-9947-28...re-request-id': '90920959-4427-44fa-930b-fbdb515f4df7', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:55 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1903,7 +1903,7 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_update_destination_changes_compression" time="0.012"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd152b0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_update_destination_changes_compression" time="0.011"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c2591c0&gt;
 
     def test_update_destination_changes_compression(self):
         """UpdateDestination can change compression format."""
@@ -1919,7 +1919,7 @@ E           AttributeError: 'NoneType' object has no attribute 'setdefault'
                       ^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'Destinations'
 
-tests/compatibility/test_firehose_compat.py:683: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_update_destination_wrong_version_raises" time="0.012"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd156d0&gt;
+tests/compatibility/test_firehose_compat.py:683: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_update_destination_wrong_version_raises" time="0.011"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c2595e0&gt;
 
     def test_update_destination_wrong_version_raises(self):
         """UpdateDestination with wrong version ID raises error."""
@@ -1935,7 +1935,7 @@ tests/compatibility/test_firehose_compat.py:683: KeyError</failure></testcase><t
                       ^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'Destinations'
 
-tests/compatibility/test_firehose_compat.py:713: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_put_record_returns_record_id_format" time="0.011" /><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_put_record_batch_each_has_record_id" time="0.012"><failure message="KeyError: 'RequestResponses'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd15f10&gt;
+tests/compatibility/test_firehose_compat.py:713: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_put_record_returns_record_id_format" time="0.011" /><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_put_record_batch_each_has_record_id" time="0.010"><failure message="KeyError: 'RequestResponses'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c259e20&gt;
 
     def test_put_record_batch_each_has_record_id(self):
         """PutRecordBatch response has a RecordId for each record."""
@@ -1951,7 +1951,7 @@ tests/compatibility/test_firehose_compat.py:713: KeyError</failure></testcase><t
                        ^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'RequestResponses'
 
-tests/compatibility/test_firehose_compat.py:760: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_with_custom_buffering_hints" time="0.012"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd03fe0&gt;
+tests/compatibility/test_firehose_compat.py:760: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_create_with_custom_buffering_hints" time="0.010"><failure message="KeyError: 'Destinations'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c247ec0&gt;
 
     def test_create_with_custom_buffering_hints(self):
         """CreateDeliveryStream with custom BufferingHints values are reflected in describe."""
@@ -1971,7 +1971,7 @@ tests/compatibility/test_firehose_compat.py:760: KeyError</failure></testcase><t
                    ^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'Destinations'
 
-tests/compatibility/test_firehose_compat.py:781: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_version_id_increments_on_update" time="0.012"><failure message="KeyError: 'VersionId'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd019d0&gt;
+tests/compatibility/test_firehose_compat.py:781: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_version_id_increments_on_update" time="0.011"><failure message="KeyError: 'VersionId'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c2441a0&gt;
 
     def test_version_id_increments_on_update(self):
         """VersionId changes after UpdateDestination."""
@@ -1987,7 +1987,7 @@ tests/compatibility/test_firehose_compat.py:781: KeyError</failure></testcase><t
                  ^^^^^^^^^^^^^^^^^^
 E           KeyError: 'VersionId'
 
-tests/compatibility/test_firehose_compat.py:799: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_list_tags_with_limit" time="0.011"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd03530&gt;
+tests/compatibility/test_firehose_compat.py:799: KeyError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_list_tags_with_limit" time="0.010"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c2471d0&gt;
 
     def test_list_tags_with_limit(self):
         """ListTagsForDeliveryStream respects Limit parameter."""
@@ -2028,8 +2028,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10d4b16d0&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'b4938eb6-31b6-47ab-b431-cd...re-request-id': 'cf5eb7e3-72c5-41ba-bdad-cbd05cd15992', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:30 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10da41760&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': 'ae44af82-0319-4c2a-8270-11d5ae31d269', 'server': '...re-request-id': '2eda43b7-e88a-466b-91e7-9dcc79c0461f', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:55 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -2039,7 +2039,7 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_list_tags_pagination_with_exclusive_start" time="0.012"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bcdbaa0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_list_tags_pagination_with_exclusive_start" time="0.011"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c21f5c0&gt;
 
     def test_list_tags_pagination_with_exclusive_start(self):
         """ListTagsForDeliveryStream paginates with ExclusiveStartTagKey."""
@@ -2080,8 +2080,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10d5e5010&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '368b84ab-7348-4423-a55b-af...re-request-id': 'c9bb6024-e409-4513-a59f-4390780e24a8', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:30 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10db59400&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '29fca9f8-da35-4a48-a33d-8c...re-request-id': '348a0e62-f3b5-45fe-acbf-5b25a5b778f6', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:55 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -2091,7 +2091,7 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore',
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_delete_stream_then_describe_raises" time="0.013"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10bd15c10&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_firehose_compat.TestFirehoseExtended" name="test_delete_stream_then_describe_raises" time="0.012"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_firehose_compat.TestFirehoseExtended object at 0x10c259c10&gt;
 
     def test_delete_stream_then_describe_raises(self):
         """Describing a deleted stream raises ResourceNotFoundException."""
@@ -2131,8 +2131,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10d69c080&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '455cfa6d-7570-433d-8e05-3d7a15134446', 'server': '...re-request-id': 'bf86fb39-e924-40a2-be4f-03c7f2578d9f', 'content-length': '4', 'date': 'Sat, 29 Aug 2026 23:30:30 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10db7b470&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': 'f4b8c5f3-9819-49e2-a769-ab...re-request-id': 'c3151448-8b65-4afc-be95-c402ba363815', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 00:39:55 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
