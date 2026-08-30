@@ -226,9 +226,11 @@ impl LogsHandler {
     fn describe_log_streams(&self, req: &AwsRequest) -> AwsResponse {
         let group_name = req.params.get("logGroupName").and_then(|v| v.as_str()).unwrap_or_default();
         let state = self.get_state(req.account, &req.region);
+        let prefix = req.params.get("prefix").and_then(|v| v.as_str()).unwrap_or("");
         let streams: Vec<Value> = state.get_log_group(group_name)
             .map(|g| {
                 g.log_streams.read().iter()
+                    .filter(|s| prefix.is_empty() || s.name.starts_with(prefix))
                     .map(|s| Self::stream_value(s, &g.name))
                     .collect()
             })

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="81" skipped="0" tests="113" time="4.760" timestamp="2026-08-30T05:17:26.033684-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_put_rule" time="0.067" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_list_rules" time="0.005" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_describe_rule" time="0.004"><failure message="AssertionError: assert '' == 'desc-rule'&#10;  &#10;  - desc-rule">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10a4d0ec0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10ad56d80&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="81" skipped="0" tests="113" time="4.911" timestamp="2026-08-30T05:58:23.951126-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_put_rule" time="0.075" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_list_rules" time="0.005" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_describe_rule" time="0.004"><failure message="AssertionError: assert '' == 'desc-rule'&#10;  &#10;  - desc-rule">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10bf24c20&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c7a6c60&gt;
 
     def test_describe_rule(self, events):
         events.put_rule(Name="desc-rule", ScheduleExpression="rate(1 day)")
@@ -9,8 +9,8 @@ E       AssertionError: assert '' == 'desc-rule'
 E         
 E         - desc-rule
 
-tests/compatibility/test_events_compat.py:44: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_put_events" time="0.007" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_put_and_list_targets" time="0.007" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_event_pattern_rule" time="0.004"><failure message="KeyError: 'EventPattern'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10a4d1a00&gt;
-events = &lt;botocore.client.EventBridge object at 0x10acbbe30&gt;
+tests/compatibility/test_events_compat.py:44: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_put_events" time="0.009" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_put_and_list_targets" time="0.008" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_event_pattern_rule" time="0.004"><failure message="KeyError: 'EventPattern'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10bf25760&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c713b60&gt;
 
     def test_event_pattern_rule(self, events):
         """Test creating a rule with an event pattern."""
@@ -27,8 +27,8 @@ events = &lt;botocore.client.EventBridge object at 0x10acbbe30&gt;
                           ^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'EventPattern'
 
-tests/compatibility/test_events_compat.py:81: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_enable_disable_rule" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableRule operation: The operation DisableRule is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10a4d1dc0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b227a40&gt;
+tests/compatibility/test_events_compat.py:81: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_enable_disable_rule" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableRule operation: The operation DisableRule is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10bf25b20&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cc6b980&gt;
 
     def test_enable_disable_rule(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -46,8 +46,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b227a40&gt;
-operation_name = 'DisableRule', api_params = {'Name': 'toggle-rule-436760bf'}
+self = &lt;botocore.client.EventBridge object at 0x10cc6b980&gt;
+operation_name = 'DisableRule', api_params = {'Name': 'toggle-rule-1b41b469'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -136,8 +136,8 @@ operation_name = 'DisableRule', api_params = {'Name': 'toggle-rule-436760bf'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableRule operation: The operation DisableRule is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_create_and_delete_event_bus" time="0.006" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_put_events_multiple_entries" time="0.003" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_describe_event_bus_default" time="0.003"><failure message="KeyError: 'Name'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10a4d2900&gt;
-events = &lt;botocore.client.EventBridge object at 0x10ad10050&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_create_and_delete_event_bus" time="0.007" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_put_events_multiple_entries" time="0.003" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_describe_event_bus_default" time="0.003"><failure message="KeyError: 'Name'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10bf26660&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c767aa0&gt;
 
     def test_describe_event_bus_default(self, events):
         """Describe the default event bus."""
@@ -146,8 +146,8 @@ events = &lt;botocore.client.EventBridge object at 0x10ad10050&gt;
                ^^^^^^^^^^^^^^^^
 E       KeyError: 'Name'
 
-tests/compatibility/test_events_compat.py:133: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_describe_custom_event_bus" time="0.004"><failure message="KeyError: 'Name'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10a4d2cc0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b2545f0&gt;
+tests/compatibility/test_events_compat.py:133: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_describe_custom_event_bus" time="0.005"><failure message="KeyError: 'Name'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10bf26a20&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cca85f0&gt;
 
     def test_describe_custom_event_bus(self, events):
         """Create and describe a custom event bus."""
@@ -159,8 +159,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b2545f0&gt;
                ^^^^^^^^^^^^^^^^
 E       KeyError: 'Name'
 
-tests/compatibility/test_events_compat.py:142: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_put_rule_with_tags" time="0.005"><failure message="AssertionError: assert '' == 'tagged-rule-34fd4416'&#10;  &#10;  - tagged-rule-34fd4416">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10a4d26c0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b1c5a60&gt;
+tests/compatibility/test_events_compat.py:142: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_put_rule_with_tags" time="0.005"><failure message="AssertionError: assert '' == 'tagged-rule-dd2d4798'&#10;  &#10;  - tagged-rule-dd2d4798">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10bf26480&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cc91ac0&gt;
 
     def test_put_rule_with_tags(self, events):
         """Create a rule with tags inline."""
@@ -177,12 +177,12 @@ events = &lt;botocore.client.EventBridge object at 0x10b1c5a60&gt;
         assert "RuleArn" in resp
         desc = events.describe_rule(Name=rule_name)
 &gt;       assert desc["Name"] == rule_name
-E       AssertionError: assert '' == 'tagged-rule-34fd4416'
+E       AssertionError: assert '' == 'tagged-rule-dd2d4798'
 E         
-E         - tagged-rule-34fd4416
+E         - tagged-rule-dd2d4798
 
-tests/compatibility/test_events_compat.py:160: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_list_targets_by_rule_multiple" time="0.007" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_describe_event_bus" time="0.003"><failure message="KeyError: 'Name'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10a4d1460&gt;
-events = &lt;botocore.client.EventBridge object at 0x10ad11d90&gt;
+tests/compatibility/test_events_compat.py:160: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_list_targets_by_rule_multiple" time="0.008" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_describe_event_bus" time="0.003"><failure message="KeyError: 'Name'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10bf25730&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c873ce0&gt;
 
     def test_describe_event_bus(self, events):
         """Call describe_event_bus for 'default', assert Name='default' and Arn present."""
@@ -191,8 +191,8 @@ events = &lt;botocore.client.EventBridge object at 0x10ad11d90&gt;
                ^^^^^^^^^^^^^^^^
 E       KeyError: 'Name'
 
-tests/compatibility/test_events_compat.py:187: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_list_event_buses" time="0.005" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_enable_disable_rule_with_pattern" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableRule operation: The operation DisableRule is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10a4d2e40&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b17db20&gt;
+tests/compatibility/test_events_compat.py:187: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_list_event_buses" time="0.006" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_enable_disable_rule_with_pattern" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableRule operation: The operation DisableRule is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10bf26ba0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cc45b50&gt;
 
     def test_enable_disable_rule_with_pattern(self, events):
         """Create rule with event pattern, disable, verify DISABLED, enable, verify ENABLED."""
@@ -212,8 +212,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b17db20&gt;
-operation_name = 'DisableRule', api_params = {'Name': 'pattern-toggle-5851e479'}
+self = &lt;botocore.client.EventBridge object at 0x10cc45b50&gt;
+operation_name = 'DisableRule', api_params = {'Name': 'pattern-toggle-cdc90789'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -302,8 +302,8 @@ operation_name = 'DisableRule', api_params = {'Name': 'pattern-toggle-5851e479'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableRule operation: The operation DisableRule is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_create_and_delete_archive" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10a4d3260&gt;
-events = &lt;botocore.client.EventBridge object at 0x10ae27e30&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeOperations" name="test_create_and_delete_archive" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeOperations object at 0x10bf26fc0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cc1acc0&gt;
 
     def test_create_and_delete_archive(self, events):
         """Create archive from default event bus, describe, delete."""
@@ -315,8 +315,8 @@ events = &lt;botocore.client.EventBridge object at 0x10ae27e30&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:220: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeSQSTarget" name="test_event_delivered_to_sqs" time="1.020"><failure message="AssertionError: Expected at least one message from EventBridge&#10;assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeSQSTarget object at 0x10a4d3710&gt;
-events = &lt;botocore.client.EventBridge object at 0x10ad10110&gt;
+tests/compatibility/test_events_compat.py:220: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeSQSTarget" name="test_event_delivered_to_sqs" time="1.023"><failure message="AssertionError: Expected at least one message from EventBridge&#10;assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeSQSTarget object at 0x10bf27410&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c872390&gt;
 
     def test_event_delivered_to_sqs(self, events):
         """When PutEvents matches a rule with SQS target, message appears in queue."""
@@ -361,8 +361,8 @@ E       AssertionError: Expected at least one message from EventBridge
 E       assert 0 &gt;= 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_events_compat.py:274: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeSQSTarget" name="test_non_matching_event_not_delivered" time="1.027" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRulePatterns" name="test_rule_with_source_pattern" time="0.007"><failure message="KeyError: 'EventPattern'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRulePatterns object at 0x10a4d3f20&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b256450&gt;
+tests/compatibility/test_events_compat.py:274: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeSQSTarget" name="test_non_matching_event_not_delivered" time="1.024" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRulePatterns" name="test_rule_with_source_pattern" time="0.006"><failure message="KeyError: 'EventPattern'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRulePatterns object at 0x10bf27c80&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c873260&gt;
 
     def test_rule_with_source_pattern(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -379,8 +379,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b256450&gt;
                               ^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'EventPattern'
 
-tests/compatibility/test_events_compat.py:338: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRulePatterns" name="test_rule_with_detail_type_pattern" time="0.006"><failure message="KeyError: 'EventPattern'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRulePatterns object at 0x10a500380&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b259c10&gt;
+tests/compatibility/test_events_compat.py:338: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRulePatterns" name="test_rule_with_detail_type_pattern" time="0.006"><failure message="KeyError: 'EventPattern'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRulePatterns object at 0x10bf540e0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cbd0530&gt;
 
     def test_rule_with_detail_type_pattern(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -397,8 +397,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b259c10&gt;
                                   ^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'EventPattern'
 
-tests/compatibility/test_events_compat.py:353: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRulePatterns" name="test_rule_with_detail_field_pattern" time="0.005"><failure message="KeyError: 'EventPattern'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRulePatterns object at 0x10a5007a0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b38fa70&gt;
+tests/compatibility/test_events_compat.py:353: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRulePatterns" name="test_rule_with_detail_field_pattern" time="0.009"><failure message="KeyError: 'EventPattern'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRulePatterns object at 0x10bf54500&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cbb79e0&gt;
 
     def test_rule_with_detail_field_pattern(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -419,8 +419,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b38fa70&gt;
                                   ^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'EventPattern'
 
-tests/compatibility/test_events_compat.py:373: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRulePatterns" name="test_rule_with_rate_schedule" time="0.006"><failure message="KeyError: 'ScheduleExpression'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRulePatterns object at 0x10a500bc0&gt;
-events = &lt;botocore.client.EventBridge object at 0x108bdb770&gt;
+tests/compatibility/test_events_compat.py:373: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRulePatterns" name="test_rule_with_rate_schedule" time="0.007"><failure message="KeyError: 'ScheduleExpression'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRulePatterns object at 0x10bf54920&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cbd1220&gt;
 
     def test_rule_with_rate_schedule(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -436,8 +436,8 @@ events = &lt;botocore.client.EventBridge object at 0x108bdb770&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'ScheduleExpression'
 
-tests/compatibility/test_events_compat.py:388: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRulePatterns" name="test_rule_with_cron_schedule" time="0.005"><failure message="KeyError: 'ScheduleExpression'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRulePatterns object at 0x10a500fe0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b26ae70&gt;
+tests/compatibility/test_events_compat.py:388: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRulePatterns" name="test_rule_with_cron_schedule" time="0.006"><failure message="KeyError: 'ScheduleExpression'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRulePatterns object at 0x10bf54d40&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cbe2750&gt;
 
     def test_rule_with_cron_schedule(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -453,8 +453,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b26ae70&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'ScheduleExpression'
 
-tests/compatibility/test_events_compat.py:402: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEventBus" name="test_list_event_buses_includes_default" time="0.003" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEventBus" name="test_create_describe_delete_event_bus" time="0.005"><failure message="KeyError: 'Name'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeEventBus object at 0x10a4d3c80&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b454cb0&gt;
+tests/compatibility/test_events_compat.py:402: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEventBus" name="test_list_event_buses_includes_default" time="0.004" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEventBus" name="test_create_describe_delete_event_bus" time="0.006"><failure message="KeyError: 'Name'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeEventBus object at 0x10bf27e90&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cb80c50&gt;
 
     def test_create_describe_delete_event_bus(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -468,8 +468,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b454cb0&gt;
                    ^^^^^^^^^^^^
 E           KeyError: 'Name'
 
-tests/compatibility/test_events_compat.py:427: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEventBus" name="test_put_events_to_custom_bus" time="0.005" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTags" name="test_tag_and_list_tags_on_rule" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTags object at 0x10a4d0920&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b39a2d0&gt;
+tests/compatibility/test_events_compat.py:427: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEventBus" name="test_put_events_to_custom_bus" time="0.005" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTags" name="test_tag_and_list_tags_on_rule" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTags object at 0x10bf24650&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cac22a0&gt;
 
     def test_tag_and_list_tags_on_rule(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -498,9 +498,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b39a2d0&gt;
+self = &lt;botocore.client.EventBridge object at 0x10cac22a0&gt;
 operation_name = 'TagResource'
-api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:rule/tag-rule-596cb42a', 'Tags': [{'Key': 'env', 'Value': 'staging'}, {'Key': 'team', 'Value': 'backend'}]}
+api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:rule/tag-rule-14568256', 'Tags': [{'Key': 'env', 'Value': 'staging'}, {'Key': 'team', 'Value': 'backend'}]}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -589,8 +589,8 @@ api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:rule/tag-rul
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTags" name="test_untag_resource_on_rule" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTags object at 0x10a4d2360&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b3e9c40&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTags" name="test_untag_resource_on_rule" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTags object at 0x10bf258b0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c873e60&gt;
 
     def test_untag_resource_on_rule(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -619,9 +619,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b3e9c40&gt;
+self = &lt;botocore.client.EventBridge object at 0x10c873e60&gt;
 operation_name = 'TagResource'
-api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:rule/untag-rule-3122cbf8', 'Tags': [{'Key': 'remove-me', 'Value': 'yes'}, {'Key': 'keep-me', 'Value': 'yes'}]}
+api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:rule/untag-rule-cf8249e9', 'Tags': [{'Key': 'remove-me', 'Value': 'yes'}, {'Key': 'keep-me', 'Value': 'yes'}]}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -710,8 +710,8 @@ api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:rule/untag-r
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListRules" name="test_list_rules_with_name_prefix" time="0.008" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListRules" name="test_describe_rule_details" time="0.006"><failure message="AssertionError: assert '' == 'desc-detail-e1b1e939'&#10;  &#10;  - desc-detail-e1b1e939">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeListRules object at 0x10a500da0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b4541a0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListRules" name="test_list_rules_with_name_prefix" time="0.008" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListRules" name="test_describe_rule_details" time="0.007"><failure message="AssertionError: assert '' == 'desc-detail-5733eea2'&#10;  &#10;  - desc-detail-5733eea2">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeListRules object at 0x10bf54b30&gt;
+events = &lt;botocore.client.EventBridge object at 0x10bdfe990&gt;
 
     def test_describe_rule_details(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -725,12 +725,12 @@ events = &lt;botocore.client.EventBridge object at 0x10b4541a0&gt;
             )
             desc = events.describe_rule(Name=rule_name)
 &gt;           assert desc["Name"] == rule_name
-E           AssertionError: assert '' == 'desc-detail-e1b1e939'
+E           AssertionError: assert '' == 'desc-detail-5733eea2'
 E             
-E             - desc-detail-e1b1e939
+E             - desc-detail-5733eea2
 
-tests/compatibility/test_events_compat.py:539: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTargets" name="test_put_targets_multiple_and_remove_subset" time="0.010" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTargets" name="test_put_targets_returns_failed_count" time="0.006" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTargets" name="test_list_targets_empty" time="0.005" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEventBuses" name="test_put_list_remove_targets" time="0.008" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleState" name="test_create_and_describe_archive" time="0.005"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRuleState object at 0x10a502780&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b434b00&gt;
+tests/compatibility/test_events_compat.py:539: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTargets" name="test_put_targets_multiple_and_remove_subset" time="0.009" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTargets" name="test_put_targets_returns_failed_count" time="0.007" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTargets" name="test_list_targets_empty" time="0.005" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEventBuses" name="test_put_list_remove_targets" time="0.008" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleState" name="test_create_and_describe_archive" time="0.006"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRuleState object at 0x10bf565a0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cae0a40&gt;
 
     def test_create_and_describe_archive(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -742,8 +742,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b434b00&gt;
                       ^^^^^^^^^^
 E           KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:637: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleState" name="test_list_archives" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRuleState object at 0x10a502ba0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10ad7bb00&gt;
+tests/compatibility/test_events_compat.py:637: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleState" name="test_list_archives" time="0.005"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRuleState object at 0x10bf569c0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cb121b0&gt;
 
     def test_list_archives(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -754,8 +754,8 @@ events = &lt;botocore.client.EventBridge object at 0x10ad7bb00&gt;
                       ^^^^^^^^^^
 E           KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:659: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleState" name="test_delete_archive" time="0.003"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRuleState object at 0x10a502fc0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b259730&gt;
+tests/compatibility/test_events_compat.py:659: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleState" name="test_delete_archive" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRuleState object at 0x10bf56de0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cb80a40&gt;
 
     def test_delete_archive(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -765,8 +765,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b259730&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:675: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleState" name="test_create_describe_list_delete_archive" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRuleState object at 0x10a5033e0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b3ba420&gt;
+tests/compatibility/test_events_compat.py:675: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleState" name="test_create_describe_list_delete_archive" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRuleState object at 0x10bf57200&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cbb9190&gt;
 
     def test_create_describe_list_delete_archive(self, events):
         """Archive CRUD lifecycle."""
@@ -778,8 +778,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b3ba420&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:691: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeDescribeRuleFields" name="test_describe_rule_all_fields" time="0.006"><failure message="AssertionError: assert '' == 'describe-fields-358055c3'&#10;  &#10;  - describe-fields-358055c3">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeDescribeRuleFields object at 0x10a4d1d90&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b1c7410&gt;
+tests/compatibility/test_events_compat.py:691: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeDescribeRuleFields" name="test_describe_rule_all_fields" time="0.007"><failure message="AssertionError: assert '' == 'describe-fields-12a40897'&#10;  &#10;  - describe-fields-12a40897">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeDescribeRuleFields object at 0x10bf263c0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10bf73bc0&gt;
 
     def test_describe_rule_all_fields(self, events):
         """DescribeRule returns all expected fields."""
@@ -794,12 +794,12 @@ events = &lt;botocore.client.EventBridge object at 0x10b1c7410&gt;
         try:
             resp = events.describe_rule(Name=rule_name)
 &gt;           assert resp["Name"] == rule_name
-E           AssertionError: assert '' == 'describe-fields-358055c3'
+E           AssertionError: assert '' == 'describe-fields-12a40897'
 E             
-E             - describe-fields-358055c3
+E             - describe-fields-12a40897
 
-tests/compatibility/test_events_compat.py:731: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTargetsExtended" name="test_list_targets_by_rule" time="0.007" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTargetsExtended" name="test_put_targets_multiple" time="0.007" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTargetsExtended" name="test_remove_targets" time="0.008" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListRulesFilter" name="test_create_describe_delete_archive" time="0.003"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeListRulesFilter object at 0x10a501eb0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10af77620&gt;
+tests/compatibility/test_events_compat.py:731: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTargetsExtended" name="test_list_targets_by_rule" time="0.008" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTargetsExtended" name="test_put_targets_multiple" time="0.008" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTargetsExtended" name="test_remove_targets" time="0.008" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListRulesFilter" name="test_create_describe_delete_archive" time="0.003"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeListRulesFilter object at 0x10bf562d0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10ce8b4d0&gt;
 
     def test_create_describe_delete_archive(self, events):
         """Test CreateArchive, DescribeArchive, DeleteArchive lifecycle."""
@@ -811,8 +811,8 @@ events = &lt;botocore.client.EventBridge object at 0x10af77620&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:815: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePartnerEvents" name="test_put_partner_events_source" time="0.028"><failure message="AssertionError: assert 'FailedEntryCount' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '9', 'content-type': 'application/x-amz-json-1.0', 'date': 'Su...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6a7f354b-1d7f-495f-8834-88c324d6c23c', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_events_compat.TestEventBridgePartnerEvents object at 0x10a501220&gt;
-events = &lt;botocore.client.EventBridge object at 0x10af75130&gt;
+tests/compatibility/test_events_compat.py:815: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePartnerEvents" name="test_put_partner_events_source" time="0.032"><failure message="AssertionError: assert 'FailedEntryCount' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '9', 'content-type': 'application/x-amz-json-1.0', 'date': 'Su...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '1f52230d-5b23-4daf-8389-ad6dfa494c3f', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_events_compat.TestEventBridgePartnerEvents object at 0x10bf54290&gt;
+events = &lt;botocore.client.EventBridge object at 0x10bf8ec60&gt;
 
     def test_put_partner_events_source(self, events):
         """PutPartnerEvents accepts partner event entries and returns a response."""
@@ -826,10 +826,10 @@ events = &lt;botocore.client.EventBridge object at 0x10af75130&gt;
             ]
         )
 &gt;       assert "FailedEntryCount" in resp
-E       AssertionError: assert 'FailedEntryCount' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '9', 'content-type': 'application/x-amz-json-1.0', 'date': 'Su...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6a7f354b-1d7f-495f-8834-88c324d6c23c', 'RetryAttempts': 0}}
+E       AssertionError: assert 'FailedEntryCount' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '9', 'content-type': 'application/x-amz-json-1.0', 'date': 'Su...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '1f52230d-5b23-4daf-8389-ad6dfa494c3f', 'RetryAttempts': 0}}
 
-tests/compatibility/test_events_compat.py:845: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleTagging" name="test_tag_untag_list_tags_on_rule" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRuleTagging object at 0x10a503a10&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b436600&gt;
+tests/compatibility/test_events_compat.py:845: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleTagging" name="test_tag_untag_list_tags_on_rule" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRuleTagging object at 0x10bf57800&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cbd11f0&gt;
 
     def test_tag_untag_list_tags_on_rule(self, events):
         """TagResource, UntagResource, ListTagsForResource on rules."""
@@ -856,9 +856,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b436600&gt;
+self = &lt;botocore.client.EventBridge object at 0x10cbd11f0&gt;
 operation_name = 'TagResource'
-api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:rule/tag-rule-07dc701c', 'Tags': [{'Key': 'env', 'Value': 'staging'}, {'Key': 'team', 'Value': 'infra'}]}
+api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:rule/tag-rule-d190d7fe', 'Tags': [{'Key': 'env', 'Value': 'staging'}, {'Key': 'team', 'Value': 'infra'}]}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -947,8 +947,8 @@ api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:rule/tag-rul
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeConnections" name="test_create_describe_connection" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeConnection operation: The operation DescribeConnection is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeConnections object at 0x10a503e90&gt;
-events = &lt;botocore.client.EventBridge object at 0x10a35b6b0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeConnections" name="test_create_describe_connection" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeConnection operation: The operation DescribeConnection is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeConnections object at 0x10bf57c80&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cc6a660&gt;
 
     def test_create_describe_connection(self, events):
         """Test CreateConnection and DescribeConnection."""
@@ -979,9 +979,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10a35b6b0&gt;
+self = &lt;botocore.client.EventBridge object at 0x10cc6a660&gt;
 operation_name = 'DescribeConnection'
-api_params = {'Name': 'test-conn-de82c8da'}
+api_params = {'Name': 'test-conn-a721d6fc'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1070,8 +1070,8 @@ api_params = {'Name': 'test-conn-de82c8da'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeConnection operation: The operation DescribeConnection is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeUpdateConnection" name="test_update_connection" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeConnection operation: The operation DescribeConnection is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeUpdateConnection object at 0x10a51c380&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b457290&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeUpdateConnection" name="test_update_connection" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeConnection operation: The operation DescribeConnection is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeUpdateConnection object at 0x10bf70170&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cbb5d90&gt;
 
     def test_update_connection(self, events):
         """UpdateConnection modifies an existing connection's auth parameters."""
@@ -1112,9 +1112,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b457290&gt;
+self = &lt;botocore.client.EventBridge object at 0x10cbb5d90&gt;
 operation_name = 'DescribeConnection'
-api_params = {'Name': 'upd-conn-8601732a'}
+api_params = {'Name': 'upd-conn-314caeab'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1203,8 +1203,8 @@ api_params = {'Name': 'upd-conn-8601732a'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeConnection operation: The operation DescribeConnection is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeApiDestinations" name="test_create_describe_api_destination" time="0.006"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid length for parameter ConnectionArn, value: 0, valid min length: 1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeApiDestinations object at 0x10a51c800&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b17ddf0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeApiDestinations" name="test_create_describe_api_destination" time="0.007"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid length for parameter ConnectionArn, value: 0, valid min length: 1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeApiDestinations object at 0x10bf705f0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c872c00&gt;
 
     def test_create_describe_api_destination(self, events):
         """Test CreateApiDestination and DescribeApiDestination."""
@@ -1245,7 +1245,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     request_dict = self._serializer.serialize_to_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.validate.ParamValidationDecorator object at 0x10b261af0&gt;
+self = &lt;botocore.validate.ParamValidationDecorator object at 0x10c872450&gt;
 parameters = {'ConnectionArn': '', 'HttpMethod': 'POST', 'InvocationEndpoint': 'https://example.com/api', 'InvocationRateLimitPerSecond': 10, ...}
 operation_model = OperationModel(name=CreateApiDestination)
 
@@ -1260,8 +1260,8 @@ operation_model = OperationModel(name=CreateApiDestination)
 E               botocore.exceptions.ParamValidationError: Parameter validation failed:
 E               Invalid length for parameter ConnectionArn, value: 0, valid min length: 1
 
-.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeUpdateApiDestination" name="test_update_api_destination" time="0.006"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid length for parameter ConnectionArn, value: 0, valid min length: 1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeUpdateApiDestination object at 0x10a51cc50&gt;
-events = &lt;botocore.client.EventBridge object at 0x10a3d0830&gt;
+.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeUpdateApiDestination" name="test_update_api_destination" time="0.007"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid length for parameter ConnectionArn, value: 0, valid min length: 1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeUpdateApiDestination object at 0x10bf70aa0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10ce890d0&gt;
 
     def test_update_api_destination(self, events):
         """UpdateApiDestination changes endpoint and method."""
@@ -1301,8 +1301,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     request_dict = self._serializer.serialize_to_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.validate.ParamValidationDecorator object at 0x10af75250&gt;
-parameters = {'ConnectionArn': '', 'HttpMethod': 'POST', 'InvocationEndpoint': 'https://example.com/v1', 'Name': 'upd-dest-e0b9bc7b'}
+self = &lt;botocore.validate.ParamValidationDecorator object at 0x10ce89580&gt;
+parameters = {'ConnectionArn': '', 'HttpMethod': 'POST', 'InvocationEndpoint': 'https://example.com/v1', 'Name': 'upd-dest-de40f0cc'}
 operation_model = OperationModel(name=CreateApiDestination)
 
     def serialize_to_request(self, parameters, operation_model):
@@ -1316,8 +1316,8 @@ operation_model = OperationModel(name=CreateApiDestination)
 E               botocore.exceptions.ParamValidationError: Parameter validation failed:
 E               Invalid length for parameter ConnectionArn, value: 0, valid min length: 1
 
-.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListRuleNamesByTarget" name="test_list_rule_names_by_target" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListRuleNamesByTarget operation: The operation ListRuleNamesByTarget is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeListRuleNamesByTarget object at 0x10a51d100&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b2572c0&gt;
+.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListRuleNamesByTarget" name="test_list_rule_names_by_target" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListRuleNamesByTarget operation: The operation ListRuleNamesByTarget is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeListRuleNamesByTarget object at 0x10bf70f50&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cbd1d30&gt;
 
     def test_list_rule_names_by_target(self, events):
         """ListRuleNamesByTarget returns rules associated with a target ARN."""
@@ -1343,9 +1343,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b2572c0&gt;
+self = &lt;botocore.client.EventBridge object at 0x10cbd1d30&gt;
 operation_name = 'ListRuleNamesByTarget'
-api_params = {'TargetArn': 'arn:aws:sqs:us-east-1:123456789012:lrnbt-queue-3ee48c68'}
+api_params = {'TargetArn': 'arn:aws:sqs:us-east-1:123456789012:lrnbt-queue-ae80b690'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1434,8 +1434,8 @@ api_params = {'TargetArn': 'arn:aws:sqs:us-east-1:123456789012:lrnbt-queue-3ee48
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListRuleNamesByTarget operation: The operation ListRuleNamesByTarget is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_rule_with_event_pattern" time="0.006"><failure message="AssertionError: assert '' == 'pattern-rule-f31d48cf'&#10;  &#10;  - pattern-rule-f31d48cf">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10a51d580&gt;
-events = &lt;botocore.client.EventBridge object at 0x10ad56780&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_rule_with_event_pattern" time="0.006"><failure message="AssertionError: assert '' == 'pattern-rule-d8db6ff4'&#10;  &#10;  - pattern-rule-d8db6ff4">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10bf713a0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c7cc590&gt;
 
     def test_put_rule_with_event_pattern(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -1446,12 +1446,12 @@ events = &lt;botocore.client.EventBridge object at 0x10ad56780&gt;
             assert "RuleArn" in resp
             desc = events.describe_rule(Name=rule_name)
 &gt;           assert desc["Name"] == rule_name
-E           AssertionError: assert '' == 'pattern-rule-f31d48cf'
+E           AssertionError: assert '' == 'pattern-rule-d8db6ff4'
 E             
-E             - pattern-rule-f31d48cf
+E             - pattern-rule-d8db6ff4
 
-tests/compatibility/test_events_compat.py:1089: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_enable_disable_rule" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableRule operation: The operation DisableRule is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10a503800&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b3b8950&gt;
+tests/compatibility/test_events_compat.py:1089: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_enable_disable_rule" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableRule operation: The operation DisableRule is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10bf579e0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cc47380&gt;
 
     def test_enable_disable_rule(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -1470,8 +1470,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b3b8950&gt;
-operation_name = 'DisableRule', api_params = {'Name': 'toggle-rule-bbc07266'}
+self = &lt;botocore.client.EventBridge object at 0x10cc47380&gt;
+operation_name = 'DisableRule', api_params = {'Name': 'toggle-rule-7853c05d'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1560,8 +1560,8 @@ operation_name = 'DisableRule', api_params = {'Name': 'toggle-rule-bbc07266'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableRule operation: The operation DisableRule is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_list_rules_name_prefix" time="0.006" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_events" time="0.003" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_events_multiple" time="0.004" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_create_custom_event_bus" time="0.005"><failure message="KeyError: 'Name'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10a51caa0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b3b8ec0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_list_rules_name_prefix" time="0.007" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_events" time="0.003" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_events_multiple" time="0.004" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_create_custom_event_bus" time="0.005"><failure message="KeyError: 'Name'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10bf70d10&gt;
+events = &lt;botocore.client.EventBridge object at 0x10ce89d00&gt;
 
     def test_create_custom_event_bus(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -1575,8 +1575,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b3b8ec0&gt;
                    ^^^^^^^^^^^^
 E           KeyError: 'Name'
 
-tests/compatibility/test_events_compat.py:1170: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_list_event_buses" time="0.003" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_rule_on_custom_bus" time="0.006" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_targets_with_input_transformer" time="0.006" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_targets_with_input" time="0.006" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_describe_event_bus_default" time="0.004"><failure message="KeyError: 'Name'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10a51e630&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b3a1be0&gt;
+tests/compatibility/test_events_compat.py:1170: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_list_event_buses" time="0.004" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_rule_on_custom_bus" time="0.008" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_targets_with_input_transformer" time="0.007" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_targets_with_input" time="0.007" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_describe_event_bus_default" time="0.004"><failure message="KeyError: 'Name'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10bf72450&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cb566f0&gt;
 
     def test_describe_event_bus_default(self, events):
         resp = events.describe_event_bus(Name="default")
@@ -1584,8 +1584,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b3a1be0&gt;
                ^^^^^^^^^^^^
 E       KeyError: 'Name'
 
-tests/compatibility/test_events_compat.py:1253: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_list_archives" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListArchives operation: The operation ListArchives is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10a51ea20&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b38ce30&gt;
+tests/compatibility/test_events_compat.py:1253: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_list_archives" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListArchives operation: The operation ListArchives is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10bf72840&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c7a7b00&gt;
 
     def test_list_archives(self, events):
 &gt;       resp = events.list_archives()
@@ -1601,7 +1601,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b38ce30&gt;
+self = &lt;botocore.client.EventBridge object at 0x10c7a7b00&gt;
 operation_name = 'ListArchives', api_params = {}
 
     @with_current_context()
@@ -1691,8 +1691,8 @@ operation_name = 'ListArchives', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListArchives operation: The operation ListArchives is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_rule_with_description" time="0.005"><failure message="KeyError: 'Description'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10a51ee10&gt;
-events = &lt;botocore.client.EventBridge object at 0x10af755e0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_put_rule_with_description" time="0.006"><failure message="KeyError: 'Description'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10bf72c30&gt;
+events = &lt;botocore.client.EventBridge object at 0x10ce895b0&gt;
 
     def test_put_rule_with_description(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -1708,8 +1708,8 @@ events = &lt;botocore.client.EventBridge object at 0x10af755e0&gt;
                    ^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'Description'
 
-tests/compatibility/test_events_compat.py:1271: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_update_archive" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10a51f200&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b454ce0&gt;
+tests/compatibility/test_events_compat.py:1271: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeExtended" name="test_update_archive" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeExtended object at 0x10bf73020&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cbb55b0&gt;
 
     def test_update_archive(self, events):
         suffix = uuid.uuid4().hex[:8]
@@ -1719,8 +1719,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b454ce0&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:1279: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeReplay" name="test_start_and_describe_replay" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeReplay object at 0x10a51f6b0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b1c7200&gt;
+tests/compatibility/test_events_compat.py:1279: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeReplay" name="test_start_and_describe_replay" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeReplay object at 0x10bf73440&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cb56930&gt;
 
     def test_start_and_describe_replay(self, events):
         """StartReplay from an archive, then DescribeReplay to verify state."""
@@ -1734,8 +1734,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b1c7200&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:1308: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTagsOnBus" name="test_tag_list_untag_on_event_bus" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTagsOnBus object at 0x10a51fb30&gt;
-events = &lt;botocore.client.EventBridge object at 0x10ad7aed0&gt;
+tests/compatibility/test_events_compat.py:1308: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTagsOnBus" name="test_tag_list_untag_on_event_bus" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTagsOnBus object at 0x10bf738c0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c713b00&gt;
 
     def test_tag_list_untag_on_event_bus(self, events):
         """Tag an event bus, list tags, untag, verify removal."""
@@ -1763,9 +1763,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10ad7aed0&gt;
+self = &lt;botocore.client.EventBridge object at 0x10c713b00&gt;
 operation_name = 'TagResource'
-api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:event-bus/tag-bus-d790da91', 'Tags': [{'Key': 'project', 'Value': 'robotocore'}, {'Key': 'env', 'Value': 'test'}]}
+api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:event-bus/tag-bus-a9d7853d', 'Tags': [{'Key': 'project', 'Value': 'robotocore'}, {'Key': 'env', 'Value': 'test'}]}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1854,8 +1854,8 @@ api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:event-bus/ta
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTagsOnArchive" name="test_tag_and_list_tags_on_archive" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTagsOnArchive object at 0x10a5000e0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b1cac90&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTagsOnArchive" name="test_tag_and_list_tags_on_archive" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTagsOnArchive object at 0x10bf56ae0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cc90620&gt;
 
     def test_tag_and_list_tags_on_archive(self, events):
         """Tag an archive, verify tags via ListTagsForResource."""
@@ -1866,8 +1866,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b1cac90&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:1377: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTagsOnConnection" name="test_tag_and_list_tags_on_connection" time="0.005"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid length for parameter ResourceARN, value: 0, valid min length: 1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTagsOnConnection object at 0x10a51f440&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b259c10&gt;
+tests/compatibility/test_events_compat.py:1377: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTagsOnConnection" name="test_tag_and_list_tags_on_connection" time="0.005"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid length for parameter ResourceARN, value: 0, valid min length: 1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTagsOnConnection object at 0x10bf73860&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cae2210&gt;
 
     def test_tag_and_list_tags_on_connection(self, events):
         """Tag a connection, verify tags via ListTagsForResource."""
@@ -1905,7 +1905,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     request_dict = self._serializer.serialize_to_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.validate.ParamValidationDecorator object at 0x10b38e720&gt;
+self = &lt;botocore.validate.ParamValidationDecorator object at 0x10cae2360&gt;
 parameters = {'ResourceARN': '', 'Tags': [{'Key': 'managed-by', 'Value': 'test'}]}
 operation_model = OperationModel(name=TagResource)
 
@@ -1920,8 +1920,8 @@ operation_model = OperationModel(name=TagResource)
 E               botocore.exceptions.ParamValidationError: Parameter validation failed:
 E               Invalid length for parameter ResourceARN, value: 0, valid min length: 1
 
-.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListArchivesFilters" name="test_list_archives_with_name_prefix" time="0.003"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeListArchivesFilters object at 0x10a51eb70&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b1c5dc0&gt;
+.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListArchivesFilters" name="test_list_archives_with_name_prefix" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeListArchivesFilters object at 0x10bf72a50&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c7a6090&gt;
 
     def test_list_archives_with_name_prefix(self, events):
         """ListArchives filtered by NamePrefix returns matching archives."""
@@ -1935,8 +1935,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b1c5dc0&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:1441: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListArchivesFilters" name="test_list_archives_with_event_source_arn" time="0.003"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeListArchivesFilters object at 0x10a51e5d0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10ad10e60&gt;
+tests/compatibility/test_events_compat.py:1441: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListArchivesFilters" name="test_list_archives_with_event_source_arn" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeListArchivesFilters object at 0x10bf72210&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cb5ab40&gt;
 
     def test_list_archives_with_event_source_arn(self, events):
         """ListArchives filtered by EventSourceArn returns matching archives."""
@@ -1947,16 +1947,16 @@ events = &lt;botocore.client.EventBridge object at 0x10ad10e60&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:1463: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsGapStubs" name="test_list_connections" time="0.005"><failure message="AssertionError: assert 'Connections' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '435e2b0b-8f61-4547-a69e-84155fa74d2d', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_events_compat.TestEventsGapStubs object at 0x10a51d880&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b26a630&gt;
+tests/compatibility/test_events_compat.py:1463: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsGapStubs" name="test_list_connections" time="0.005"><failure message="AssertionError: assert 'Connections' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'ca067b57-89dc-4e0f-b1b1-75cf244bdb99', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_events_compat.TestEventsGapStubs object at 0x10bf718b0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c766330&gt;
 
     def test_list_connections(self, events):
         resp = events.list_connections()
 &gt;       assert "Connections" in resp
-E       AssertionError: assert 'Connections' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '435e2b0b-8f61-4547-a69e-84155fa74d2d', 'RetryAttempts': 0}}
+E       AssertionError: assert 'Connections' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'ca067b57-89dc-4e0f-b1b1-75cf244bdb99', 'RetryAttempts': 0}}
 
-tests/compatibility/test_events_compat.py:1482: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsGapStubs" name="test_list_api_destinations" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListApiDestinations operation: The operation ListApiDestinations is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsGapStubs object at 0x10a51d430&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b1c63c0&gt;
+tests/compatibility/test_events_compat.py:1482: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsGapStubs" name="test_list_api_destinations" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListApiDestinations operation: The operation ListApiDestinations is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsGapStubs object at 0x10bf703e0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c713b30&gt;
 
     def test_list_api_destinations(self, events):
 &gt;       resp = events.list_api_destinations()
@@ -1972,7 +1972,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b1c63c0&gt;
+self = &lt;botocore.client.EventBridge object at 0x10c713b30&gt;
 operation_name = 'ListApiDestinations', api_params = {}
 
     @with_current_context()
@@ -2062,8 +2062,8 @@ operation_name = 'ListApiDestinations', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListApiDestinations operation: The operation ListApiDestinations is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsGapStubs" name="test_list_endpoints" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListEndpoints operation: The operation ListEndpoints is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsGapStubs object at 0x10a51fe30&gt;
-events = &lt;botocore.client.EventBridge object at 0x10af7b980&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsGapStubs" name="test_list_endpoints" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListEndpoints operation: The operation ListEndpoints is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsGapStubs object at 0x10bf73bf0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10ce09d30&gt;
 
     def test_list_endpoints(self, events):
 &gt;       resp = events.list_endpoints()
@@ -2079,7 +2079,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10af7b980&gt;
+self = &lt;botocore.client.EventBridge object at 0x10ce09d30&gt;
 operation_name = 'ListEndpoints', api_params = {}
 
     @with_current_context()
@@ -2169,8 +2169,8 @@ operation_name = 'ListEndpoints', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListEndpoints operation: The operation ListEndpoints is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeDeleteConnection" name="test_delete_connection_lifecycle" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeConnection operation: The operation DescribeConnection is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeDeleteConnection object at 0x10a5382c0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10ad560c0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeDeleteConnection" name="test_delete_connection_lifecycle" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeConnection operation: The operation DescribeConnection is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeDeleteConnection object at 0x10bf8c0b0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10bf70230&gt;
 
     def test_delete_connection_lifecycle(self, events):
         """Create, describe, delete, verify ResourceNotFoundException."""
@@ -2204,9 +2204,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10ad560c0&gt;
+self = &lt;botocore.client.EventBridge object at 0x10bf70230&gt;
 operation_name = 'DescribeConnection'
-api_params = {'Name': 'del-conn-80b3bd7e'}
+api_params = {'Name': 'del-conn-f5f7d984'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2295,8 +2295,8 @@ api_params = {'Name': 'del-conn-80b3bd7e'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeConnection operation: The operation DescribeConnection is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeDeleteApiDestination" name="test_delete_api_destination_lifecycle" time="0.006"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid length for parameter ConnectionArn, value: 0, valid min length: 1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeDeleteApiDestination object at 0x10a538740&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b46dd00&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeDeleteApiDestination" name="test_delete_api_destination_lifecycle" time="0.007"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid length for parameter ConnectionArn, value: 0, valid min length: 1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeDeleteApiDestination object at 0x10bf8c530&gt;
+events = &lt;botocore.client.EventBridge object at 0x10ceadd30&gt;
 
     def test_delete_api_destination_lifecycle(self, events):
         """Create, describe, delete, verify ResourceNotFoundException."""
@@ -2339,8 +2339,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     request_dict = self._serializer.serialize_to_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.validate.ParamValidationDecorator object at 0x10b46e0c0&gt;
-parameters = {'ConnectionArn': '', 'HttpMethod': 'POST', 'InvocationEndpoint': 'https://example.com/api', 'Name': 'del-dest-98bfe901'}
+self = &lt;botocore.validate.ParamValidationDecorator object at 0x10ceae0f0&gt;
+parameters = {'ConnectionArn': '', 'HttpMethod': 'POST', 'InvocationEndpoint': 'https://example.com/api', 'Name': 'del-dest-d34ae940'}
 operation_model = OperationModel(name=CreateApiDestination)
 
     def serialize_to_request(self, parameters, operation_model):
@@ -2354,8 +2354,8 @@ operation_model = OperationModel(name=CreateApiDestination)
 E               botocore.exceptions.ParamValidationError: Parameter validation failed:
 E               Invalid length for parameter ConnectionArn, value: 0, valid min length: 1
 
-.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsAutoCoverage" name="test_list_event_sources" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListEventSources operation: The operation ListEventSources is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsAutoCoverage object at 0x10a538b90&gt;
-client = &lt;botocore.client.EventBridge object at 0x10af77c80&gt;
+.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsAutoCoverage" name="test_list_event_sources" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListEventSources operation: The operation ListEventSources is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsAutoCoverage object at 0x10bf8c9b0&gt;
+client = &lt;botocore.client.EventBridge object at 0x10cc6aa20&gt;
 
     def test_list_event_sources(self, client):
         """ListEventSources returns a response."""
@@ -2372,7 +2372,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10af77c80&gt;
+self = &lt;botocore.client.EventBridge object at 0x10cc6aa20&gt;
 operation_name = 'ListEventSources', api_params = {}
 
     @with_current_context()
@@ -2462,8 +2462,8 @@ operation_name = 'ListEventSources', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListEventSources operation: The operation ListEventSources is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsAutoCoverage" name="test_list_replays" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListReplays operation: The operation ListReplays is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsAutoCoverage object at 0x10a538f80&gt;
-client = &lt;botocore.client.EventBridge object at 0x10b4c99d0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsAutoCoverage" name="test_list_replays" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListReplays operation: The operation ListReplays is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsAutoCoverage object at 0x10bf8cda0&gt;
+client = &lt;botocore.client.EventBridge object at 0x10cdf3bf0&gt;
 
     def test_list_replays(self, client):
         """ListReplays returns a response."""
@@ -2480,7 +2480,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b4c99d0&gt;
+self = &lt;botocore.client.EventBridge object at 0x10cdf3bf0&gt;
 operation_name = 'ListReplays', api_params = {}
 
     @with_current_context()
@@ -2570,8 +2570,8 @@ operation_name = 'ListReplays', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListReplays operation: The operation ListReplays is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsAutoCoverage" name="test_put_permission" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutPermission operation: The operation PutPermission is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsAutoCoverage object at 0x10a539370&gt;
-client = &lt;botocore.client.EventBridge object at 0x10b481220&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsAutoCoverage" name="test_put_permission" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutPermission operation: The operation PutPermission is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsAutoCoverage object at 0x10bf8d190&gt;
+client = &lt;botocore.client.EventBridge object at 0x10ce29340&gt;
 
     def test_put_permission(self, client):
         """PutPermission grants permission and returns a 200 response."""
@@ -2594,9 +2594,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b481220&gt;
+self = &lt;botocore.client.EventBridge object at 0x10ce29340&gt;
 operation_name = 'PutPermission'
-api_params = {'Action': 'events:PutEvents', 'Principal': '123456789012', 'StatementId': 'test-stmt-12ada6ee'}
+api_params = {'Action': 'events:PutEvents', 'Principal': '123456789012', 'StatementId': 'test-stmt-2832f324'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2685,8 +2685,8 @@ api_params = {'Action': 'events:PutEvents', 'Principal': '123456789012', 'Statem
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutPermission operation: The operation PutPermission is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsAutoCoverage" name="test_remove_permission" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutPermission operation: The operation PutPermission is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsAutoCoverage object at 0x10a539760&gt;
-client = &lt;botocore.client.EventBridge object at 0x10b39b8c0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsAutoCoverage" name="test_remove_permission" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutPermission operation: The operation PutPermission is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsAutoCoverage object at 0x10bf8d580&gt;
+client = &lt;botocore.client.EventBridge object at 0x10cc90d10&gt;
 
     def test_remove_permission(self, client):
         """RemovePermission removes a previously added statement."""
@@ -2709,9 +2709,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b39b8c0&gt;
+self = &lt;botocore.client.EventBridge object at 0x10cc90d10&gt;
 operation_name = 'PutPermission'
-api_params = {'Action': 'events:PutEvents', 'Principal': '123456789012', 'StatementId': 'test-stmt-59976dca'}
+api_params = {'Action': 'events:PutEvents', 'Principal': '123456789012', 'StatementId': 'test-stmt-829ca7b6'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2800,8 +2800,8 @@ api_params = {'Action': 'events:PutEvents', 'Principal': '123456789012', 'Statem
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the PutPermission operation: The operation PutPermission is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsAutoCoverage" name="test_update_event_bus" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the UpdateEventBus operation: The operation UpdateEventBus is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsAutoCoverage object at 0x10a539b50&gt;
-client = &lt;botocore.client.EventBridge object at 0x10a501c40&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventsAutoCoverage" name="test_update_event_bus" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the UpdateEventBus operation: The operation UpdateEventBus is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventsAutoCoverage object at 0x10bf8d970&gt;
+client = &lt;botocore.client.EventBridge object at 0x10ce8a6f0&gt;
 
     def test_update_event_bus(self, client):
         """UpdateEventBus returns a response."""
@@ -2818,7 +2818,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10a501c40&gt;
+self = &lt;botocore.client.EventBridge object at 0x10ce8a6f0&gt;
 operation_name = 'UpdateEventBus', api_params = {}
 
     @with_current_context()
@@ -2908,8 +2908,8 @@ operation_name = 'UpdateEventBus', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the UpdateEventBus operation: The operation UpdateEventBus is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePartnerEventSource" name="test_create_describe_delete_partner_event_source" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribePartnerEventSource operation: The operation DescribePartnerEventSource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgePartnerEventSource object at 0x10a51c560&gt;
-events = &lt;botocore.client.EventBridge object at 0x10a455b50&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePartnerEventSource" name="test_create_describe_delete_partner_event_source" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribePartnerEventSource operation: The operation DescribePartnerEventSource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgePartnerEventSource object at 0x10bf71820&gt;
+events = &lt;botocore.client.EventBridge object at 0x10be246e0&gt;
 
     def test_create_describe_delete_partner_event_source(self, events):
         """CreatePartnerEventSource, DescribePartnerEventSource, DeletePartnerEventSource."""
@@ -2931,9 +2931,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10a455b50&gt;
+self = &lt;botocore.client.EventBridge object at 0x10be246e0&gt;
 operation_name = 'DescribePartnerEventSource'
-api_params = {'Name': 'aws.partner/example.com/4aca45ae/test'}
+api_params = {'Name': 'aws.partner/example.com/0ace95af/test'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3022,8 +3022,8 @@ api_params = {'Name': 'aws.partner/example.com/4aca45ae/test'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribePartnerEventSource operation: The operation DescribePartnerEventSource is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeCancelReplay" name="test_cancel_replay_nonexistent" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeCancelReplay object at 0x10a51eff0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b25a990&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeCancelReplay" name="test_cancel_replay_nonexistent" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeCancelReplay object at 0x10bf73410&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c7a6ea0&gt;
 
     def test_cancel_replay_nonexistent(self, events):
         """CancelReplay on a nonexistent replay returns ResourceNotFoundException."""
@@ -3037,8 +3037,8 @@ E
 E         - ResourceNotFoundException
 E         + ValidationException
 
-tests/compatibility/test_events_compat.py:1677: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTestEventPattern" name="test_test_event_pattern_match" time="0.003" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTestEventPattern" name="test_test_event_pattern_no_match" time="0.003"><failure message="assert True is False">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTestEventPattern object at 0x10a539550&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b434e60&gt;
+tests/compatibility/test_events_compat.py:1677: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTestEventPattern" name="test_test_event_pattern_match" time="0.004" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTestEventPattern" name="test_test_event_pattern_no_match" time="0.003"><failure message="assert True is False">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTestEventPattern object at 0x10bf8d3a0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cb54110&gt;
 
     def test_test_event_pattern_no_match(self, events):
         """TestEventPattern returns False when event does not match pattern."""
@@ -3055,8 +3055,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b434e60&gt;
 &gt;       assert resp["Result"] is False
 E       assert True is False
 
-tests/compatibility/test_events_compat.py:1713: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps" name="test_describe_endpoint" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeEndpoint operation: The operation DescribeEndpoint is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps object at 0x10a538bc0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b255d30&gt;
+tests/compatibility/test_events_compat.py:1713: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps" name="test_describe_endpoint" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeEndpoint operation: The operation DescribeEndpoint is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps object at 0x10bf8cb90&gt;
+events = &lt;botocore.client.EventBridge object at 0x10b9f40e0&gt;
 
     def test_describe_endpoint(self, events):
         name = "test-endpoint"
@@ -3087,7 +3087,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b255d30&gt;
+self = &lt;botocore.client.EventBridge object at 0x10b9f40e0&gt;
 operation_name = 'DescribeEndpoint', api_params = {'Name': 'test-endpoint'}
 
     @with_current_context()
@@ -3177,8 +3177,8 @@ operation_name = 'DescribeEndpoint', api_params = {'Name': 'test-endpoint'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeEndpoint operation: The operation DescribeEndpoint is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps" name="test_describe_endpoint_nonexistent_raises" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps object at 0x10a538710&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b17d430&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps" name="test_describe_endpoint_nonexistent_raises" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps object at 0x10bf8c260&gt;
+events = &lt;botocore.client.EventBridge object at 0x10ce0b110&gt;
 
     def test_describe_endpoint_nonexistent_raises(self, events):
         with pytest.raises(events.exceptions.ClientError) as exc_info:
@@ -3189,8 +3189,8 @@ E
 E         - ResourceNotFoundException
 E         + ValidationException
 
-tests/compatibility/test_events_compat.py:1745: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps" name="test_list_partner_event_sources" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListPartnerEventSources operation: The operation ListPartnerEventSources is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps object at 0x10a53a030&gt;
-events = &lt;botocore.client.EventBridge object at 0x10af76c30&gt;
+tests/compatibility/test_events_compat.py:1745: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps" name="test_list_partner_event_sources" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListPartnerEventSources operation: The operation ListPartnerEventSources is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps object at 0x10bf8de80&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cbb4530&gt;
 
     def test_list_partner_event_sources(self, events):
 &gt;       resp = events.list_partner_event_sources(NamePrefix="aws.partner")
@@ -3206,7 +3206,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10af76c30&gt;
+self = &lt;botocore.client.EventBridge object at 0x10cbb4530&gt;
 operation_name = 'ListPartnerEventSources'
 api_params = {'NamePrefix': 'aws.partner'}
 
@@ -3297,8 +3297,8 @@ api_params = {'NamePrefix': 'aws.partner'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListPartnerEventSources operation: The operation ListPartnerEventSources is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps" name="test_list_partner_event_source_accounts" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListPartnerEventSourceAccounts operation: The operation ListPartnerEventSourceAccounts is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps object at 0x10a53a450&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b17e720&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps" name="test_list_partner_event_source_accounts" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListPartnerEventSourceAccounts operation: The operation ListPartnerEventSourceAccounts is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeEndpointAndPartnerOps object at 0x10bf8e2a0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10ce0b3b0&gt;
 
     def test_list_partner_event_source_accounts(self, events):
 &gt;       resp = events.list_partner_event_source_accounts(EventSourceName="aws.partner/example/test")
@@ -3314,7 +3314,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b17e720&gt;
+self = &lt;botocore.client.EventBridge object at 0x10ce0b3b0&gt;
 operation_name = 'ListPartnerEventSourceAccounts'
 api_params = {'EventSourceName': 'aws.partner/example/test'}
 
@@ -3405,8 +3405,8 @@ api_params = {'EventSourceName': 'aws.partner/example/test'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListPartnerEventSourceAccounts operation: The operation ListPartnerEventSourceAccounts is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeReplayLifecycle" name="test_start_describe_list_replay" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeReplayLifecycle object at 0x10a53a900&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b39a870&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeReplayLifecycle" name="test_start_describe_list_replay" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeReplayLifecycle object at 0x10bf8e750&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cc68b30&gt;
 
     def test_start_describe_list_replay(self, events):
         """StartReplay, DescribeReplay, ListReplays full lifecycle."""
@@ -3420,8 +3420,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b39a870&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:1769: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeReplayLifecycle" name="test_cancel_replay_completed_raises_error" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeReplayLifecycle object at 0x10a53ad20&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b46fcb0&gt;
+tests/compatibility/test_events_compat.py:1769: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeReplayLifecycle" name="test_cancel_replay_completed_raises_error" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeReplayLifecycle object at 0x10bf8eb70&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cead2e0&gt;
 
     def test_cancel_replay_completed_raises_error(self, events):
         """CancelReplay on a COMPLETED replay raises an error."""
@@ -3437,8 +3437,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b46fcb0&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:1804: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeConnectionLifecycle" name="test_create_update_describe_delete_connection" time="0.005"><failure message="AssertionError: assert 'ConnectionState' in {'ConnectionArn': '', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '20', 'content-type': 'application/x-amz-...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f3c1bdd3-f4bd-48f3-99a7-aa8eb80b4bf3', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeConnectionLifecycle object at 0x10a53b1a0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10ad79d00&gt;
+tests/compatibility/test_events_compat.py:1804: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeConnectionLifecycle" name="test_create_update_describe_delete_connection" time="0.005"><failure message="AssertionError: assert 'ConnectionState' in {'ConnectionArn': '', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '20', 'content-type': 'application/x-amz-...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '224095ea-dbc7-4b2f-aa1c-b6a2c0cdd638', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeConnectionLifecycle object at 0x10bf8eff0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10ccaabd0&gt;
 
     def test_create_update_describe_delete_connection(self, events):
         """Full connection lifecycle."""
@@ -3457,10 +3457,10 @@ events = &lt;botocore.client.EventBridge object at 0x10ad79d00&gt;
             )
             assert "ConnectionArn" in create_resp
 &gt;           assert "ConnectionState" in create_resp
-E           AssertionError: assert 'ConnectionState' in {'ConnectionArn': '', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '20', 'content-type': 'application/x-amz-...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f3c1bdd3-f4bd-48f3-99a7-aa8eb80b4bf3', 'RetryAttempts': 0}}
+E           AssertionError: assert 'ConnectionState' in {'ConnectionArn': '', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '20', 'content-type': 'application/x-amz-...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '224095ea-dbc7-4b2f-aa1c-b6a2c0cdd638', 'RetryAttempts': 0}}
 
-tests/compatibility/test_events_compat.py:1842: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeConnectionLifecycle" name="test_delete_connection_then_describe_raises" time="0.006"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeConnectionLifecycle object at 0x10a53b5c0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b17c9e0&gt;
+tests/compatibility/test_events_compat.py:1842: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeConnectionLifecycle" name="test_delete_connection_then_describe_raises" time="0.007"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeConnectionLifecycle object at 0x10bf8f410&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cc93b60&gt;
 
     def test_delete_connection_then_describe_raises(self, events):
         """Delete connection, then describe raises ResourceNotFoundException."""
@@ -3487,8 +3487,8 @@ E
 E         - ResourceNotFoundException
 E         + ValidationException
 
-tests/compatibility/test_events_compat.py:1890: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeApiDestinationLifecycle" name="test_create_update_describe_delete_api_destination" time="0.006"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid length for parameter ConnectionArn, value: 0, valid min length: 1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeApiDestinationLifecycle object at 0x10a53ba40&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b4c86b0&gt;
+tests/compatibility/test_events_compat.py:1890: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeApiDestinationLifecycle" name="test_create_update_describe_delete_api_destination" time="0.007"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid length for parameter ConnectionArn, value: 0, valid min length: 1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeApiDestinationLifecycle object at 0x10bf8f890&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cdf2d20&gt;
 
     def test_create_update_describe_delete_api_destination(self, events):
         """Full API destination lifecycle."""
@@ -3530,7 +3530,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     request_dict = self._serializer.serialize_to_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.validate.ParamValidationDecorator object at 0x10b4ca090&gt;
+self = &lt;botocore.validate.ParamValidationDecorator object at 0x10cdf29f0&gt;
 parameters = {'ConnectionArn': '', 'HttpMethod': 'POST', 'InvocationEndpoint': 'https://example.com/v1', 'InvocationRateLimitPerSecond': 10, ...}
 operation_model = OperationModel(name=CreateApiDestination)
 
@@ -3545,8 +3545,8 @@ operation_model = OperationModel(name=CreateApiDestination)
 E               botocore.exceptions.ParamValidationError: Parameter validation failed:
 E               Invalid length for parameter ConnectionArn, value: 0, valid min length: 1
 
-.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeApiDestinationLifecycle" name="test_delete_api_destination_then_describe_raises" time="0.005"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid length for parameter ConnectionArn, value: 0, valid min length: 1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeApiDestinationLifecycle object at 0x10a53be60&gt;
-events = &lt;botocore.client.EventBridge object at 0x10ad7af60&gt;
+.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeApiDestinationLifecycle" name="test_delete_api_destination_then_describe_raises" time="0.005"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid length for parameter ConnectionArn, value: 0, valid min length: 1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeApiDestinationLifecycle object at 0x10bf8fcb0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c7a47d0&gt;
 
     def test_delete_api_destination_then_describe_raises(self, events):
         """Delete API destination, then describe raises ResourceNotFoundException."""
@@ -3588,8 +3588,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     request_dict = self._serializer.serialize_to_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.validate.ParamValidationDecorator object at 0x10ad78230&gt;
-parameters = {'ConnectionArn': '', 'HttpMethod': 'POST', 'InvocationEndpoint': 'https://example.com/api', 'Name': 'del-dest2-5cc43aaf'}
+self = &lt;botocore.validate.ParamValidationDecorator object at 0x10c7a65a0&gt;
+parameters = {'ConnectionArn': '', 'HttpMethod': 'POST', 'InvocationEndpoint': 'https://example.com/api', 'Name': 'del-dest2-f6841da8'}
 operation_model = OperationModel(name=CreateApiDestination)
 
     def serialize_to_request(self, parameters, operation_model):
@@ -3603,8 +3603,8 @@ operation_model = OperationModel(name=CreateApiDestination)
 E               botocore.exceptions.ParamValidationError: Parameter validation failed:
 E               Invalid length for parameter ConnectionArn, value: 0, valid min length: 1
 
-.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePartnerLifecycle" name="test_create_list_delete_partner_event_source" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribePartnerEventSource operation: The operation DescribePartnerEventSource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgePartnerLifecycle object at 0x10a51db50&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b17c290&gt;
+.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePartnerLifecycle" name="test_create_list_delete_partner_event_source" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribePartnerEventSource operation: The operation DescribePartnerEventSource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgePartnerLifecycle object at 0x10bf733e0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10ce08890&gt;
 
     def test_create_list_delete_partner_event_source(self, events):
         """CreatePartnerEventSource, ListPartnerEventSources, DeletePartnerEventSource."""
@@ -3628,9 +3628,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b17c290&gt;
+self = &lt;botocore.client.EventBridge object at 0x10ce08890&gt;
 operation_name = 'DescribePartnerEventSource'
-api_params = {'Name': 'aws.partner/example.com/748d05e4/lifecycle'}
+api_params = {'Name': 'aws.partner/example.com/0ab4f9e2/lifecycle'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3719,8 +3719,8 @@ api_params = {'Name': 'aws.partner/example.com/748d05e4/lifecycle'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribePartnerEventSource operation: The operation DescribePartnerEventSource is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePartnerLifecycle" name="test_list_event_sources_returns_list" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListEventSources operation: The operation ListEventSources is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgePartnerLifecycle object at 0x10a53b830&gt;
-events = &lt;botocore.client.EventBridge object at 0x10a3b3830&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePartnerLifecycle" name="test_list_event_sources_returns_list" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListEventSources operation: The operation ListEventSources is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgePartnerLifecycle object at 0x10bf8f980&gt;
+events = &lt;botocore.client.EventBridge object at 0x10be632c0&gt;
 
     def test_list_event_sources_returns_list(self, events):
         """ListEventSources returns EventSources key with a list."""
@@ -3737,7 +3737,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10a3b3830&gt;
+self = &lt;botocore.client.EventBridge object at 0x10be632c0&gt;
 operation_name = 'ListEventSources', api_params = {}
 
     @with_current_context()
@@ -3827,8 +3827,8 @@ operation_name = 'ListEventSources', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListEventSources operation: The operation ListEventSources is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePartnerLifecycle" name="test_list_partner_event_source_accounts_returns_list" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListPartnerEventSourceAccounts operation: The operation ListPartnerEventSourceAccounts is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgePartnerLifecycle object at 0x10a53af30&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b3a3650&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePartnerLifecycle" name="test_list_partner_event_source_accounts_returns_list" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListPartnerEventSourceAccounts operation: The operation ListPartnerEventSourceAccounts is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgePartnerLifecycle object at 0x10bf8ed50&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c8703e0&gt;
 
     def test_list_partner_event_source_accounts_returns_list(self, events):
         """ListPartnerEventSourceAccounts returns the expected key."""
@@ -3846,7 +3846,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b3a3650&gt;
+self = &lt;botocore.client.EventBridge object at 0x10c8703e0&gt;
 operation_name = 'ListPartnerEventSourceAccounts'
 api_params = {'EventSourceName': 'aws.partner/example.com/test'}
 
@@ -3937,8 +3937,8 @@ api_params = {'EventSourceName': 'aws.partner/example.com/test'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListPartnerEventSourceAccounts operation: The operation ListPartnerEventSourceAccounts is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePutEventsDetail" name="test_put_events_with_detail_and_event_bus" time="0.004" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePutEventsDetail" name="test_put_events_with_resources" time="0.004" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeArchiveUpdate" name="test_update_archive_description_and_retention" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeArchiveUpdate object at 0x10a5398e0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b3a36e0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePutEventsDetail" name="test_put_events_with_detail_and_event_bus" time="0.004" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgePutEventsDetail" name="test_put_events_with_resources" time="0.004" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeArchiveUpdate" name="test_update_archive_description_and_retention" time="0.003"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeArchiveUpdate object at 0x10bf8db50&gt;
+events = &lt;botocore.client.EventBridge object at 0x10ccabe30&gt;
 
     def test_update_archive_description_and_retention(self, events):
         """UpdateArchive changes description and retention days."""
@@ -3949,8 +3949,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b3a36e0&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:2071: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeArchiveUpdate" name="test_update_archive_event_pattern" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeArchiveUpdate object at 0x10a5482c0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b261a30&gt;
+tests/compatibility/test_events_compat.py:2071: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeArchiveUpdate" name="test_update_archive_event_pattern" time="0.004"><failure message="KeyError: 'Arn'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeArchiveUpdate object at 0x10bf9c110&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cb58740&gt;
 
     def test_update_archive_event_pattern(self, events):
         """UpdateArchive changes the event pattern filter."""
@@ -3961,8 +3961,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b261a30&gt;
                   ^^^^^^^^^^
 E       KeyError: 'Arn'
 
-tests/compatibility/test_events_compat.py:2099: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleOnCustomBus" name="test_rule_lifecycle_on_custom_bus" time="0.007"><failure message="AssertionError: assert '' == 'custom-bus-rule-e24d6ed1'&#10;  &#10;  - custom-bus-rule-e24d6ed1">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRuleOnCustomBus object at 0x10a548740&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b449d90&gt;
+tests/compatibility/test_events_compat.py:2099: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleOnCustomBus" name="test_rule_lifecycle_on_custom_bus" time="0.008"><failure message="AssertionError: assert '' == 'custom-bus-rule-c0f7f0ed'&#10;  &#10;  - custom-bus-rule-c0f7f0ed">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeRuleOnCustomBus object at 0x10bf9c590&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cb80590&gt;
 
     def test_rule_lifecycle_on_custom_bus(self, events):
         """PutRule, DescribeRule, ListRules, DeleteRule on a custom event bus."""
@@ -3981,12 +3981,12 @@ events = &lt;botocore.client.EventBridge object at 0x10b449d90&gt;
     
             desc = events.describe_rule(Name=rule_name, EventBusName=bus_name)
 &gt;           assert desc["Name"] == rule_name
-E           AssertionError: assert '' == 'custom-bus-rule-e24d6ed1'
+E           AssertionError: assert '' == 'custom-bus-rule-c0f7f0ed'
 E             
-E             - custom-bus-rule-e24d6ed1
+E             - custom-bus-rule-c0f7f0ed
 
-tests/compatibility/test_events_compat.py:2136: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleOnCustomBus" name="test_targets_on_custom_bus_rule" time="0.012" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTagsOnEventBus" name="test_tag_bus_then_list" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTagsOnEventBus object at 0x10a548fe0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b4568d0&gt;
+tests/compatibility/test_events_compat.py:2136: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeRuleOnCustomBus" name="test_targets_on_custom_bus_rule" time="0.013" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTagsOnEventBus" name="test_tag_bus_then_list" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTagsOnEventBus object at 0x10bf9ce30&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cca8170&gt;
 
     def test_tag_bus_then_list(self, events):
         """Create event bus, tag it, then list tags to verify."""
@@ -4014,9 +4014,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b4568d0&gt;
+self = &lt;botocore.client.EventBridge object at 0x10cca8170&gt;
 operation_name = 'TagResource'
-api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:event-bus/tagged-bus-b995af70', 'Tags': [{'Key': 'project', 'Value': 'robotocore'}, {'Key': 'env', 'Value': 'test'}]}
+api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:event-bus/tagged-bus-5c8da249', 'Tags': [{'Key': 'project', 'Value': 'robotocore'}, {'Key': 'env', 'Value': 'test'}]}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4105,8 +4105,8 @@ api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:event-bus/ta
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTagsOnEventBus" name="test_tag_untag_event_bus" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTagsOnEventBus object at 0x10a549400&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b448350&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeTagsOnEventBus" name="test_tag_untag_event_bus" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeTagsOnEventBus object at 0x10bf9d250&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c764b60&gt;
 
     def test_tag_untag_event_bus(self, events):
         """Tag, list, untag, verify removal on event bus."""
@@ -4135,9 +4135,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b448350&gt;
+self = &lt;botocore.client.EventBridge object at 0x10c764b60&gt;
 operation_name = 'TagResource'
-api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:event-bus/tag-untag-bus-f0762df3', 'Tags': [{'Key': 'alpha', 'Value': '1'}, {'Key': 'beta', 'Value': '2'}, {'Key': 'gamma', 'Value': '3'}]}
+api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:event-bus/tag-untag-bus-e2a0b8ce', 'Tags': [{'Key': 'alpha', 'Value': '1'}, {'Key': 'beta', 'Value': '2'}, {'Key': 'gamma', 'Value': '3'}]}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4226,8 +4226,8 @@ api_params = {'ResourceARN': 'arn:aws:events:us-east-1:123456789012:event-bus/ta
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the TagResource operation: The operation TagResource is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListRuleNamesByTargetExtended" name="test_multiple_rules_same_target" time="0.010"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListRuleNamesByTarget operation: The operation ListRuleNamesByTarget is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeListRuleNamesByTargetExtended object at 0x10a549880&gt;
-events = &lt;botocore.client.EventBridge object at 0x10a4d16d0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeListRuleNamesByTargetExtended" name="test_multiple_rules_same_target" time="0.012"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListRuleNamesByTarget operation: The operation ListRuleNamesByTarget is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeListRuleNamesByTargetExtended object at 0x10bf9d6d0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cac22d0&gt;
 
     def test_multiple_rules_same_target(self, events):
         """Two rules with the same target ARN both appear in ListRuleNamesByTarget."""
@@ -4254,9 +4254,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10a4d16d0&gt;
+self = &lt;botocore.client.EventBridge object at 0x10cac22d0&gt;
 operation_name = 'ListRuleNamesByTarget'
-api_params = {'TargetArn': 'arn:aws:sqs:us-east-1:123456789012:shared-queue-d5c2706c'}
+api_params = {'TargetArn': 'arn:aws:sqs:us-east-1:123456789012:shared-queue-c15a6058'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4345,8 +4345,8 @@ api_params = {'TargetArn': 'arn:aws:sqs:us-east-1:123456789012:shared-queue-d5c2
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the ListRuleNamesByTarget operation: The operation ListRuleNamesByTarget is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps" name="test_activate_event_source" time="0.003" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps" name="test_deactivate_event_source" time="0.003" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps" name="test_describe_event_source_not_found" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps object at 0x10a539940&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b1c7020&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps" name="test_activate_event_source" time="0.004" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps" name="test_deactivate_event_source" time="0.003" /><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps" name="test_describe_event_source_not_found" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps object at 0x10bf8cad0&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cc47e00&gt;
 
     def test_describe_event_source_not_found(self, events):
         """DescribeEventSource raises ResourceNotFoundException for unknown source."""
@@ -4360,8 +4360,8 @@ E
 E         - ResourceNotFoundException
 E         + ValidationException
 
-tests/compatibility/test_events_compat.py:2317: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps" name="test_deauthorize_connection" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DeauthorizeConnection operation: The operation DeauthorizeConnection is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps object at 0x10a53ba10&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b38f830&gt;
+tests/compatibility/test_events_compat.py:2317: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps" name="test_deauthorize_connection" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DeauthorizeConnection operation: The operation DeauthorizeConnection is not implemented">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps object at 0x10bf8e480&gt;
+events = &lt;botocore.client.EventBridge object at 0x10c873a40&gt;
 
     def test_deauthorize_connection(self, events):
         """DeauthorizeConnection transitions connection state to DEAUTHORIZED."""
@@ -4386,9 +4386,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.EventBridge object at 0x10b38f830&gt;
+self = &lt;botocore.client.EventBridge object at 0x10c873a40&gt;
 operation_name = 'DeauthorizeConnection'
-api_params = {'Name': 'test-conn-4373d419'}
+api_params = {'Name': 'test-conn-3901f4fb'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4477,8 +4477,8 @@ api_params = {'Name': 'test-conn-4373d419'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DeauthorizeConnection operation: The operation DeauthorizeConnection is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps" name="test_create_and_delete_endpoint" time="0.004"><failure message="KeyError: 'State'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps object at 0x10a51f230&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b5340b0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps" name="test_create_and_delete_endpoint" time="0.004"><failure message="KeyError: 'State'">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps object at 0x10bf73e30&gt;
+events = &lt;botocore.client.EventBridge object at 0x10ce2bfb0&gt;
 
     def test_create_and_delete_endpoint(self, events):
         """CreateEndpoint / DeleteEndpoint lifecycle."""
@@ -4500,8 +4500,8 @@ events = &lt;botocore.client.EventBridge object at 0x10b5340b0&gt;
                ^^^^^^^^^^^^^
 E       KeyError: 'State'
 
-tests/compatibility/test_events_compat.py:2350: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps" name="test_update_endpoint" time="0.006"><failure message="AssertionError: assert 'Arn' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '51dac8be-104a-42a4-b7ae-ba2f1957f498', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps object at 0x10a5035f0&gt;
-events = &lt;botocore.client.EventBridge object at 0x10b0514c0&gt;
+tests/compatibility/test_events_compat.py:2350: KeyError</failure></testcase><testcase classname="tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps" name="test_update_endpoint" time="0.007"><failure message="AssertionError: assert 'Arn' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '23a95898-a772-4338-930f-a3b2da4dd99e', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_events_compat.TestEventBridgeMissingGapOps object at 0x10bf57e30&gt;
+events = &lt;botocore.client.EventBridge object at 0x10cf89280&gt;
 
     def test_update_endpoint(self, events):
         """UpdateEndpoint modifies endpoint routing config."""
@@ -4529,6 +4529,6 @@ events = &lt;botocore.client.EventBridge object at 0x10b0514c0&gt;
             },
         )
 &gt;       assert "Arn" in resp
-E       AssertionError: assert 'Arn' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '51dac8be-104a-42a4-b7ae-ba2f1957f498', 'RetryAttempts': 0}}
+E       AssertionError: assert 'Arn' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '23a95898-a772-4338-930f-a3b2da4dd99e', 'RetryAttempts': 0}}
 
 tests/compatibility/test_events_compat.py:2380: AssertionError</failure></testcase></testsuite></testsuites>
