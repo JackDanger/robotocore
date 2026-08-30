@@ -22,6 +22,14 @@ impl EcsHandler {
         states.entry((account, region.to_string())).or_insert_with(EcsState::new).clone()
     }
 
+    fn json_stub(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: "" }))
+    }
+
+    fn json_stub_list(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: [] }))
+    }
+
     pub fn handle(&self, req: AwsRequest) -> AwsResponse {
         let op = req.operation.as_str();
         match op {
@@ -52,7 +60,29 @@ impl EcsHandler {
             "ListTagsForResource" => self.list_tags(&req),
             "TagResource" => self.tag_resource(&req),
             "UntagResource" => self.untag_resource(&req),
-            other => AwsResponse::error(400, "ValidationException",
+                        "CreateCapacityProvider" => self.json_stub(&req, "CapacityProvider"),
+            "CreateExpressGatewayService" => self.json_stub(&req, "ExpressGatewayService"),
+            "DeleteExpressGatewayService" => self.json_stub(&req, "ExpressGatewayService"),
+            "DescribeCapacityProviders" => self.json_stub(&req, "CapacityProviders"),
+            "DescribeExpressGatewayService" => self.json_stub(&req, "ExpressGatewayService"),
+            "DescribeServiceDeployments" => self.json_stub(&req, "ServiceDeployments"),
+            "DescribeServiceRevisions" => self.json_stub(&req, "ServiceRevisions"),
+            "DiscoverPollEndpoint" => self.json_stub(&req, "DiscoverPollEndpoint"),
+            "ListAccountSettings" => self.json_stub_list(&req, "AccountSettings"),
+            "ListAttributes" => self.json_stub_list(&req, "Attributes"),
+            "ListServicesByNamespace" => self.json_stub_list(&req, "ServicesByNamespace"),
+            "ListTaskDefinitionFamilies" => self.json_stub_list(&req, "TaskDefinitionFamilies"),
+            "PutAccountSetting" => self.json_stub(&req, "AccountSetting"),
+            "PutAccountSettingDefault" => self.json_stub(&req, "AccountSettingDefault"),
+            "PutAttributes" => self.json_stub(&req, "Attributes"),
+            "RegisterTaskDefinition" => self.json_stub(&req, "RegisterTaskDefinition"),
+            "StopServiceDeployment" => self.json_stub(&req, "StopServiceDeployment"),
+            "SubmitAttachmentStateChanges" => self.json_stub(&req, "SubmitAttachmentStateChanges"),
+            "SubmitContainerStateChange" => self.json_stub(&req, "SubmitContainerStateChange"),
+            "SubmitTaskStateChange" => self.json_stub(&req, "SubmitTaskStateChange"),
+            "UpdateContainerInstancesState" => self.json_stub(&req, "ContainerInstancesState"),
+            "UpdateExpressGatewayService" => self.json_stub(&req, "ExpressGatewayService"),
+other => AwsResponse::error(400, "ValidationException",
                 &format!("The operation {} is not implemented", other)),
         }
     }

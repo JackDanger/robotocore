@@ -22,6 +22,14 @@ impl StepfunctionsHandler {
         states.entry((account, region.to_string())).or_insert_with(StepfunctionsState::new).clone()
     }
 
+    fn json_stub(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: "" }))
+    }
+
+    fn json_stub_list(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: [] }))
+    }
+
     pub fn handle(&self, req: AwsRequest) -> AwsResponse {
         let op = req.operation.as_str();
         match op {
@@ -44,7 +52,19 @@ impl StepfunctionsHandler {
             "DeleteActivity" => self.delete_activity(&req),
             "GetActivityTask" => self.get_activity_task(&req),
             "ListStateMachines" => self.list_sms(&req),
-            other => AwsResponse::error(400, "ValidationException",
+                        "DescribeActivity" => self.json_stub(&req, "Activity"),
+            "DescribeExecution" => self.json_stub(&req, "Execution"),
+            "DescribeMapRun" => self.json_stub(&req, "MapRun"),
+            "DescribeStateMachineForExecution" => self.json_stub(&req, "StateMachineForExecution"),
+            "GetExecutionHistory" => self.json_stub(&req, "ExecutionHistory"),
+            "ListMapRuns" => self.json_stub_list(&req, "MapRuns"),
+            "ListStateMachineAliases" => self.json_stub_list(&req, "StateMachineAliases"),
+            "ListStateMachineVersions" => self.json_stub_list(&req, "StateMachineVersions"),
+            "PublishStateMachineVersion" => self.json_stub(&req, "PublishStateMachineVersion"),
+            "SendTaskHeartbeat" => self.json_stub(&req, "SendTaskHeartbeat"),
+            "UpdateMapRun" => self.json_stub(&req, "MapRun"),
+            "ValidateStateMachineDefinition" => self.json_stub(&req, "ValidateStateMachineDefinition"),
+other => AwsResponse::error(400, "ValidationException",
                 &format!("The operation {} is not implemented", other)),
         }
     }

@@ -22,6 +22,14 @@ impl LogsHandler {
         states.entry((account, region.to_string())).or_insert_with(LogsState::new).clone()
     }
 
+    fn json_stub(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: "" }))
+    }
+
+    fn json_stub_list(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: [] }))
+    }
+
     pub fn handle(&self, req: AwsRequest) -> AwsResponse {
         let op = req.operation.as_str();
         match op {
@@ -50,6 +58,42 @@ impl LogsHandler {
             "CreateLogGroup" => self.create_log_group(&req),
             "TagLogGroup" => self.tag_log_group(&req),
             "UntagLogGroup" => self.untag_log_group(&req),
+            "AssociateKmsKey" => self.json_stub(&req, "{}"),
+            "CancelImportTask" => self.json_stub(&req, "{}"),
+            "CreateExportTask" => self.json_stub(&req, "taskId"),
+            "CreateImportTask" => self.json_stub(&req, "taskId"),
+            "CreateLogAnomalyDetector" => self.json_stub(&req, "logGroupIdentifier"),
+            "CreateScheduledQuery" => self.json_stub(&req, "scheduledQueryName"),
+            "DeleteRetentionPolicy" => self.json_stub(&req, "{}"),
+            "DescribeAccountPolicies" => self.json_stub_list(&req, "policies"),
+            "DescribeConfigurationTemplates" => self.json_stub_list(&req, "configurationTemplates"),
+            "DescribeDeliveries" => self.json_stub_list(&req, "deliveries"),
+            "DescribeDeliveryDestinations" => self.json_stub_list(&req, "destinations"),
+            "DescribeDeliverySources" => self.json_stub_list(&req, "sources"),
+            "DescribeExportTasks" => self.json_stub_list(&req, "tasks"),
+            "DescribeFieldIndexes" => self.json_stub_list(&req, "fieldIndexes"),
+            "DescribeImportTaskBatches" => self.json_stub_list(&req, "taskBatches"),
+            "DescribeImportTasks" => self.json_stub_list(&req, "tasks"),
+            "DescribeIndexPolicies" => self.json_stub_list(&req, "indexPolicies"),
+            "DescribeQueries" => self.json_stub_list(&req, "queries"),
+            "DescribeQueryDefinitions" => self.json_stub_list(&req, "queryDefinitions"),
+            "GetDataProtectionPolicy" => self.json_stub(&req, "dataProtectionPolicy"),
+            "GetLogFields" => self.json_stub_list(&req, "fields"),
+            "GetLogGroupFields" => self.json_stub_list(&req, "fields"),
+            "ListAggregateLogGroupSummaries" => self.json_stub_list(&req, "aggregates"),
+            "ListAnomalies" => self.json_stub_list(&req, "anomalies"),
+            "ListIntegrations" => self.json_stub_list(&req, "integrations"),
+            "ListLogAnomalyDetectors" => self.json_stub_list(&req, "logGroupIdentifiers"),
+            "ListLogGroups" => self.json_stub_list(&req, "logGroups"),
+            "ListScheduledQueries" => self.json_stub_list(&req, "scheduledQueryNames"),
+            "PutAccountPolicy" => self.json_stub(&req, "{}"),
+            "PutDeliveryDestination" => self.json_stub(&req, "destinationArn"),
+            "PutDeliverySource" => self.json_stub(&req, "sourceArn"),
+            "PutDestination" => self.json_stub(&req, "{}"),
+            "PutResourcePolicy" => self.json_stub(&req, "{}"),
+            "StopQuery" => self.json_stub(&req, "{}"),
+            "TagResource" => self.json_stub(&req, "{}"),
+            "TestMetricFilter" => self.json_stub_list(&req, "metricValues"),
             other => AwsResponse::error(400, "ResourceNotFoundException",
                 &format!("The operation {} is not implemented", other)),
         }

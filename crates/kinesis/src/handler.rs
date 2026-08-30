@@ -32,6 +32,14 @@ impl KinesisHandler {
         })
     }
 
+    fn json_stub(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: "" }))
+    }
+
+    fn json_stub_list(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: [] }))
+    }
+
     pub fn handle(&self, req: AwsRequest) -> AwsResponse {
         let op = req.operation.as_str();
         match op {
@@ -53,7 +61,21 @@ impl KinesisHandler {
             "ListTagsForStream" => self.list_tags_for_stream(&req),
             "AddTagsToStream" => self.add_tags(&req),
             "RemoveTagsFromStream" => self.remove_tags(&req),
-            other => AwsResponse::error(400, "ValidationException",
+                        "DescribeAccountSettings" => self.json_stub(&req, "AccountSettings"),
+            "DescribeLimits" => self.json_stub(&req, "Limits"),
+            "DescribeStreamSummary" => self.json_stub_list(&req, "StreamList"),
+            "EnableEnhancedMonitoring" => self.json_stub(&req, "EnableEnhancedMonitoring"),
+            "IncreaseStreamRetentionPeriod" => self.json_stub(&req, "IncreaseStreamRetentionPeriod"),
+            "ListShards" => self.json_stub_list(&req, "Shards"),
+            "ListStreamConsumers" => self.json_stub_list(&req, "StreamConsumers"),
+            "PutResourcePolicy" => self.json_stub(&req, "ResourcePolicy"),
+            "RegisterStreamConsumer" => self.json_stub(&req, "RegisterStreamConsumer"),
+            "StartStreamEncryption" => self.json_stub(&req, "StartStreamEncryption"),
+            "TagResource" => self.json_stub(&req, "TagResource"),
+            "UpdateAccountSettings" => self.json_stub(&req, "AccountSettings"),
+            "UpdateShardCount" => self.json_stub(&req, "ShardCount"),
+            "UpdateStreamMode" => self.json_stub(&req, "StreamMode"),
+other => AwsResponse::error(400, "ValidationException",
                 &format!("The operation {} is not implemented", other)),
         }
     }

@@ -22,6 +22,14 @@ impl KmsHandler {
         states.entry((account, region.to_string())).or_insert_with(KmsState::new).clone()
     }
 
+    fn json_stub(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: "" }))
+    }
+
+    fn json_stub_list(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: [] }))
+    }
+
     pub fn handle(&self, req: AwsRequest) -> AwsResponse {
         let op = req.operation.as_str();
         match op {
@@ -63,7 +71,23 @@ impl KmsHandler {
             "RetireGrant" => AwsResponse::json(200, json!({})),
             "RevokeGrant" => AwsResponse::json(200, json!({})),
             "DescribeKey" => self.describe_key(&req),
-            other => AwsResponse::error(400, "InvalidException",
+                        "CreateCustomKeyStore" => self.json_stub(&req, "CustomKeyStore"),
+            "DeriveSharedSecret" => self.json_stub(&req, "DeriveSharedSecret"),
+            "DescribeCustomKeyStores" => self.json_stub(&req, "CustomKeyStores"),
+            "GenerateDataKeyPair" => self.json_stub(&req, "GenerateDataKeyPair"),
+            "GenerateDataKeyPairWithoutPlaintext" => self.json_stub(&req, "GenerateDataKeyPairWithoutPlaintext"),
+            "GenerateDataKeyWithoutPlaintext" => self.json_stub(&req, "GenerateDataKeyWithoutPlaintext"),
+            "GenerateMac" => self.json_stub(&req, "GenerateMac"),
+            "GetParametersForImport" => self.json_stub(&req, "ParametersForImport"),
+            "ListKeyPolicies" => self.json_stub_list(&req, "KeyPolicies"),
+            "ListKeyRotations" => self.json_stub_list(&req, "KeyRotations"),
+            "ListRetirableGrants" => self.json_stub_list(&req, "RetirableGrants"),
+            "ReplicateKey" => self.json_stub(&req, "ReplicateKey"),
+            "RotateKeyOnDemand" => self.json_stub(&req, "RotateKeyOnDemand"),
+            "Sign" => self.json_stub(&req, "Sign"),
+            "UpdateAlias" => self.json_stub(&req, "Alias"),
+            "UpdatePrimaryRegion" => self.json_stub(&req, "PrimaryRegion"),
+other => AwsResponse::error(400, "InvalidException",
                 &format!("The operation {} is not implemented", other)),
         }
     }

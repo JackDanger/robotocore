@@ -22,6 +22,14 @@ impl EcrHandler {
         states.entry((account, region.to_string())).or_insert_with(EcrState::new).clone()
     }
 
+    fn json_stub(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: "" }))
+    }
+
+    fn json_stub_list(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: [] }))
+    }
+
     pub fn handle(&self, req: AwsRequest) -> AwsResponse {
         let op = req.operation.as_str();
         match op {
@@ -57,7 +65,19 @@ impl EcrHandler {
             "PutRegistryScanningConfiguration" => self.put_registry_scanning(&req),
             "GetRegistryScanningConfiguration" => self.get_registry_scanning(&req),
             "BatchGetRepositoryScanningConfiguration" => self.batch_get_scanning_config(&req),
-            other => AwsResponse::error(400, "ValidationException",
+                        "CreatePullThroughCacheRule" => self.json_stub(&req, "PullThroughCacheRule"),
+            "CreateRepositoryCreationTemplate" => self.json_stub(&req, "RepositoryCreationTemplate"),
+            "DescribeImages" => self.json_stub(&req, "Images"),
+            "DescribePullThroughCacheRules" => self.json_stub(&req, "PullThroughCacheRules"),
+            "GetSigningConfiguration" => self.json_stub(&req, "SigningConfiguration"),
+            "ListImageReferrers" => self.json_stub_list(&req, "ImageReferrers"),
+            "ListPullTimeUpdateExclusions" => self.json_stub_list(&req, "PullTimeUpdateExclusions"),
+            "PutAccountSetting" => self.json_stub(&req, "AccountSetting"),
+            "PutRegistryPolicy" => self.json_stub(&req, "RegistryPolicy"),
+            "PutReplicationConfiguration" => self.json_stub(&req, "ReplicationConfiguration"),
+            "PutSigningConfiguration" => self.json_stub(&req, "SigningConfiguration"),
+            "UpdateImageStorageClass" => self.json_stub(&req, "ImageStorageClass"),
+other => AwsResponse::error(400, "ValidationException",
                 &format!("The operation {} is not implemented", other)),
         }
     }

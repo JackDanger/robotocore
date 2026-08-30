@@ -22,6 +22,14 @@ impl CloudwatchHandler {
         states.entry((account, region.to_string())).or_insert_with(CloudwatchState::new).clone()
     }
 
+    fn json_stub(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: "" }))
+    }
+
+    fn json_stub_list(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: [] }))
+    }
+
     pub fn handle(&self, req: AwsRequest) -> AwsResponse {
         let op = req.operation.as_str();
         match op {
@@ -48,7 +56,24 @@ impl CloudwatchHandler {
             "GetMetricData" => self.get_metric_data(&req),
             "GetMetricStatistics" => self.get_metric_statistics(&req),
             "GetMetricData" => self.get_metric_data(&req),
-            other => AwsResponse::error(400, "ValidationException",
+                        "DeleteAlarmMuteRule" => self.json_stub(&req, "AlarmMuteRule"),
+            "DeleteAnomalyDetector" => self.json_stub(&req, "AnomalyDetector"),
+            "DeleteMetricStream" => self.json_stub(&req, "MetricStream"),
+            "DescribeAlarmContributors" => self.json_stub(&req, "AlarmContributors"),
+            "DescribeAlarmHistory" => self.json_stub(&req, "AlarmHistory"),
+            "DescribeAnomalyDetectors" => self.json_stub(&req, "AnomalyDetectors"),
+            "DisableAlarmActions" => self.json_stub(&req, "DisableAlarmActions"),
+            "GetMetricWidgetImage" => self.json_stub(&req, "MetricWidgetImage"),
+            "ListAlarmMuteRules" => self.json_stub_list(&req, "AlarmMuteRules"),
+            "ListManagedInsightRules" => self.json_stub_list(&req, "ManagedInsightRules"),
+            "ListMetricStreams" => self.json_stub_list(&req, "MetricStreams"),
+            "PutAlarmMuteRule" => self.json_stub(&req, "AlarmMuteRule"),
+            "PutAnomalyDetector" => self.json_stub(&req, "AnomalyDetector"),
+            "PutCompositeAlarm" => self.json_stub(&req, "CompositeAlarm"),
+            "PutInsightRule" => self.json_stub(&req, "InsightRule"),
+            "PutManagedInsightRules" => self.json_stub(&req, "ManagedInsightRules"),
+            "PutMetricStream" => self.json_stub(&req, "MetricStream"),
+other => AwsResponse::error(400, "ValidationException",
                 &format!("The operation {} is not implemented", other)),
         }
     }
