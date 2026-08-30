@@ -107,7 +107,7 @@ other => AwsResponse::error(400, "ValidationException",
             .map(|(k, _)| k.clone());
         if let Some(k) = key {
             sms.remove(&k);
-            AwsResponse::json(200, Value::Null)
+            AwsResponse::json(200, json!({}))
         } else {
             AwsResponse::error(400, "StateMachineDoesNotExist",
                 &format!("State machine {arn} not found"))
@@ -212,7 +212,7 @@ other => AwsResponse::error(400, "ValidationException",
         if let Some(exec) = execs.get_mut(exec_arn) {
             exec["status"] = json!("ABORTED");
             exec["stopDate"] = json!(chrono::Utc::now().timestamp() as u64);
-            AwsResponse::json(200, Value::Null)
+            AwsResponse::json(200, json!({}))
         } else {
             AwsResponse::error(400, "ExecutionDoesNotExist",
                 &format!("Execution {exec_arn} not found"))
@@ -220,11 +220,11 @@ other => AwsResponse::error(400, "ValidationException",
     }
 
     fn send_task_success(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn send_task_failure(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn update_sm(&self, req: &AwsRequest) -> AwsResponse {
@@ -242,7 +242,7 @@ other => AwsResponse::error(400, "ValidationException",
                 sm["roleArn"] = role.clone();
             }
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn list_tags(&self, req: &AwsRequest) -> AwsResponse {
@@ -264,7 +264,7 @@ other => AwsResponse::error(400, "ValidationException",
         let mut all_tags = state.tags.write();
         let entry = all_tags.entry(arn).or_insert_with(Vec::new);
         entry.extend(tags);
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn untag_resource(&self, req: &AwsRequest) -> AwsResponse {
@@ -283,7 +283,7 @@ other => AwsResponse::error(400, "ValidationException",
                     .unwrap_or(true)
             });
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn list_activities(&self, _req: &AwsRequest) -> AwsResponse {
@@ -303,7 +303,7 @@ other => AwsResponse::error(400, "ValidationException",
     fn delete_activity(&self, req: &AwsRequest) -> AwsResponse {
         let arn = req.params.get("activityArn")
             .and_then(|v| v.as_str()).unwrap_or_default();
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn get_activity_task(&self, _req: &AwsRequest) -> AwsResponse {

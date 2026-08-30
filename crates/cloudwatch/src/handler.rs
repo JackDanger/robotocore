@@ -93,7 +93,7 @@ other => AwsResponse::error(400, "ValidationException",
             let key = format!("{}/{}", namespace, metric_name);
             metrics.entry(key).or_insert_with(Vec::new).push(dp.clone());
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn get_metric_statistics(&self, req: &AwsRequest) -> AwsResponse {
@@ -218,7 +218,7 @@ other => AwsResponse::error(400, "ValidationException",
             }
         });
         state.alarms.write().insert(name.clone(), alarm);
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn delete_alarms(&self, req: &AwsRequest) -> AwsResponse {
@@ -231,7 +231,7 @@ other => AwsResponse::error(400, "ValidationException",
         for name in &names {
             alarms.remove(name);
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn get_alarm_history(&self, _req: &AwsRequest) -> AwsResponse {
@@ -257,7 +257,7 @@ other => AwsResponse::error(400, "ValidationException",
                 .and_then(|v| v.as_str()).unwrap_or("OK");
             alarm["State"]["Value"] = json!(value);
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn list_dashboards(&self, _req: &AwsRequest) -> AwsResponse {
@@ -289,7 +289,7 @@ other => AwsResponse::error(400, "ValidationException",
         for name in &names {
             dashboards.remove(name);
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn get_dashboard(&self, req: &AwsRequest) -> AwsResponse {
@@ -315,7 +315,7 @@ other => AwsResponse::error(400, "ValidationException",
             .and_then(|v| v.as_str()).unwrap_or("{}").to_string();
         let state = self.get_state(req.account, &req.region);
         state.dashboards.write().insert(name, body);
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn list_tags(&self, req: &AwsRequest) -> AwsResponse {
@@ -337,7 +337,7 @@ other => AwsResponse::error(400, "ValidationException",
         let mut all_tags = state.tags.write();
         let entry = all_tags.entry(arn).or_insert_with(Vec::new);
         entry.extend(tags);
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn untag_resource(&self, req: &AwsRequest) -> AwsResponse {
@@ -356,7 +356,7 @@ other => AwsResponse::error(400, "ValidationException",
                     .unwrap_or(true)
             });
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 }
 

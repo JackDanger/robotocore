@@ -281,7 +281,7 @@ other => AwsResponse::error(400, "ValidationException",
         let mut all_tags = state.tags.write();
         let entry = all_tags.entry(arn).or_insert_with(Vec::new);
         entry.extend(tags);
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn untag_resource(&self, req: &AwsRequest) -> AwsResponse {
@@ -300,7 +300,7 @@ other => AwsResponse::error(400, "ValidationException",
                     .unwrap_or(true)
             });
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn get_repository_policy(&self, req: &AwsRequest) -> AwsResponse {
@@ -325,7 +325,7 @@ other => AwsResponse::error(400, "ValidationException",
             .and_then(|v| v.as_str()).unwrap_or_default().to_string();
         let state = self.get_state(req.account, &req.region);
         state.policies.write().insert(name, policy);
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn delete_repository_policy(&self, req: &AwsRequest) -> AwsResponse {
@@ -333,7 +333,7 @@ other => AwsResponse::error(400, "ValidationException",
             .and_then(|v| v.as_str()).unwrap_or_default();
         let state = self.get_state(req.account, &req.region);
         state.policies.write().remove(name);
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn start_image_scan(&self, req: &AwsRequest) -> AwsResponse {
@@ -393,11 +393,11 @@ other => AwsResponse::error(400, "ValidationException",
         let state = self.get_state(req.account, &req.region);
         let config = req.params.get("imageScanningConfiguration").cloned().unwrap_or(Value::Null);
         state.scanning_configs.write().insert(name, config);
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn put_image_tag_mutability(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn batch_check_layer(&self, _req: &AwsRequest) -> AwsResponse {
@@ -415,7 +415,7 @@ other => AwsResponse::error(400, "ValidationException",
     }
 
     fn upload_layer_part(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn complete_layer_upload(&self, _req: &AwsRequest) -> AwsResponse {
@@ -444,7 +444,7 @@ other => AwsResponse::error(400, "ValidationException",
             .and_then(|v| v.as_str()).unwrap_or_default().to_string();
         let state = self.get_state(req.account, &req.region);
         state.policies.write().insert(name, policy);
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn get_lifecycle_policy(&self, req: &AwsRequest) -> AwsResponse {
@@ -463,11 +463,11 @@ other => AwsResponse::error(400, "ValidationException",
             .and_then(|v| v.as_str()).unwrap_or_default();
         let state = self.get_state(req.account, &req.region);
         state.policies.write().remove(name);
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn put_registry_scanning(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn get_registry_scanning(&self, _req: &AwsRequest) -> AwsResponse {
