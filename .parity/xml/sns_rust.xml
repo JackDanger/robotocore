@@ -1,25 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="83" skipped="0" tests="100" time="2.404" timestamp="2026-08-29T23:57:55.874146-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_create_topic" time="0.069" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_create_topic_idempotent" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_list_topics" time="0.006"><failure message="KeyError: 'Topics'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicOperations object at 0x10e3e8ad0&gt;
-sns = &lt;botocore.client.SNS object at 0x10ebf9700&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:test-topic'
-
-    def test_list_topics(self, sns, topic_arn):
-        response = sns.list_topics()
-&gt;       arns = [t["TopicArn"] for t in response["Topics"]]
-                                       ^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Topics'
-
-tests/compatibility/test_sns_compat.py:44: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_get_topic_attributes" time="0.005"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicOperations object at 0x10e3e8e90&gt;
-sns = &lt;botocore.client.SNS object at 0x10ee9d700&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:test-topic'
-
-    def test_get_topic_attributes(self, sns, topic_arn):
-        response = sns.get_topic_attributes(TopicArn=topic_arn)
-&gt;       assert response["Attributes"]["TopicArn"] == topic_arn
-               ^^^^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Attributes'
-
-tests/compatibility/test_sns_compat.py:49: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_set_topic_attributes" time="0.007"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicOperations object at 0x10e3e9250&gt;
-sns = &lt;botocore.client.SNS object at 0x10e2a10d0&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="72" skipped="0" tests="100" time="2.248" timestamp="2026-08-30T01:08:15.657397-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_create_topic" time="0.067" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_create_topic_idempotent" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_list_topics" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_get_topic_attributes" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_set_topic_attributes" time="0.007"><failure message="KeyError: 'DisplayName'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicOperations object at 0x10c324fb0&gt;
+sns = &lt;botocore.client.SNS object at 0x10cb56570&gt;
 topic_arn = 'arn:aws:sns:us-east-1:123456789012:test-topic'
 
     def test_set_topic_attributes(self, sns, topic_arn):
@@ -28,58 +8,13 @@ topic_arn = 'arn:aws:sns:us-east-1:123456789012:test-topic'
             AttributeName="DisplayName",
             AttributeValue="My Display Name",
         )
-&gt;       attrs = sns.get_topic_attributes(TopicArn=topic_arn)["Attributes"]
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Attributes'
+        attrs = sns.get_topic_attributes(TopicArn=topic_arn)["Attributes"]
+&gt;       assert attrs["DisplayName"] == "My Display Name"
+               ^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'DisplayName'
 
-tests/compatibility/test_sns_compat.py:57: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_publish" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_delete_topic" time="0.005"><failure message="KeyError: 'Topics'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicOperations object at 0x10e3e99d0&gt;
-sns = &lt;botocore.client.SNS object at 0x10ebfa120&gt;
-
-    def test_delete_topic(self, sns):
-        arn = sns.create_topic(Name="delete-me")["TopicArn"]
-        sns.delete_topic(TopicArn=arn)
-&gt;       topics = sns.list_topics()["Topics"]
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Topics'
-
-tests/compatibility/test_sns_compat.py:67: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptions" name="test_subscribe_email" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptions" name="test_list_subscriptions_by_topic" time="0.006"><failure message="KeyError: 'Subscriptions'">self = &lt;tests.compatibility.test_sns_compat.TestSNSSubscriptions object at 0x10e3ea150&gt;
-sns = &lt;botocore.client.SNS object at 0x10eebd9d0&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:test-topic'
-
-    def test_list_subscriptions_by_topic(self, sns, topic_arn):
-        sns.subscribe(TopicArn=topic_arn, Protocol="email", Endpoint="a@b.com")
-        subs = sns.list_subscriptions_by_topic(TopicArn=topic_arn)
-&gt;       assert len(subs["Subscriptions"]) &gt;= 1
-                   ^^^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Subscriptions'
-
-tests/compatibility/test_sns_compat.py:80: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptions" name="test_list_subscriptions" time="0.007"><failure message="KeyError: 'Subscriptions'">self = &lt;tests.compatibility.test_sns_compat.TestSNSSubscriptions object at 0x10e3ea510&gt;
-sns = &lt;botocore.client.SNS object at 0x10eebc5c0&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:test-topic'
-
-    def test_list_subscriptions(self, sns, topic_arn):
-        sns.subscribe(TopicArn=topic_arn, Protocol="email", Endpoint="a@b.com")
-        subs = sns.list_subscriptions()
-&gt;       assert len(subs["Subscriptions"]) &gt;= 1
-                   ^^^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Subscriptions'
-
-tests/compatibility/test_sns_compat.py:85: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptions" name="test_unsubscribe" time="0.008"><failure message="KeyError: 'Subscriptions'">self = &lt;tests.compatibility.test_sns_compat.TestSNSSubscriptions object at 0x10e3ea8d0&gt;
-sns = &lt;botocore.client.SNS object at 0x10eb7aae0&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:test-topic'
-
-    def test_unsubscribe(self, sns, topic_arn):
-        sub_arn = sns.subscribe(TopicArn=topic_arn, Protocol="email", Endpoint="unsub@test.com")[
-            "SubscriptionArn"
-        ]
-        sns.unsubscribe(SubscriptionArn=sub_arn)
-        subs = sns.list_subscriptions_by_topic(TopicArn=topic_arn)
-&gt;       sub_arns = [s["SubscriptionArn"] for s in subs["Subscriptions"]]
-                                                  ^^^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Subscriptions'
-
-tests/compatibility/test_sns_compat.py:93: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSAttributeOperations" name="test_set_and_get_topic_attributes" time="0.006"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSAttributeOperations object at 0x10e3eacc0&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef7a2a0&gt;
+tests/compatibility/test_sns_compat.py:58: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_publish" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicOperations" name="test_delete_topic" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptions" name="test_subscribe_email" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptions" name="test_list_subscriptions_by_topic" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptions" name="test_list_subscriptions" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptions" name="test_unsubscribe" time="0.007" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSAttributeOperations" name="test_set_and_get_topic_attributes" time="0.005"><failure message="KeyError: 'DisplayName'">self = &lt;tests.compatibility.test_sns_compat.TestSNSAttributeOperations object at 0x10c326a20&gt;
+sns = &lt;botocore.client.SNS object at 0x10cb6f770&gt;
 
     def test_set_and_get_topic_attributes(self, sns):
         arn = sns.create_topic(Name="attr-topic")["TopicArn"]
@@ -88,12 +23,13 @@ sns = &lt;botocore.client.SNS object at 0x10ef7a2a0&gt;
             AttributeName="DisplayName",
             AttributeValue="My Test Display",
         )
-&gt;       attrs = sns.get_topic_attributes(TopicArn=arn)["Attributes"]
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Attributes'
+        attrs = sns.get_topic_attributes(TopicArn=arn)["Attributes"]
+&gt;       assert attrs["DisplayName"] == "My Test Display"
+               ^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'DisplayName'
 
-tests/compatibility/test_sns_compat.py:105: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSAttributeOperations" name="test_set_and_get_subscription_attributes" time="0.007"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSAttributeOperations object at 0x10e3eb0b0&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef80560&gt;
+tests/compatibility/test_sns_compat.py:106: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSAttributeOperations" name="test_set_and_get_subscription_attributes" time="0.006"><failure message="KeyError: 'RawMessageDelivery'">self = &lt;tests.compatibility.test_sns_compat.TestSNSAttributeOperations object at 0x10c326e10&gt;
+sns = &lt;botocore.client.SNS object at 0x10cae0170&gt;
 
     def test_set_and_get_subscription_attributes(self, sns):
         arn = sns.create_topic(Name="sub-attr-topic")["TopicArn"]
@@ -107,28 +43,14 @@ sns = &lt;botocore.client.SNS object at 0x10ef80560&gt;
             AttributeName="RawMessageDelivery",
             AttributeValue="true",
         )
-&gt;       attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)["Attributes"]
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Attributes'
+        attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)["Attributes"]
+&gt;       assert attrs["RawMessageDelivery"] == "true"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'RawMessageDelivery'
 
-tests/compatibility/test_sns_compat.py:121: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSAttributeOperations" name="test_list_subscriptions_by_topic_filtered" time="0.005"><failure message="KeyError: 'Subscriptions'">self = &lt;tests.compatibility.test_sns_compat.TestSNSAttributeOperations object at 0x10e3eb4d0&gt;
-sns = &lt;botocore.client.SNS object at 0x10ebfac00&gt;
-
-    def test_list_subscriptions_by_topic_filtered(self, sns):
-        arn = sns.create_topic(Name="list-sub-topic")["TopicArn"]
-        sns.subscribe(
-            TopicArn=arn,
-            Protocol="sqs",
-            Endpoint="arn:aws:sqs:us-east-1:123456789012:test",
-        )
-        subs = sns.list_subscriptions_by_topic(TopicArn=arn)
-&gt;       sub_endpoints = [s["Endpoint"] for s in subs["Subscriptions"]]
-                                                ^^^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Subscriptions'
-
-tests/compatibility/test_sns_compat.py:134: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSToSQSDelivery" name="test_publish_delivers_to_sqs" time="0.011"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_sns_compat.TestSNSToSQSDelivery object at 0x10e3eae10&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef80170&gt;
-sqs = &lt;botocore.client.SQS object at 0x10ef181d0&gt;
+tests/compatibility/test_sns_compat.py:122: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSAttributeOperations" name="test_list_subscriptions_by_topic_filtered" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSToSQSDelivery" name="test_publish_delivers_to_sqs" time="0.011"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_sns_compat.TestSNSToSQSDelivery object at 0x10c326b40&gt;
+sns = &lt;botocore.client.SNS object at 0x10cc78380&gt;
+sqs = &lt;botocore.client.SQS object at 0x10cc76480&gt;
 
     def test_publish_delivers_to_sqs(self, sns, sqs):
         # Create SQS queue
@@ -151,9 +73,9 @@ sqs = &lt;botocore.client.SQS object at 0x10ef181d0&gt;
 E       assert 0 == 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_sns_compat.py:157: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSToSQSDelivery" name="test_raw_message_delivery" time="0.013"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_sns_compat.TestSNSToSQSDelivery object at 0x10e3ea600&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef1d310&gt;
-sqs = &lt;botocore.client.SQS object at 0x10ef1e540&gt;
+tests/compatibility/test_sns_compat.py:157: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSToSQSDelivery" name="test_raw_message_delivery" time="0.011"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_sns_compat.TestSNSToSQSDelivery object at 0x10c326360&gt;
+sns = &lt;botocore.client.SNS object at 0x10cb33a70&gt;
+sqs = &lt;botocore.client.SQS object at 0x10cb6c8c0&gt;
 
     def test_raw_message_delivery(self, sns, sqs):
         q_url = sqs.create_queue(QueueName="sns-raw-test")["QueueUrl"]
@@ -179,9 +101,9 @@ sqs = &lt;botocore.client.SQS object at 0x10ef1e540&gt;
 E       assert 0 == 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_sns_compat.py:185: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSToSQSDelivery" name="test_multiple_subscribers" time="0.012"><failure message="AssertionError: assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10ef2d080&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10ef2d080&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 06:57:56 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sns_compat.TestSNSToSQSDelivery object at 0x10e3e9e50&gt;
-sns = &lt;botocore.client.SNS object at 0x10ebfa180&gt;
-sqs = &lt;botocore.client.SQS object at 0x10ef18ad0&gt;
+tests/compatibility/test_sns_compat.py:185: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSToSQSDelivery" name="test_multiple_subscribers" time="0.012"><failure message="AssertionError: assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10ceaf980&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10ceaf980&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 08:08:15 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sns_compat.TestSNSToSQSDelivery object at 0x10c325910&gt;
+sns = &lt;botocore.client.SNS object at 0x10cc77980&gt;
+sqs = &lt;botocore.client.SQS object at 0x10ce80d40&gt;
 
     def test_multiple_subscribers(self, sns, sqs):
         q1_url = sqs.create_queue(QueueName="sns-multi-1")["QueueUrl"]
@@ -204,11 +126,11 @@ sqs = &lt;botocore.client.SQS object at 0x10ef18ad0&gt;
 &gt;       assert len(r1.get("Messages", [])) == 1
 E       AssertionError: assert 0 == 1
 E        +  where 0 = len([])
-E        +    where [] = &lt;built-in method get of dict object at 0x10ef2d080&gt;('Messages', [])
-E        +      where &lt;built-in method get of dict object at 0x10ef2d080&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 06:57:56 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
+E        +    where [] = &lt;built-in method get of dict object at 0x10ceaf980&gt;('Messages', [])
+E        +      where &lt;built-in method get of dict object at 0x10ceaf980&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 08:08:15 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
 
-tests/compatibility/test_sns_compat.py:210: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSFifoTopics" name="test_create_fifo_topic" time="0.004"><failure message="AssertionError: assert False&#10; +  where False = &lt;built-in method endswith of str object at 0x10ef0be50&gt;('.fifo')&#10; +    where &lt;built-in method endswith of str object at 0x10ef0be50&gt; = 'arn:aws:sns:us-east-1:123456789012:fifo-topic-1b1a1c43.fifo:FIFO'.endswith">self = &lt;tests.compatibility.test_sns_compat.TestSNSFifoTopics object at 0x10e3e9340&gt;
-sns = &lt;botocore.client.SNS object at 0x10eeb71d0&gt;
+tests/compatibility/test_sns_compat.py:210: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSFifoTopics" name="test_create_fifo_topic" time="0.005"><failure message="AssertionError: assert False&#10; +  where False = &lt;built-in method endswith of str object at 0x10cc39df0&gt;('.fifo')&#10; +    where &lt;built-in method endswith of str object at 0x10cc39df0&gt; = 'arn:aws:sns:us-east-1:123456789012:fifo-topic-c3217843.fifo:FIFO'.endswith">self = &lt;tests.compatibility.test_sns_compat.TestSNSFifoTopics object at 0x10c324dd0&gt;
+sns = &lt;botocore.client.SNS object at 0x10aa24980&gt;
 
     def test_create_fifo_topic(self, sns):
         suffix = uuid.uuid4().hex[:8]
@@ -224,12 +146,12 @@ sns = &lt;botocore.client.SNS object at 0x10eeb71d0&gt;
             arn = response["TopicArn"]
 &gt;           assert arn.endswith(".fifo")
 E           AssertionError: assert False
-E            +  where False = &lt;built-in method endswith of str object at 0x10ef0be50&gt;('.fifo')
-E            +    where &lt;built-in method endswith of str object at 0x10ef0be50&gt; = 'arn:aws:sns:us-east-1:123456789012:fifo-topic-1b1a1c43.fifo:FIFO'.endswith
+E            +  where False = &lt;built-in method endswith of str object at 0x10cc39df0&gt;('.fifo')
+E            +    where &lt;built-in method endswith of str object at 0x10cc39df0&gt; = 'arn:aws:sns:us-east-1:123456789012:fifo-topic-c3217843.fifo:FIFO'.endswith
 
-tests/compatibility/test_sns_compat.py:231: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSFifoTopics" name="test_publish_to_fifo_topic" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSFifoTopics" name="test_fifo_topic_with_dedup_id" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSFilterPolicy" name="test_subscription_filter_policy_string_match" time="0.012"><failure message="AssertionError: assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10f0a4080&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10f0a4080&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 06:57:56 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sns_compat.TestSNSFilterPolicy object at 0x10e3e9bb0&gt;
-sns = &lt;botocore.client.SNS object at 0x10eebd790&gt;
-sqs = &lt;botocore.client.SQS object at 0x10e3e8890&gt;
+tests/compatibility/test_sns_compat.py:231: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSFifoTopics" name="test_publish_to_fifo_topic" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSFifoTopics" name="test_fifo_topic_with_dedup_id" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSFilterPolicy" name="test_subscription_filter_policy_string_match" time="0.014"><failure message="AssertionError: assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10cce7300&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10cce7300&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 08:08:16 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sns_compat.TestSNSFilterPolicy object at 0x10c327a10&gt;
+sns = &lt;botocore.client.SNS object at 0x10cb6d3d0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10cdf8140&gt;
 
     def test_subscription_filter_policy_string_match(self, sns, sqs):
         suffix = uuid.uuid4().hex[:8]
@@ -257,12 +179,12 @@ sqs = &lt;botocore.client.SQS object at 0x10e3e8890&gt;
 &gt;           assert len(recv.get("Messages", [])) == 1
 E           AssertionError: assert 0 == 1
 E            +  where 0 = len([])
-E            +    where [] = &lt;built-in method get of dict object at 0x10f0a4080&gt;('Messages', [])
-E            +      where &lt;built-in method get of dict object at 0x10f0a4080&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 06:57:56 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
+E            +    where [] = &lt;built-in method get of dict object at 0x10cce7300&gt;('Messages', [])
+E            +      where &lt;built-in method get of dict object at 0x10cce7300&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 08:08:16 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
 
-tests/compatibility/test_sns_compat.py:298: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSFilterPolicy" name="test_subscription_filter_policy_prefix" time="0.012"><failure message="AssertionError: assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10eff8700&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10eff8700&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 06:57:56 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sns_compat.TestSNSFilterPolicy object at 0x10e410050&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef19f70&gt;
-sqs = &lt;botocore.client.SQS object at 0x10ef19a90&gt;
+tests/compatibility/test_sns_compat.py:298: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSFilterPolicy" name="test_subscription_filter_policy_prefix" time="0.014"><failure message="AssertionError: assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10ce10480&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10ce10480&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 08:08:16 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sns_compat.TestSNSFilterPolicy object at 0x10c327e30&gt;
+sns = &lt;botocore.client.SNS object at 0x10cb6f500&gt;
+sqs = &lt;botocore.client.SQS object at 0x10cb33020&gt;
 
     def test_subscription_filter_policy_prefix(self, sns, sqs):
         suffix = uuid.uuid4().hex[:8]
@@ -289,12 +211,12 @@ sqs = &lt;botocore.client.SQS object at 0x10ef19a90&gt;
 &gt;           assert len(recv.get("Messages", [])) == 1
 E           AssertionError: assert 0 == 1
 E            +  where 0 = len([])
-E            +    where [] = &lt;built-in method get of dict object at 0x10eff8700&gt;('Messages', [])
-E            +      where &lt;built-in method get of dict object at 0x10eff8700&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 06:57:56 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
+E            +    where [] = &lt;built-in method get of dict object at 0x10ce10480&gt;('Messages', [])
+E            +      where &lt;built-in method get of dict object at 0x10ce10480&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 08:08:16 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
 
-tests/compatibility/test_sns_compat.py:334: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSFilterPolicy" name="test_subscription_filter_policy_numeric" time="0.013"><failure message="AssertionError: assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10ef00200&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10ef00200&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 06:57:56 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sns_compat.TestSNSFilterPolicy object at 0x10e410470&gt;
-sns = &lt;botocore.client.SNS object at 0x10e0b3500&gt;
-sqs = &lt;botocore.client.SQS object at 0x10ef1dc40&gt;
+tests/compatibility/test_sns_compat.py:334: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSFilterPolicy" name="test_subscription_filter_policy_numeric" time="0.012"><failure message="AssertionError: assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10ce9e1c0&gt;('Messages', [])&#10; +      where &lt;built-in method get of dict object at 0x10ce9e1c0&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 08:08:16 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get">self = &lt;tests.compatibility.test_sns_compat.TestSNSFilterPolicy object at 0x10c348290&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce726f0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10ce2caa0&gt;
 
     def test_subscription_filter_policy_numeric(self, sns, sqs):
         suffix = uuid.uuid4().hex[:8]
@@ -321,11 +243,11 @@ sqs = &lt;botocore.client.SQS object at 0x10ef1dc40&gt;
 &gt;           assert len(recv.get("Messages", [])) == 1
 E           AssertionError: assert 0 == 1
 E            +  where 0 = len([])
-E            +    where [] = &lt;built-in method get of dict object at 0x10ef00200&gt;('Messages', [])
-E            +      where &lt;built-in method get of dict object at 0x10ef00200&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 06:57:56 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
+E            +    where [] = &lt;built-in method get of dict object at 0x10ce9e1c0&gt;('Messages', [])
+E            +      where &lt;built-in method get of dict object at 0x10ce9e1c0&gt; = {'Messages': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '15', 'content-type': 'application/x-amz-json-1.0', 'date': 'Sun, 30 Aug 2026 08:08:16 GMT', 'server': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RetryAttempts': 0}}.get
 
-tests/compatibility/test_sns_compat.py:361: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicTags" name="test_tag_resource" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the TagResource operation: The action TagResource is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicTags object at 0x10e410920&gt;
-sns = &lt;botocore.client.SNS object at 0x10f065df0&gt;
+tests/compatibility/test_sns_compat.py:361: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicTags" name="test_tag_resource" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the TagResource operation: The action TagResource is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicTags object at 0x10c348740&gt;
+sns = &lt;botocore.client.SNS object at 0x10ceb5e80&gt;
 
     def test_tag_resource(self, sns):
         suffix = uuid.uuid4().hex[:8]
@@ -349,9 +271,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f065df0&gt;
+self = &lt;botocore.client.SNS object at 0x10ceb5e80&gt;
 operation_name = 'TagResource'
-api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:tag-topic-237c50da', 'Tags': [{'Key': 'env', 'Value': 'test'}, {'Key': 'team', 'Value': 'platform'}]}
+api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:tag-topic-421755e1', 'Tags': [{'Key': 'env', 'Value': 'test'}, {'Key': 'team', 'Value': 'platform'}]}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -440,8 +362,8 @@ api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:tag-topic-237c5
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the TagResource operation: The action TagResource is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicTags" name="test_untag_resource" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the TagResource operation: The action TagResource is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicTags object at 0x10e410d40&gt;
-sns = &lt;botocore.client.SNS object at 0x10f016030&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicTags" name="test_untag_resource" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the TagResource operation: The action TagResource is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicTags object at 0x10c348b60&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce72480&gt;
 
     def test_untag_resource(self, sns):
         suffix = uuid.uuid4().hex[:8]
@@ -462,9 +384,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f016030&gt;
+self = &lt;botocore.client.SNS object at 0x10ce72480&gt;
 operation_name = 'TagResource'
-api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:untag-topic-b2487929', 'Tags': [{'Key': 'env', 'Value': 'test'}, {'Key': 'keep', 'Value': 'yes'}]}
+api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:untag-topic-ccc9bef9', 'Tags': [{'Key': 'env', 'Value': 'test'}, {'Key': 'keep', 'Value': 'yes'}]}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -553,8 +475,8 @@ api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:untag-topic-b24
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the TagResource operation: The action TagResource is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicTags" name="test_list_tags_for_resource_empty" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListTagsForResource operation: The action ListTagsForResource is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicTags object at 0x10e411160&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef1d310&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicTags" name="test_list_tags_for_resource_empty" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListTagsForResource operation: The action ListTagsForResource is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicTags object at 0x10c348f80&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce2de80&gt;
 
     def test_list_tags_for_resource_empty(self, sns):
         suffix = uuid.uuid4().hex[:8]
@@ -573,9 +495,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ef1d310&gt;
+self = &lt;botocore.client.SNS object at 0x10ce2de80&gt;
 operation_name = 'ListTagsForResource'
-api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:notags-ea445408'}
+api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:notags-cb0aac78'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -664,19 +586,21 @@ api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:notags-ea445408
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListTagsForResource operation: The action ListTagsForResource is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes" name="test_get_topic_attributes_fields" time="0.006"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes object at 0x10e4115b0&gt;
-sns = &lt;botocore.client.SNS object at 0x10efc9550&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes" name="test_get_topic_attributes_fields" time="0.006"><failure message="AssertionError: assert 'SubscriptionsConfirmed' in {'Owner': '123456789012', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:attrs-34773170'}">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes object at 0x10c3493d0&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce71e20&gt;
 
     def test_get_topic_attributes_fields(self, sns):
         suffix = uuid.uuid4().hex[:8]
         arn = sns.create_topic(Name=f"attrs-{suffix}")["TopicArn"]
         try:
-&gt;           attrs = sns.get_topic_attributes(TopicArn=arn)["Attributes"]
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E           KeyError: 'Attributes'
+            attrs = sns.get_topic_attributes(TopicArn=arn)["Attributes"]
+            assert "TopicArn" in attrs
+            assert "Owner" in attrs
+&gt;           assert "SubscriptionsConfirmed" in attrs
+E           AssertionError: assert 'SubscriptionsConfirmed' in {'Owner': '123456789012', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:attrs-34773170'}
 
-tests/compatibility/test_sns_compat.py:417: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes" name="test_set_topic_display_name" time="0.007"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes object at 0x10e4119d0&gt;
-sns = &lt;botocore.client.SNS object at 0x10efc0a40&gt;
+tests/compatibility/test_sns_compat.py:420: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes" name="test_set_topic_display_name" time="0.006"><failure message="KeyError: 'DisplayName'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes object at 0x10c3497f0&gt;
+sns = &lt;botocore.client.SNS object at 0x10d052990&gt;
 
     def test_set_topic_display_name(self, sns):
         suffix = uuid.uuid4().hex[:8]
@@ -687,12 +611,13 @@ sns = &lt;botocore.client.SNS object at 0x10efc0a40&gt;
                 AttributeName="DisplayName",
                 AttributeValue="My Topic Display",
             )
-&gt;           attrs = sns.get_topic_attributes(TopicArn=arn)["Attributes"]
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E           KeyError: 'Attributes'
+            attrs = sns.get_topic_attributes(TopicArn=arn)["Attributes"]
+&gt;           assert attrs["DisplayName"] == "My Topic Display"
+                   ^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'DisplayName'
 
-tests/compatibility/test_sns_compat.py:433: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes" name="test_set_topic_policy" time="0.007"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes object at 0x10e3ebda0&gt;
-sns = &lt;botocore.client.SNS object at 0x10f067380&gt;
+tests/compatibility/test_sns_compat.py:434: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes" name="test_set_topic_policy" time="0.006"><failure message="KeyError: 'Policy'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes object at 0x10c327f50&gt;
+sns = &lt;botocore.client.SNS object at 0x10d00d700&gt;
 
     def test_set_topic_policy(self, sns):
         suffix = uuid.uuid4().hex[:8]
@@ -716,32 +641,14 @@ sns = &lt;botocore.client.SNS object at 0x10f067380&gt;
                 AttributeName="Policy",
                 AttributeValue=policy,
             )
-&gt;           attrs = sns.get_topic_attributes(TopicArn=arn)["Attributes"]
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E           KeyError: 'Attributes'
+            attrs = sns.get_topic_attributes(TopicArn=arn)["Attributes"]
+&gt;           returned_policy = json.loads(attrs["Policy"])
+                                         ^^^^^^^^^^^^^^^
+E           KeyError: 'Policy'
 
-tests/compatibility/test_sns_compat.py:460: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes" name="test_get_subscription_attributes" time="0.011"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes object at 0x10e3e88f0&gt;
-sns = &lt;botocore.client.SNS object at 0x10f088680&gt;
-sqs = &lt;botocore.client.SQS object at 0x10f0899a0&gt;
-
-    def test_get_subscription_attributes(self, sns, sqs):
-        suffix = uuid.uuid4().hex[:8]
-        q_url = sqs.create_queue(QueueName=f"sub-attrs-{suffix}")["QueueUrl"]
-        q_arn = sqs.get_queue_attributes(QueueUrl=q_url, AttributeNames=["QueueArn"])["Attributes"][
-            "QueueArn"
-        ]
-        topic_arn = sns.create_topic(Name=f"sub-attrs-{suffix}")["TopicArn"]
-        try:
-            sub_arn = sns.subscribe(TopicArn=topic_arn, Protocol="sqs", Endpoint=q_arn)[
-                "SubscriptionArn"
-            ]
-&gt;           attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)["Attributes"]
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E           KeyError: 'Attributes'
-
-tests/compatibility/test_sns_compat.py:477: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes" name="test_set_subscription_raw_message_delivery" time="0.012"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes object at 0x10e3e9400&gt;
-sns = &lt;botocore.client.SNS object at 0x10f1697c0&gt;
-sqs = &lt;botocore.client.SQS object at 0x10f067980&gt;
+tests/compatibility/test_sns_compat.py:461: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes" name="test_get_subscription_attributes" time="0.011" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes" name="test_set_subscription_raw_message_delivery" time="0.011"><failure message="KeyError: 'RawMessageDelivery'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicAndSubscriptionAttributes object at 0x10c325490&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce738f0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10cb31640&gt;
 
     def test_set_subscription_raw_message_delivery(self, sns, sqs):
         suffix = uuid.uuid4().hex[:8]
@@ -759,12 +666,13 @@ sqs = &lt;botocore.client.SQS object at 0x10f067980&gt;
                 AttributeName="RawMessageDelivery",
                 AttributeValue="true",
             )
-&gt;           attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)["Attributes"]
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E           KeyError: 'Attributes'
+            attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)["Attributes"]
+&gt;           assert attrs["RawMessageDelivery"] == "true"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'RawMessageDelivery'
 
-tests/compatibility/test_sns_compat.py:502: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPublishFeatures" name="test_publish_with_message_attributes" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSPublishFeatures" name="test_publish_batch" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the PublishBatch operation: The action PublishBatch is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPublishFeatures object at 0x10e411790&gt;
-sns = &lt;botocore.client.SNS object at 0x10f14b4a0&gt;
+tests/compatibility/test_sns_compat.py:503: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPublishFeatures" name="test_publish_with_message_attributes" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSPublishFeatures" name="test_publish_batch" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the PublishBatch operation: The action PublishBatch is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPublishFeatures object at 0x10c349940&gt;
+sns = &lt;botocore.client.SNS object at 0x10d0590a0&gt;
 
     def test_publish_batch(self, sns):
         suffix = uuid.uuid4().hex[:8]
@@ -789,9 +697,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f14b4a0&gt;
+self = &lt;botocore.client.SNS object at 0x10d0590a0&gt;
 operation_name = 'PublishBatch'
-api_params = {'PublishBatchRequestEntries': [{'Id': 'msg1', 'Message': 'first message'}, {'Id': 'msg2', 'Message': 'second message'}, {'Id': 'msg3', 'Message': 'third message'}], 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:batch-6321a8df'}
+api_params = {'PublishBatchRequestEntries': [{'Id': 'msg1', 'Message': 'first message'}, {'Id': 'msg2', 'Message': 'second message'}, {'Id': 'msg3', 'Message': 'third message'}], 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:batch-f894414d'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -880,8 +788,8 @@ api_params = {'PublishBatchRequestEntries': [{'Id': 'msg1', 'Message': 'first me
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the PublishBatch operation: The action PublishBatch is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPublishFeatures" name="test_publish_with_subject" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSPublishFeatures" name="test_publish_message_structure_json" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSPlatformApplications" name="test_create_and_list_platform_application" time="0.003"><failure message="UnboundLocalError: cannot access local variable 'app_arn' where it is not associated with a value">self = &lt;tests.compatibility.test_sns_compat.TestSNSPlatformApplications object at 0x10e4120c0&gt;
-sns = &lt;botocore.client.SNS object at 0x10f067380&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPublishFeatures" name="test_publish_with_subject" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSPublishFeatures" name="test_publish_message_structure_json" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSPlatformApplications" name="test_create_and_list_platform_application" time="0.003"><failure message="UnboundLocalError: cannot access local variable 'app_arn' where it is not associated with a value">self = &lt;tests.compatibility.test_sns_compat.TestSNSPlatformApplications object at 0x10c349f10&gt;
+sns = &lt;botocore.client.SNS object at 0x10d00d370&gt;
 
     def test_create_and_list_platform_application(self, sns):
         suffix = uuid.uuid4().hex[:8]
@@ -903,9 +811,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f067380&gt;
+self = &lt;botocore.client.SNS object at 0x10d00d370&gt;
 operation_name = 'CreatePlatformApplication'
-api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'test-app-f7a7fa4a', 'Platform': 'GCM'}
+api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'test-app-16c06c1f', 'Platform': 'GCM'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -998,8 +906,8 @@ E           botocore.exceptions.ClientError: An error occurred (InvalidAction) w
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_sns_compat.TestSNSPlatformApplications object at 0x10e4120c0&gt;
-sns = &lt;botocore.client.SNS object at 0x10f067380&gt;
+self = &lt;tests.compatibility.test_sns_compat.TestSNSPlatformApplications object at 0x10c349f10&gt;
+sns = &lt;botocore.client.SNS object at 0x10d00d370&gt;
 
     def test_create_and_list_platform_application(self, sns):
         suffix = uuid.uuid4().hex[:8]
@@ -1021,8 +929,8 @@ sns = &lt;botocore.client.SNS object at 0x10f067380&gt;
                                                                    ^^^^^^^
 E           UnboundLocalError: cannot access local variable 'app_arn' where it is not associated with a value
 
-tests/compatibility/test_sns_compat.py:587: UnboundLocalError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPlatformApplications" name="test_delete_platform_application" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPlatformApplications object at 0x10e4124e0&gt;
-sns = &lt;botocore.client.SNS object at 0x10ebf8830&gt;
+tests/compatibility/test_sns_compat.py:587: UnboundLocalError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPlatformApplications" name="test_delete_platform_application" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPlatformApplications object at 0x10c34a330&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce2c740&gt;
 
     def test_delete_platform_application(self, sns):
         suffix = uuid.uuid4().hex[:8]
@@ -1043,9 +951,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ebf8830&gt;
+self = &lt;botocore.client.SNS object at 0x10ce2c740&gt;
 operation_name = 'CreatePlatformApplication'
-api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'del-app-df451527', 'Platform': 'GCM'}
+api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'del-app-818188d4', 'Platform': 'GCM'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1134,9 +1042,9 @@ api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'del
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributes" name="test_set_and_get_filter_policy" time="0.039"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributes object at 0x10e412960&gt;
-sns = &lt;botocore.client.SNS object at 0x10eeb5940&gt;
-sqs = &lt;botocore.client.SQS object at 0x10f150b90&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributes" name="test_set_and_get_filter_policy" time="0.009"><failure message="KeyError: 'FilterPolicy'">self = &lt;tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributes object at 0x10c34a750&gt;
+sns = &lt;botocore.client.SNS object at 0x10d0b1d60&gt;
+sqs = &lt;botocore.client.SQS object at 0x10d0b3230&gt;
 
     def test_set_and_get_filter_policy(self, sns, sqs):
         """SetSubscriptionAttributes + GetSubscriptionAttributes with filter policy."""
@@ -1157,13 +1065,14 @@ sqs = &lt;botocore.client.SQS object at 0x10f150b90&gt;
             AttributeValue=filter_policy,
         )
     
-&gt;       attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)["Attributes"]
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Attributes'
+        attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)["Attributes"]
+&gt;       assert json.loads(attrs["FilterPolicy"]) == {"event_type": ["order_placed"]}
+                          ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'FilterPolicy'
 
-tests/compatibility/test_sns_compat.py:624: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributes" name="test_get_subscription_attributes_basic" time="0.009"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributes object at 0x10e412d80&gt;
-sns = &lt;botocore.client.SNS object at 0x10efc9a00&gt;
-sqs = &lt;botocore.client.SQS object at 0x10f064590&gt;
+tests/compatibility/test_sns_compat.py:625: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributes" name="test_get_subscription_attributes_basic" time="0.040"><failure message="AssertionError: assert 'Owner' in {'Endpoint': 'arn:aws:sqs:us-east-1:123456789012:get-sub-attrs-queue', 'Protocol': 'sqs', 'SubscriptionArn': 'arn:aws:...929bb6fb28:00000000-0000-0000-0000-000000000000', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:get-sub-attrs-topic'}">self = &lt;tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributes object at 0x10c34ab70&gt;
+sns = &lt;botocore.client.SNS object at 0x10cfec7d0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10d0b15e0&gt;
 
     def test_get_subscription_attributes_basic(self, sns, sqs):
         """GetSubscriptionAttributes returns standard fields."""
@@ -1177,12 +1086,16 @@ sqs = &lt;botocore.client.SQS object at 0x10f064590&gt;
             "SubscriptionArn"
         ]
     
-&gt;       attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)["Attributes"]
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Attributes'
+        attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)["Attributes"]
+        assert attrs["SubscriptionArn"] == sub_arn
+        assert attrs["TopicArn"] == topic_arn
+        assert attrs["Protocol"] == "sqs"
+        assert attrs["Endpoint"] == q_arn
+&gt;       assert "Owner" in attrs
+E       AssertionError: assert 'Owner' in {'Endpoint': 'arn:aws:sqs:us-east-1:123456789012:get-sub-attrs-queue', 'Protocol': 'sqs', 'SubscriptionArn': 'arn:aws:...929bb6fb28:00000000-0000-0000-0000-000000000000', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:get-sub-attrs-topic'}
 
-tests/compatibility/test_sns_compat.py:644: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSMessageAttributes" name="test_tag_untag_list_tags" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the TagResource operation: The action TagResource is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSMessageAttributes object at 0x10e413200&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef1f8f0&gt;
+tests/compatibility/test_sns_compat.py:649: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSMessageAttributes" name="test_tag_untag_list_tags" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the TagResource operation: The action TagResource is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSMessageAttributes object at 0x10c34aff0&gt;
+sns = &lt;botocore.client.SNS object at 0x10d0b3b90&gt;
 topic_arn = 'arn:aws:sns:us-east-1:123456789012:test-topic'
 
     def test_tag_untag_list_tags(self, sns, topic_arn):
@@ -1205,7 +1118,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ef1f8f0&gt;
+self = &lt;botocore.client.SNS object at 0x10d0b3b90&gt;
 operation_name = 'TagResource'
 api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:test-topic', 'Tags': [{'Key': 'env', 'Value': 'test'}, {'Key': 'team', 'Value': 'platform'}]}
 
@@ -1296,9 +1209,9 @@ api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:test-topic', 'T
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the TagResource operation: The action TagResource is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributesExtended" name="test_set_subscription_filter_policy" time="0.012"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributesExtended object at 0x10e4135f0&gt;
-sns = &lt;botocore.client.SNS object at 0x10efc9760&gt;
-sqs = &lt;botocore.client.SQS object at 0x10f089100&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributesExtended" name="test_set_subscription_filter_policy" time="0.012"><failure message="AssertionError: assert 'FilterPolicy' in {'Endpoint': 'arn:aws:sqs:us-east-1:123456789012:sns-filter-test', 'Protocol': 'sqs', 'SubscriptionArn': 'arn:aws:sns:...b0f0-dbc4562cd8fd:00000000-0000-0000-0000-000000000000', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:filter-topic'}">self = &lt;tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributesExtended object at 0x10c34b440&gt;
+sns = &lt;botocore.client.SNS object at 0x10cc775c0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10cc789e0&gt;
 
     def test_set_subscription_filter_policy(self, sns, sqs):
         """Test SetSubscriptionAttributes with FilterPolicy."""
@@ -1319,28 +1232,10 @@ sqs = &lt;botocore.client.SQS object at 0x10f089100&gt;
             )
             attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)
 &gt;           assert "FilterPolicy" in attrs["Attributes"]
-                                     ^^^^^^^^^^^^^^^^^^^
-E           KeyError: 'Attributes'
+E           AssertionError: assert 'FilterPolicy' in {'Endpoint': 'arn:aws:sqs:us-east-1:123456789012:sns-filter-test', 'Protocol': 'sqs', 'SubscriptionArn': 'arn:aws:sns:...b0f0-dbc4562cd8fd:00000000-0000-0000-0000-000000000000', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:filter-topic'}
 
-tests/compatibility/test_sns_compat.py:697: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributesExtended" name="test_list_topics_pagination" time="0.011"><failure message="KeyError: 'Topics'">self = &lt;tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributesExtended object at 0x10e413a10&gt;
-sns = &lt;botocore.client.SNS object at 0x10eebcb90&gt;
-
-    def test_list_topics_pagination(self, sns):
-        """Test ListTopics pagination by creating many topics."""
-        created_arns = []
-        try:
-            for i in range(5):
-                arn = sns.create_topic(Name=f"page-topic-{i}")["TopicArn"]
-                created_arns.append(arn)
-            # List all topics — should include our topics
-            all_arns = []
-            response = sns.list_topics()
-&gt;           all_arns.extend([t["TopicArn"] for t in response["Topics"]])
-                                                    ^^^^^^^^^^^^^^^^^^
-E           KeyError: 'Topics'
-
-tests/compatibility/test_sns_compat.py:715: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributesExtended" name="test_confirm_subscription_with_dummy_token" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSPlatformApplication" name="test_create_and_delete_platform_application" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPlatformApplication object at 0x10e3e8740&gt;
-sns = &lt;botocore.client.SNS object at 0x10eba9a00&gt;
+tests/compatibility/test_sns_compat.py:697: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributesExtended" name="test_list_topics_pagination" time="0.011" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscriptionAttributesExtended" name="test_confirm_subscription_with_dummy_token" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSPlatformApplication" name="test_create_and_delete_platform_application" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPlatformApplication object at 0x10c327b30&gt;
+sns = &lt;botocore.client.SNS object at 0x10cae2780&gt;
 
     def test_create_and_delete_platform_application(self, sns):
         """Test CreatePlatformApplication and DeletePlatformApplication."""
@@ -1360,7 +1255,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10eba9a00&gt;
+self = &lt;botocore.client.SNS object at 0x10cae2780&gt;
 operation_name = 'CreatePlatformApplication'
 api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'test-platform-app', 'Platform': 'GCM'}
 
@@ -1451,19 +1346,21 @@ api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'tes
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicAttributesExtended" name="test_get_topic_attributes_all_fields" time="0.007"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicAttributesExtended object at 0x10e4139e0&gt;
-sns = &lt;botocore.client.SNS object at 0x10f089d60&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSTopicAttributesExtended" name="test_get_topic_attributes_all_fields" time="0.006"><failure message="AssertionError: assert 'DisplayName' in {'Owner': '123456789012', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:test-topic'}">self = &lt;tests.compatibility.test_sns_compat.TestSNSTopicAttributesExtended object at 0x10c34b560&gt;
+sns = &lt;botocore.client.SNS object at 0x10d025c70&gt;
 topic_arn = 'arn:aws:sns:us-east-1:123456789012:test-topic'
 
     def test_get_topic_attributes_all_fields(self, sns, topic_arn):
         """Test GetTopicAttributes returns all expected fields."""
-&gt;       attrs = sns.get_topic_attributes(TopicArn=topic_arn)["Attributes"]
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Attributes'
+        attrs = sns.get_topic_attributes(TopicArn=topic_arn)["Attributes"]
+        assert "TopicArn" in attrs
+        assert "Owner" in attrs
+&gt;       assert "DisplayName" in attrs
+E       AssertionError: assert 'DisplayName' in {'Owner': '123456789012', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:test-topic'}
 
-tests/compatibility/test_sns_compat.py:750: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscribeProtocols" name="test_subscribe_sqs_protocol" time="0.010" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscribeProtocols" name="test_subscribe_lambda_protocol" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscribeProtocols" name="test_subscribe_https_protocol" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_set_get_topic_attributes" time="0.007"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10e413f50&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef1d970&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-27d6c114'
+tests/compatibility/test_sns_compat.py:753: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscribeProtocols" name="test_subscribe_sqs_protocol" time="0.010" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscribeProtocols" name="test_subscribe_lambda_protocol" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSSubscribeProtocols" name="test_subscribe_https_protocol" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_set_get_topic_attributes" time="0.006"><failure message="KeyError: 'DisplayName'">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10c34bd70&gt;
+sns = &lt;botocore.client.SNS object at 0x10d078530&gt;
+topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-f7b8360f'
 
     def test_set_get_topic_attributes(self, sns, topic_arn):
         sns.set_topic_attributes(
@@ -1473,12 +1370,12 @@ topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-27d6c114'
         )
         resp = sns.get_topic_attributes(TopicArn=topic_arn)
 &gt;       assert resp["Attributes"]["DisplayName"] == "My Display Name"
-               ^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Attributes'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'DisplayName'
 
-tests/compatibility/test_sns_compat.py:816: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_tag_untag_topic" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the TagResource operation: The action TagResource is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10e430350&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef7a300&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-46632383'
+tests/compatibility/test_sns_compat.py:816: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_tag_untag_topic" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the TagResource operation: The action TagResource is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10c368170&gt;
+sns = &lt;botocore.client.SNS object at 0x10cfbe3c0&gt;
+topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-c501bd67'
 
     def test_tag_untag_topic(self, sns, topic_arn):
 &gt;       sns.tag_resource(
@@ -1499,9 +1396,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ef7a300&gt;
+self = &lt;botocore.client.SNS object at 0x10cfbe3c0&gt;
 operation_name = 'TagResource'
-api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:ext-topic-46632383', 'Tags': [{'Key': 'env', 'Value': 'test'}, {'Key': 'team', 'Value': 'platform'}]}
+api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:ext-topic-c501bd67', 'Tags': [{'Key': 'env', 'Value': 'test'}, {'Key': 'team', 'Value': 'platform'}]}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1590,9 +1487,9 @@ api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:ext-topic-46632
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the TagResource operation: The action TagResource is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_set_subscription_attributes" time="0.013"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10e430710&gt;
-sns = &lt;botocore.client.SNS object at 0x10f017140&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-2ef8035d'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_set_subscription_attributes" time="0.011"><failure message="KeyError: 'RawMessageDelivery'">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10c368530&gt;
+sns = &lt;botocore.client.SNS object at 0x10d00cc50&gt;
+topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-35595b62'
 
     def test_set_subscription_attributes(self, sns, topic_arn):
         from tests.compatibility.conftest import make_client
@@ -1614,12 +1511,12 @@ topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-2ef8035d'
                 )
                 attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)
 &gt;               assert attrs["Attributes"]["RawMessageDelivery"] == "true"
-                       ^^^^^^^^^^^^^^^^^^^
-E               KeyError: 'Attributes'
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               KeyError: 'RawMessageDelivery'
 
-tests/compatibility/test_sns_compat.py:854: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_publish_with_message_attributes" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_publish_batch" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the PublishBatch operation: The action PublishBatch is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10e430e90&gt;
-sns = &lt;botocore.client.SNS object at 0x10efa53a0&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-1fa3fe6b'
+tests/compatibility/test_sns_compat.py:854: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_publish_with_message_attributes" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_publish_batch" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the PublishBatch operation: The action PublishBatch is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10c368cb0&gt;
+sns = &lt;botocore.client.SNS object at 0x10ceb4890&gt;
+topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-0a6cff22'
 
     def test_publish_batch(self, sns, topic_arn):
 &gt;       resp = sns.publish_batch(
@@ -1641,9 +1538,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10efa53a0&gt;
+self = &lt;botocore.client.SNS object at 0x10ceb4890&gt;
 operation_name = 'PublishBatch'
-api_params = {'PublishBatchRequestEntries': [{'Id': 'msg1', 'Message': 'first'}, {'Id': 'msg2', 'Message': 'second'}, {'Id': 'msg3', 'Message': 'third'}], 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:ext-topic-1fa3fe6b'}
+api_params = {'PublishBatchRequestEntries': [{'Id': 'msg1', 'Message': 'first'}, {'Id': 'msg2', 'Message': 'second'}, {'Id': 'msg3', 'Message': 'third'}], 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:ext-topic-0a6cff22'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1732,8 +1629,8 @@ api_params = {'PublishBatchRequestEntries': [{'Id': 'msg1', 'Message': 'first'},
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the PublishBatch operation: The action PublishBatch is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_create_topic_with_tags" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListTagsForResource operation: The action ListTagsForResource is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10e431250&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef81f70&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_create_topic_with_tags" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListTagsForResource operation: The action ListTagsForResource is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10c369070&gt;
+sns = &lt;botocore.client.SNS object at 0x10d0b08c0&gt;
 
     def test_create_topic_with_tags(self, sns):
         import uuid
@@ -1758,9 +1655,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ef81f70&gt;
+self = &lt;botocore.client.SNS object at 0x10d0b08c0&gt;
 operation_name = 'ListTagsForResource'
-api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:tagged-topic-4562c37b'}
+api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:tagged-topic-9cf63baf'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1849,8 +1746,8 @@ api_params = {'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:tagged-topic-45
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListTagsForResource operation: The action ListTagsForResource is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_create_topic_with_attributes" time="0.005"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10e431610&gt;
-sns = &lt;botocore.client.SNS object at 0x10f08bec0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_create_topic_with_attributes" time="0.005"><failure message="KeyError: 'DisplayName'">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10c369430&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce2c260&gt;
 
     def test_create_topic_with_attributes(self, sns):
         import uuid
@@ -1864,40 +1761,11 @@ sns = &lt;botocore.client.SNS object at 0x10f08bec0&gt;
         try:
             attrs = sns.get_topic_attributes(TopicArn=arn)
 &gt;           assert attrs["Attributes"]["DisplayName"] == "Attributed Topic"
-                   ^^^^^^^^^^^^^^^^^^^
-E           KeyError: 'Attributes'
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'DisplayName'
 
-tests/compatibility/test_sns_compat.py:908: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_list_subscriptions" time="0.006"><failure message="AssertionError: assert 'Subscriptions' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '309', 'content-type': 'text/xml', 'date': 'Sun, 30 Aug 2026 0...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '3a626847-8e83-4bff-a5b9-caf8ff70e59d', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10e4319d0&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef80d40&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-8e9c8bc1'
-
-    def test_list_subscriptions(self, sns, topic_arn):
-        resp = sns.list_subscriptions()
-&gt;       assert "Subscriptions" in resp
-E       AssertionError: assert 'Subscriptions' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '309', 'content-type': 'text/xml', 'date': 'Sun, 30 Aug 2026 0...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '3a626847-8e83-4bff-a5b9-caf8ff70e59d', 'RetryAttempts': 0}}
-
-tests/compatibility/test_sns_compat.py:914: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_list_subscriptions_by_topic" time="0.011"><failure message="KeyError: 'Subscriptions'">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10e431d90&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef18b30&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-f536022a'
-
-    def test_list_subscriptions_by_topic(self, sns, topic_arn):
-        from tests.compatibility.conftest import make_client
-    
-        sqs = make_client("sqs")
-        q = sqs.create_queue(QueueName=f"sns-list-sub-{__import__('uuid').uuid4().hex[:8]}")
-        q_url = q["QueueUrl"]
-        q_arn = sqs.get_queue_attributes(QueueUrl=q_url, AttributeNames=["QueueArn"])["Attributes"][
-            "QueueArn"
-        ]
-        try:
-            sns.subscribe(TopicArn=topic_arn, Protocol="sqs", Endpoint=q_arn)
-            resp = sns.list_subscriptions_by_topic(TopicArn=topic_arn)
-&gt;           assert len(resp["Subscriptions"]) &gt;= 1
-                       ^^^^^^^^^^^^^^^^^^^^^
-E           KeyError: 'Subscriptions'
-
-tests/compatibility/test_sns_compat.py:928: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_confirm_subscription_invalid_token" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_create_fifo_topic" time="0.006"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10e412ae0&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef82240&gt;
+tests/compatibility/test_sns_compat.py:908: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_list_subscriptions" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_list_subscriptions_by_topic" time="0.011" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_confirm_subscription_invalid_token" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_create_fifo_topic" time="0.005"><failure message="AssertionError: assert None == 'true'&#10; +  where None = &lt;built-in method get of dict object at 0x10ced8640&gt;('FifoTopic')&#10; +    where &lt;built-in method get of dict object at 0x10ced8640&gt; = {'Owner': '123456789012', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:fifo-topic-407e7f86.fifo:FIFO'}.get">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10c34b0e0&gt;
+sns = &lt;botocore.client.SNS object at 0x10d050f20&gt;
 
     def test_create_fifo_topic(self, sns):
         import uuid
@@ -1911,12 +1779,13 @@ sns = &lt;botocore.client.SNS object at 0x10ef82240&gt;
         try:
             attrs = sns.get_topic_attributes(TopicArn=arn)
 &gt;           assert attrs["Attributes"].get("FifoTopic") == "true"
-                   ^^^^^^^^^^^^^^^^^^^
-E           KeyError: 'Attributes'
+E           AssertionError: assert None == 'true'
+E            +  where None = &lt;built-in method get of dict object at 0x10ced8640&gt;('FifoTopic')
+E            +    where &lt;built-in method get of dict object at 0x10ced8640&gt; = {'Owner': '123456789012', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:fifo-topic-407e7f86.fifo:FIFO'}.get
 
-tests/compatibility/test_sns_compat.py:950: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_publish_to_fifo_topic" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_subscribe_with_filter_policy" time="0.013"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10e431460&gt;
-sns = &lt;botocore.client.SNS object at 0x10ebf8c80&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-2540442f'
+tests/compatibility/test_sns_compat.py:950: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_publish_to_fifo_topic" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_subscribe_with_filter_policy" time="0.011"><failure message="KeyError: 'FilterPolicy'">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10c3695e0&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce2dc70&gt;
+topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-7bed1959'
 
     def test_subscribe_with_filter_policy(self, sns, topic_arn):
         from tests.compatibility.conftest import make_client
@@ -1940,12 +1809,12 @@ topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-2540442f'
             if sub_arn != "pending confirmation":
                 attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)
 &gt;               fp = json.loads(attrs["Attributes"]["FilterPolicy"])
-                                ^^^^^^^^^^^^^^^^^^^
-E               KeyError: 'Attributes'
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               KeyError: 'FilterPolicy'
 
-tests/compatibility/test_sns_compat.py:994: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_publish_with_subject" time="0.006" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_set_topic_policy" time="0.007"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10e430560&gt;
-sns = &lt;botocore.client.SNS object at 0x10eeb4410&gt;
-topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-502de766'
+tests/compatibility/test_sns_compat.py:994: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_publish_with_subject" time="0.005" /><testcase classname="tests.compatibility.test_sns_compat.TestSNSExtendedOperations" name="test_set_topic_policy" time="0.007"><failure message="KeyError: 'Policy'">self = &lt;tests.compatibility.test_sns_compat.TestSNSExtendedOperations object at 0x10c3686e0&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce50140&gt;
+topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-6dfbacf8'
 
     def test_set_topic_policy(self, sns, topic_arn):
         policy = json.dumps(
@@ -1968,11 +1837,11 @@ topic_arn = 'arn:aws:sns:us-east-1:123456789012:ext-topic-502de766'
         )
         attrs = sns.get_topic_attributes(TopicArn=topic_arn)
 &gt;       parsed = json.loads(attrs["Attributes"]["Policy"])
-                            ^^^^^^^^^^^^^^^^^^^
-E       KeyError: 'Attributes'
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'Policy'
 
-tests/compatibility/test_sns_compat.py:1027: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSGapStubs" name="test_list_sms_sandbox_phone_numbers" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListSMSSandboxPhoneNumbers operation: The action ListSMSSandboxPhoneNumbers is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSGapStubs object at 0x10e431f40&gt;
-sns = &lt;botocore.client.SNS object at 0x10f089730&gt;
+tests/compatibility/test_sns_compat.py:1027: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSGapStubs" name="test_list_sms_sandbox_phone_numbers" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListSMSSandboxPhoneNumbers operation: The action ListSMSSandboxPhoneNumbers is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSGapStubs object at 0x10c369d60&gt;
+sns = &lt;botocore.client.SNS object at 0x10cb33290&gt;
 
     def test_list_sms_sandbox_phone_numbers(self, sns):
 &gt;       resp = sns.list_sms_sandbox_phone_numbers()
@@ -1988,7 +1857,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f089730&gt;
+self = &lt;botocore.client.SNS object at 0x10cb33290&gt;
 operation_name = 'ListSMSSandboxPhoneNumbers', api_params = {}
 
     @with_current_context()
@@ -2078,8 +1947,8 @@ operation_name = 'ListSMSSandboxPhoneNumbers', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListSMSSandboxPhoneNumbers operation: The action ListSMSSandboxPhoneNumbers is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSGapStubs" name="test_list_origination_numbers" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListOriginationNumbers operation: The action ListOriginationNumbers is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSGapStubs object at 0x10e432330&gt;
-sns = &lt;botocore.client.SNS object at 0x10f014dd0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSGapStubs" name="test_list_origination_numbers" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListOriginationNumbers operation: The action ListOriginationNumbers is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSGapStubs object at 0x10c36a150&gt;
+sns = &lt;botocore.client.SNS object at 0x10d00d6d0&gt;
 
     def test_list_origination_numbers(self, sns):
 &gt;       resp = sns.list_origination_numbers()
@@ -2095,7 +1964,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f014dd0&gt;
+self = &lt;botocore.client.SNS object at 0x10d00d6d0&gt;
 operation_name = 'ListOriginationNumbers', api_params = {}
 
     @with_current_context()
@@ -2185,8 +2054,8 @@ operation_name = 'ListOriginationNumbers', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListOriginationNumbers operation: The action ListOriginationNumbers is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSGapStubs" name="test_get_sms_sandbox_account_status" time="0.003"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSSandboxAccountStatus operation: The action GetSMSSandboxAccountStatus is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSGapStubs object at 0x10e432720&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef81400&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSGapStubs" name="test_get_sms_sandbox_account_status" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSSandboxAccountStatus operation: The action GetSMSSandboxAccountStatus is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSGapStubs object at 0x10c36a540&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce832c0&gt;
 
     def test_get_sms_sandbox_account_status(self, sns):
 &gt;       resp = sns.get_sms_sandbox_account_status()
@@ -2202,7 +2071,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ef81400&gt;
+self = &lt;botocore.client.SNS object at 0x10ce832c0&gt;
 operation_name = 'GetSMSSandboxAccountStatus', api_params = {}
 
     @with_current_context()
@@ -2292,8 +2161,8 @@ operation_name = 'GetSMSSandboxAccountStatus', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSSandboxAccountStatus operation: The action GetSMSSandboxAccountStatus is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSnsAutoCoverage" name="test_get_sms_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSAttributes operation: The action GetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSnsAutoCoverage object at 0x10e432ba0&gt;
-client = &lt;botocore.client.SNS object at 0x10efc0fe0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSnsAutoCoverage" name="test_get_sms_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSAttributes operation: The action GetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSnsAutoCoverage object at 0x10c36a9f0&gt;
+client = &lt;botocore.client.SNS object at 0x10cfbd070&gt;
 
     def test_get_sms_attributes(self, client):
         """GetSMSAttributes returns a response."""
@@ -2310,7 +2179,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10efc0fe0&gt;
+self = &lt;botocore.client.SNS object at 0x10cfbd070&gt;
 operation_name = 'GetSMSAttributes', api_params = {}
 
     @with_current_context()
@@ -2400,8 +2269,8 @@ operation_name = 'GetSMSAttributes', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSAttributes operation: The action GetSMSAttributes is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSnsAutoCoverage" name="test_get_sms_sandbox_account_status" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSSandboxAccountStatus operation: The action GetSMSSandboxAccountStatus is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSnsAutoCoverage object at 0x10e432f90&gt;
-client = &lt;botocore.client.SNS object at 0x10eeb48f0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSnsAutoCoverage" name="test_get_sms_sandbox_account_status" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSSandboxAccountStatus operation: The action GetSMSSandboxAccountStatus is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSnsAutoCoverage object at 0x10c36ade0&gt;
+client = &lt;botocore.client.SNS object at 0x10ce716d0&gt;
 
     def test_get_sms_sandbox_account_status(self, client):
         """GetSMSSandboxAccountStatus returns a response."""
@@ -2418,7 +2287,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10eeb48f0&gt;
+self = &lt;botocore.client.SNS object at 0x10ce716d0&gt;
 operation_name = 'GetSMSSandboxAccountStatus', api_params = {}
 
     @with_current_context()
@@ -2508,8 +2377,8 @@ operation_name = 'GetSMSSandboxAccountStatus', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSSandboxAccountStatus operation: The action GetSMSSandboxAccountStatus is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSnsAutoCoverage" name="test_list_phone_numbers_opted_out" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListPhoneNumbersOptedOut operation: The action ListPhoneNumbersOptedOut is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSnsAutoCoverage object at 0x10e433380&gt;
-client = &lt;botocore.client.SNS object at 0x10f016450&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSnsAutoCoverage" name="test_list_phone_numbers_opted_out" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListPhoneNumbersOptedOut operation: The action ListPhoneNumbersOptedOut is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSnsAutoCoverage object at 0x10c36b1d0&gt;
+client = &lt;botocore.client.SNS object at 0x10d078980&gt;
 
     def test_list_phone_numbers_opted_out(self, client):
         """ListPhoneNumbersOptedOut returns a response."""
@@ -2526,7 +2395,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f016450&gt;
+self = &lt;botocore.client.SNS object at 0x10d078980&gt;
 operation_name = 'ListPhoneNumbersOptedOut', api_params = {}
 
     @with_current_context()
@@ -2616,8 +2485,8 @@ operation_name = 'ListPhoneNumbersOptedOut', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListPhoneNumbersOptedOut operation: The action ListPhoneNumbersOptedOut is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSnsAutoCoverage" name="test_list_sms_sandbox_phone_numbers" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListSMSSandboxPhoneNumbers operation: The action ListSMSSandboxPhoneNumbers is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSnsAutoCoverage object at 0x10e433770&gt;
-client = &lt;botocore.client.SNS object at 0x10eebdd90&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSnsAutoCoverage" name="test_list_sms_sandbox_phone_numbers" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListSMSSandboxPhoneNumbers operation: The action ListSMSSandboxPhoneNumbers is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSnsAutoCoverage object at 0x10c36b5c0&gt;
+client = &lt;botocore.client.SNS object at 0x10cb6e5a0&gt;
 
     def test_list_sms_sandbox_phone_numbers(self, client):
         """ListSMSSandboxPhoneNumbers returns a response."""
@@ -2634,7 +2503,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10eebdd90&gt;
+self = &lt;botocore.client.SNS object at 0x10cb6e5a0&gt;
 operation_name = 'ListSMSSandboxPhoneNumbers', api_params = {}
 
     @with_current_context()
@@ -2724,8 +2593,8 @@ operation_name = 'ListSMSSandboxPhoneNumbers', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListSMSSandboxPhoneNumbers operation: The action ListSMSSandboxPhoneNumbers is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSAttributes" name="test_get_sms_attributes_returns_dict" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSAttributes operation: The action GetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSAttributes object at 0x10e433bf0&gt;
-sns = &lt;botocore.client.SNS object at 0x10f179070&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSAttributes" name="test_get_sms_attributes_returns_dict" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSAttributes operation: The action GetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSAttributes object at 0x10c36ba70&gt;
+sns = &lt;botocore.client.SNS object at 0x10cdd9c10&gt;
 
     def test_get_sms_attributes_returns_dict(self, sns):
         """GetSMSAttributes returns attributes as a dict."""
@@ -2742,7 +2611,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f179070&gt;
+self = &lt;botocore.client.SNS object at 0x10cdd9c10&gt;
 operation_name = 'GetSMSAttributes', api_params = {}
 
     @with_current_context()
@@ -2832,8 +2701,8 @@ operation_name = 'GetSMSAttributes', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSAttributes operation: The action GetSMSAttributes is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSAttributes" name="test_set_and_get_sms_attributes_default_sms_type" time="0.031"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSAttributes object at 0x10e4133b0&gt;
-sns = &lt;botocore.client.SNS object at 0x10f009e50&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSAttributes" name="test_set_and_get_sms_attributes_default_sms_type" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSAttributes object at 0x10c34a060&gt;
+sns = &lt;botocore.client.SNS object at 0x10cb6da90&gt;
 
     def test_set_and_get_sms_attributes_default_sms_type(self, sns):
         """SetSMSAttributes sets DefaultSMSType and GetSMSAttributes retrieves it."""
@@ -2851,7 +2720,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f009e50&gt;
+self = &lt;botocore.client.SNS object at 0x10cb6da90&gt;
 operation_name = 'SetSMSAttributes'
 api_params = {'attributes': {'DefaultSMSType': 'Transactional'}}
 
@@ -2942,8 +2811,8 @@ api_params = {'attributes': {'DefaultSMSType': 'Transactional'}}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSAttributes" name="test_set_and_get_sms_attributes_sender_id" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSAttributes object at 0x10e4338f0&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef1f380&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSAttributes" name="test_set_and_get_sms_attributes_sender_id" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSAttributes object at 0x10c36b860&gt;
+sns = &lt;botocore.client.SNS object at 0x10cdc13d0&gt;
 
     def test_set_and_get_sms_attributes_sender_id(self, sns):
         """SetSMSAttributes sets DefaultSenderID and GetSMSAttributes retrieves it."""
@@ -2961,7 +2830,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ef1f380&gt;
+self = &lt;botocore.client.SNS object at 0x10cdc13d0&gt;
 operation_name = 'SetSMSAttributes'
 api_params = {'attributes': {'DefaultSenderID': 'MyApp'}}
 
@@ -3052,8 +2921,8 @@ api_params = {'attributes': {'DefaultSenderID': 'MyApp'}}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSAttributes" name="test_get_sms_attributes_filtered" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSAttributes object at 0x10e433320&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef19730&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSAttributes" name="test_get_sms_attributes_filtered" time="0.031"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSAttributes object at 0x10c36afc0&gt;
+sns = &lt;botocore.client.SNS object at 0x10cb6dca0&gt;
 
     def test_get_sms_attributes_filtered(self, sns):
         """GetSMSAttributes with specific attribute names filters results."""
@@ -3074,7 +2943,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ef19730&gt;
+self = &lt;botocore.client.SNS object at 0x10cb6dca0&gt;
 operation_name = 'SetSMSAttributes'
 api_params = {'attributes': {'DefaultSMSType': 'Promotional', 'DefaultSenderID': 'TestSender'}}
 
@@ -3165,8 +3034,8 @@ api_params = {'attributes': {'DefaultSMSType': 'Promotional', 'DefaultSenderID':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSAttributes" name="test_set_sms_attributes_overwrite" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSAttributes object at 0x10e432b70&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef1e2d0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSAttributes" name="test_set_sms_attributes_overwrite" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSAttributes object at 0x10c36a750&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce51550&gt;
 
     def test_set_sms_attributes_overwrite(self, sns):
         """SetSMSAttributes overwrites previous values."""
@@ -3184,7 +3053,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ef1e2d0&gt;
+self = &lt;botocore.client.SNS object at 0x10ce51550&gt;
 operation_name = 'SetSMSAttributes'
 api_params = {'attributes': {'DefaultSMSType': 'Transactional'}}
 
@@ -3275,8 +3144,8 @@ api_params = {'attributes': {'DefaultSMSType': 'Transactional'}}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSEndpointAttributes" name="test_get_endpoint_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSEndpointAttributes object at 0x10e4301a0&gt;
-sns = &lt;botocore.client.SNS object at 0x10efa6330&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSEndpointAttributes" name="test_get_endpoint_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSEndpointAttributes object at 0x10c369e50&gt;
+sns = &lt;botocore.client.SNS object at 0x10cab7500&gt;
 
     def test_get_endpoint_attributes(self, sns):
         """GetEndpointAttributes returns attributes for a platform endpoint."""
@@ -3295,9 +3164,9 @@ tests/compatibility/test_sns_compat.py:1143: in _create_endpoint
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10efa6330&gt;
+self = &lt;botocore.client.SNS object at 0x10cab7500&gt;
 operation_name = 'CreatePlatformApplication'
-api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'ep-attr-app-31aba4a7', 'Platform': 'GCM'}
+api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'ep-attr-app-29c5b323', 'Platform': 'GCM'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3386,8 +3255,8 @@ api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'ep-
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSEndpointAttributes" name="test_set_endpoint_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSEndpointAttributes object at 0x10e4314c0&gt;
-sns = &lt;botocore.client.SNS object at 0x10e324560&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSEndpointAttributes" name="test_set_endpoint_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSEndpointAttributes object at 0x10c369250&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce518e0&gt;
 
     def test_set_endpoint_attributes(self, sns):
         """SetEndpointAttributes updates and persists endpoint attributes."""
@@ -3406,9 +3275,9 @@ tests/compatibility/test_sns_compat.py:1143: in _create_endpoint
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10e324560&gt;
+self = &lt;botocore.client.SNS object at 0x10ce518e0&gt;
 operation_name = 'CreatePlatformApplication'
-api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'ep-attr-app-3c53004e', 'Platform': 'GCM'}
+api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'ep-attr-app-c2ec4886', 'Platform': 'GCM'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3497,8 +3366,8 @@ api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'ep-
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPermissions" name="test_add_permission" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the AddPermission operation: The action AddPermission is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPermissions object at 0x10e433e60&gt;
-sns = &lt;botocore.client.SNS object at 0x10f1798e0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPermissions" name="test_add_permission" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the AddPermission operation: The action AddPermission is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPermissions object at 0x10c36bd40&gt;
+sns = &lt;botocore.client.SNS object at 0x10cc79f10&gt;
 
     def test_add_permission(self, sns):
         """AddPermission adds a permission statement to a topic policy."""
@@ -3521,9 +3390,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f1798e0&gt;
+self = &lt;botocore.client.SNS object at 0x10cc79f10&gt;
 operation_name = 'AddPermission'
-api_params = {'AWSAccountId': ['123456789012'], 'ActionName': ['Publish'], 'Label': 'test-statement', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:perm-topic-189bcedc'}
+api_params = {'AWSAccountId': ['123456789012'], 'ActionName': ['Publish'], 'Label': 'test-statement', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:perm-topic-551777ef'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3612,8 +3481,8 @@ api_params = {'AWSAccountId': ['123456789012'], 'ActionName': ['Publish'], 'Labe
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the AddPermission operation: The action AddPermission is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPermissions" name="test_add_permission_multiple_actions" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the AddPermission operation: The action AddPermission is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPermissions object at 0x10e44c290&gt;
-sns = &lt;botocore.client.SNS object at 0x10f008b90&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPermissions" name="test_add_permission_multiple_actions" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the AddPermission operation: The action AddPermission is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPermissions object at 0x10c384170&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce51ee0&gt;
 
     def test_add_permission_multiple_actions(self, sns):
         """AddPermission with multiple actions and accounts."""
@@ -3636,9 +3505,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f008b90&gt;
+self = &lt;botocore.client.SNS object at 0x10ce51ee0&gt;
 operation_name = 'AddPermission'
-api_params = {'AWSAccountId': ['111111111111', '222222222222'], 'ActionName': ['Publish', 'Subscribe'], 'Label': 'multi-action', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:perm-multi-a9e4d864'}
+api_params = {'AWSAccountId': ['111111111111', '222222222222'], 'ActionName': ['Publish', 'Subscribe'], 'Label': 'multi-action', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:perm-multi-bf6630c9'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3727,8 +3596,8 @@ api_params = {'AWSAccountId': ['111111111111', '222222222222'], 'ActionName': ['
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the AddPermission operation: The action AddPermission is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPermissions" name="test_remove_permission" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the AddPermission operation: The action AddPermission is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPermissions object at 0x10e44c680&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef1eba0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPermissions" name="test_remove_permission" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the AddPermission operation: The action AddPermission is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPermissions object at 0x10c384560&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce82330&gt;
 
     def test_remove_permission(self, sns):
         """RemovePermission removes a previously added permission statement."""
@@ -3751,9 +3620,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ef1eba0&gt;
+self = &lt;botocore.client.SNS object at 0x10ce82330&gt;
 operation_name = 'AddPermission'
-api_params = {'AWSAccountId': ['123456789012'], 'ActionName': ['Publish'], 'Label': 'to-remove', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:perm-rm-6102d924'}
+api_params = {'AWSAccountId': ['123456789012'], 'ActionName': ['Publish'], 'Label': 'to-remove', 'TopicArn': 'arn:aws:sns:us-east-1:123456789012:perm-rm-523821d0'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3842,8 +3711,8 @@ api_params = {'AWSAccountId': ['123456789012'], 'ActionName': ['Publish'], 'Labe
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the AddPermission operation: The action AddPermission is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPermissions" name="test_add_permission_nonexistent_topic" time="0.004"><failure message="AssertionError: assert 'InvalidAction' == 'NotFound'&#10;  &#10;  - NotFound&#10;  + InvalidAction">self = &lt;tests.compatibility.test_sns_compat.TestSNSPermissions object at 0x10e44ca70&gt;
-sns = &lt;botocore.client.SNS object at 0x10f0089e0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPermissions" name="test_add_permission_nonexistent_topic" time="0.006"><failure message="AssertionError: assert 'InvalidAction' == 'NotFound'&#10;  &#10;  - NotFound&#10;  + InvalidAction">self = &lt;tests.compatibility.test_sns_compat.TestSNSPermissions object at 0x10c384950&gt;
+sns = &lt;botocore.client.SNS object at 0x10cfefc50&gt;
 
     def test_add_permission_nonexistent_topic(self, sns):
         """AddPermission on non-existent topic raises NotFoundException."""
@@ -3861,8 +3730,8 @@ E
 E         - NotFound
 E         + InvalidAction
 
-tests/compatibility/test_sns_compat.py:1253: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPlatformApplicationAttributes" name="test_get_platform_application_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPlatformApplicationAttributes object at 0x10e44cf20&gt;
-sns = &lt;botocore.client.SNS object at 0x10f017e60&gt;
+tests/compatibility/test_sns_compat.py:1253: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPlatformApplicationAttributes" name="test_get_platform_application_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPlatformApplicationAttributes object at 0x10c384dd0&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce816d0&gt;
 
     def test_get_platform_application_attributes(self, sns):
         """GetPlatformApplicationAttributes returns attributes dict."""
@@ -3881,9 +3750,9 @@ tests/compatibility/test_sns_compat.py:1265: in _create_app
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f017e60&gt;
+self = &lt;botocore.client.SNS object at 0x10ce816d0&gt;
 operation_name = 'CreatePlatformApplication'
-api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'attr-app-99754edc', 'Platform': 'GCM'}
+api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'attr-app-15aae99a', 'Platform': 'GCM'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3972,8 +3841,8 @@ api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'att
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPlatformApplicationAttributes" name="test_set_platform_application_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPlatformApplicationAttributes object at 0x10e44d310&gt;
-sns = &lt;botocore.client.SNS object at 0x10f179760&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSPlatformApplicationAttributes" name="test_set_platform_application_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSPlatformApplicationAttributes object at 0x10c3851c0&gt;
+sns = &lt;botocore.client.SNS object at 0x10cddac00&gt;
 
     def test_set_platform_application_attributes(self, sns):
         """SetPlatformApplicationAttributes updates and persists attributes."""
@@ -3992,9 +3861,9 @@ tests/compatibility/test_sns_compat.py:1265: in _create_app
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f179760&gt;
+self = &lt;botocore.client.SNS object at 0x10cddac00&gt;
 operation_name = 'CreatePlatformApplication'
-api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'attr-app-c6d4b11e', 'Platform': 'GCM'}
+api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'attr-app-9c8115ae', 'Platform': 'GCM'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4083,8 +3952,8 @@ api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'att
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSCheckIfPhoneNumberIsOptedOut" name="test_check_if_phone_number_is_opted_out" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CheckIfPhoneNumberIsOptedOut operation: The action CheckIfPhoneNumberIsOptedOut is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSCheckIfPhoneNumberIsOptedOut object at 0x10e44d7c0&gt;
-sns = &lt;botocore.client.SNS object at 0x10eebef30&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSCheckIfPhoneNumberIsOptedOut" name="test_check_if_phone_number_is_opted_out" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CheckIfPhoneNumberIsOptedOut operation: The action CheckIfPhoneNumberIsOptedOut is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSCheckIfPhoneNumberIsOptedOut object at 0x10c385670&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce81610&gt;
 
     def test_check_if_phone_number_is_opted_out(self, sns):
         """CheckIfPhoneNumberIsOptedOut returns isOptedOut boolean."""
@@ -4101,7 +3970,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10eebef30&gt;
+self = &lt;botocore.client.SNS object at 0x10ce81610&gt;
 operation_name = 'CheckIfPhoneNumberIsOptedOut'
 api_params = {'phoneNumber': '+15555550100'}
 
@@ -4192,8 +4061,8 @@ api_params = {'phoneNumber': '+15555550100'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CheckIfPhoneNumberIsOptedOut operation: The action CheckIfPhoneNumberIsOptedOut is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSEndpointsByPlatformApplication" name="test_list_endpoints_by_platform_application" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSEndpointsByPlatformApplication object at 0x10e44dc10&gt;
-sns = &lt;botocore.client.SNS object at 0x10eba8440&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSEndpointsByPlatformApplication" name="test_list_endpoints_by_platform_application" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSEndpointsByPlatformApplication object at 0x10c385ac0&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce51f70&gt;
 
     def test_list_endpoints_by_platform_application(self, sns):
         """ListEndpointsByPlatformApplication returns endpoints list."""
@@ -4214,9 +4083,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10eba8440&gt;
+self = &lt;botocore.client.SNS object at 0x10ce51f70&gt;
 operation_name = 'CreatePlatformApplication'
-api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'ep-list-app-7fd18c04', 'Platform': 'GCM'}
+api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'ep-list-app-e4165d3b', 'Platform': 'GCM'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4305,8 +4174,8 @@ api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'ep-
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSEndpointsByPlatformApplication" name="test_list_endpoints_empty" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSEndpointsByPlatformApplication object at 0x10e430b00&gt;
-sns = &lt;botocore.client.SNS object at 0x10efc8860&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSEndpointsByPlatformApplication" name="test_list_endpoints_empty" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSEndpointsByPlatformApplication object at 0x10c368ad0&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce2dee0&gt;
 
     def test_list_endpoints_empty(self, sns):
         """ListEndpointsByPlatformApplication with no endpoints returns empty list."""
@@ -4327,9 +4196,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10efc8860&gt;
+self = &lt;botocore.client.SNS object at 0x10ce2dee0&gt;
 operation_name = 'CreatePlatformApplication'
-api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'ep-empty-app-e88e712c', 'Platform': 'GCM'}
+api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'ep-empty-app-24f88a8c', 'Platform': 'GCM'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -4418,8 +4287,8 @@ api_params = {'Attributes': {'PlatformCredential': 'test-api-key'}, 'Name': 'ep-
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreatePlatformApplication operation: The action CreatePlatformApplication is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSOptInPhoneNumber" name="test_opt_in_phone_number" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the OptInPhoneNumber operation: The action OptInPhoneNumber is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSOptInPhoneNumber object at 0x10e433560&gt;
-sns = &lt;botocore.client.SNS object at 0x10ef82120&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSOptInPhoneNumber" name="test_opt_in_phone_number" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the OptInPhoneNumber operation: The action OptInPhoneNumber is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSOptInPhoneNumber object at 0x10c36a810&gt;
+sns = &lt;botocore.client.SNS object at 0x10cfeec00&gt;
 
     def test_opt_in_phone_number(self, sns):
         """OptInPhoneNumber returns successfully."""
@@ -4436,7 +4305,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ef82120&gt;
+self = &lt;botocore.client.SNS object at 0x10cfeec00&gt;
 operation_name = 'OptInPhoneNumber'
 api_params = {'phoneNumber': '+15555550100'}
 
@@ -4527,8 +4396,8 @@ api_params = {'phoneNumber': '+15555550100'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the OptInPhoneNumber operation: The action OptInPhoneNumber is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSErrorHandling" name="test_delete_nonexistent_topic_succeeds" time="0.004"><failure message="botocore.errorfactory.InvalidParameterException: An error occurred (InvalidParameter) when calling the DeleteTopic operation: Topic arn does not exist in discoveries">self = &lt;tests.compatibility.test_sns_compat.TestSNSErrorHandling object at 0x10e44d400&gt;
-sns = &lt;botocore.client.SNS object at 0x10eeb54c0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSErrorHandling" name="test_delete_nonexistent_topic_succeeds" time="0.004"><failure message="botocore.errorfactory.InvalidParameterException: An error occurred (InvalidParameter) when calling the DeleteTopic operation: Topic arn does not exist in discoveries">self = &lt;tests.compatibility.test_sns_compat.TestSNSErrorHandling object at 0x10c3490a0&gt;
+sns = &lt;botocore.client.SNS object at 0x10d053a10&gt;
 
     def test_delete_nonexistent_topic_succeeds(self, sns):
         """DeleteTopic on nonexistent topic returns 200 (idempotent)."""
@@ -4545,7 +4414,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10eeb54c0&gt;
+self = &lt;botocore.client.SNS object at 0x10d053a10&gt;
 operation_name = 'DeleteTopic'
 api_params = {'TopicArn': 'arn:aws:sns:us-east-1:123456789012:nonexistent-topic'}
 
@@ -4636,8 +4505,8 @@ api_params = {'TopicArn': 'arn:aws:sns:us-east-1:123456789012:nonexistent-topic'
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.InvalidParameterException: An error occurred (InvalidParameter) when calling the DeleteTopic operation: Topic arn does not exist in discoveries
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: InvalidParameterException</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSErrorHandling" name="test_get_topic_attributes_nonexistent" time="0.004"><failure message="AssertionError: assert 'InvalidParameter' == 'NotFound'&#10;  &#10;  - NotFound&#10;  + InvalidParameter">self = &lt;tests.compatibility.test_sns_compat.TestSNSErrorHandling object at 0x10e44d5e0&gt;
-sns = &lt;botocore.client.SNS object at 0x10f0673e0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: InvalidParameterException</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSErrorHandling" name="test_get_topic_attributes_nonexistent" time="0.004"><failure message="AssertionError: assert 'InvalidParameter' == 'NotFound'&#10;  &#10;  - NotFound&#10;  + InvalidParameter">self = &lt;tests.compatibility.test_sns_compat.TestSNSErrorHandling object at 0x10c385820&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce511f0&gt;
 
     def test_get_topic_attributes_nonexistent(self, sns):
         """GetTopicAttributes on nonexistent topic raises NotFound."""
@@ -4651,9 +4520,9 @@ E
 E         - NotFound
 E         + InvalidParameter
 
-tests/compatibility/test_sns_compat.py:1387: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSFilterPolicyScope" name="test_subscribe_with_filter_policy_scope_message_body" time="0.010"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSFilterPolicyScope object at 0x10e44cef0&gt;
-sns = &lt;botocore.client.SNS object at 0x10eeb57c0&gt;
-sqs = &lt;botocore.client.SQS object at 0x10f17b380&gt;
+tests/compatibility/test_sns_compat.py:1387: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSFilterPolicyScope" name="test_subscribe_with_filter_policy_scope_message_body" time="0.011"><failure message="KeyError: 'FilterPolicyScope'">self = &lt;tests.compatibility.test_sns_compat.TestSNSFilterPolicyScope object at 0x10c384b90&gt;
+sns = &lt;botocore.client.SNS object at 0x10d05baa0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10d0790a0&gt;
 
     def test_subscribe_with_filter_policy_scope_message_body(self, sns, sqs):
         """Subscribe with FilterPolicyScope=MessageBody stores the scope."""
@@ -4676,12 +4545,12 @@ sqs = &lt;botocore.client.SQS object at 0x10f17b380&gt;
             sub_arn = sub["SubscriptionArn"]
             attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)
 &gt;           assert attrs["Attributes"]["FilterPolicyScope"] == "MessageBody"
-                   ^^^^^^^^^^^^^^^^^^^
-E           KeyError: 'Attributes'
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'FilterPolicyScope'
 
-tests/compatibility/test_sns_compat.py:1421: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSFilterPolicyScope" name="test_subscribe_with_filter_policy_scope_message_attributes" time="0.010"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_sns_compat.TestSNSFilterPolicyScope object at 0x10e44c650&gt;
-sns = &lt;botocore.client.SNS object at 0x10f08ac60&gt;
-sqs = &lt;botocore.client.SQS object at 0x10f08a9c0&gt;
+tests/compatibility/test_sns_compat.py:1421: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSFilterPolicyScope" name="test_subscribe_with_filter_policy_scope_message_attributes" time="0.016"><failure message="KeyError: 'FilterPolicyScope'">self = &lt;tests.compatibility.test_sns_compat.TestSNSFilterPolicyScope object at 0x10c3842f0&gt;
+sns = &lt;botocore.client.SNS object at 0x10cb33e00&gt;
+sqs = &lt;botocore.client.SQS object at 0x10cfbf020&gt;
 
     def test_subscribe_with_filter_policy_scope_message_attributes(self, sns, sqs):
         """Subscribe with FilterPolicyScope=MessageAttributes stores the scope."""
@@ -4704,11 +4573,11 @@ sqs = &lt;botocore.client.SQS object at 0x10f08a9c0&gt;
             sub_arn = sub["SubscriptionArn"]
             attrs = sns.get_subscription_attributes(SubscriptionArn=sub_arn)
 &gt;           assert attrs["Attributes"]["FilterPolicyScope"] == "MessageAttributes"
-                   ^^^^^^^^^^^^^^^^^^^
-E           KeyError: 'Attributes'
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'FilterPolicyScope'
 
-tests/compatibility/test_sns_compat.py:1447: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSOperations" name="test_get_sms_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSAttributes operation: The action GetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSOperations object at 0x10e44e060&gt;
-sns = &lt;botocore.client.SNS object at 0x10f17d8b0&gt;
+tests/compatibility/test_sns_compat.py:1447: KeyError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSOperations" name="test_get_sms_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSAttributes operation: The action GetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSOperations object at 0x10c385e50&gt;
+sns = &lt;botocore.client.SNS object at 0x10cc77e60&gt;
 
     def test_get_sms_attributes(self, sns):
         """GetSMSAttributes returns attributes dict."""
@@ -4725,7 +4594,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f17d8b0&gt;
+self = &lt;botocore.client.SNS object at 0x10cc77e60&gt;
 operation_name = 'GetSMSAttributes', api_params = {}
 
     @with_current_context()
@@ -4815,8 +4684,8 @@ operation_name = 'GetSMSAttributes', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSAttributes operation: The action GetSMSAttributes is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSOperations" name="test_set_sms_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSOperations object at 0x10e44e480&gt;
-sns = &lt;botocore.client.SNS object at 0x10f179100&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSOperations" name="test_set_sms_attributes" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSOperations object at 0x10c386270&gt;
+sns = &lt;botocore.client.SNS object at 0x10d059b50&gt;
 
     def test_set_sms_attributes(self, sns):
         """SetSMSAttributes sets the default SMS type."""
@@ -4833,7 +4702,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f179100&gt;
+self = &lt;botocore.client.SNS object at 0x10d059b50&gt;
 operation_name = 'SetSMSAttributes'
 api_params = {'attributes': {'DefaultSMSType': 'Transactional'}}
 
@@ -4924,8 +4793,8 @@ api_params = {'attributes': {'DefaultSMSType': 'Transactional'}}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the SetSMSAttributes operation: The action SetSMSAttributes is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSOperations" name="test_list_phone_numbers_opted_out" time="0.003"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListPhoneNumbersOptedOut operation: The action ListPhoneNumbersOptedOut is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSOperations object at 0x10e44e8a0&gt;
-sns = &lt;botocore.client.SNS object at 0x10f08c1d0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSOperations" name="test_list_phone_numbers_opted_out" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListPhoneNumbersOptedOut operation: The action ListPhoneNumbersOptedOut is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSOperations object at 0x10c386690&gt;
+sns = &lt;botocore.client.SNS object at 0x10cdd8230&gt;
 
     def test_list_phone_numbers_opted_out(self, sns):
         """ListPhoneNumbersOptedOut returns a phone numbers list."""
@@ -4942,7 +4811,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f08c1d0&gt;
+self = &lt;botocore.client.SNS object at 0x10cdd8230&gt;
 operation_name = 'ListPhoneNumbersOptedOut', api_params = {}
 
     @with_current_context()
@@ -5032,8 +4901,8 @@ operation_name = 'ListPhoneNumbersOptedOut', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListPhoneNumbersOptedOut operation: The action ListPhoneNumbersOptedOut is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSOperations" name="test_get_sms_sandbox_account_status" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSSandboxAccountStatus operation: The action GetSMSSandboxAccountStatus is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSOperations object at 0x10e44ecc0&gt;
-sns = &lt;botocore.client.SNS object at 0x10f17b1d0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSOperations" name="test_get_sms_sandbox_account_status" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSSandboxAccountStatus operation: The action GetSMSSandboxAccountStatus is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSOperations object at 0x10c386ab0&gt;
+sns = &lt;botocore.client.SNS object at 0x10d07a8a0&gt;
 
     def test_get_sms_sandbox_account_status(self, sns):
         """GetSMSSandboxAccountStatus returns sandbox status."""
@@ -5050,7 +4919,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10f17b1d0&gt;
+self = &lt;botocore.client.SNS object at 0x10d07a8a0&gt;
 operation_name = 'GetSMSSandboxAccountStatus', api_params = {}
 
     @with_current_context()
@@ -5140,8 +5009,8 @@ operation_name = 'GetSMSSandboxAccountStatus', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the GetSMSSandboxAccountStatus operation: The action GetSMSSandboxAccountStatus is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSOperations" name="test_list_sms_sandbox_phone_numbers" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListSMSSandboxPhoneNumbers operation: The action ListSMSSandboxPhoneNumbers is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSOperations object at 0x10e44f0e0&gt;
-sns = &lt;botocore.client.SNS object at 0x10ecf4650&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSOperations" name="test_list_sms_sandbox_phone_numbers" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListSMSSandboxPhoneNumbers operation: The action ListSMSSandboxPhoneNumbers is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSOperations object at 0x10c386ed0&gt;
+sns = &lt;botocore.client.SNS object at 0x10d00fe60&gt;
 
     def test_list_sms_sandbox_phone_numbers(self, sns):
         """ListSMSSandboxPhoneNumbers returns a phone numbers list."""
@@ -5158,7 +5027,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ecf4650&gt;
+self = &lt;botocore.client.SNS object at 0x10d00fe60&gt;
 operation_name = 'ListSMSSandboxPhoneNumbers', api_params = {}
 
     @with_current_context()
@@ -5248,8 +5117,8 @@ operation_name = 'ListSMSSandboxPhoneNumbers', api_params = {}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the ListSMSSandboxPhoneNumbers operation: The action ListSMSSandboxPhoneNumbers is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSDataProtectionPolicy" name="test_get_data_protection_policy_nonexistent_topic" time="0.005"><failure message="AssertionError: assert 'InvalidAction' == 'NotFound'&#10;  &#10;  - NotFound&#10;  + InvalidAction">self = &lt;tests.compatibility.test_sns_compat.TestSNSDataProtectionPolicy object at 0x10e44f5c0&gt;
-sns = &lt;botocore.client.SNS object at 0x10f064920&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSDataProtectionPolicy" name="test_get_data_protection_policy_nonexistent_topic" time="0.004"><failure message="AssertionError: assert 'InvalidAction' == 'NotFound'&#10;  &#10;  - NotFound&#10;  + InvalidAction">self = &lt;tests.compatibility.test_sns_compat.TestSNSDataProtectionPolicy object at 0x10c3873b0&gt;
+sns = &lt;botocore.client.SNS object at 0x10cfbe120&gt;
 
     def test_get_data_protection_policy_nonexistent_topic(self, sns):
         """GetDataProtectionPolicy for nonexistent topic raises NotFound."""
@@ -5265,8 +5134,8 @@ E
 E         - NotFound
 E         + InvalidAction
 
-tests/compatibility/test_sns_compat.py:1500: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSSandbox" name="test_create_and_delete_sms_sandbox_phone_number" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreateSMSSandboxPhoneNumber operation: The action CreateSMSSandboxPhoneNumber is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSSandbox object at 0x10e44fa40&gt;
-sns = &lt;botocore.client.SNS object at 0x10ed51250&gt;
+tests/compatibility/test_sns_compat.py:1500: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSSandbox" name="test_create_and_delete_sms_sandbox_phone_number" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreateSMSSandboxPhoneNumber operation: The action CreateSMSSandboxPhoneNumber is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSSandbox object at 0x10c3877d0&gt;
+sns = &lt;botocore.client.SNS object at 0x10cdf8560&gt;
 
     def test_create_and_delete_sms_sandbox_phone_number(self, sns):
         """CreateSMSSandboxPhoneNumber then DeleteSMSSandboxPhoneNumber works."""
@@ -5284,7 +5153,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ed51250&gt;
+self = &lt;botocore.client.SNS object at 0x10cdf8560&gt;
 operation_name = 'CreateSMSSandboxPhoneNumber'
 api_params = {'PhoneNumber': '+15555551234'}
 
@@ -5375,8 +5244,8 @@ api_params = {'PhoneNumber': '+15555551234'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the CreateSMSSandboxPhoneNumber operation: The action CreateSMSSandboxPhoneNumber is not supported
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSSandbox" name="test_verify_sms_sandbox_phone_number_not_found" time="0.004"><failure message="AssertionError: assert 'InvalidAction' == 'ResourceNotFound'&#10;  &#10;  - ResourceNotFound&#10;  + InvalidAction">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSSandbox object at 0x10e44fe60&gt;
-sns = &lt;botocore.client.SNS object at 0x10ec963f0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSSMSSandbox" name="test_verify_sms_sandbox_phone_number_not_found" time="0.004"><failure message="AssertionError: assert 'InvalidAction' == 'ResourceNotFound'&#10;  &#10;  - ResourceNotFound&#10;  + InvalidAction">self = &lt;tests.compatibility.test_sns_compat.TestSNSSMSSandbox object at 0x10c387bf0&gt;
+sns = &lt;botocore.client.SNS object at 0x10cdc32f0&gt;
 
     def test_verify_sms_sandbox_phone_number_not_found(self, sns):
         """VerifySMSSandboxPhoneNumber for unregistered number raises ResourceNotFound."""
@@ -5392,8 +5261,8 @@ E
 E         - ResourceNotFound
 E         + InvalidAction
 
-tests/compatibility/test_sns_compat.py:1522: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSMissingGapOps" name="test_put_and_get_data_protection_policy" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the PutDataProtectionPolicy operation: The action PutDataProtectionPolicy is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSMissingGapOps object at 0x10e431af0&gt;
-sns = &lt;botocore.client.SNS object at 0x10ed21970&gt;
+tests/compatibility/test_sns_compat.py:1522: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_sns_compat.TestSNSMissingGapOps" name="test_put_and_get_data_protection_policy" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidAction) when calling the PutDataProtectionPolicy operation: The action PutDataProtectionPolicy is not supported">self = &lt;tests.compatibility.test_sns_compat.TestSNSMissingGapOps object at 0x10c36a180&gt;
+sns = &lt;botocore.client.SNS object at 0x10ce504d0&gt;
 
     def test_put_and_get_data_protection_policy(self, sns):
         import uuid
@@ -5415,9 +5284,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.SNS object at 0x10ed21970&gt;
+self = &lt;botocore.client.SNS object at 0x10ce504d0&gt;
 operation_name = 'PutDataProtectionPolicy'
-api_params = {'DataProtectionPolicy': '{"Name":"test","Statements":[]}', 'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:test-dpp-e448ca4e'}
+api_params = {'DataProtectionPolicy': '{"Name":"test","Statements":[]}', 'ResourceArn': 'arn:aws:sns:us-east-1:123456789012:test-dpp-6b4f2695'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):

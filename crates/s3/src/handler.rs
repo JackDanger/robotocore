@@ -326,6 +326,12 @@ impl S3Handler {
             }
         };
 
+        // Check for CopyObject (PUT with x-amz-copy-source header)
+        let copy_source = req.headers.get("x-amz-copy-source").cloned().unwrap_or_default();
+        if !copy_source.is_empty() {
+            return self.do_copy_object(req, &bucket_name, &key, &copy_source, &state);
+        }
+
         let content_type = req
             .headers
             .get("content-type")
@@ -339,10 +345,46 @@ impl S3Handler {
         AwsResponse::xml(
             200,
             format!(
-                r#"<?xml version="1.0" encoding="UTF-8"?><ETag xmlns="http://s3.amazonaws.com/doc/2006-03-01/">{}</ETag>"#,
+                r#"<?xml version="1.0" encoding="UTF-8"?><CopyObjectResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><LastModified>2024-01-01T00:00:00.000Z</LastModified><ETag>{}</ETag></CopyObjectResult>"#,
                 etag
             ),
         )
+    }
+
+    fn do_copy_object(&self, req: &AwsRequest, dest_bucket: &str, dest_key: &str, copy_source: &str, state: &S3State) -> AwsResponse {
+        let trimmed = copy_source.trim_start_matches('/');
+        let source_parts: Vec<&str> = trimmed.splitn(2, '/').collect();
+        if source_parts.len() < 2 {
+            return AwsResponse::error(400, "InvalidArgument",
+                "The x-amz-copy-source header must be in the format /source-bucket/source-key");
+        }
+        let source_bucket_name = source_parts[0];
+        let source_key = source_parts[1];
+        let source_bucket = match state.get_bucket(source_bucket_name) {
+            Some(b) => b,
+            None => return AwsResponse::error(404, "NoSuchBucket",
+                "The specified source bucket does not exist"),
+        };
+        let (source_data, source_ct) = {
+            let objects = source_bucket.objects.read();
+            match objects.get(source_key) {
+                Some(o) => (o.data.clone(), o.content_type.clone()),
+                None => return AwsResponse::error(404, "NoSuchKey",
+                    "The specified source key does not exist"),
+            }
+        };
+        let dest_bucket = match state.get_bucket(dest_bucket) {
+            Some(b) => b,
+            None => return AwsResponse::error(404, "NoSuchBucket",
+                "The specified destination bucket does not exist"),
+        };
+        let obj = crate::models::Object::new(dest_key.to_string(), source_data, source_ct);
+        let etag = obj.etag.clone();
+        dest_bucket.objects.write().insert(dest_key.to_string(), obj);
+        AwsResponse::xml(200, format!(
+            r#"<?xml version="1.0" encoding="UTF-8"?><CopyObjectResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><LastModified>2024-01-01T00:00:00.000Z</LastModified><ETag>{}</ETag></CopyObjectResult>"#,
+            etag
+        ))
     }
 
     fn get_object(&self, req: &AwsRequest) -> AwsResponse {
@@ -1083,25 +1125,18 @@ impl S3Handler {
         let body_str = String::from_utf8_lossy(&req.body);
         let mut deleted: Vec<String> = Vec::new();
 
-        let mut in_delete = false;
-        let mut key = String::new();
-        let _ = key; // suppress unused initial value warning
-        for line in body_str.lines() {
-            let trimmed = line.trim();
-            if trimmed == "<Delete>" {
-                in_delete = true;
-            } else if trimmed == "</Delete>" {
-                in_delete = false;
-            } else if in_delete && trimmed.starts_with("<Key>") {
-                key = trimmed
-                    .trim_start_matches("<Key>")
-                    .trim_end_matches("</Key>")
-                    .to_string();
+        // Parse <Key>...</Key> elements (works for both multi-line and single-line XML)
+        let mut rest: &str = &body_str;
+        while let Some(start) = rest.find("<Key>") {
+            let after = &rest[start + 5..];
+            if let Some(end) = after.find("</Key>") {
+                let key = &after[..end];
                 if !key.is_empty() {
-                    bucket.objects.write().remove(&key);
-                    deleted.push(key.clone());
+                    bucket.objects.write().remove(key);
+                    deleted.push(key.to_string());
                 }
             }
+            rest = after;
         }
 
         let mut xml_str = r#"<?xml version="1.0" encoding="UTF-8"?><DeleteResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">"#.to_string();
