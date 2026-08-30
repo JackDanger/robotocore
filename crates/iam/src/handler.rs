@@ -221,7 +221,9 @@ impl IamHandler {
             "TagServerCertificate" => self.xml_empty(&req, "TagServerCertificate"),
             "UpdateServerCertificate" => self.xml_empty(&req, "UpdateServerCertificate"),
             "UploadSigningCertificate" => self.xml_empty(&req, "UploadSigningCertificate"),
-other => AwsResponse::error(400, "InvalidParameterValue",
+"ListServerCertificateTags" => self.xml_stub_list(&req, "Tags", "ListServerCertificateTags"),
+            "UntagServerCertificate" => self.xml_empty(&req, "UntagServerCertificate"),
+            other => AwsResponse::error(400, "InvalidParameterValue",
                 &format!("The operation {} is not implemented", other)),
         }
     }
@@ -257,7 +259,7 @@ other => AwsResponse::error(400, "InvalidParameterValue",
         let desc = get_param(req, "Description").unwrap_or_else(|| "service-linked-role".into());
         let id = uuid::Uuid::new_v4().simple();
         AwsResponse::xml(200, "CreateServiceLinkedRole", format!(
-            "<CreateServiceLinkedRoleResult><Role><Path>/aws-service-role/</Path><RoleName>SLR-{}-{}<</RoleName><RoleId>AROA{}<</RoleId><Arn>arn:aws:iam::{}:role/aws-service-role/SLR-{}<</Arn><CreateDate>{}</CreateDate><Description>{}</Description></Role></CreateServiceLinkedRoleResult>",
+            "<Role><Path>/aws-service-role/</Path><RoleName>SLR-{}-{}<</RoleName><RoleId>AROA{}<</RoleId><Arn>arn:aws:iam::{}:role/aws-service-role/SLR-{}<</Arn><CreateDate>{}</CreateDate><Description>{}</Description></Role>",
             desc, id,
             uuid::Uuid::new_v4().simple(),
             req.account,
@@ -288,7 +290,7 @@ other => AwsResponse::error(400, "InvalidParameterValue",
         let user_name = get_param(req, "UserName").unwrap_or_default().to_string();
         let _pw = get_param(req, "Password").unwrap_or_default();
         AwsResponse::xml(200, "CreateLoginProfile", format!(
-            "<CreateLoginProfileResult><LoginProfile><UserName>{}</UserName><PasswordResetRequired>true</PasswordResetRequired><CreateDate>{}</CreateDate></LoginProfile></CreateLoginProfileResult>",
+            "<LoginProfile><UserName>{}</UserName><PasswordResetRequired>true</PasswordResetRequired><CreateDate>{}</CreateDate></LoginProfile>",
             user_name, chrono::Utc::now().to_rfc3339()
         ))
     }
@@ -297,7 +299,7 @@ other => AwsResponse::error(400, "InvalidParameterValue",
         let user_name = get_param(req, "UserName").unwrap_or_default().to_string();
         let _pw = get_param(req, "Password").unwrap_or_default();
         AwsResponse::xml(200, "UpdateLoginProfile", format!(
-            "<UpdateLoginProfileResult><LoginProfile><UserName>{}</UserName><PasswordResetRequired>false</PasswordResetRequired></LoginProfile></UpdateLoginProfileResult>",
+            "<LoginProfile><UserName>{}</UserName><PasswordResetRequired>false</PasswordResetRequired></LoginProfile>",
             user_name
         ))
     }
@@ -307,7 +309,7 @@ other => AwsResponse::error(400, "InvalidParameterValue",
         let state = self.get_state(req.account);
         if state.get_user(&user_name).is_some() {
             AwsResponse::xml(200, "GetLoginProfile", format!(
-                "<GetLoginProfileResult><LoginProfile><UserName>{}</UserName><PasswordResetRequired>false</PasswordResetRequired><CreateDate>{}</CreateDate></LoginProfile></GetLoginProfileResult>",
+                "<LoginProfile><UserName>{}</UserName><PasswordResetRequired>false</PasswordResetRequired><CreateDate>{}</CreateDate></LoginProfile>",
                 user_name, chrono::Utc::now().to_rfc3339()
             ))
         } else {
@@ -1523,7 +1525,7 @@ other => AwsResponse::error(400, "InvalidParameterValue",
     fn xml_saml_create(&self, req: &AwsRequest) -> AwsResponse {
         let name = get_param(req, "SAMLProviderName").unwrap_or_else(|| "unknown".into());
         AwsResponse::xml(200, "CreateSAMLProvider", format!(
-            "<CreateSAMLProviderResult><SAMLProviderArn>arn:aws:iam::{}:saml-provider/{}</SAMLProviderArn></CreateSAMLProviderResult>",
+            "<SAMLProviderArn>arn:aws:iam::{}:saml-provider/{}</SAMLProviderArn>",
             req.account, name
         ))
     }
@@ -1537,7 +1539,7 @@ other => AwsResponse::error(400, "InvalidParameterValue",
     }
     fn xml_ip_list(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "ListInstanceProfiles",
-            "<ListInstanceProfilesResult><InstanceProfiles/></ListInstanceProfilesResult>".into())
+            "<InstanceProfiles/>".into())
     }
     fn xml_ssh_list(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "ListSSHPublicKeys",
@@ -1550,7 +1552,7 @@ other => AwsResponse::error(400, "InvalidParameterValue",
     fn xml_login_get(&self, req: &AwsRequest) -> AwsResponse {
         let user = get_param(req, "UserName").unwrap_or_else(|| "unknown".into());
         AwsResponse::xml(200, "GetLoginProfile", format!(
-            "<GetLoginProfileResult><LoginProfile><UserName>{}</UserName><PasswordLastUsed>2024-01-01T00:00:00Z</PasswordLastUsed><PasswordResetRequired>false</PasswordResetRequired></LoginProfile></GetLoginProfileResult>",
+            "<LoginProfile><UserName>{}</UserName><PasswordLastUsed>2024-01-01T00:00:00Z</PasswordLastUsed><PasswordResetRequired>false</PasswordResetRequired></LoginProfile>",
             user
         ))
     }
@@ -1563,21 +1565,21 @@ other => AwsResponse::error(400, "InvalidParameterValue",
     fn xml_saml_get(&self, req: &AwsRequest) -> AwsResponse {
         let name = get_param(req, "SAMLProviderName").unwrap_or_else(|| "unknown".into());
         AwsResponse::xml(200, "GetSAMLProvider", format!(
-            "<GetSAMLProviderResult><SAMLProviderArn>arn:aws:iam::{}:saml-provider/{}</SAMLProviderArn></GetSAMLProviderResult>",
+            "<SAMLProviderArn>arn:aws:iam::{}:saml-provider/{}</SAMLProviderArn>",
             req.account, name
         ))
     }
     fn xml_oidc_create(&self, req: &AwsRequest) -> AwsResponse {
         let url = get_param(req, "Url").unwrap_or_else(|| "https://unknown".into());
         AwsResponse::xml(200, "CreateOpenIDConnectProvider", format!(
-            "<CreateOpenIDConnectProviderResult><OpenIDConnectProviderArn>arn:aws:iam::{}:oidc-provider/{}</OpenIDConnectProviderArn></CreateOpenIDConnectProviderResult>",
+            "<OpenIDConnectProviderArn>arn:aws:iam::{}:oidc-provider/{}</OpenIDConnectProviderArn>",
             req.account, url
         ))
     }
     fn xml_mfa_create(&self, req: &AwsRequest) -> AwsResponse {
         let name = get_param(req, "VirtualMFADeviceName").unwrap_or_else(|| "unknown".into());
         AwsResponse::xml(200, "CreateVirtualMFADevice", format!(
-            "<CreateVirtualMFADeviceResult><VirtualMFADevice><SerialNumber>arn:aws:iam::{}:mfa/{}</SerialNumber><VirtualMFADeviceName>{}</VirtualMFADeviceName></VirtualMFADevice><Base32StringSeed>ABCDEF123456</Base32StringSeed><QRCodePNGBase64>iVBORw0KGgo=</QRCodePNGBase64></CreateVirtualMFADeviceResult>",
+            "<VirtualMFADevice><SerialNumber>arn:aws:iam::{}:mfa/{}</SerialNumber><VirtualMFADeviceName>{}</VirtualMFADeviceName></VirtualMFADevice><Base32StringSeed>ABCDEF123456</Base32StringSeed><QRCodePNGBase64>iVBORw0KGgo=</QRCodePNGBase64>",
             req.account, name, name
         ))
     }
@@ -1594,7 +1596,7 @@ other => AwsResponse::error(400, "InvalidParameterValue",
                 t.get("Value").and_then(|v| v.as_str()).unwrap_or("")));
         }
         AwsResponse::xml(200, "CreateInstanceProfile", format!(
-            "<CreateInstanceProfileResult><InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>arn:aws:iam::{}:instance-profile/{}</InstanceProfileArn><Path>/</Path><Roles/>{}{}</InstanceProfile></CreateInstanceProfileResult>",
+            "<InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>arn:aws:iam::{}:instance-profile/{}</InstanceProfileArn><Path>/</Path><Roles/>{}{}</InstanceProfile>",
             name, req.account, name,
             if tags_xml.is_empty() { String::new() } else { "<Tags>".to_string() },
             if tags_xml.is_empty() { String::new() } else { format!("{}{}</Tags>", tags_xml, "") },
@@ -1612,7 +1614,7 @@ other => AwsResponse::error(400, "InvalidParameterValue",
                 }
             }
             AwsResponse::xml(200, "GetInstanceProfile", format!(
-                "<GetInstanceProfileResult><InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>arn:aws:iam::{}:instance-profile/{}</InstanceProfileArn><Path>/</Path><Roles>{}</Roles></InstanceProfile></GetInstanceProfileResult>",
+                "<InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>arn:aws:iam::{}:instance-profile/{}</InstanceProfileArn><Path>/</Path><Roles>{}</Roles></InstanceProfile>",
                 name, req.account, name, roles_xml
             ))
         } else {
@@ -1731,7 +1733,7 @@ other => AwsResponse::error(400, "InvalidParameterValue",
         let name = get_param(req, "SSHPublicKeyName").unwrap_or_else(|| "unknown".into());
         let user = get_param(req, "UserName").unwrap_or_else(|| "unknown".into());
         AwsResponse::xml(200, "UploadSSHPublicKey", format!(
-            "<UploadSSHPublicKeyResult><SSHPublicKey><SSHPublicKeyId>{}-{}</SSHPublicKeyId><SSHPublicKeyName>{}</SSHPublicKeyName><UserName>{}</UserName><Status>Active</Status></SSHPublicKey></UploadSSHPublicKeyResult>",
+            "<SSHPublicKey><SSHPublicKeyId>{}-{}</SSHPublicKeyId><SSHPublicKeyName>{}</SSHPublicKeyName><UserName>{}</UserName><Status>Active</Status></SSHPublicKey>",
             user, name, name, user
         ))
     }
@@ -1739,27 +1741,27 @@ other => AwsResponse::error(400, "InvalidParameterValue",
         let name = get_param(req, "SSHPublicKeyName").unwrap_or_else(|| "unknown".into());
         let user = get_param(req, "UserName").unwrap_or_else(|| "unknown".into());
         AwsResponse::xml(200, "GetSSHPublicKey", format!(
-            "<GetSSHPublicKeyResult><SSHPublicKey><SSHPublicKeyId>{}-{}</SSHPublicKeyId><SSHPublicKeyName>{}</SSHPublicKeyName><UserName>{}</UserName><Status>Active</Status><SSHPublicKeyBody>ssh-rsa AAAAB3NzaC1yc2E=</SSHPublicKeyBody></SSHPublicKey></GetSSHPublicKeyResult>",
+            "<SSHPublicKey><SSHPublicKeyId>{}-{}</SSHPublicKeyId><SSHPublicKeyName>{}</SSHPublicKeyName><UserName>{}</UserName><Status>Active</Status><SSHPublicKeyBody>ssh-rsa AAAAB3NzaC1yc2E=</SSHPublicKeyBody></SSHPublicKey>",
             user, name, name, user
         ))
     }
     fn xml_cert_upload(&self, req: &AwsRequest) -> AwsResponse {
         let name = get_param(req, "ServerCertificateName").unwrap_or_else(|| "unknown".into());
         AwsResponse::xml(200, "UploadServerCertificate", format!(
-            "<UploadServerCertificateResult><ServerCertificateMetadata><ServerCertificateName>{}</ServerCertificateName><ServerCertificateId>cert-{}</ServerCertificateId><Arn>arn:aws:iam::{}:server-certificate/{}</Arn></ServerCertificateMetadata></UploadServerCertificateResult>",
+            "<ServerCertificateMetadata><ServerCertificateName>{}</ServerCertificateName><ServerCertificateId>cert-{}</ServerCertificateId><Arn>arn:aws:iam::{}:server-certificate/{}</Arn></ServerCertificateMetadata>",
             name, name, req.account, name
         ))
     }
     fn xml_cert_get(&self, req: &AwsRequest) -> AwsResponse {
         let name = get_param(req, "ServerCertificateName").unwrap_or_else(|| "unknown".into());
         AwsResponse::xml(200, "GetServerCertificate", format!(
-            "<GetServerCertificateResult><ServerCertificateMetadata><ServerCertificateName>{}</ServerCertificateName><ServerCertificateId>cert-{}</ServerCertificateId><Arn>arn:aws:iam::{}:server-certificate/{}</Arn></ServerCertificateMetadata></GetServerCertificateResult>",
+            "<ServerCertificateMetadata><ServerCertificateName>{}</ServerCertificateName><ServerCertificateId>cert-{}</ServerCertificateId><Arn>arn:aws:iam::{}:server-certificate/{}</Arn></ServerCertificateMetadata>",
             name, name, req.account, name
         ))
     }
     fn xml_login_create(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "CreateLoginProfile",
-            "<CreateLoginProfileResult><Password>TempPassword123!</Password><PasswordResetRequired>true</PasswordResetRequired></CreateLoginProfileResult>".into())
+            "<Password>TempPassword123!</Password><PasswordResetRequired>true</PasswordResetRequired>".into())
     }
 
 }
