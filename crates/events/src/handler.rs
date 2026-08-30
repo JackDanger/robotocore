@@ -73,7 +73,7 @@ impl EventsHandler {
             "DeleteArchive" => self.json_stub(&req, "{}"),
             "DescribeArchive" => self.json_stub(&req, "Archive"),
             "DescribeEventBus" => self.json_stub(&req, "EventBusName"),
-            "DescribeRule" => self.json_stub(&req, "Name"),
+            "DescribeRule" => self.describe_rule(&req),
             "StartArchive" => self.json_stub(&req, "State"),
             "StopArchive" => self.json_stub(&req, "State"),
             "PutPartnerEvents" => self.json_stub(&req, "{}"),
@@ -244,6 +244,37 @@ impl EventsHandler {
             "EventBuses": all,
             "NextToken": null
         }))
+    }
+
+    fn describe_rule(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("Name").and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let state = self.get_state(req.account, &req.region);
+        let rule = {
+            let rules = state.rules.read();
+            match rules.get(&name) {
+                Some(r) => r.clone(),
+                None => {
+                    return AwsResponse::error(400, "ResourceNotFoundException",
+                        &format!("Rule not found: {}", name));
+                }
+            }
+        };
+        let mut resp = json!({
+            "Name": rule.name,
+            "Arn": rule.arn,
+            "State": rule.state,
+            "EventBusName": "default",
+        });
+        if let Some(ref sched) = rule.schedule_expression {
+            resp.as_object_mut().unwrap().insert("ScheduleExpression".into(), json!(sched));
+        }
+        if !rule.event_pattern.is_empty() {
+            resp.as_object_mut().unwrap().insert("EventPattern".into(), json!(rule.event_pattern));
+        }
+        if !rule.description.is_empty() {
+            resp.as_object_mut().unwrap().insert("Description".into(), json!(rule.description));
+        }
+        AwsResponse::json(200, resp)
     }
 }
 
