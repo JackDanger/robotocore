@@ -51,7 +51,7 @@ impl DynamoDbHandler {
             "DescribeTimeToLive" => self.describe_ttl(&req),
             "UpdateTimeToLive" => self.update_ttl(&req),
             "ConditionCheck" => self.condition_check(&req),
-            "TransactWriteItems" => self.json_stub(&req, "ClientRequestToken"),
+            "TransactWriteItems" => self.transact_write_items(&req),
             "TransactGetItems" => self.json_stub_list(&req, "Responses"),
             "BatchExecuteStatement" => self.json_stub_list(&req, "Responses"),
             "ExecuteStatement" => self.json_stub_list(&req, "Items"),
@@ -918,6 +918,41 @@ impl DynamoDbHandler {
                 "TableName": table_name,
                 "TimeToLive": { "Enabled": enabled, "AttributeName": attr }
             }
+        }))
+    }
+
+    fn transact_write_items(&self, req: &AwsRequest) -> AwsResponse {
+        let transact_items = req.params.get("TransactItems").cloned().unwrap_or(Value::Null);
+        let items: Vec<Value> = transact_items.as_array().cloned().unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut items_out: Vec<Value> = Vec::new();
+        for item in &items {
+            if let Some(put) = item.get("Put") {
+                let table_name = put.get("TableName").and_then(|v| v.as_str()).unwrap_or("");
+                let table = match state.get_table(table_name) {
+                    Some(t) => t,
+                    None => continue,
+                };
+                let item_val = put.get("Item").cloned().unwrap_or(Value::Null);
+                let item_obj = item_val.as_object().cloned().unwrap_or_default();
+                let attrs: std::collections::HashMap<String, Value> = item_obj.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
+                let item = Arc::new(crate::models::Item::new(attrs));
+                // Use the hash key as the item key
+                let key_parts: Vec<String> = table.key_schema.iter()
+                    .map(|k| {
+                        let val = item_obj.get(&k.attribute_name)
+                            .cloned()
+                            .unwrap_or(Value::Null);
+                        format!("{}:{}", k.attribute_name, self.dyn_to_str(&val))
+                    })
+                    .collect();
+                let item_key = key_parts.join("|");
+                table.items.write().insert(item_key, item);
+                items_out.push(item_val);
+            }
+        }
+        AwsResponse::json(200, json!({
+            "ConsumedCapacity": null
         }))
     }
 
