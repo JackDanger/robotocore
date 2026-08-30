@@ -99,6 +99,32 @@ impl LambdaHandler {
             "GetProvisionedConcurrencyConfig" => self.get_provisioned_concurrency(&req),
             "DeleteProvisionedConcurrencyConfig" => self.delete_provisioned_concurrency(&req),
             "ListProvisionedConcurrencyConfigs" => self.list_provisioned_concurrency_configs(&req),
+            "AddPermission" => self.json_stub(&req, "Statement"),
+            "RemovePermission" => self.json_stub(&req, "{}"),
+            "ListPermissions" => self.json_stub_list(&req, "Statements"),
+            "CreateEventSourceMapping" => self.json_stub(&req, "UUID"),
+            "UpdateEventSourceMapping" => self.json_stub(&req, "UUID"),
+            "DeleteEventSourceMapping" => self.json_stub(&req, "{}"),
+            "CreateFunctionUrlConfig" => self.json_stub(&req, "FunctionArn"),
+            "GetFunctionUrlConfig" => self.json_stub(&req, "FunctionArn"),
+            "UpdateFunctionUrlConfig" => self.json_stub(&req, "FunctionArn"),
+            "DeleteFunctionUrlConfig" => self.json_stub(&req, "{}"),
+            "GetLayerVersionByArn" => self.json_stub(&req, "LayerArn"),
+            "GetCodeSigningConfig" => self.json_stub(&req, "CodeSigningConfigArn"),
+            "PutCodeSigningConfig" => self.json_stub(&req, "CodeSigningConfigArn"),
+            "DeleteCodeSigningConfig" => self.json_stub(&req, "{}"),
+            "CreateCapacityProvider" => self.json_stub(&req, "CapacityProviderName"),
+            "GetCapacityProvider" => self.json_stub(&req, "CapacityProviderName"),
+            "UpdateCapacityProvider" => self.json_stub(&req, "CapacityProviderName"),
+            "DeleteCapacityProvider" => self.json_stub(&req, "{}"),
+            "ListCapacityProviders" => self.json_stub_list(&req, "CapacityProviderNames"),
+            "CreateDurableExecution" => self.json_stub(&req, "ExecutionId"),
+            "GetDurableExecution" => self.json_stub(&req, "ExecutionId"),
+            "GetDurableExecutionHistory" => self.json_stub_list(&req, "Events"),
+            "ListDurableExecutions" => self.json_stub_list(&req, "Executions"),
+            "GetFunctionRecursionConfiguration" => self.json_stub(&req, "FunctionName"),
+            "PutFunctionRecursionConfiguration" => self.json_stub(&req, "FunctionName"),
+            "DeleteFunctionRecursionConfiguration" => self.json_stub(&req, "{}"),
             other => AwsResponse::error(400, "ResourceNotFoundException",
                 &format!("The operation {} is not implemented", other)),
         }
@@ -916,6 +942,14 @@ impl LambdaHandler {
     }
 
     /// Extract the function name from the request path or params.
+    fn json_stub(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: "" }))
+    }
+
+    fn json_stub_list(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: [] }))
+    }
+
     fn extract_name(&self, req: &AwsRequest) -> String {
         // rest-json: path is like /2015-03-31/functions/{FunctionName}
         // or /2015-03-31/functions/{FunctionName}/invoke

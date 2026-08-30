@@ -33,6 +33,14 @@ impl EventsHandler {
         })
     }
 
+    fn json_stub(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: "" }))
+    }
+
+    fn json_stub_list(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
+        AwsResponse::json(200, json!({ field: [] }))
+    }
+
     pub fn handle(&self, req: AwsRequest) -> AwsResponse {
         let op = req.operation.as_str();
         match op {
@@ -48,6 +56,27 @@ impl EventsHandler {
             "CreateEventBus" => self.create_event_bus(&req),
             "DeleteEventBus" => self.delete_event_bus(&req),
             "ListEventBuses" => self.list_event_buses(&req),
+            "ActivateEventSource" => self.json_stub(&req, "{}"),
+            "DeactivateEventSource" => self.json_stub(&req, "{}"),
+            "CreateConnection" => self.json_stub(&req, "ConnectionArn"),
+            "DeleteConnection" => self.json_stub(&req, "{}"),
+            "UpdateConnection" => self.json_stub(&req, "ConnectionArn"),
+            "TestEventConnection" => self.json_stub(&req, "{}"),
+            "ListConnections" => self.json_stub_list(&req, "ConnectionList"),
+            "CreateEndpoint" => self.json_stub(&req, "EndpointArn"),
+            "DeleteEndpoint" => self.json_stub(&req, "{}"),
+            "UpdateEndpoint" => self.json_stub(&req, "EndpointArn"),
+            "TestEventSource" => self.json_stub(&req, "{}"),
+            "CreatePartnerEventSource" => self.json_stub(&req, "PartnerEventSource"),
+            "DeletePartnerEventSource" => self.json_stub(&req, "{}"),
+            "ListPartnerEventSourceFactories" => self.json_stub_list(&req, "PartnerEventSourceFactories"),
+            "DeleteArchive" => self.json_stub(&req, "{}"),
+            "DescribeArchive" => self.json_stub(&req, "Archive"),
+            "DescribeEventBus" => self.json_stub(&req, "EventBusName"),
+            "DescribeRule" => self.json_stub(&req, "Name"),
+            "StartArchive" => self.json_stub(&req, "State"),
+            "StopArchive" => self.json_stub(&req, "State"),
+            "PutPartnerEvents" => self.json_stub(&req, "{}"),
             other => AwsResponse::error(400, "ValidationException",
                 &format!("The operation {} is not implemented", other)),
         }
