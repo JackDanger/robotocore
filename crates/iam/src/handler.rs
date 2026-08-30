@@ -201,12 +201,12 @@ impl IamHandler {
     // ---- Extended operations ----
     fn generate_credential_report(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "GenerateCredentialReport",
-            "<GenerateCredentialReportResult><State>COMPLETE</State><Description/></GenerateCredentialReportResult>".into())
+            "<State>COMPLETE</State><Description/>".into())
     }
 
     fn get_credential_report(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "GetCredentialReport",
-            "<GetCredentialReportResult><Content></Content><State>COMPLETE</State><Description/></GetCredentialReportResult>".into())
+            "<Content></Content><State>COMPLETE</State><Description/>".into())
     }
 
     fn list_ip_for_role(&self, req: &AwsRequest) -> AwsResponse {
@@ -1554,12 +1554,22 @@ impl IamHandler {
         ))
     }
     fn xml_ip_create(&self, req: &AwsRequest) -> AwsResponse {
-        let name = get_param(req, "InstanceProfileName").unwrap_or_else(|| "unknown".into());
+        let name = get_param(req, "InstanceProfileName").unwrap_or_else(|| "unknown".into()).to_string();
         let state = self.get_state(req.account);
         state.create_instance_profile(&name);
+        // Include tags if provided
+        let tags = self.parse_query_list(&req.params, "Tags");
+        let mut tags_xml = String::new();
+        for t in &tags {
+            tags_xml.push_str(&format!("<member><Key>{}</Key><Value>{}</Value></member>",
+                t.get("Key").and_then(|k| k.as_str()).unwrap_or(""),
+                t.get("Value").and_then(|v| v.as_str()).unwrap_or("")));
+        }
         AwsResponse::xml(200, "CreateInstanceProfile", format!(
-            "<CreateInstanceProfileResult><InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>arn:aws:iam::{}:instance-profile/{}</InstanceProfileArn><Path>/</Path><Roles/></InstanceProfile></CreateInstanceProfileResult>",
-            name, req.account, name
+            "<CreateInstanceProfileResult><InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>arn:aws:iam::{}:instance-profile/{}</InstanceProfileArn><Path>/</Path><Roles/>{}{}</InstanceProfile></CreateInstanceProfileResult>",
+            name, req.account, name,
+            if tags_xml.is_empty() { String::new() } else { "<Tags>".to_string() },
+            if tags_xml.is_empty() { String::new() } else { format!("{}{}</Tags>", tags_xml, "") },
         ))
     }
     fn xml_ip_get(&self, req: &AwsRequest) -> AwsResponse {
@@ -1636,25 +1646,41 @@ impl IamHandler {
     fn get_account_authorization_details(&self, req: &AwsRequest) -> AwsResponse {
         let state = self.get_state(req.account);
 
+        // Parse Filter parameter
+        let filter: Vec<String> = req.params.get("Filter")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+
+        let show_users = filter.is_empty() || filter.contains(&"User".to_string()) || filter.contains(&"UserPolicy".to_string());
+        let show_roles = filter.is_empty() || filter.contains(&"Role".to_string()) || filter.contains(&"RolePolicy".to_string());
+        let show_groups = filter.is_empty() || filter.contains(&"Group".to_string()) || filter.contains(&"GroupPolicy".to_string());
+
         // Users
-        let users = state.users.read();
         let mut user_xml = String::new();
-        for (_name, user) in users.iter() {
-            user_xml.push_str(&self.user_xml(user));
+        if show_users {
+            let users = state.users.read();
+            for (_name, user) in users.iter() {
+                user_xml.push_str(&self.user_xml(user));
+            }
         }
 
         // Roles
-        let roles = state.roles.read();
         let mut role_xml = String::new();
-        for (_name, role) in roles.iter() {
-            role_xml.push_str(&self.role_xml(&*role));
+        if show_roles {
+            let roles = state.roles.read();
+            for (_name, role) in roles.iter() {
+                role_xml.push_str(&self.role_xml(&*role));
+            }
         }
 
         // Groups
-        let groups = state.groups.read();
         let mut group_xml = String::new();
-        for (_name, group) in groups.iter() {
-            group_xml.push_str(&self.group_xml(&*group));
+        if show_groups {
+            let groups = state.groups.read();
+            for (_name, group) in groups.iter() {
+                group_xml.push_str(&self.group_xml(&*group));
+            }
         }
 
         let body = format!(
