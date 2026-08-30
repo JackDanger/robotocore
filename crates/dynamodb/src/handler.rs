@@ -95,7 +95,7 @@ impl DynamoDbHandler {
     }
 
     fn create_table(&self, req: &AwsRequest) -> AwsResponse {
-        let table_name = req
+                let table_name = req
             .params
             .get("TableName")
             .and_then(|v| v.as_str())
@@ -154,14 +154,59 @@ impl DynamoDbHandler {
             .unwrap_or("PAY_PER_REQUEST")
             .to_string();
 
-        let table = Arc::new(Table::new(
-            table_name.clone(),
-            req.account,
-            req.region.clone(),
-            key_schema.clone(),
-            attribute_definitions.clone(),
-            billing_mode,
-        ));
+        // Parse GSIs and LSIs
+                let gsis: Vec<crate::models::IndexDefinition> = req
+            .params
+            .get("GlobalSecondaryIndexes")
+            .and_then(|v| v.as_array())
+            .map(|arr| {
+                arr.iter().filter_map(|g| {
+                    Some(crate::models::IndexDefinition {
+                        name: g.get("IndexName")?.as_str()?.to_string(),
+                        key_schema: g.get("KeySchema")?.as_array()?.iter().filter_map(|k| {
+                            Some(crate::models::KeySchema {
+                                attribute_name: k.get("AttributeName")?.as_str()?.to_string(),
+                                key_type: k.get("KeyType")?.as_str()?.to_string(),
+                            })
+                        }).collect(),
+                        projection: g.get("Projection")?.get("ProjectionType")?.as_str()?.to_string(),
+                    })
+                }).collect()
+            })
+            .unwrap_or_default();
+        let lsis: Vec<crate::models::IndexDefinition> = req
+            .params
+            .get("LocalSecondaryIndexes")
+            .and_then(|v| v.as_array())
+            .map(|arr| {
+                arr.iter().filter_map(|l| {
+                    Some(crate::models::IndexDefinition {
+                        name: l.get("IndexName")?.as_str()?.to_string(),
+                        key_schema: l.get("KeySchema")?.as_array()?.iter().filter_map(|k| {
+                            Some(crate::models::KeySchema {
+                                attribute_name: k.get("AttributeName")?.as_str()?.to_string(),
+                                key_type: k.get("KeyType")?.as_str()?.to_string(),
+                            })
+                        }).collect(),
+                        projection: l.get("Projection")?.get("ProjectionType")?.as_str()?.to_string(),
+                    })
+                }).collect()
+            })
+            .unwrap_or_default();
+        
+        let table = {
+            let mut t = Table::new(
+                table_name.clone(),
+                req.account,
+                req.region.clone(),
+                key_schema.clone(),
+                attribute_definitions.clone(),
+                billing_mode,
+            );
+            t.global_secondary_indexes = gsis;
+            t.local_secondary_indexes = lsis;
+            Arc::new(t)
+        };
         state.put_table(table.clone());
 
         let table_arn = format!("arn:aws:dynamodb:{}:{}:table/{}", req.region, req.account, table_name);
@@ -192,8 +237,16 @@ impl DynamoDbHandler {
                         "ReadCapacityUnits": 0.0,
                         "WriteCapacityUnits": 0.0
                     },
-                    "LocalSecondaryIndexes": [],
-                    "GlobalSecondaryIndexes": [],
+                    "LocalSecondaryIndexes": table.local_secondary_indexes.iter().map(|i| json!({
+                        "IndexName": i.name,
+                        "KeySchema": i.key_schema.iter().map(|k| json!({"AttributeName": k.attribute_name, "KeyType": k.key_type})).collect::<Vec<_>>(),
+                        "Projection": {"ProjectionType": i.projection}
+                    })).collect::<Vec<_>>(),
+                    "GlobalSecondaryIndexes": table.global_secondary_indexes.iter().map(|i| json!({
+                        "IndexName": i.name,
+                        "KeySchema": i.key_schema.iter().map(|k| json!({"AttributeName": k.attribute_name, "KeyType": k.key_type})).collect::<Vec<_>>(),
+                        "Projection": {"ProjectionType": i.projection}
+                    })).collect::<Vec<_>>(),
                     "DeletionProtectionEnabled": false,
                     "SseSpecification": { "SseType": "DISABLED" },
                     "TableId": table.table_id.clone(),
@@ -225,7 +278,7 @@ impl DynamoDbHandler {
     }
 
     fn describe_table(&self, req: &AwsRequest) -> AwsResponse {
-        let table_name = req
+                let table_name = req
             .params
             .get("TableName")
             .and_then(|v| v.as_str())
@@ -235,7 +288,7 @@ impl DynamoDbHandler {
         let state = self.get_state(req.account, &req.region);
         match state.get_table(&table_name) {
             Some(table) => {
-                let table_arn = format!("arn:aws:dynamodb:{}:{}:table/{}", req.region, req.account, table.name);
+                                let table_arn = format!("arn:aws:dynamodb:{}:{}:table/{}", req.region, req.account, table.name);
                 let key_schema_json: Vec<Value> = table
                     .key_schema
                     .iter()
@@ -263,8 +316,16 @@ impl DynamoDbHandler {
                             "ReadCapacityUnits": 0.0,
                             "WriteCapacityUnits": 0.0
                         },
-                        "LocalSecondaryIndexes": [],
-                        "GlobalSecondaryIndexes": [],
+                        "LocalSecondaryIndexes": table.local_secondary_indexes.iter().map(|i| json!({
+                            "IndexName": i.name,
+                            "KeySchema": i.key_schema.iter().map(|k| json!({"AttributeName": k.attribute_name, "KeyType": k.key_type})).collect::<Vec<_>>(),
+                            "Projection": {"ProjectionType": i.projection}
+                        })).collect::<Vec<_>>(),
+                        "GlobalSecondaryIndexes": table.global_secondary_indexes.iter().map(|i| json!({
+                            "IndexName": i.name,
+                            "KeySchema": i.key_schema.iter().map(|k| json!({"AttributeName": k.attribute_name, "KeyType": k.key_type})).collect::<Vec<_>>(),
+                            "Projection": {"ProjectionType": i.projection}
+                        })).collect::<Vec<_>>(),
                         "DeletionProtectionEnabled": false,
                         "SseSpecification": { "SseType": "DISABLED" },
                         "TableId": table.table_id.clone(),
