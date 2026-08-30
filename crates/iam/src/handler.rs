@@ -1304,8 +1304,11 @@ impl IamHandler {
             .unwrap_or(false);
         let state = self.get_state(req.account);
 
-        // Generate version ID
-        let version_id = format!("v{}", state.policy_version_counter.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1);
+        // Generate version ID (per-policy counter)
+        let policy = state.get_policy(&arn).unwrap();
+        let next_version = *policy.version_count.read() + 1;
+        *policy.version_count.write() = next_version;
+        let version_id = format!("v{}", next_version);
 
         let body = format!(
             "<PolicyVersion>\

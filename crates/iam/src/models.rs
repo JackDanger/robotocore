@@ -150,6 +150,7 @@ pub struct Policy {
     pub attachments: u32,
     pub policy_document: RwLock<String>,
     pub tags: RwLock<Vec<serde_json::Value>>,
+    pub version_count: RwLock<u32>,
 }
 
 impl Policy {
@@ -169,6 +170,7 @@ impl Policy {
             attachments: 0,
             policy_document: RwLock::new(document),
             tags: RwLock::new(Vec::new()),
+            version_count: RwLock::new(1),
         }
     }
 }

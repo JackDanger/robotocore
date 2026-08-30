@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="45" skipped="0" tests="81" time="1.107" timestamp="2026-08-30T02:44:50.714048-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key" time="0.072" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_keys" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_data_key" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_alias" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_with_alias" time="0.006"><failure message="botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the Encrypt operation: Key not found">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c3085f0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb9cc80&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="45" skipped="0" tests="81" time="1.173" timestamp="2026-08-30T03:50:52.677502-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key" time="0.088" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_keys" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_data_key" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_alias" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_with_alias" time="0.007"><failure message="botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the Encrypt operation: Key not found">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c110740&gt;
+kms = &lt;botocore.client.KMS object at 0x10c8bad20&gt;
 
     def test_encrypt_with_alias(self, kms):
         key = kms.create_key(Description="alias encrypt")
@@ -19,7 +19,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cb9cc80&gt;, operation_name = 'Encrypt'
+self = &lt;botocore.client.KMS object at 0x10c8bad20&gt;, operation_name = 'Encrypt'
 api_params = {'KeyId': 'alias/enc-test', 'Plaintext': b'test data'}
 
     @with_current_context()
@@ -109,8 +109,8 @@ api_params = {'KeyId': 'alias/enc-test', 'Plaintext': b'test data'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the Encrypt operation: Key not found
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: NotFoundException</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_key_rotation_status" time="0.005"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c3089b0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cbede50&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: NotFoundException</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_key_rotation_status" time="0.005"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c110b00&gt;
+kms = &lt;botocore.client.KMS object at 0x10c9f6180&gt;
 
     def test_get_key_rotation_status(self, kms):
         key = kms.create_key(Description="rotation status key")
@@ -121,8 +121,8 @@ kms = &lt;botocore.client.KMS object at 0x10cbede50&gt;
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'KeyRotationEnabled'
 
-tests/compatibility/test_kms_compat.py:89: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_key_enable_disable" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_key" time="0.004"><failure message="AssertionError: assert None == 'test'&#10; +  where None = &lt;built-in method get of dict object at 0x10cbf0ac0&gt;('env')&#10; +    where &lt;built-in method get of dict object at 0x10cbf0ac0&gt; = {}.get">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c309130&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb9f0b0&gt;
+tests/compatibility/test_kms_compat.py:89: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_key_enable_disable" time="0.010" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_key" time="0.005"><failure message="AssertionError: assert None == 'test'&#10; +  where None = &lt;built-in method get of dict object at 0x10c9d92c0&gt;('env')&#10; +    where &lt;built-in method get of dict object at 0x10c9d92c0&gt; = {}.get">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c111280&gt;
+kms = &lt;botocore.client.KMS object at 0x10c8bbf20&gt;
 
     def test_tag_key(self, kms):
         key = kms.create_key(Description="tag key", Tags=[{"TagKey": "env", "TagValue": "test"}])
@@ -132,11 +132,11 @@ kms = &lt;botocore.client.KMS object at 0x10cb9f0b0&gt;
         tag_map = {t["TagKey"]: t["TagValue"] for t in tags["Tags"]}
 &gt;       assert tag_map.get("env") == "test"
 E       AssertionError: assert None == 'test'
-E        +  where None = &lt;built-in method get of dict object at 0x10cbf0ac0&gt;('env')
-E        +    where &lt;built-in method get of dict object at 0x10cbf0ac0&gt; = {}.get
+E        +  where None = &lt;built-in method get of dict object at 0x10c9d92c0&gt;('env')
+E        +    where &lt;built-in method get of dict object at 0x10c9d92c0&gt; = {}.get
 
-tests/compatibility/test_kms_compat.py:113: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_key_rotation" time="0.005"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c2d3fe0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb35f10&gt;
+tests/compatibility/test_kms_compat.py:113: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_key_rotation" time="0.006"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c0d7bf0&gt;
+kms = &lt;botocore.client.KMS object at 0x10c93a390&gt;
 
     def test_enable_key_rotation(self, kms):
         key = kms.create_key(Description="rotation key")
@@ -148,8 +148,8 @@ kms = &lt;botocore.client.KMS object at 0x10cb35f10&gt;
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'KeyRotationEnabled'
 
-tests/compatibility/test_kms_compat.py:121: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_aliases_for_key" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_update_alias" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_untag_resource" time="0.006"><failure message="KeyError: 'team'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c308b30&gt;
-kms = &lt;botocore.client.KMS object at 0x10d08df40&gt;
+tests/compatibility/test_kms_compat.py:121: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_aliases_for_key" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_update_alias" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_untag_resource" time="0.009"><failure message="KeyError: 'team'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c110bc0&gt;
+kms = &lt;botocore.client.KMS object at 0x10cd9a090&gt;
 
     def test_tag_untag_resource(self, kms):
         key = kms.create_key(Description="tag untag key")
@@ -168,8 +168,8 @@ kms = &lt;botocore.client.KMS object at 0x10d08df40&gt;
                ^^^^^^^^^^^^^^^
 E       KeyError: 'team'
 
-tests/compatibility/test_kms_compat.py:169: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_key_policy" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_key_policies" time="0.004"><failure message="KeyError: 'PolicyNames'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c3096d0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb9cb00&gt;
+tests/compatibility/test_kms_compat.py:169: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_key_policy" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_key_policies" time="0.004"><failure message="KeyError: 'PolicyNames'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c111820&gt;
+kms = &lt;botocore.client.KMS object at 0x10c9a4ad0&gt;
 
     def test_list_key_policies(self, kms):
         key = kms.create_key(Description="list policy key")
@@ -180,8 +180,8 @@ kms = &lt;botocore.client.KMS object at 0x10cb9cb00&gt;
                             ^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'PolicyNames'
 
-tests/compatibility/test_kms_compat.py:190: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt_with_context" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_data_key_without_plaintext_basic" time="0.004"><failure message="AssertionError: assert 'CiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '38', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '499b785a-1ddc-4e4e-ac74-a215119b91a0', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c309f10&gt;
-kms = &lt;botocore.client.KMS object at 0x10cbc1d00&gt;
+tests/compatibility/test_kms_compat.py:190: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt_with_context" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_data_key_without_plaintext_basic" time="0.004"><failure message="AssertionError: assert 'CiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '38', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '7b71f256-f675-4b6c-b314-697dd3a07874', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c112060&gt;
+kms = &lt;botocore.client.KMS object at 0x10c9c7f20&gt;
 
     def test_generate_data_key_without_plaintext_basic(self, kms):
         key = kms.create_key(Description="data key no pt")
@@ -189,10 +189,10 @@ kms = &lt;botocore.client.KMS object at 0x10cbc1d00&gt;
     
         response = kms.generate_data_key_without_plaintext(KeyId=key_id, KeySpec="AES_256")
 &gt;       assert "CiphertextBlob" in response
-E       AssertionError: assert 'CiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '38', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '499b785a-1ddc-4e4e-ac74-a215119b91a0', 'RetryAttempts': 0}}
+E       AssertionError: assert 'CiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '38', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '7b71f256-f675-4b6c-b314-697dd3a07874', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:210: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_re_encrypt" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key_with_alias" time="0.006"><failure message="botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the DescribeKey operation: The operation references an alias that does not exist">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c30a750&gt;
-kms = &lt;botocore.client.KMS object at 0x10cc8bb90&gt;
+tests/compatibility/test_kms_compat.py:210: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_re_encrypt" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key_with_alias" time="0.005"><failure message="botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the DescribeKey operation: The operation references an alias that does not exist">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c1128a0&gt;
+kms = &lt;botocore.client.KMS object at 0x10c9a53a0&gt;
 
     def test_describe_key_with_alias(self, kms):
         key = kms.create_key(Description="alias desc key")
@@ -212,7 +212,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10cc8bb90&gt;
+self = &lt;botocore.client.KMS object at 0x10c9a53a0&gt;
 operation_name = 'DescribeKey', api_params = {'KeyId': 'alias/desc-test'}
 
     @with_current_context()
@@ -302,8 +302,8 @@ operation_name = 'DescribeKey', api_params = {'KeyId': 'alias/desc-test'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the DescribeKey operation: The operation references an alias that does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: NotFoundException</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_schedule_and_cancel_key_deletion" time="0.006"><failure message="AssertionError: assert 'Enabled' == 'PendingDeletion'&#10;  &#10;  - PendingDeletion&#10;  + Enabled">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c30ab70&gt;
-kms = &lt;botocore.client.KMS object at 0x10cc69850&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: NotFoundException</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_schedule_and_cancel_key_deletion" time="0.006"><failure message="AssertionError: assert 'Enabled' == 'PendingDeletion'&#10;  &#10;  - PendingDeletion&#10;  + Enabled">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c112cc0&gt;
+kms = &lt;botocore.client.KMS object at 0x10ca6f3b0&gt;
 
     def test_schedule_and_cancel_key_deletion(self, kms):
         key = kms.create_key(Description="delete cancel key")
@@ -319,8 +319,8 @@ E
 E         - PendingDeletion
 E         + Enabled
 
-tests/compatibility/test_kms_compat.py:248: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_grant" time="0.005"><failure message="AssertionError: assert 'GrantId' in {'GrantToken': '37cdfc4d5dc944319b7ec471c311e0f4', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'bfad0f7b-7cad-4a65-aa81-cd4daa916d98', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c30af90&gt;
-kms = &lt;botocore.client.KMS object at 0x10c1daa50&gt;
+tests/compatibility/test_kms_compat.py:248: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_grant" time="0.006"><failure message="AssertionError: assert 'GrantId' in {'GrantToken': '5751cf1f2d2542d1bc812c8d093d1910', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'dedc060a-f29d-42a9-b487-1a4cd4f335c1', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c1130e0&gt;
+kms = &lt;botocore.client.KMS object at 0x10a6d6b40&gt;
 
     def test_create_grant(self, kms):
         key = kms.create_key(Description="grant key")
@@ -332,10 +332,10 @@ kms = &lt;botocore.client.KMS object at 0x10c1daa50&gt;
             Operations=["Encrypt", "Decrypt"],
         )
 &gt;       assert "GrantId" in grant
-E       AssertionError: assert 'GrantId' in {'GrantToken': '37cdfc4d5dc944319b7ec471c311e0f4', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'bfad0f7b-7cad-4a65-aa81-cd4daa916d98', 'RetryAttempts': 0}}
+E       AssertionError: assert 'GrantId' in {'GrantToken': '5751cf1f2d2542d1bc812c8d093d1910', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'dedc060a-f29d-42a9-b487-1a4cd4f335c1', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:263: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_put_key_policy" time="0.005"><failure message="KeyError: 'Id'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c30b3b0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cc8b950&gt;
+tests/compatibility/test_kms_compat.py:263: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_put_key_policy" time="0.005"><failure message="KeyError: 'Id'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c113500&gt;
+kms = &lt;botocore.client.KMS object at 0x10c9a77d0&gt;
 
     def test_put_key_policy(self, kms):
         """PutKeyPolicy sets a key policy and GetKeyPolicy retrieves it."""
@@ -367,8 +367,8 @@ kms = &lt;botocore.client.KMS object at 0x10cc8b950&gt;
                ^^^^^^^^^^^^^^^
 E       KeyError: 'Id'
 
-tests/compatibility/test_kms_compat.py:301: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_key_rotation_status" time="0.004"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c30b800&gt;
-kms = &lt;botocore.client.KMS object at 0x10cfbfa10&gt;
+tests/compatibility/test_kms_compat.py:301: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_key_rotation_status" time="0.004"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c113950&gt;
+kms = &lt;botocore.client.KMS object at 0x10ccebcb0&gt;
 
     def test_key_rotation_status(self, kms):
         """Enable, check, and disable key rotation."""
@@ -381,8 +381,8 @@ kms = &lt;botocore.client.KMS object at 0x10cfbfa10&gt;
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'KeyRotationEnabled'
 
-tests/compatibility/test_kms_compat.py:310: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_random" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key_symmetric_default" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key_rsa_2048" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key_all_fields" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_update_delete_alias" time="0.009"><failure message="AssertionError: assert '6a81b9cb4ded...2f4bbfd51dad4' == '01eee02ca3c8...3295eab06a030'&#10;  &#10;  - 01eee02ca3c84bf08ef3295eab06a030&#10;  + 6a81b9cb4ded44e99412f4bbfd51dad4">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c30a360&gt;
-kms = &lt;botocore.client.KMS object at 0x10cbc14f0&gt;
+tests/compatibility/test_kms_compat.py:310: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_random" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key_symmetric_default" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key_rsa_2048" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key_all_fields" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_update_delete_alias" time="0.011"><failure message="AssertionError: assert 'd6a5134934c9...aa81af2bda512' == '48fa147d5711...f326c3430b63d'&#10;  &#10;  - 48fa147d571141bcb36f326c3430b63d&#10;  + d6a5134934c94286bb8aa81af2bda512">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c112270&gt;
+kms = &lt;botocore.client.KMS object at 0x10ca8fce0&gt;
 
     def test_create_update_delete_alias(self, kms):
         """Test CreateAlias, ListAliases, UpdateAlias, DeleteAlias."""
@@ -406,13 +406,13 @@ kms = &lt;botocore.client.KMS object at 0x10cbc14f0&gt;
             aliases2 = kms.list_aliases()
             alias_entry2 = next(a for a in aliases2["Aliases"] if a["AliasName"] == alias_name)
 &gt;           assert alias_entry2["TargetKeyId"] == key2_id
-E           AssertionError: assert '6a81b9cb4ded...2f4bbfd51dad4' == '01eee02ca3c8...3295eab06a030'
+E           AssertionError: assert 'd6a5134934c9...aa81af2bda512' == '48fa147d5711...f326c3430b63d'
 E             
-E             - 01eee02ca3c84bf08ef3295eab06a030
-E             + 6a81b9cb4ded44e99412f4bbfd51dad4
+E             - 48fa147d571141bcb36f326c3430b63d
+E             + d6a5134934c94286bb8aa81af2bda512
 
-tests/compatibility/test_kms_compat.py:395: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt_roundtrip" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key_rotation" time="0.005"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c3086e0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb368d0&gt;
+tests/compatibility/test_kms_compat.py:395: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt_roundtrip" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key_rotation" time="0.005"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c110860&gt;
+kms = &lt;botocore.client.KMS object at 0x10c9c61e0&gt;
 
     def test_enable_disable_key_rotation(self, kms):
         """Test EnableKeyRotation, GetKeyRotationStatus, DisableKeyRotation."""
@@ -424,8 +424,8 @@ kms = &lt;botocore.client.KMS object at 0x10cb368d0&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'KeyRotationEnabled'
 
-tests/compatibility/test_kms_compat.py:427: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key_state" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_untag_list_resource_tags" time="0.006"><failure message="KeyError: 'project'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c31c350&gt;
-kms = &lt;botocore.client.KMS object at 0x10d083dd0&gt;
+tests/compatibility/test_kms_compat.py:427: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key_state" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_untag_list_resource_tags" time="0.006"><failure message="KeyError: 'project'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c1244a0&gt;
+kms = &lt;botocore.client.KMS object at 0x10c93a360&gt;
 
     def test_tag_untag_list_resource_tags(self, kms):
         """Test TagResource, UntagResource, ListResourceTags."""
@@ -445,8 +445,8 @@ kms = &lt;botocore.client.KMS object at 0x10d083dd0&gt;
                    ^^^^^^^^^^^^^^^^^^
 E           KeyError: 'project'
 
-tests/compatibility/test_kms_compat.py:468: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_sign_verify_rsa" time="0.006"><failure message="AssertionError: assert 'Signature' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '8a346a17-4861-485b-9141-72dccae00a19', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c31c770&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb9c0b0&gt;
+tests/compatibility/test_kms_compat.py:468: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_sign_verify_rsa" time="0.006"><failure message="AssertionError: assert 'Signature' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'a58ea00b-2393-4ea9-87f3-be9adece39b5', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c1248c0&gt;
+kms = &lt;botocore.client.KMS object at 0x10ccebbc0&gt;
 
     def test_sign_verify_rsa(self, kms):
         """Test Sign and Verify with an RSA key."""
@@ -465,10 +465,10 @@ kms = &lt;botocore.client.KMS object at 0x10cb9c0b0&gt;
                 SigningAlgorithm="RSASSA_PKCS1_V1_5_SHA_256",
             )
 &gt;           assert "Signature" in sign_resp
-E           AssertionError: assert 'Signature' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '8a346a17-4861-485b-9141-72dccae00a19', 'RetryAttempts': 0}}
+E           AssertionError: assert 'Signature' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'a58ea00b-2393-4ea9-87f3-be9adece39b5', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:495: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_update_key_description" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_put_key_policy" time="0.005"><failure message="AssertionError: assert 'Statement' in {}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c31cfb0&gt;
-kms = &lt;botocore.client.KMS object at 0x10d02f0e0&gt;
+tests/compatibility/test_kms_compat.py:495: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_update_key_description" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_put_key_policy" time="0.005"><failure message="AssertionError: assert 'Statement' in {}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c125100&gt;
+kms = &lt;botocore.client.KMS object at 0x10cbf1e50&gt;
 
     def test_get_put_key_policy(self, kms):
         """Test GetKeyPolicy and PutKeyPolicy."""
@@ -483,8 +483,8 @@ kms = &lt;botocore.client.KMS object at 0x10d02f0e0&gt;
 &gt;           assert "Statement" in parsed
 E           AssertionError: assert 'Statement' in {}
 
-tests/compatibility/test_kms_compat.py:529: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_public_key" time="0.005"><failure message="AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '88945f46-b334-4df6-8ffe-cceb90c98fbf', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c31d3d0&gt;
-kms = &lt;botocore.client.KMS object at 0x10d02eb40&gt;
+tests/compatibility/test_kms_compat.py:529: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_public_key" time="0.005"><failure message="AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '1c8fd103-fc48-4295-ac21-6c190556612e', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c125520&gt;
+kms = &lt;botocore.client.KMS object at 0x10cbf2ea0&gt;
 
     def test_get_public_key(self, kms):
         """Test GetPublicKey for an asymmetric key."""
@@ -498,10 +498,10 @@ kms = &lt;botocore.client.KMS object at 0x10d02eb40&gt;
             resp = kms.get_public_key(KeyId=key_id)
             assert "PublicKey" in resp
 &gt;           assert "KeyId" in resp
-E           AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '88945f46-b334-4df6-8ffe-cceb90c98fbf', 'RetryAttempts': 0}}
+E           AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '1c8fd103-fc48-4295-ac21-6c190556612e', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:565: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_retire_grant" time="0.005"><failure message="KeyError: 'GrantId'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c31d7f0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb34fe0&gt;
+tests/compatibility/test_kms_compat.py:565: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_retire_grant" time="0.005"><failure message="KeyError: 'GrantId'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c125940&gt;
+kms = &lt;botocore.client.KMS object at 0x10c9c4830&gt;
 
     def test_retire_grant(self, kms):
         """Test RetireGrant removes a grant."""
@@ -517,8 +517,8 @@ kms = &lt;botocore.client.KMS object at 0x10cb34fe0&gt;
                        ^^^^^^^^^^^^^^^^
 E           KeyError: 'GrantId'
 
-tests/compatibility/test_kms_compat.py:581: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_mac_and_verify_mac" time="0.006"><failure message="AssertionError: assert 'Mac' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f5434d24-387b-4f73-ae13-c65f42631197', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c31dc10&gt;
-kms = &lt;botocore.client.KMS object at 0x10d0131a0&gt;
+tests/compatibility/test_kms_compat.py:581: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_mac_and_verify_mac" time="0.006"><failure message="AssertionError: assert 'Mac' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '8f051808-243a-4a5b-a7b6-dfed0d9e1256', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10c125d60&gt;
+kms = &lt;botocore.client.KMS object at 0x10cd47e30&gt;
 
     def test_generate_mac_and_verify_mac(self, kms):
         """Test GenerateMac and VerifyMac with HMAC key."""
@@ -536,10 +536,10 @@ kms = &lt;botocore.client.KMS object at 0x10d0131a0&gt;
                 MacAlgorithm="HMAC_SHA_256",
             )
 &gt;           assert "Mac" in mac_resp
-E           AssertionError: assert 'Mac' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f5434d24-387b-4f73-ae13-c65f42631197', 'RetryAttempts': 0}}
+E           AssertionError: assert 'Mac' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '8f051808-243a-4a5b-a7b6-dfed0d9e1256', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:614: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_data_key" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_data_key_without_plaintext" time="0.006"><failure message="AssertionError: assert 'CiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '38', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '3ac5fc6a-8da1-4eb9-96ac-ed7eecc72c72', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10c309820&gt;
-kms = &lt;botocore.client.KMS object at 0x10d083b00&gt;
+tests/compatibility/test_kms_compat.py:614: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_data_key" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_data_key_without_plaintext" time="0.006"><failure message="AssertionError: assert 'CiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '38', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6e05d0bb-69f3-42f5-9990-ccec0e082fdd', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10c110560&gt;
+kms = &lt;botocore.client.KMS object at 0x10cd46c30&gt;
 
     def test_generate_data_key_without_plaintext(self, kms):
         key = kms.create_key()
@@ -547,10 +547,10 @@ kms = &lt;botocore.client.KMS object at 0x10d083b00&gt;
         try:
             resp = kms.generate_data_key_without_plaintext(KeyId=key_id, KeySpec="AES_256")
 &gt;           assert "CiphertextBlob" in resp
-E           AssertionError: assert 'CiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '38', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '3ac5fc6a-8da1-4eb9-96ac-ed7eecc72c72', 'RetryAttempts': 0}}
+E           AssertionError: assert 'CiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '38', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6e05d0bb-69f3-42f5-9990-ccec0e082fdd', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:654: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_random" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_keys" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_aliases" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_update_key_description" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_enable_disable_key" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_key_policies" time="0.005"><failure message="AssertionError: assert 'PolicyNames' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '2aa23eb4-ec2a-460d-8d8f-1f5a86e24503', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10c31c0e0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb9f6e0&gt;
+tests/compatibility/test_kms_compat.py:654: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_random" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_keys" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_aliases" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_update_key_description" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_enable_disable_key" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_key_policies" time="0.005"><failure message="AssertionError: assert 'PolicyNames' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '448bdeb5-627e-4e85-894b-d2d0445530a4', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10c1241d0&gt;
+kms = &lt;botocore.client.KMS object at 0x10cceb2c0&gt;
 
     def test_list_key_policies(self, kms):
         key = kms.create_key()
@@ -558,10 +558,10 @@ kms = &lt;botocore.client.KMS object at 0x10cb9f6e0&gt;
         try:
             resp = kms.list_key_policies(KeyId=key_id)
 &gt;           assert "PolicyNames" in resp
-E           AssertionError: assert 'PolicyNames' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '2aa23eb4-ec2a-460d-8d8f-1f5a86e24503', 'RetryAttempts': 0}}
+E           AssertionError: assert 'PolicyNames' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '448bdeb5-627e-4e85-894b-d2d0445530a4', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:702: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_create_grant" time="0.006"><failure message="AssertionError: assert 'GrantId' in {'GrantToken': 'ca6d9eb566b24a988169aeea2ada75bb', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6fd1d691-817c-4678-aada-21ed49f7d4de', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10c31e420&gt;
-kms = &lt;botocore.client.KMS object at 0x10ce502f0&gt;
+tests/compatibility/test_kms_compat.py:702: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_create_grant" time="0.005"><failure message="AssertionError: assert 'GrantId' in {'GrantToken': '0a80c09fff254745bc1d8ef0b8198b84', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0325601f-3604-4c13-a711-7ce566ff7914', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10c1265d0&gt;
+kms = &lt;botocore.client.KMS object at 0x10cc25fa0&gt;
 
     def test_create_grant(self, kms):
         key = kms.create_key()
@@ -573,10 +573,10 @@ kms = &lt;botocore.client.KMS object at 0x10ce502f0&gt;
                 Operations=["Encrypt", "Decrypt"],
             )
 &gt;           assert "GrantId" in resp
-E           AssertionError: assert 'GrantId' in {'GrantToken': 'ca6d9eb566b24a988169aeea2ada75bb', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6fd1d691-817c-4678-aada-21ed49f7d4de', 'RetryAttempts': 0}}
+E           AssertionError: assert 'GrantId' in {'GrantToken': '0a80c09fff254745bc1d8ef0b8198b84', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0325601f-3604-4c13-a711-7ce566ff7914', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:716: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_encrypt_decrypt_roundtrip" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_re_encrypt" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_describe_custom_key_stores" time="0.030" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_grants" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_retirable_grants" time="0.003"><failure message="AssertionError: assert 'Grants' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '2610d30f-12bb-497c-b64b-f02195475645', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c31f8c0&gt;
-kms = &lt;botocore.client.KMS object at 0x10c291730&gt;
+tests/compatibility/test_kms_compat.py:716: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_encrypt_decrypt_roundtrip" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_re_encrypt" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_describe_custom_key_stores" time="0.033" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_grants" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_retirable_grants" time="0.003"><failure message="AssertionError: assert 'Grants' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '15e19394-de21-4dbd-9134-82a49ff4f06e', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c1279e0&gt;
+kms = &lt;botocore.client.KMS object at 0x10c8bbef0&gt;
 
     def test_list_retirable_grants(self, kms):
         """ListRetirableGrants returns grants for a principal (possibly empty)."""
@@ -584,10 +584,10 @@ kms = &lt;botocore.client.KMS object at 0x10c291730&gt;
             RetiringPrincipal="arn:aws:iam::123456789012:root",
         )
 &gt;       assert "Grants" in resp
-E       AssertionError: assert 'Grants' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '2610d30f-12bb-497c-b64b-f02195475645', 'RetryAttempts': 0}}
+E       AssertionError: assert 'Grants' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '15e19394-de21-4dbd-9134-82a49ff4f06e', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:788: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_rotate_key_on_demand" time="0.005"><failure message="AssertionError: assert 'KeyId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '24', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '32bdddac-1c2a-4a4c-8cae-df1b7fa82ac8', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c31fce0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cdbbbc0&gt;
+tests/compatibility/test_kms_compat.py:788: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_rotate_key_on_demand" time="0.006"><failure message="AssertionError: assert 'KeyId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '24', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'fee0ded8-eafe-4588-9d3b-b35e54b7011d', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c127e00&gt;
+kms = &lt;botocore.client.KMS object at 0x10cc21460&gt;
 
     def test_rotate_key_on_demand(self, kms):
         """RotateKeyOnDemand triggers an on-demand rotation."""
@@ -596,10 +596,10 @@ kms = &lt;botocore.client.KMS object at 0x10cdbbbc0&gt;
         try:
             resp = kms.rotate_key_on_demand(KeyId=key_id)
 &gt;           assert "KeyId" in resp
-E           AssertionError: assert 'KeyId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '24', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '32bdddac-1c2a-4a4c-8cae-df1b7fa82ac8', 'RetryAttempts': 0}}
+E           AssertionError: assert 'KeyId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '24', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'fee0ded8-eafe-4588-9d3b-b35e54b7011d', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:797: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_key_rotations" time="0.007"><failure message="AssertionError: assert 'Rotations' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '19', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '889759ee-fe84-410c-a5ed-980576dc0aac', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c330140&gt;
-kms = &lt;botocore.client.KMS object at 0x10cc6ba10&gt;
+tests/compatibility/test_kms_compat.py:797: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_key_rotations" time="0.006"><failure message="AssertionError: assert 'Rotations' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '19', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '2851b9fd-5cf3-4202-b2cb-e0f43ba35251', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c138260&gt;
+kms = &lt;botocore.client.KMS object at 0x10ca8eb10&gt;
 
     def test_list_key_rotations(self, kms):
         """ListKeyRotations returns rotation history for a key."""
@@ -608,10 +608,10 @@ kms = &lt;botocore.client.KMS object at 0x10cc6ba10&gt;
         try:
             resp = kms.list_key_rotations(KeyId=key_id)
 &gt;           assert "Rotations" in resp
-E           AssertionError: assert 'Rotations' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '19', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '889759ee-fe84-410c-a5ed-980576dc0aac', 'RetryAttempts': 0}}
+E           AssertionError: assert 'Rotations' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '19', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '2851b9fd-5cf3-4202-b2cb-e0f43ba35251', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:807: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_replicate_key" time="0.006"><failure message="AssertionError: assert 'ReplicaKeyMetadata' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '19', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'abc06251-0561-4b16-a3c2-40e8cf371a35', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c31f9b0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cdb8710&gt;
+tests/compatibility/test_kms_compat.py:807: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_replicate_key" time="0.007"><failure message="AssertionError: assert 'ReplicaKeyMetadata' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '19', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '646b0b38-6118-48ef-9b17-40f13460bb12', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c127770&gt;
+kms = &lt;botocore.client.KMS object at 0x10cc210a0&gt;
 
     def test_replicate_key(self, kms):
         """ReplicateKey replicates a multi-region key to another region."""
@@ -626,10 +626,10 @@ kms = &lt;botocore.client.KMS object at 0x10cdb8710&gt;
                 ReplicaRegion="eu-west-1",
             )
 &gt;           assert "ReplicaKeyMetadata" in resp
-E           AssertionError: assert 'ReplicaKeyMetadata' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '19', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'abc06251-0561-4b16-a3c2-40e8cf371a35', 'RetryAttempts': 0}}
+E           AssertionError: assert 'ReplicaKeyMetadata' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '19', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '646b0b38-6118-48ef-9b17-40f13460bb12', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:824: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_multi_region" time="0.004"><failure message="KeyError: 'MultiRegion'">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c31ee40&gt;
-kms = &lt;botocore.client.KMS object at 0x10cfbe780&gt;
+tests/compatibility/test_kms_compat.py:824: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_multi_region" time="0.005"><failure message="KeyError: 'MultiRegion'">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c126ed0&gt;
+kms = &lt;botocore.client.KMS object at 0x10c8ba6f0&gt;
 
     def test_create_key_multi_region(self, kms):
         """CreateKey with MultiRegion=True sets the flag."""
@@ -640,8 +640,8 @@ kms = &lt;botocore.client.KMS object at 0x10cfbe780&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'MultiRegion'
 
-tests/compatibility/test_kms_compat.py:834: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_external_origin" time="0.004"><failure message="AssertionError: assert 'AWS_KMS' == 'EXTERNAL'&#10;  &#10;  - EXTERNAL&#10;  + AWS_KMS">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c31e570&gt;
-kms = &lt;botocore.client.KMS object at 0x10d061b80&gt;
+tests/compatibility/test_kms_compat.py:834: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_external_origin" time="0.005"><failure message="AssertionError: assert 'AWS_KMS' == 'EXTERNAL'&#10;  &#10;  - EXTERNAL&#10;  + AWS_KMS">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c126990&gt;
+kms = &lt;botocore.client.KMS object at 0x10cc44bf0&gt;
 
     def test_create_key_external_origin(self, kms):
         """CreateKey with Origin=EXTERNAL creates a key with EXTERNAL origin."""
@@ -655,8 +655,8 @@ E
 E             - EXTERNAL
 E             + AWS_KMS
 
-tests/compatibility/test_kms_compat.py:846: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_grant_with_constraints" time="0.006"><failure message="AssertionError: assert 'GrantId' in {'GrantToken': 'e845c3ace74b4b65bc392c27c077ee6e', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f3a59b5a-f755-496a-bbbe-7e0e41304ee0', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c31c140&gt;
-kms = &lt;botocore.client.KMS object at 0x10d08d3d0&gt;
+tests/compatibility/test_kms_compat.py:846: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_grant_with_constraints" time="0.006"><failure message="AssertionError: assert 'GrantId' in {'GrantToken': 'eec17e0956914f089f2e4391cca2ca54', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '9db2fd16-890d-41cb-ab25-a27c31008777', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c124e00&gt;
+kms = &lt;botocore.client.KMS object at 0x10ccd78f0&gt;
 
     def test_grant_with_constraints(self, kms):
         """CreateGrant with EncryptionContextSubset constraint."""
@@ -672,10 +672,10 @@ kms = &lt;botocore.client.KMS object at 0x10d08d3d0&gt;
                 },
             )
 &gt;           assert "GrantId" in grant
-E           AssertionError: assert 'GrantId' in {'GrantToken': 'e845c3ace74b4b65bc392c27c077ee6e', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f3a59b5a-f755-496a-bbbe-7e0e41304ee0', 'RetryAttempts': 0}}
+E           AssertionError: assert 'GrantId' in {'GrantToken': 'eec17e0956914f089f2e4391cca2ca54', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '9db2fd16-890d-41cb-ab25-a27c31008777', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:865: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_generate_random_various_sizes" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_ecc" time="0.006"><failure message="AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '73413446-140f-43c8-af05-7f498f321436', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c30b1a0&gt;
-kms = &lt;botocore.client.KMS object at 0x10d0617c0&gt;
+tests/compatibility/test_kms_compat.py:865: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_generate_random_various_sizes" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_ecc" time="0.005"><failure message="AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'b101977f-fe2e-45fe-91a2-6dad128f9f04', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c1128d0&gt;
+kms = &lt;botocore.client.KMS object at 0x10c0664e0&gt;
 
     def test_create_key_ecc(self, kms):
         """CreateKey with ECC_NIST_P256 for sign/verify."""
@@ -690,10 +690,10 @@ kms = &lt;botocore.client.KMS object at 0x10d0617c0&gt;
             pub = kms.get_public_key(KeyId=key_id)
             assert "PublicKey" in pub
 &gt;           assert "KeyId" in pub
-E           AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '73413446-140f-43c8-af05-7f498f321436', 'RetryAttempts': 0}}
+E           AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'b101977f-fe2e-45fe-91a2-6dad128f9f04', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:894: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_encrypt_decrypt_with_algorithm" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_re_encrypt_with_context" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_sign_verify_ecc" time="0.005"><failure message="AssertionError: assert 'Signature' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'b136d020-c80d-4f09-a9ee-17ee9ed83b45', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c330ad0&gt;
-kms = &lt;botocore.client.KMS object at 0x10d006a50&gt;
+tests/compatibility/test_kms_compat.py:894: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_encrypt_decrypt_with_algorithm" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_re_encrypt_with_context" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_sign_verify_ecc" time="0.006"><failure message="AssertionError: assert 'Signature' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'caca1ee5-ec0f-4060-a305-a4996ba8a132', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c138bf0&gt;
+kms = &lt;botocore.client.KMS object at 0x10ccf9310&gt;
 
     def test_sign_verify_ecc(self, kms):
         """Sign and Verify with ECC key."""
@@ -712,10 +712,10 @@ kms = &lt;botocore.client.KMS object at 0x10d006a50&gt;
                 SigningAlgorithm="ECDSA_SHA_256",
             )
 &gt;           assert "Signature" in sig
-E           AssertionError: assert 'Signature' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'b136d020-c80d-4f09-a9ee-17ee9ed83b45', 'RetryAttempts': 0}}
+E           AssertionError: assert 'Signature' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'caca1ee5-ec0f-4060-a305-a4996ba8a132', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:965: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_generate_data_key_number_of_bytes" time="0.005"><failure message="AssertionError: assert 32 == 64&#10; +  where 32 = len(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c330ef0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cdb9910&gt;
+tests/compatibility/test_kms_compat.py:965: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_generate_data_key_number_of_bytes" time="0.006"><failure message="AssertionError: assert 32 == 64&#10; +  where 32 = len(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10c139010&gt;
+kms = &lt;botocore.client.KMS object at 0x10c085cd0&gt;
 
     def test_generate_data_key_number_of_bytes(self, kms):
         """GenerateDataKey with NumberOfBytes instead of KeySpec."""
@@ -727,8 +727,8 @@ kms = &lt;botocore.client.KMS object at 0x10cdb9910&gt;
 E           AssertionError: assert 32 == 64
 E            +  where 32 = len(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
 
-tests/compatibility/test_kms_compat.py:985: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_random_fixed" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_random_min_max" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_rsa" time="0.005"><failure message="AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'be4db453-26cc-452e-9934-3c25e1b1421e', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c331ac0&gt;
-kms = &lt;botocore.client.KMS object at 0x10d01aff0&gt;
+tests/compatibility/test_kms_compat.py:985: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_random_fixed" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_random_min_max" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_rsa" time="0.005"><failure message="AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e0ca4dcb-9d57-4511-bb32-744744460f3b', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c139c70&gt;
+kms = &lt;botocore.client.KMS object at 0x10cd0d490&gt;
 
     def test_generate_data_key_pair_rsa(self, kms):
         """GenerateDataKeyPair with RSA_2048 returns key pair components."""
@@ -740,10 +740,10 @@ kms = &lt;botocore.client.KMS object at 0x10d01aff0&gt;
                 KeyPairSpec="RSA_2048",
             )
 &gt;           assert "PrivateKeyCiphertextBlob" in resp
-E           AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'be4db453-26cc-452e-9934-3c25e1b1421e', 'RetryAttempts': 0}}
+E           AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e0ca4dcb-9d57-4511-bb32-744744460f3b', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1021: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_ecc" time="0.006"><failure message="AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '7bd59783-fc97-4e94-9044-ef05839f8979', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c331eb0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cfbce00&gt;
+tests/compatibility/test_kms_compat.py:1021: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_ecc" time="0.006"><failure message="AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'fae61523-152c-49db-8e49-af6daae797bc', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c13a060&gt;
+kms = &lt;botocore.client.KMS object at 0x10cc46c00&gt;
 
     def test_generate_data_key_pair_ecc(self, kms):
         """GenerateDataKeyPair with ECC_NIST_P256."""
@@ -755,10 +755,10 @@ kms = &lt;botocore.client.KMS object at 0x10cfbce00&gt;
                 KeyPairSpec="ECC_NIST_P256",
             )
 &gt;           assert "PrivateKeyCiphertextBlob" in resp
-E           AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '7bd59783-fc97-4e94-9044-ef05839f8979', 'RetryAttempts': 0}}
+E           AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'fae61523-152c-49db-8e49-af6daae797bc', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1039: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_without_plaintext_rsa" time="0.005"><failure message="AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '42', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '7c3b51c2-1263-4f9e-b79e-111f16d32a02', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c3322a0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cdb8b30&gt;
+tests/compatibility/test_kms_compat.py:1039: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_without_plaintext_rsa" time="0.005"><failure message="AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '42', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '2901fd11-ba9f-4e26-8fbf-616dc5882362', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c13a450&gt;
+kms = &lt;botocore.client.KMS object at 0x10c085a60&gt;
 
     def test_generate_data_key_pair_without_plaintext_rsa(self, kms):
         """GenerateDataKeyPairWithoutPlaintext omits private key plaintext."""
@@ -770,10 +770,10 @@ kms = &lt;botocore.client.KMS object at 0x10cdb8b30&gt;
                 KeyPairSpec="RSA_2048",
             )
 &gt;           assert "PrivateKeyCiphertextBlob" in resp
-E           AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '42', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '7c3b51c2-1263-4f9e-b79e-111f16d32a02', 'RetryAttempts': 0}}
+E           AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '42', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '2901fd11-ba9f-4e26-8fbf-616dc5882362', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1055: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_without_plaintext_ecc" time="0.005"><failure message="AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '42', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f699ceea-5d86-4eb6-aa1e-fdd1c97e496e', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c31c980&gt;
-kms = &lt;botocore.client.KMS object at 0x10cbed880&gt;
+tests/compatibility/test_kms_compat.py:1055: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_without_plaintext_ecc" time="0.006"><failure message="AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '42', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f8a3b5e4-670e-402a-90e6-7f182d2f441f', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c125730&gt;
+kms = &lt;botocore.client.KMS object at 0x10cd3d700&gt;
 
     def test_generate_data_key_pair_without_plaintext_ecc(self, kms):
         """GenerateDataKeyPairWithoutPlaintext with ECC_NIST_P256."""
@@ -785,10 +785,10 @@ kms = &lt;botocore.client.KMS object at 0x10cbed880&gt;
                 KeyPairSpec="ECC_NIST_P256",
             )
 &gt;           assert "PrivateKeyCiphertextBlob" in resp
-E           AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '42', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f699ceea-5d86-4eb6-aa1e-fdd1c97e496e', 'RetryAttempts': 0}}
+E           AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '42', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f8a3b5e4-670e-402a-90e6-7f182d2f441f', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1072: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_custom_key_store_lifecycle" time="0.003"><failure message="AssertionError: assert 'CustomKeyStoreId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '7d59cc31-f390-4b7a-bb3d-b9e0b5cb4c69', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c31e990&gt;
-kms = &lt;botocore.client.KMS object at 0x10d073020&gt;
+tests/compatibility/test_kms_compat.py:1072: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_custom_key_store_lifecycle" time="0.004"><failure message="AssertionError: assert 'CustomKeyStoreId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '3ec7ed14-0d90-4d59-9fc8-c5b8f9b6498d', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c1269f0&gt;
+kms = &lt;botocore.client.KMS object at 0x10c9f6e70&gt;
 
     def test_custom_key_store_lifecycle(self, kms):
         """CreateCustomKeyStore, DescribeCustomKeyStores, DeleteCustomKeyStore."""
@@ -813,10 +813,10 @@ kms = &lt;botocore.client.KMS object at 0x10d073020&gt;
             KeyStorePassword="kmsP@ssw0rd!",
         )
 &gt;       assert "CustomKeyStoreId" in resp
-E       AssertionError: assert 'CustomKeyStoreId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '7d59cc31-f390-4b7a-bb3d-b9e0b5cb4c69', 'RetryAttempts': 0}}
+E       AssertionError: assert 'CustomKeyStoreId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '3ec7ed14-0d90-4d59-9fc8-c5b8f9b6498d', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1101: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_get_parameters_for_import" time="0.006"><failure message="AssertionError: assert 'KeyId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0d3d4086-0a40-4756-b320-2f7654009277', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c31fe00&gt;
-kms = &lt;botocore.client.KMS object at 0x10c290230&gt;
+tests/compatibility/test_kms_compat.py:1101: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_get_parameters_for_import" time="0.008"><failure message="AssertionError: assert 'KeyId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '661049f8-b48c-4c9f-95e8-308a81388e60', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c127fb0&gt;
+kms = &lt;botocore.client.KMS object at 0x10c086c90&gt;
 
     def test_get_parameters_for_import(self, kms):
         """GetParametersForImport returns wrapping key and import token."""
@@ -829,10 +829,10 @@ kms = &lt;botocore.client.KMS object at 0x10c290230&gt;
                 WrappingKeySpec="RSA_2048",
             )
 &gt;           assert "KeyId" in resp
-E           AssertionError: assert 'KeyId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0d3d4086-0a40-4756-b320-2f7654009277', 'RetryAttempts': 0}}
+E           AssertionError: assert 'KeyId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '661049f8-b48c-4c9f-95e8-308a81388e60', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1128: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_import_key_material_and_delete" time="0.005"><failure message="KeyError: 'ImportToken'">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c331c70&gt;
-kms = &lt;botocore.client.KMS object at 0x10d063c20&gt;
+tests/compatibility/test_kms_compat.py:1128: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_import_key_material_and_delete" time="0.005"><failure message="KeyError: 'ImportToken'">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c139e20&gt;
+kms = &lt;botocore.client.KMS object at 0x10c8bbfe0&gt;
 
     def test_import_key_material_and_delete(self, kms):
         """Full key import flow: create EXTERNAL key, get params, import, delete material."""
@@ -853,8 +853,8 @@ kms = &lt;botocore.client.KMS object at 0x10d063c20&gt;
                            ^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'ImportToken'
 
-tests/compatibility/test_kms_compat.py:1150: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_delete_custom_key_store_nonexistent" time="0.003"><failure message="AssertionError: assert 'InvalidException' in ('CustomKeyStoreNotFoundException', 'NotFoundException')">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c3314f0&gt;
-kms = &lt;botocore.client.KMS object at 0x10d0709e0&gt;
+tests/compatibility/test_kms_compat.py:1150: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_delete_custom_key_store_nonexistent" time="0.004"><failure message="AssertionError: assert 'InvalidException' in ('CustomKeyStoreNotFoundException', 'NotFoundException')">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c1396a0&gt;
+kms = &lt;botocore.client.KMS object at 0x10ca6fcb0&gt;
 
     def test_delete_custom_key_store_nonexistent(self, kms):
         """DeleteCustomKeyStore with fake ID raises an error."""
@@ -867,8 +867,8 @@ kms = &lt;botocore.client.KMS object at 0x10d0709e0&gt;
         )
 E       AssertionError: assert 'InvalidException' in ('CustomKeyStoreNotFoundException', 'NotFoundException')
 
-tests/compatibility/test_kms_compat.py:1187: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_get_parameters_for_import_wrong_origin" time="0.005"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c330bf0&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb9fe90&gt;
+tests/compatibility/test_kms_compat.py:1187: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_get_parameters_for_import_wrong_origin" time="0.005"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c138d10&gt;
+kms = &lt;botocore.client.KMS object at 0x10cc915b0&gt;
 
     def test_get_parameters_for_import_wrong_origin(self, kms):
         """GetParametersForImport on a non-EXTERNAL key raises error."""
@@ -879,8 +879,8 @@ kms = &lt;botocore.client.KMS object at 0x10cb9fe90&gt;
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_kms_compat.py:1197: Failed</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_connect_disconnect_custom_key_store" time="0.004"><failure message="KeyError: 'CustomKeyStoreId'">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c3303e0&gt;
-kms = &lt;botocore.client.KMS object at 0x10d0738f0&gt;
+tests/compatibility/test_kms_compat.py:1197: Failed</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_connect_disconnect_custom_key_store" time="0.005"><failure message="KeyError: 'CustomKeyStoreId'">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c138500&gt;
+kms = &lt;botocore.client.KMS object at 0x10cc91df0&gt;
 
     def test_connect_disconnect_custom_key_store(self, kms):
         """ConnectCustomKeyStore and DisconnectCustomKeyStore lifecycle."""
@@ -908,8 +908,8 @@ kms = &lt;botocore.client.KMS object at 0x10d0738f0&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'CustomKeyStoreId'
 
-tests/compatibility/test_kms_compat.py:1230: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_update_custom_key_store" time="0.003"><failure message="KeyError: 'CustomKeyStoreId'">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c332690&gt;
-kms = &lt;botocore.client.KMS object at 0x10cc89ca0&gt;
+tests/compatibility/test_kms_compat.py:1230: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_update_custom_key_store" time="0.003"><failure message="KeyError: 'CustomKeyStoreId'">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c13a840&gt;
+kms = &lt;botocore.client.KMS object at 0x10cc46f00&gt;
 
     def test_update_custom_key_store(self, kms):
         """UpdateCustomKeyStore changes the store name."""
@@ -937,8 +937,8 @@ kms = &lt;botocore.client.KMS object at 0x10cc89ca0&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'CustomKeyStoreId'
 
-tests/compatibility/test_kms_compat.py:1264: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_derive_shared_secret" time="0.007"><failure message="AssertionError: assert 'SharedSecret' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '23e1ca3b-6072-442f-97bb-d91169257d62', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c332a80&gt;
-kms = &lt;botocore.client.KMS object at 0x10cb9c0b0&gt;
+tests/compatibility/test_kms_compat.py:1264: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_derive_shared_secret" time="0.006"><failure message="AssertionError: assert 'SharedSecret' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'fe00e2e3-97dd-439c-b47e-ffe76df564b2', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10c13ac30&gt;
+kms = &lt;botocore.client.KMS object at 0x10cc27590&gt;
 
     def test_derive_shared_secret(self, kms):
         """DeriveSharedSecret with ECC KEY_AGREEMENT key."""
@@ -956,6 +956,6 @@ kms = &lt;botocore.client.KMS object at 0x10cb9c0b0&gt;
                 PublicKey=pub["PublicKey"],
             )
 &gt;           assert "SharedSecret" in resp
-E           AssertionError: assert 'SharedSecret' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '23e1ca3b-6072-442f-97bb-d91169257d62', 'RetryAttempts': 0}}
+E           AssertionError: assert 'SharedSecret' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'fe00e2e3-97dd-439c-b47e-ffe76df564b2', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1292: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_update_primary_region" time="0.007" /></testsuite></testsuites>
+tests/compatibility/test_kms_compat.py:1292: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_update_primary_region" time="0.008" /></testsuite></testsuites>

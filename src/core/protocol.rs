@@ -106,14 +106,43 @@ pub fn parse_query_protocol(
     body: &[u8],
 ) -> Result<HashMap<String, Value>, Box<dyn std::error::Error>> {
     let body_str = str::from_utf8(body)?;
-    let mut params = HashMap::new();
+    let mut raw_params: Vec<(String, String)> = Vec::new();
 
     for pair in body_str.split('&') {
         if let Some((key, value)) = pair.split_once('=') {
             let key = urlencoding::decode(key)?.into_owned();
             let value = urlencoding::decode(value)?.into_owned();
+            raw_params.push((key, value));
+        }
+    }
+
+    // Build params, handling member indices (e.g., TagKeys.member.1=env)
+    let mut params = HashMap::new();
+    let mut lists: HashMap<String, Vec<(u32, String)>> = HashMap::new();
+
+    for (key, value) in raw_params {
+        // Check for member index pattern: Name.member.N=value
+        if let Some(pos) = key.rfind(".member.") {
+            let base = &key[..pos];
+            let idx_str = &key[pos + 8..];
+            if let Ok(idx) = idx_str.parse::<u32>() {
+                lists.entry(base.to_string()).or_default().push((idx, value));
+            } else {
+                params.insert(key, Value::String(value));
+            }
+        } else if key.contains(".") {
+            // Nested key (e.g., CreateDate=...) - store as-is
+            params.insert(key, Value::String(value));
+        } else {
             params.insert(key, Value::String(value));
         }
+    }
+
+    // Convert lists to JSON arrays
+    for (base, mut entries) in lists {
+        entries.sort_by_key(|(idx, _)| *idx);
+        let arr: Vec<Value> = entries.iter().map(|(_, v)| Value::String(v.clone())).collect();
+        params.insert(base, Value::Array(arr));
     }
 
     Ok(params)
