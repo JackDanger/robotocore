@@ -342,13 +342,9 @@ impl S3Handler {
         let etag = obj.etag.clone();
         bucket.objects.write().insert(key, obj);
 
-        AwsResponse::xml(
-            200,
-            format!(
-                r#"<?xml version="1.0" encoding="UTF-8"?><CopyObjectResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><LastModified>2024-01-01T00:00:00.000Z</LastModified><ETag>{}</ETag></CopyObjectResult>"#,
-                etag
-            ),
-        )
+        let mut resp = AwsResponse::xml(200, String::new());
+        resp.headers.push(("ETag".to_string(), format!("\"{}\"", etag)));
+        resp
     }
 
     fn do_copy_object(&self, req: &AwsRequest, dest_bucket: &str, dest_key: &str, copy_source: &str, state: &S3State) -> AwsResponse {
@@ -980,13 +976,9 @@ impl S3Handler {
             .write()
             .insert(part_number, part);
 
-        AwsResponse::xml(
-            200,
-            format!(
-                r#"<?xml version="1.0" encoding="UTF-8"?><ETag xmlns="http://s3.amazonaws.com/doc/2006-03-01/">{}</ETag>"#,
-                etag
-            ),
-        )
+        let mut resp = AwsResponse::xml(200, String::new());
+        resp.headers.push(("ETag".to_string(), format!("\"{}\"", etag)));
+        resp
     }
 
     fn complete_multipart_upload(&self, req: &AwsRequest) -> AwsResponse {
