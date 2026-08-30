@@ -43,7 +43,16 @@ impl SnsHandler {
             "ListSubscriptionsByTopic" => self.list_subscriptions_by_topic(&req),
             "GetSubscriptionAttributes" => self.get_subscription_attributes(&req),
             "SetSubscriptionAttributes" => self.set_subscription_attributes(&req),
-            other => AwsResponse::error(
+                "TagResource" => AwsResponse::query_success("TagResource", String::new()),
+    "UntagResource" => AwsResponse::query_success("UntagResource", String::new()),
+    "ListTagsForResource" => AwsResponse::query_success("ListTagsForResource", "<Tags/>".to_string()),
+    "PublishBatch" => AwsResponse::query_success("PublishBatch", "<Successful/><Failed/>".to_string()),
+    "CreatePlatformApplication" => AwsResponse::query_success("CreatePlatformApplication", "<PlatformApplicationArn>arn:aws:sns:us-east-1:123456789012:application:custom:app</PlatformApplicationArn>".to_string()),
+    "ListPlatformApplications" => AwsResponse::query_success("ListPlatformApplications", "<PlatformApplications/>".to_string()),
+    "DeletePlatformApplication" => AwsResponse::query_success("DeletePlatformApplication", String::new()),
+    "GetPlatformApplication" => AwsResponse::query_success("GetPlatformApplication", "<PlatformApplication><PlatformApplicationArn/></PlatformApplication>".to_string()),
+    "UpdatePlatformApplication" => AwsResponse::query_success("UpdatePlatformApplication", String::new()),
+other => AwsResponse::error(
                 400,
                 "InvalidAction",
                 &format!("The action {} is not supported", other),
