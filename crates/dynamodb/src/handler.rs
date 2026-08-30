@@ -367,21 +367,147 @@ impl DynamoDbHandler {
                 &format!("Requested resource not found: Table: {}", table_name)),
         };
 
+        let key_cond = req.params.get("KeyConditionExpression")
+            .and_then(|v| v.as_str()).unwrap_or("");
+        let expr_vals = req.params.get("ExpressionAttributeValues").cloned().unwrap_or(Value::Null);
+        let expr_names: HashMap<String, String> = req.params.get("ExpressionAttributeNames")
+            .and_then(|v| v.as_object())
+            .map(|m| m.iter().filter_map(|(k, v)| v.as_str().map(|s| (k.clone(), s.to_string()))).collect())
+            .unwrap_or_default();
+        let limit = req.params.get("Limit").and_then(|v| v.as_u64()).map(|v| v as usize).unwrap_or(1000);
+        let filter_expr = req.params.get("FilterExpression")
+            .and_then(|v| v.as_str()).unwrap_or("");
+        let projection = req.params.get("ProjectionExpression")
+            .and_then(|v| v.as_str()).unwrap_or("");
+
         let items = table.items.read();
         let mut result_items: Vec<Value> = Vec::new();
+        let mut scanned = 0;
+
         for (_key, item) in items.iter() {
+            scanned += 1;
             let item_json = serde_json::to_value(&item.attributes).unwrap_or(Value::Null);
-            result_items.push(item_json);
+
+            // Apply KeyConditionExpression
+            if !key_cond.is_empty() {
+                if !self.matches_key_condition(&item_json, key_cond, &expr_vals, &expr_names) {
+                    continue;
+                }
+            }
+
+            // Apply FilterExpression
+            if !filter_expr.is_empty() {
+                if !self.matches_filter(&item_json, filter_expr, &expr_vals, &expr_names) {
+                    continue;
+                }
+            }
+
+            // Apply projection
+            let final_item = if !projection.is_empty() {
+                let proj_attrs: Vec<String> = projection.split(',')
+                    .map(|s| self.resolve_name(s.trim(), &expr_names)).collect();
+                let mut proj = serde_json::Map::new();
+                for attr in &proj_attrs {
+                    if let Some(v) = item_json.get(attr) {
+                        proj.insert(attr.clone(), v.clone());
+                    }
+                }
+                Value::Object(proj)
+            } else {
+                item_json
+            };
+
+            result_items.push(final_item);
+            if result_items.len() >= limit {
+                break;
+            }
         }
 
-        let limit = req.params.get("Limit").and_then(|v| v.as_u64()).map(|v| v as usize).unwrap_or(1000);
-        let items_slice = &result_items[..result_items.len().min(limit)];
-
         AwsResponse::json(200, json!({
-            "Items": items_slice,
-            "Count": items_slice.len(),
-            "ScannedCount": items_slice.len()
+            "Items": result_items,
+            "Count": result_items.len(),
+            "ScannedCount": scanned
         }))
+    }
+
+    fn matches_key_condition(&self, item: &Value, expr: &str, vals: &Value, names: &HashMap<String, String>) -> bool {
+        // Parse "attr = :val AND attr2 BETWEEN :lo AND :hi"
+        let expr = expr.trim();
+        let conditions: Vec<&str> = expr.split(" AND ").map(|s| s.trim()).collect();
+        for cond in conditions {
+            let cond = cond.trim();
+            if cond.contains(" BETWEEN ") {
+                let parts: Vec<&str> = cond.split(" BETWEEN ").collect();
+                if parts.len() == 2 {
+                    let attr = self.resolve_name(parts[0].trim(), names);
+                    let bounds: Vec<&str> = parts[1].split(" AND ").collect();
+                    if bounds.len() == 2 {
+                        let lo_val = vals.get(bounds[0].trim()).cloned().unwrap_or(Value::Null);
+                        let hi_val = vals.get(bounds[1].trim()).cloned().unwrap_or(Value::Null);
+                        let item_val = item.get(&attr).cloned().unwrap_or(Value::Null);
+                        let item_s = self.dyn_to_str(&item_val);
+                        let lo_s = self.dyn_to_str(&lo_val);
+                        let hi_s = self.dyn_to_str(&hi_val);
+                        if item_s < lo_s || item_s > hi_s {
+                            return false;
+                        }
+                    }
+                }
+            } else if let Some(eq_pos) = cond.find('=') {
+                let attr = self.resolve_name(&cond[..eq_pos].trim(), names);
+                let val_ref = cond[eq_pos+1..].trim();
+                let val = vals.get(val_ref).cloned().unwrap_or(Value::Null);
+                let item_val = item.get(&attr).cloned().unwrap_or(Value::Null);
+                if item_val != val {
+                    return false;
+                }
+            }
+        }
+        true
+    }
+
+    fn matches_filter(&self, item: &Value, expr: &str, vals: &Value, names: &HashMap<String, String>) -> bool {
+        // Basic filter: "attr = :val" or "attr > :val" etc.
+        let expr = expr.trim();
+        // Handle simple "attr op :val" patterns
+        for op in [">=", "<=", ">", "<", "="] {
+            if expr.contains(op) {
+                let parts: Vec<&str> = expr.split(op).collect();
+                if parts.len() == 2 {
+                    let attr = self.resolve_name(parts[0].trim(), names);
+                    let val_ref = parts[1].trim();
+                    let val = vals.get(val_ref).cloned().unwrap_or(Value::Null);
+                    let item_val = item.get(&attr).cloned().unwrap_or(Value::Null);
+                    let item_s = self.dyn_to_str(&item_val);
+                    let val_s = self.dyn_to_str(&val);
+                    match op {
+                        "=" => { if item_s != val_s { return false; } }
+                        ">" => { if item_s <= val_s { return false; } }
+                        "<" => { if item_s >= val_s { return false; } }
+                        ">=" => { if item_s < val_s { return false; } }
+                        "<=" => { if item_s > val_s { return false; } }
+                        _ => {}
+                    }
+                }
+            }
+        }
+        true
+    }
+
+    fn dyn_to_str(&self, val: &Value) -> String {
+        match val {
+            Value::String(s) => s.clone(),
+            Value::Object(m) => {
+                if let Some(s) = m.get("S").and_then(|v| v.as_str()) {
+                    s.to_string()
+                } else if let Some(n) = m.get("N").and_then(|v| v.as_str()) {
+                    n.to_string()
+                } else {
+                    val.to_string()
+                }
+            }
+            _ => val.to_string(),
+        }
     }
 
     fn scan(&self, req: &AwsRequest) -> AwsResponse {
