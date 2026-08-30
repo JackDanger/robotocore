@@ -63,7 +63,7 @@ impl KinesisHandler {
             "RemoveTagsFromStream" => self.remove_tags(&req),
                         "DescribeAccountSettings" => self.json_stub(&req, "AccountSettings"),
             "DescribeLimits" => self.json_stub(&req, "Limits"),
-            "DescribeStreamSummary" => self.json_stub_list(&req, "StreamList"),
+            "DescribeStreamSummary" => self.describe_stream_summary(&req),
             "EnableEnhancedMonitoring" => self.json_stub(&req, "EnableEnhancedMonitoring"),
             "IncreaseStreamRetentionPeriod" => self.json_stub(&req, "IncreaseStreamRetentionPeriod"),
             "ListShards" => self.json_stub_list(&req, "Shards"),
@@ -253,6 +253,32 @@ other => AwsResponse::error(400, "ValidationException",
 
     fn remove_tags(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::json(200, json!({}))
+    }
+
+    fn describe_stream_summary(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("StreamName").and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        match state.get_stream(name) {
+            Some(stream) => {
+                let shard_count = stream.shards.read().len();
+                AwsResponse::json(200, json!({
+                    "StreamDescriptionSummary": {
+                        "StreamName": stream.stream_name,
+                        "StreamARN": stream.stream_arn,
+                        "StreamStatus": *stream.stream_status.read(),
+                        "StreamModeDetails": {
+                            "StreamMode": stream.stream_mode
+                        },
+                        "RetentionPeriodHours": stream.retention_period_hours,
+                        "OpenShardCount": shard_count,
+                        "ConsumerCount": 0,
+                        "EnhancedMonitoring": [{ "ShardLevelMetrics": [] }],
+                    }
+                }))
+            }
+            None => AwsResponse::error(400, "ResourceNotFoundException",
+                &format!("Stream {name} not found")),
+        }
     }
 }
 
