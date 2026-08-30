@@ -836,7 +836,8 @@ pub async fn catch_all_handler(
 
     // Determine operation (may be empty for REST services like S3 where
     // the operation is derived from method + path + query params)
-    let operation = match extract_operation(&method, &headers_with_path, &body_bytes, &service) {
+    let query_string = uri.query().unwrap_or("").to_string();
+    let operation = match extract_operation(&method, &headers_with_path, &body_bytes, &service, &query_string) {
         Ok(o) => o,
         Err(_) => String::new(),
     };

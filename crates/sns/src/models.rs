@@ -55,12 +55,14 @@ pub struct Subscription {
 #[derive(Clone)]
 pub struct SnsState {
     pub topics: Arc<RwLock<HashMap<String, Arc<Topic>>>>,
+    pub subscriptions: Arc<RwLock<Vec<Subscription>>>,
 }
 
 impl SnsState {
     pub fn new() -> Self {
         Self {
             topics: Arc::new(RwLock::new(HashMap::new())),
+            subscriptions: Arc::new(RwLock::new(Vec::new())),
         }
     }
 
@@ -78,6 +80,18 @@ impl SnsState {
 
     pub fn list_topics(&self) -> Vec<Arc<Topic>> {
         self.topics.read().values().cloned().collect()
+    }
+
+    pub fn add_subscription(&self, sub: Subscription) {
+        self.subscriptions.write().push(sub);
+    }
+
+    pub fn list_subscriptions(&self) -> Vec<Subscription> {
+        self.subscriptions.read().clone()
+    }
+
+    pub fn remove_subscription(&self, arn: &str) {
+        self.subscriptions.write().retain(|s| s.subscription_arn != arn);
     }
 }
 

@@ -229,6 +229,7 @@ pub fn extract_operation(
     headers: &HeaderMap,
     body: &[u8],
     service: &str,
+    query_string: &str,
 ) -> Result<String, Box<dyn std::error::Error>> {
     // Try X-Amz-Target header (JSON/EC2 protocols)
     if let Some(target) = headers.get("X-Amz-Target") {
@@ -242,6 +243,16 @@ pub fn extract_operation(
     let body_str = str::from_utf8(body).unwrap_or("");
     if let Some(start) = body_str.find("Action=") {
         let after_action = &body_str[start + 7..];
+        if let Some(end) = after_action.find('&') {
+            return Ok(after_action[..end].to_string());
+        } else {
+            return Ok(after_action.to_string());
+        }
+    }
+
+    // Try query string for Action parameter (GET requests with query params)
+    if let Some(start) = query_string.find("Action=") {
+        let after_action = &query_string[start + 7..];
         if let Some(end) = after_action.find('&') {
             return Ok(after_action[..end].to_string());
         } else {

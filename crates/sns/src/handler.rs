@@ -117,13 +117,16 @@ impl SnsHandler {
             }
         };
 
-        let mut body = String::new();
-        body.push_str(&format!("<DisplayName>{}</DisplayName>", topic.display_name.as_deref().unwrap_or("")));
-        body.push_str(&format!("<Owner>{}</Owner>", topic.owner));
-        if let Some(policy) = &topic.policy {
-            body.push_str(&format!("<Policy>{}</Policy>", policy));
+        let mut body = String::from("<Attributes>");
+        body.push_str(&format!("<entry><key>TopicArn</key><value>{}</value></entry>", topic.arn));
+        body.push_str(&format!("<entry><key>Owner</key><value>{}</value></entry>", topic.owner));
+        if let Some(dn) = &topic.display_name {
+            body.push_str(&format!("<entry><key>DisplayName</key><value>{}</value></entry>", dn));
         }
-        body.push_str(&format!("<TopicArn>{}</TopicArn>", topic.arn));
+        if let Some(policy) = &topic.policy {
+            body.push_str(&format!("<entry><key>Policy</key><value>{}</value></entry>", policy));
+        }
+        body.push_str("</Attributes>");
 
         AwsResponse::query_success("GetTopicAttributes", body)
     }
@@ -162,10 +165,11 @@ impl SnsHandler {
         let state = self.get_state(req.account, &req.region);
         let topics = state.list_topics();
 
-        let mut body = String::new();
+        let mut body = String::from("<Topics>");
         for topic in &topics {
-            body.push_str(&format!("<Topic><TopicArn>{}</TopicArn></Topic>", topic.arn));
+            body.push_str(&format!("<member><TopicArn>{}</TopicArn></member>", topic.arn));
         }
+        body.push_str("</Topics>");
 
         AwsResponse::query_success("ListTopics", body)
     }
@@ -238,7 +242,7 @@ impl SnsHandler {
             created: chrono::Utc::now().timestamp() as u64,
         };
 
-        let _ = topic; // Can't modify Arc directly
+        state.add_subscription(sub);
         let body = format!("<SubscriptionArn>{}</SubscriptionArn>", subscription_arn);
         AwsResponse::query_success("Subscribe", body)
     }
@@ -255,12 +259,23 @@ impl SnsHandler {
             return AwsResponse::error(400, "InvalidParameter", "Subscription arn cannot be empty");
         }
 
+        let state = self.get_state(req.account, &req.region);
+        state.remove_subscription(&arn);
         let body = String::new();
         AwsResponse::query_success("Unsubscribe", body)
     }
 
-    fn list_subscriptions(&self, _req: &AwsRequest) -> AwsResponse {
-        let body = String::new();
+    fn list_subscriptions(&self, req: &AwsRequest) -> AwsResponse {
+        let state = self.get_state(req.account, &req.region);
+        let subs = state.list_subscriptions();
+        let mut body = String::from("<Subscriptions>");
+        for sub in &subs {
+            body.push_str(&format!(
+                "<member><SubscriptionArn>{}</SubscriptionArn><TopicArn>{}</TopicArn><Endpoint>{}</Endpoint><Protocol>{}</Protocol><Owner>{}</Owner><RawMessageDelivery>false</RawMessageDelivery></member>",
+                sub.subscription_arn, sub.topic_arn, sub.endpoint, sub.protocol, sub.owner
+            ));
+        }
+        body.push_str("</Subscriptions>");
         AwsResponse::query_success("ListSubscriptions", body)
     }
 
@@ -284,13 +299,35 @@ impl SnsHandler {
             }
         };
 
-        let body = String::new();
+        let subs = state.list_subscriptions();
+        let mut body = String::from("<Subscriptions>");
+        for sub in &subs {
+            if sub.topic_arn == arn {
+                body.push_str(&format!(
+                    "<member><SubscriptionArn>{}</SubscriptionArn><TopicArn>{}</TopicArn><Endpoint>{}</Endpoint><Protocol>{}</Protocol><Owner>{}</Owner><RawMessageDelivery>false</RawMessageDelivery></member>",
+                    sub.subscription_arn, sub.topic_arn, sub.endpoint, sub.protocol, sub.owner
+                ));
+            }
+        }
+        body.push_str("</Subscriptions>");
         AwsResponse::query_success("ListSubscriptionsByTopic", body)
     }
 
-    fn get_subscription_attributes(&self, _req: &AwsRequest) -> AwsResponse {
-        let body = String::new();
-        AwsResponse::query_success("GetSubscriptionAttributes", body)
+    fn get_subscription_attributes(&self, req: &AwsRequest) -> AwsResponse {
+        let sub_arn = req.params.get("SubscriptionArn")
+            .and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        let subs = state.list_subscriptions();
+        if let Some(sub) = subs.iter().find(|s| s.subscription_arn == sub_arn) {
+            let body = format!(
+                "<Attributes><entry><key>SubscriptionArn</key><value>{}</value></entry><entry><key>TopicArn</key><value>{}</value></entry><entry><key>Protocol</key><value>{}</value></entry><entry><key>Endpoint</key><value>{}</value></entry></Attributes>",
+                sub.subscription_arn, sub.topic_arn, sub.protocol, sub.endpoint
+            );
+            AwsResponse::query_success("GetSubscriptionAttributes", body)
+        } else {
+            AwsResponse::error(400, "InvalidParameter",
+                "Subscription arn does not exist")
+        }
     }
 
     fn set_subscription_attributes(&self, _req: &AwsRequest) -> AwsResponse {
