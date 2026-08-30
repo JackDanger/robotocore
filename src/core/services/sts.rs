@@ -123,7 +123,7 @@ fn handle_get_session_token(
 <GetSessionTokenResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
     <GetSessionTokenResult>
         <Credentials>
-            <AccessKeyId>AKIAIOSFODNN7EXAMPLE</AccessKeyId>
+            <AccessKeyId>ASIAIOSFODNN7EXAMPLE</AccessKeyId>
             <SecretAccessKey>wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</SecretAccessKey>
             <SessionToken>session-token-001</SessionToken>
             <Expiration>2024-12-31T23:59:59Z</Expiration>
@@ -152,7 +152,7 @@ fn handle_get_federation_token(
             <FederatedUserId>{}/{}-1234567890</FederatedUserId>
         </FederatedUser>
         <Credentials>
-            <AccessKeyId>AKIAIOSFODNN7EXAMPLE</AccessKeyId>
+            <AccessKeyId>ASIAIOSFODNN7EXAMPLE</AccessKeyId>
             <SecretAccessKey>wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</SecretAccessKey>
             <SessionToken>session-token-001</SessionToken>
             <Expiration>2024-12-31T23:59:59Z</Expiration>
@@ -176,26 +176,32 @@ fn handle_assume_role(
         .and_then(|v| v.as_str())
         .map(|s| s.to_string())
         .unwrap_or_else(|| format!("arn:aws:iam::{}:role/lambda-role", account));
+    let session_name = req.params.get("RoleSessionName")
+        .and_then(|v| v.as_str())
+        .map(|s| s.to_string())
+        .unwrap_or_else(|| format!("session-{}", uuid::Uuid::new_v4().to_string().split('-').next().unwrap_or("0000")));
+    let arn = format!("{}/{}", role_arn, session_name);
+    let role_id = format!("AROA{}:{}", account, session_name);
     let body = format!(
         r#"<?xml version="1.0" encoding="UTF-8"?>
 <AssumeRoleResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
     <AssumeRoleResult>
         <Credentials>
-            <AccessKeyId>AKIAIOSFODNN7EXAMPLE</AccessKeyId>
+            <AccessKeyId>ASIAIOSFODNN7EXAMPLE</AccessKeyId>
             <SecretAccessKey>wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</SecretAccessKey>
             <SessionToken>session-token-001</SessionToken>
             <Expiration>2024-12-31T23:59:59Z</Expiration>
         </Credentials>
         <AssumedRoleUser>
             <Arn>{}</Arn>
-            <AssumedRoleId>AROA1234567890:session</AssumedRoleId>
+            <AssumedRoleId>{}</AssumedRoleId>
         </AssumedRoleUser>
     </AssumeRoleResult>
     <ResponseMetadata>
         <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
     </ResponseMetadata>
 </AssumeRoleResponse>"#,
-        role_arn
+        arn, role_id
     );
     Ok(xml_response(&body))
 }
