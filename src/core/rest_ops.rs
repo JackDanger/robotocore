@@ -2,17 +2,17 @@
 
 pub fn lambda_rest_ops() -> &'static [(&'static str, &'static str, &'static str)] {
     &[
-        ("GET", "/2014-11-13/functions/{FunctionName}/configuration", "GetFunctionConfiguration"),
-        ("POST", "/2014-11-13/functions/{FunctionName}/invoke-async/", "InvokeAsync"),
-        ("PUT", "/2014-11-13/functions/{FunctionName}/configuration", "UpdateFunctionConfiguration"),
-        ("GET", "/2014-11-13/event-source-mappings/{UUID}", "GetEventSource"),
-        ("DELETE", "/2014-11-13/event-source-mappings/{UUID}", "RemoveEventSource"),
-        ("DELETE", "/2014-11-13/functions/{FunctionName}", "DeleteFunction"),
-        ("GET", "/2014-11-13/functions/{FunctionName}", "GetFunction"),
-        ("PUT", "/2014-11-13/functions/{FunctionName}", "UploadFunction"),
-        ("POST", "/2014-11-13/event-source-mappings/", "AddEventSource"),
-        ("GET", "/2014-11-13/event-source-mappings/", "ListEventSources"),
-        ("GET", "/2014-11-13/functions/", "ListFunctions"),
+        ("GET", "/2015-03-31/functions/{FunctionName}/configuration", "GetFunctionConfiguration"),
+        ("POST", "/2015-03-31/functions/{FunctionName}/invoke-async/", "InvokeAsync"),
+        ("PUT", "/2015-03-31/functions/{FunctionName}/configuration", "UpdateFunctionConfiguration"),
+        ("GET", "/2015-03-31/event-source-mappings/{UUID}", "GetEventSource"),
+        ("DELETE", "/2015-03-31/event-source-mappings/{UUID}", "RemoveEventSource"),
+        ("DELETE", "/2015-03-31/functions/{FunctionName}", "DeleteFunction"),
+        ("GET", "/2015-03-31/functions/{FunctionName}", "GetFunction"),
+        ("PUT", "/2015-03-31/functions/{FunctionName}", "UploadFunction"),
+        ("POST", "/2015-03-31/event-source-mappings/", "AddEventSource"),
+        ("GET", "/2015-03-31/event-source-mappings/", "ListEventSources"),
+        ("GET", "/2015-03-31/functions/", "ListFunctions"),
     ]
 }
 
