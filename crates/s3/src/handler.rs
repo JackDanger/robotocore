@@ -405,7 +405,9 @@ impl S3Handler {
             }
         };
 
-        AwsResponse::binary(200, obj.data.clone(), &obj.content_type)
+        let mut resp = AwsResponse::binary(200, obj.data.clone(), &obj.content_type);
+        resp.headers.push(("ETag".to_string(), format!("\"{}\"", obj.etag)));
+        resp
     }
 
     fn head_object(&self, req: &AwsRequest) -> AwsResponse {
