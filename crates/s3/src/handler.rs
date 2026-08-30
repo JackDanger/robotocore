@@ -696,7 +696,8 @@ impl S3Handler {
 
         let body_str = String::from_utf8_lossy(&req.body);
         let enabled = body_str.contains("<Status>Enabled</Status>");
-        *bucket.versioning.write() = enabled;
+        let suspended = body_str.contains("<Status>Suspended</Status>");
+        *bucket.versioning.write() = if enabled { Some(true) } else if suspended { Some(false) } else { None };
         AwsResponse::no_content(200)
     }
 
@@ -714,16 +715,21 @@ impl S3Handler {
             }
         };
 
-        let status = if *bucket.versioning.read() {
-            "Enabled"
+        let status = match *bucket.versioning.read() {
+            Some(true) => "Enabled",
+            Some(false) => "Suspended",
+            None => "",
+        };
+        let status_elem = if status.is_empty() {
+            String::new()
         } else {
-            "Suspended"
+            format!("<Status>{}</Status>", status)
         };
         let body = format!(
             r#"<?xml version="1.0" encoding="UTF-8"?><VersioningConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-  <Status>{}</Status>
+  {}
 </VersioningConfiguration>"#,
-            status
+            status_elem
         );
         AwsResponse::xml(200, body)
     }
