@@ -45,11 +45,27 @@ impl Key {
 #[derive(Clone)]
 pub struct KmsState {
     pub keys: Arc<RwLock<HashMap<String, Arc<Key>>>>,
+    pub aliases: Arc<RwLock<HashMap<String, String>>>,
 }
 
 impl KmsState {
     pub fn new() -> Self {
-        Self { keys: Arc::new(RwLock::new(HashMap::new())) }
+        Self {
+            keys: Arc::new(RwLock::new(HashMap::new())),
+            aliases: Arc::new(RwLock::new(HashMap::new())),
+        }
+    }
+
+    pub fn create_alias(&self, alias_name: &str, key_id: &str) {
+        self.aliases.write().insert(alias_name.to_string(), key_id.to_string());
+    }
+
+    pub fn delete_alias(&self, alias_name: &str) {
+        self.aliases.write().remove(alias_name);
+    }
+
+    pub fn list_aliases(&self) -> Vec<(String, String)> {
+        self.aliases.read().iter().map(|(k, v)| (k.clone(), v.clone())).collect()
     }
 
     pub fn get_key(&self, id: &str) -> Option<Arc<Key>> {

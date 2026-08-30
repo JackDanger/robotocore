@@ -47,6 +47,22 @@ impl KmsHandler {
             "UpdateKeyDescription" => self.update_key_description(&req),
             "GetPublicKey" => self.get_public_key(&req),
             "ReEncrypt" => self.re_encrypt(&req),
+            "GetKeyRotationStatus" => self.get_key_rotation_status(&req),
+            "EnableKeyRotation" => self.enable_key_rotation(&req),
+            "DisableKeyRotation" => self.disable_key_rotation(&req),
+            "ListResourceTags" => self.list_resource_tags(&req),
+            "TagResource" => self.tag_resource(&req),
+            "UntagResource" => self.untag_resource(&req),
+            "PutKeyPolicy" => self.put_key_policy(&req),
+            "GetKeyPolicy" => self.get_key_policy(&req),
+            "DeleteAlias" => self.delete_alias(&req),
+            "ListAliases" => self.list_aliases(&req),
+            "CreateAlias" => self.create_alias(&req),
+            "CreateGrant" => AwsResponse::json(200, json!({ "GrantToken": uuid::Uuid::new_v4().simple().to_string() })),
+            "ListGrants" => AwsResponse::json(200, json!({ "Grants": [], "NextMarker": null })),
+            "RetireGrant" => AwsResponse::json(200, json!({})),
+            "RevokeGrant" => AwsResponse::json(200, json!({})),
+            "DescribeKey" => self.describe_key(&req),
             other => AwsResponse::error(400, "InvalidException",
                 &format!("The operation {} is not implemented", other)),
         }
@@ -133,8 +149,20 @@ impl KmsHandler {
         AwsResponse::json(200, json!({ "Keys": key_list }))
     }
 
-    fn list_aliases(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::json(200, json!({ "Aliases": [], "NextMarker": null }))
+    fn list_aliases(&self, req: &AwsRequest) -> AwsResponse {
+        let state = self.get_state(req.account, &req.region);
+        let aliases = state.list_aliases();
+        let alias_list: Vec<Value> = aliases.iter().map(|(name, key_id)| {
+            let key = state.get_key(key_id);
+            json!({
+                "AliasName": name,
+                "AliasArn": format!("arn:aws:kms:us-east-1:123456789012:alias/{}", name.trim_start_matches("alias/")),
+                "ResourceArn": key.map(|k| k.arn.clone()).unwrap_or_default(),
+                "CreationDate": 0.0,
+                "TargetKeyId": key_id
+            })
+        }).collect();
+        AwsResponse::json(200, json!({ "Aliases": alias_list, "NextMarker": null }))
     }
 
     fn enable_key(&self, req: &AwsRequest) -> AwsResponse {
@@ -163,11 +191,21 @@ impl KmsHandler {
         }
     }
 
-    fn create_alias(&self, _req: &AwsRequest) -> AwsResponse {
+    fn create_alias(&self, req: &AwsRequest) -> AwsResponse {
+        let alias_name = req.params.get("AliasName").and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let key_id = req.params.get("TargetKeyId").and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let state = self.get_state(req.account, &req.region);
+        if state.get_key(&key_id).is_none() {
+            return AwsResponse::error(400, "NotFoundException", "Key not found");
+        }
+        state.create_alias(&alias_name, &key_id);
         AwsResponse::json(200, json!({}))
     }
 
-    fn delete_alias(&self, _req: &AwsRequest) -> AwsResponse {
+    fn delete_alias(&self, req: &AwsRequest) -> AwsResponse {
+        let alias_name = req.params.get("AliasName").and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        state.delete_alias(alias_name);
         AwsResponse::json(200, json!({}))
     }
 
@@ -177,6 +215,32 @@ impl KmsHandler {
 
     fn untag_resource(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::json(200, json!({}))
+    }
+
+    fn get_key_rotation_status(&self, req: &AwsRequest) -> AwsResponse {
+        let key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        if state.get_key(key_id).is_some() {
+            AwsResponse::json(200, json!({
+                "RotationEnabled": false,
+                "RotationPeriodInDays": 30
+            }))
+        } else {
+            AwsResponse::error(400, "NotFoundException", "Key not found")
+        }
+    }
+
+    fn enable_key_rotation(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({}))
+    }
+
+    fn disable_key_rotation(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({}))
+    }
+
+    fn list_resource_tags(&self, req: &AwsRequest) -> AwsResponse {
+        let _key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");
+        AwsResponse::json(200, json!({ "Tags": [] }))
     }
 
     fn encrypt(&self, req: &AwsRequest) -> AwsResponse {
@@ -195,12 +259,14 @@ impl KmsHandler {
     }
 
     fn decrypt(&self, req: &AwsRequest) -> AwsResponse {
-        let ciphertext = req.params.get("CiphertextBlob").and_then(|v| v.as_str()).unwrap_or("");
+        let ciphertext_b64 = req.params.get("CiphertextBlob").and_then(|v| v.as_str()).unwrap_or("");
         let key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");
-        let plaintext = ciphertext.strip_prefix("encrypted:").unwrap_or("decrypted");
-        let pt_b64 = base64::encode(plaintext.to_string());
+        // Decode the ciphertext (base64 -> "encrypted:{original_b64}")
+        let ciphertext = base64::decode(ciphertext_b64).unwrap_or_default();
+        let ciphertext_str = String::from_utf8_lossy(&ciphertext);
+        let plaintext_b64 = ciphertext_str.strip_prefix("encrypted:").unwrap_or(&ciphertext_str);
         AwsResponse::json(200, json!({
-            "Plaintext": pt_b64,
+            "Plaintext": plaintext_b64,
             "KeyId": key_id
         }))
     }
