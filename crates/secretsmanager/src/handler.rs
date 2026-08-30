@@ -283,9 +283,11 @@ impl SecretsManagerHandler {
         let mut resp = json!({
             "ARN": secret.arn,
             "Name": secret.name,
+            "Type": "AWS_SECRETS_MANAGER",
             "CreatedDate": secret.created_date,
             "LastChangedDate": secret.created_date,
             "Tags": *secret.tags.read(),
+            "RotationEnabled": false,
             "VersionIdsToStages": {
                 "AWSCURRENT": current.map(|v| v.version_id.clone()).unwrap_or_default()
             }
@@ -332,15 +334,17 @@ impl SecretsManagerHandler {
         };
 
         let versions = secret.versions.read();
-        let mut version_ids = HashMap::new();
-        for (vid, v) in versions.iter() {
-            version_ids.insert(vid.clone(), v.stages.clone());
-        }
+        let version_list: Vec<serde_json::Value> = versions.iter().map(|(vid, v)| {
+            json!({
+                "VersionId": vid,
+                "VersionStages": v.stages,
+            })
+        }).collect();
 
         AwsResponse::json(200, json!({
+            "Versions": version_list,
             "ARN": secret.arn,
             "Name": secret.name,
-            "VersionIdsToStages": version_ids
         }))
     }
 
