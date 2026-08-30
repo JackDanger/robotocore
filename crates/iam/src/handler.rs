@@ -234,7 +234,14 @@ impl IamHandler {
             "UntagMFADevice" => self.xml_empty(&req, "UntagMFADevice"),
             "UntagOpenIDConnectProvider" => self.xml_empty(&req, "UntagOpenIDConnectProvider"),
             "UntagSAMLProvider" => self.xml_empty(&req, "UntagSAMLProvider"),
-            other => AwsResponse::error(400, "InvalidParameterValue",
+                "DeleteSigningCertificate" => { AwsResponse::xml(200, String::new()) },
+    "GetMFADevice" => { AwsResponse::query_success("GetMFADevice", "<UserName/> <SerialNumber/> <EnableDate/> <Certifications/>") },
+    "GetServiceLastAccessedDetails" => { AwsResponse::query_success("GetServiceLastAccessedDetails", "<JobStatus/> <JobType/> <JobCreationDate/> <ServicesLastAccessed><member><ServiceName/> <LastAuthenticated/> <ServiceNamespace/> <LastAuthenticatedEntity/> <LastAuthenticatedRegion/> <TotalAuthenticatedEntities>0</TotalAuthenticatedEntities> <TrackedActionsLastAccessed/></member></ServicesLastAccessed> <JobCompletionDate/> <IsTruncated>false</IsTruncated> <Marker/> <Error/>") },
+    "GetServiceLastAccessedDetailsWithEntities" => { AwsResponse::query_success("GetServiceLastAccessedDetailsWithEntities", "<JobStatus/> <JobCreationDate/> <JobCompletionDate/> <EntityDetailsList><member><EntityInfo/> <LastAuthenticated/></member></EntityDetailsList> <IsTruncated>false</IsTruncated> <Marker/> <Error/>") },
+    "GetServiceLinkedRoleDeletionStatus" => { AwsResponse::query_success("GetServiceLinkedRoleDeletionStatus", "<Status/> <Reason/>") },
+    "ResyncMFADevice" => { AwsResponse::xml(200, String::new()) },
+    "UpdateSigningCertificate" => { AwsResponse::xml(200, String::new()) },
+other => AwsResponse::error(400, "InvalidParameterValue",
                 &format!("The operation {} is not implemented", other)),
         }
     }
