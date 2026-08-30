@@ -132,21 +132,18 @@ other => AwsResponse::error(400, "ValidationException",
                 .filter_map(|n| clusters.get(n).cloned())
                 .collect()
         };
-        let missing: Vec<Value> = if !names.is_empty() {
+        let failures: Vec<Value> = if !names.is_empty() {
             names.iter()
                 .filter(|n| !clusters.contains_key(n.as_str()))
                 .map(|n| json!({
-                    "clusterArn": format!("arn:aws:ecs:{}:{}:cluster/{}", req.region, req.account, n),
-                    "clusterName": n,
-                    "status": "INACTIVE",
+                    "arn": format!("arn:aws:ecs:{}:{}:cluster/{}", req.region, req.account, n),
+                    "reason": "MISSING",
                 }))
                 .collect()
         } else {
             vec![]
         };
-        let mut all = result;
-        all.extend(missing);
-        AwsResponse::json(200, json!({ "clusters": all }))
+        AwsResponse::json(200, json!({ "clusters": result, "failures": failures }))
     }
 
     fn list_clusters(&self, _req: &AwsRequest) -> AwsResponse {
