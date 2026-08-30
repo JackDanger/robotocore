@@ -130,7 +130,7 @@ impl FirehoseHandler {
                 &format!("Firehose {name} not found"));
         }
         state.remove_stream(name);
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn describe_stream(&self, req: &AwsRequest) -> AwsResponse {
@@ -205,7 +205,7 @@ impl FirehoseHandler {
             return AwsResponse::error(400, "ResourceNotFoundException",
                 &format!("Firehose {name} not found"));
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn tag_stream(&self, req: &AwsRequest) -> AwsResponse {
@@ -220,7 +220,7 @@ impl FirehoseHandler {
             s.tags.extend(tags);
             state.put_stream(s);
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn untag_stream(&self, req: &AwsRequest) -> AwsResponse {
@@ -239,7 +239,7 @@ impl FirehoseHandler {
             });
             state.put_stream(s);
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn list_tags(&self, req: &AwsRequest) -> AwsResponse {
@@ -264,7 +264,7 @@ impl FirehoseHandler {
             }));
             state.put_stream(s);
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn stop_encryption(&self, req: &AwsRequest) -> AwsResponse {
@@ -275,7 +275,7 @@ impl FirehoseHandler {
             s.encryption = None;
             state.put_stream(s);
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 }
 
