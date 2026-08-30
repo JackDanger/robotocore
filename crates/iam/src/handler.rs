@@ -457,6 +457,7 @@ impl IamHandler {
             body.push_str(&self.user_xml(&*user));
         }
         body.push_str("</Users>");
+        body.push_str("<IsTruncated>false</IsTruncated>");
         AwsResponse::xml(200, "ListUsers", body)
     }
 
@@ -784,6 +785,7 @@ impl IamHandler {
             body.push_str(&self.role_xml(&*role));
         }
         body.push_str("</Roles>");
+        body.push_str("<IsTruncated>false</IsTruncated>");
         AwsResponse::xml(200, "ListRoles", body)
     }
 
