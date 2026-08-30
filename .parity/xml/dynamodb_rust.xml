@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="120" skipped="0" tests="178" time="56.534" timestamp="2026-08-30T01:59:29.642425-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_create_table" time="0.057" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_list_tables" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_put_and_get_item" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_delete_item" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_query" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_scan" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_batch_write_and_batch_get_item" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_describe_time_to_live" time="0.005" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_update_time_to_live" time="0.007"><failure message="AssertionError: assert 'DISABLED' in ('ENABLED', 'ENABLING')">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations object at 0x10be05cd0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8783e0&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="121" skipped="0" tests="178" time="56.367" timestamp="2026-08-30T02:42:32.110818-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_create_table" time="0.059" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_list_tables" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_put_and_get_item" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_delete_item" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_query" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_scan" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_batch_write_and_batch_get_item" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_describe_time_to_live" time="0.005" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_update_time_to_live" time="0.007"><failure message="AssertionError: assert 'DISABLED' in ('ENABLED', 'ENABLING')">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations object at 0x10e375fd0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ede8470&gt;
 
     def test_update_time_to_live(self, dynamodb):
         """Enable TTL and verify via describe."""
@@ -23,9 +23,9 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8783e0&gt;
 &gt;           assert ttl["TimeToLiveStatus"] in ("ENABLED", "ENABLING")
 E           AssertionError: assert 'DISABLED' in ('ENABLED', 'ENABLING')
 
-tests/compatibility/test_dynamodb_compat.py:188: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_update_item" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestBatchOperations" name="test_batch_write_item" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestBatchOperations" name="test_batch_get_item" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestQueryWithSortKey" name="test_query_partition_and_sort_key" time="0.012"><failure message="assert 6 == 3">self = &lt;tests.compatibility.test_dynamodb_compat.TestQueryWithSortKey object at 0x10be06cf0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7a7e60&gt;
-composite_table = 'test-composite-d65c9733'
+tests/compatibility/test_dynamodb_compat.py:188: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBOperations" name="test_update_item" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestBatchOperations" name="test_batch_write_item" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestBatchOperations" name="test_batch_get_item" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestQueryWithSortKey" name="test_query_partition_and_sort_key" time="0.011"><failure message="assert 6 == 3">self = &lt;tests.compatibility.test_dynamodb_compat.TestQueryWithSortKey object at 0x10e376f30&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed3f740&gt;
+composite_table = 'test-composite-3fb62802'
 
     def test_query_partition_and_sort_key(self, dynamodb, composite_table):
         """Query with KeyConditionExpression on partition + sort key."""
@@ -56,9 +56,9 @@ composite_table = 'test-composite-d65c9733'
 &gt;       assert response["Count"] == 3
 E       assert 6 == 3
 
-tests/compatibility/test_dynamodb_compat.py:263: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestQueryWithSortKey" name="test_query_sort_key_begins_with" time="0.009"><failure message="assert 3 == 2">self = &lt;tests.compatibility.test_dynamodb_compat.TestQueryWithSortKey object at 0x10be07110&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7cf920&gt;
-composite_table = 'test-composite-9de9b637'
+tests/compatibility/test_dynamodb_compat.py:263: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestQueryWithSortKey" name="test_query_sort_key_begins_with" time="0.009"><failure message="assert 3 == 2">self = &lt;tests.compatibility.test_dynamodb_compat.TestQueryWithSortKey object at 0x10e377350&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10eceb770&gt;
+composite_table = 'test-composite-7ee9cbca'
 
     def test_query_sort_key_begins_with(self, dynamodb, composite_table):
         """Query with begins_with on sort key."""
@@ -86,9 +86,9 @@ composite_table = 'test-composite-9de9b637'
 &gt;       assert response["Count"] == 2
 E       assert 3 == 2
 
-tests/compatibility/test_dynamodb_compat.py:290: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestScanWithFilter" name="test_scan_filter_expression" time="0.013"><failure message="assert 10 == 5">self = &lt;tests.compatibility.test_dynamodb_compat.TestScanWithFilter object at 0x10be07590&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c718f20&gt;
-table = 'test-compat-table-1052ef08'
+tests/compatibility/test_dynamodb_compat.py:290: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestScanWithFilter" name="test_scan_filter_expression" time="0.012"><failure message="assert 10 == 5">self = &lt;tests.compatibility.test_dynamodb_compat.TestScanWithFilter object at 0x10e3777a0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ecd59d0&gt;
+table = 'test-compat-table-2836797b'
 
     def test_scan_filter_expression(self, dynamodb, table):
         """Scan with FilterExpression returns only matching items."""
@@ -107,9 +107,9 @@ table = 'test-compat-table-1052ef08'
 &gt;       assert response["Count"] == 5
 E       assert 10 == 5
 
-tests/compatibility/test_dynamodb_compat.py:308: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressions" name="test_update_set_multiple_attributes" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressions" name="test_update_remove_attribute" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressions" name="test_update_set_and_remove_combined" time="0.008"><failure message="TypeError: 'NoneType' object is not subscriptable">self = &lt;tests.compatibility.test_dynamodb_compat.TestUpdateExpressions object at 0x10be1c260&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c77a810&gt;
-table = 'test-compat-table-43e1d499'
+tests/compatibility/test_dynamodb_compat.py:308: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressions" name="test_update_set_multiple_attributes" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressions" name="test_update_remove_attribute" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressions" name="test_update_set_and_remove_combined" time="0.008"><failure message="TypeError: 'NoneType' object is not subscriptable">self = &lt;tests.compatibility.test_dynamodb_compat.TestUpdateExpressions object at 0x10e38c440&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ecd6300&gt;
+table = 'test-compat-table-fedbdcfb'
 
     def test_update_set_and_remove_combined(self, dynamodb, table):
         """update_item with SET and REMOVE in a single expression."""
@@ -130,9 +130,9 @@ table = 'test-compat-table-43e1d499'
                ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       TypeError: 'NoneType' object is not subscriptable
 
-tests/compatibility/test_dynamodb_compat.py:361: TypeError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWrites" name="test_put_item_condition_succeeds" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWrites" name="test_put_item_condition_fails" time="0.006"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestConditionalWrites object at 0x10be07770&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10be07e90&gt;
-table = 'test-compat-table-8094e1dd'
+tests/compatibility/test_dynamodb_compat.py:361: TypeError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWrites" name="test_put_item_condition_succeeds" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWrites" name="test_put_item_condition_fails" time="0.007"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestConditionalWrites object at 0x10e377b90&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee6bbc0&gt;
+table = 'test-compat-table-6ccc65d6'
 
     def test_put_item_condition_fails(self, dynamodb, table):
         """put_item with ConditionExpression raises ConditionalCheckFailedException."""
@@ -144,9 +144,9 @@ table = 'test-compat-table-8094e1dd'
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_dynamodb_compat.py:387: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWrites" name="test_put_item_condition_attribute_not_exists" time="0.007"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestConditionalWrites object at 0x10be06e10&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c718f50&gt;
-table = 'test-compat-table-2b6e549e'
+tests/compatibility/test_dynamodb_compat.py:387: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWrites" name="test_put_item_condition_attribute_not_exists" time="0.007"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestConditionalWrites object at 0x10e376d20&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ede8ad0&gt;
+table = 'test-compat-table-b299b63f'
 
     def test_put_item_condition_attribute_not_exists(self, dynamodb, table):
         """put_item only if the item does not already exist."""
@@ -159,9 +159,9 @@ table = 'test-compat-table-2b6e549e'
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_dynamodb_compat.py:403: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestGlobalSecondaryIndex" name="test_gsi_table_has_index" time="0.007"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestGlobalSecondaryIndex object at 0x10be06270&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cbcd940&gt;
-gsi_table = 'test-gsi-eb1b409e'
+tests/compatibility/test_dynamodb_compat.py:403: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestGlobalSecondaryIndex" name="test_gsi_table_has_index" time="0.007"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestGlobalSecondaryIndex object at 0x10e3764e0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f158650&gt;
+gsi_table = 'test-gsi-d67e0e65'
 
     def test_gsi_table_has_index(self, dynamodb, gsi_table):
         """Describe table shows the GSI."""
@@ -171,9 +171,9 @@ gsi_table = 'test-gsi-eb1b409e'
 E       assert 0 == 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_dynamodb_compat.py:417: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestGlobalSecondaryIndex" name="test_query_on_gsi" time="0.009"><failure message="assert 3 == 2">self = &lt;tests.compatibility.test_dynamodb_compat.TestGlobalSecondaryIndex object at 0x10be05a30&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cc272f0&gt;
-gsi_table = 'test-gsi-3f85c513'
+tests/compatibility/test_dynamodb_compat.py:417: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestGlobalSecondaryIndex" name="test_query_on_gsi" time="0.008"><failure message="assert 3 == 2">self = &lt;tests.compatibility.test_dynamodb_compat.TestGlobalSecondaryIndex object at 0x10e374bf0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed3d670&gt;
+gsi_table = 'test-gsi-a1f4780c'
 
     def test_query_on_gsi(self, dynamodb, gsi_table):
         """Query items using a Global Secondary Index."""
@@ -199,9 +199,9 @@ gsi_table = 'test-gsi-3f85c513'
 &gt;       assert response["Count"] == 2
 E       assert 3 == 2
 
-tests/compatibility/test_dynamodb_compat.py:441: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTTL" name="test_describe_ttl_default" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestTTL" name="test_update_and_describe_ttl" time="0.007"><failure message="AssertionError: assert 'DISABLED' in ('ENABLED', 'ENABLING')">self = &lt;tests.compatibility.test_dynamodb_compat.TestTTL object at 0x10be1c920&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb6f110&gt;
-table = 'test-compat-table-a94856c3'
+tests/compatibility/test_dynamodb_compat.py:441: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTTL" name="test_describe_ttl_default" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestTTL" name="test_update_and_describe_ttl" time="0.010"><failure message="AssertionError: assert 'DISABLED' in ('ENABLED', 'ENABLING')">self = &lt;tests.compatibility.test_dynamodb_compat.TestTTL object at 0x10e38ca70&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f0fb350&gt;
+table = 'test-compat-table-02cbdf0f'
 
     def test_update_and_describe_ttl(self, dynamodb, table):
         """Enable TTL and verify with describe."""
@@ -217,9 +217,9 @@ table = 'test-compat-table-a94856c3'
 &gt;       assert ttl["TimeToLiveStatus"] in ("ENABLED", "ENABLING")
 E       AssertionError: assert 'DISABLED' in ('ENABLED', 'ENABLING')
 
-tests/compatibility/test_dynamodb_compat.py:466: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactions" name="test_transact_write_items_put_and_delete" time="0.009"><failure message="KeyError: 'Item'">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactions object at 0x10be1cd70&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c779850&gt;
-table = 'test-compat-table-2f96886f'
+tests/compatibility/test_dynamodb_compat.py:466: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactions" name="test_transact_write_items_put_and_delete" time="0.010"><failure message="KeyError: 'Item'">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactions object at 0x10e38ce90&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f1289b0&gt;
+table = 'test-compat-table-5c778799'
 
     def test_transact_write_items_put_and_delete(self, dynamodb, table):
         """transact_write_items with Put and Delete operations."""
@@ -258,8 +258,8 @@ table = 'test-compat-table-2f96886f'
                ^^^^^^^^^^
 E       KeyError: 'Item'
 
-tests/compatibility/test_dynamodb_compat.py:504: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactions" name="test_transact_write_items_two_puts" time="0.008"><failure message="KeyError: 'Item'">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactions object at 0x10be1d190&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8dabd0&gt;
+tests/compatibility/test_dynamodb_compat.py:504: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactions" name="test_transact_write_items_two_puts" time="0.007"><failure message="KeyError: 'Item'">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactions object at 0x10e38d2b0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ede9e20&gt;
 
     def test_transact_write_items_two_puts(self, dynamodb):
         """transact_write_items with 2 Put actions, verify both items exist."""
@@ -292,9 +292,9 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8dabd0&gt;
                    ^^^^^^^^^^
 E           KeyError: 'Item'
 
-tests/compatibility/test_dynamodb_compat.py:538: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactions" name="test_transact_write_items_condition_failure" time="0.008"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactions object at 0x10be1d5b0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cfda480&gt;
-table = 'test-compat-table-c4c62f09'
+tests/compatibility/test_dynamodb_compat.py:538: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactions" name="test_transact_write_items_condition_failure" time="0.007"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactions object at 0x10e38d6d0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f5024e0&gt;
+table = 'test-compat-table-f117525c'
 
     def test_transact_write_items_condition_failure(self, dynamodb, table):
         """transact_write_items fails entirely when a condition check fails."""
@@ -307,9 +307,9 @@ table = 'test-compat-table-c4c62f09'
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_dynamodb_compat.py:551: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestGSIAdvanced" name="test_gsi_query_with_sort_key" time="0.011"><failure message="assert 5 == 3">self = &lt;tests.compatibility.test_dynamodb_compat.TestGSIAdvanced object at 0x10be1da00&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8fbd10&gt;
-gsi_composite_table = 'test-gsic-66e9dc6f'
+tests/compatibility/test_dynamodb_compat.py:551: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestGSIAdvanced" name="test_gsi_query_with_sort_key" time="0.011"><failure message="assert 5 == 3">self = &lt;tests.compatibility.test_dynamodb_compat.TestGSIAdvanced object at 0x10e38d7c0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f14f290&gt;
+gsi_composite_table = 'test-gsic-bdacdf7a'
 
     def test_gsi_query_with_sort_key(self, dynamodb, gsi_composite_table):
         """Query GSI that has both hash and range key."""
@@ -336,9 +336,9 @@ gsi_composite_table = 'test-gsic-66e9dc6f'
 &gt;       assert response["Count"] == 3
 E       assert 5 == 3
 
-tests/compatibility/test_dynamodb_compat.py:696: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestGSIAdvanced" name="test_gsi_keys_only_projection" time="0.008"><failure message="AssertionError: assert 'extra' not in {'extra': {'S': 'should-not-appear'}, 'gsi_pk': {'S': 'grp-a'}, 'pk': {'S': 'ko-1'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestGSIAdvanced object at 0x10be1de20&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cfd9760&gt;
-gsi_keys_only_table = 'test-gsiko-91c278d4'
+tests/compatibility/test_dynamodb_compat.py:696: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestGSIAdvanced" name="test_gsi_keys_only_projection" time="0.008"><failure message="AssertionError: assert 'extra' not in {'extra': {'S': 'should-not-appear'}, 'gsi_pk': {'S': 'grp-a'}, 'pk': {'S': 'ko-1'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestGSIAdvanced object at 0x10e38df40&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed3f5c0&gt;
+gsi_keys_only_table = 'test-gsiko-8546bf88'
 
     def test_gsi_keys_only_projection(self, dynamodb, gsi_keys_only_table):
         """KEYS_ONLY GSI returns only key attributes."""
@@ -363,8 +363,8 @@ gsi_keys_only_table = 'test-gsiko-91c278d4'
 &gt;       assert "extra" not in item
 E       AssertionError: assert 'extra' not in {'extra': {'S': 'should-not-appear'}, 'gsi_pk': {'S': 'grp-a'}, 'pk': {'S': 'ko-1'}}
 
-tests/compatibility/test_dynamodb_compat.py:720: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestGSIAdvanced" name="test_gsi_project_specific_attributes" time="0.007"><failure message="AssertionError: assert 'excluded_attr' not in {'excluded_attr': {'S': 'no'}, 'gsi_pk': {'S': 'grp-b'}, 'included_attr': {'S': 'yes'}, 'pk': {'S': 'inc-1'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestGSIAdvanced object at 0x10be1e240&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cf7b2f0&gt;
+tests/compatibility/test_dynamodb_compat.py:720: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestGSIAdvanced" name="test_gsi_project_specific_attributes" time="0.007"><failure message="AssertionError: assert 'excluded_attr' not in {'excluded_attr': {'S': 'no'}, 'gsi_pk': {'S': 'grp-b'}, 'included_attr': {'S': 'yes'}, 'pk': {'S': 'inc-1'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestGSIAdvanced object at 0x10e38e360&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4fab40&gt;
 
     def test_gsi_project_specific_attributes(self, dynamodb):
         """GSI with INCLUDE projection returns only specified attributes."""
@@ -410,9 +410,9 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10cf7b2f0&gt;
 &gt;           assert "excluded_attr" not in item
 E           AssertionError: assert 'excluded_attr' not in {'excluded_attr': {'S': 'no'}, 'gsi_pk': {'S': 'grp-b'}, 'included_attr': {'S': 'yes'}, 'pk': {'S': 'inc-1'}}
 
-tests/compatibility/test_dynamodb_compat.py:763: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestGSIAdvanced" name="test_gsi_scan" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestLocalSecondaryIndex" name="test_lsi_table_has_index" time="0.007"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestLocalSecondaryIndex object at 0x10be1eae0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cc271a0&gt;
-lsi_table = 'test-lsi-5193c39b'
+tests/compatibility/test_dynamodb_compat.py:763: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestGSIAdvanced" name="test_gsi_scan" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestLocalSecondaryIndex" name="test_lsi_table_has_index" time="0.006"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestLocalSecondaryIndex object at 0x10e38ebd0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4fb5c0&gt;
+lsi_table = 'test-lsi-9573f193'
 
     def test_lsi_table_has_index(self, dynamodb, lsi_table):
         """Describe table shows the LSI."""
@@ -422,9 +422,9 @@ lsi_table = 'test-lsi-5193c39b'
 E       assert 0 == 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_dynamodb_compat.py:791: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestLocalSecondaryIndex" name="test_query_on_lsi" time="0.009"><failure message="assert 3 == 2">self = &lt;tests.compatibility.test_dynamodb_compat.TestLocalSecondaryIndex object at 0x10be05e50&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10d006690&gt;
-lsi_table = 'test-lsi-78c5c105'
+tests/compatibility/test_dynamodb_compat.py:791: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestLocalSecondaryIndex" name="test_query_on_lsi" time="0.009"><failure message="assert 3 == 2">self = &lt;tests.compatibility.test_dynamodb_compat.TestLocalSecondaryIndex object at 0x10e376000&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f5928d0&gt;
+lsi_table = 'test-lsi-b9d59ead'
 
     def test_query_on_lsi(self, dynamodb, lsi_table):
         """Query using LSI alternate sort key."""
@@ -469,9 +469,9 @@ lsi_table = 'test-lsi-78c5c105'
 &gt;       assert response["Count"] == 2
 E       assert 3 == 2
 
-tests/compatibility/test_dynamodb_compat.py:834: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestLocalSecondaryIndex" name="test_lsi_query_scan_forward_false" time="0.038"><failure message="AssertionError: assert ['lsi-002', '...0', 'lsi-001'] == ['lsi-002', '...1', 'lsi-000']&#10;  &#10;  At index 1 diff: 'lsi-000' != 'lsi-001'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_dynamodb_compat.TestLocalSecondaryIndex object at 0x10be072c0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10a952e70&gt;
-lsi_table = 'test-lsi-e679b65f'
+tests/compatibility/test_dynamodb_compat.py:834: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestLocalSecondaryIndex" name="test_lsi_query_scan_forward_false" time="0.039"><failure message="AssertionError: assert ['lsi-000', '...1', 'lsi-002'] == ['lsi-002', '...1', 'lsi-000']&#10;  &#10;  At index 0 diff: 'lsi-000' != 'lsi-002'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_dynamodb_compat.TestLocalSecondaryIndex object at 0x10e3774d0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8142f0&gt;
+lsi_table = 'test-lsi-0858f5ae'
 
     def test_lsi_query_scan_forward_false(self, dynamodb, lsi_table):
         """Query LSI in reverse order."""
@@ -493,14 +493,14 @@ lsi_table = 'test-lsi-e679b65f'
         )
         lsi_sks = [item["lsi_sk"]["S"] for item in response["Items"]]
 &gt;       assert lsi_sks == ["lsi-002", "lsi-001", "lsi-000"]
-E       AssertionError: assert ['lsi-002', '...0', 'lsi-001'] == ['lsi-002', '...1', 'lsi-000']
+E       AssertionError: assert ['lsi-000', '...1', 'lsi-002'] == ['lsi-002', '...1', 'lsi-000']
 E         
-E         At index 1 diff: 'lsi-000' != 'lsi-001'
+E         At index 0 diff: 'lsi-000' != 'lsi-002'
 E         Use -v to get more diff
 
-tests/compatibility/test_dynamodb_compat.py:857: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestBatchOperationsAdvanced" name="test_batch_write_put_and_delete" time="0.013" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestBatchOperationsAdvanced" name="test_batch_get_item_with_projection" time="0.010"><failure message="AssertionError: assert 'secret' not in {'name': {'S': 'name-0'}, 'pk': {'S': 'bgp-0'}, 'secret': {'S': 'hidden'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestBatchOperationsAdvanced object at 0x10be1dc10&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c71b830&gt;
-table = 'test-compat-table-cdeebc88'
+tests/compatibility/test_dynamodb_compat.py:857: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestBatchOperationsAdvanced" name="test_batch_write_put_and_delete" time="0.010" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestBatchOperationsAdvanced" name="test_batch_get_item_with_projection" time="0.008"><failure message="AssertionError: assert 'secret' not in {'name': {'S': 'name-0'}, 'pk': {'S': 'bgp-0'}, 'secret': {'S': 'hidden'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestBatchOperationsAdvanced object at 0x10e38dd30&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f129010&gt;
+table = 'test-compat-table-b3058524'
 
     def test_batch_get_item_with_projection(self, dynamodb, table):
         """BatchGetItem with ProjectionExpression returns only requested attrs."""
@@ -531,9 +531,9 @@ table = 'test-compat-table-cdeebc88'
 &gt;           assert "secret" not in item
 E           AssertionError: assert 'secret' not in {'name': {'S': 'name-0'}, 'pk': {'S': 'bgp-0'}, 'secret': {'S': 'hidden'}}
 
-tests/compatibility/test_dynamodb_compat.py:925: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestBatchOperationsAdvanced" name="test_batch_write_multiple_tables" time="0.011" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced" name="test_update_item_with_condition_succeeds" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced" name="test_update_item_with_condition_fails" time="0.008"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced object at 0x10be1eea0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7cf2f0&gt;
-table = 'test-compat-table-37063eab'
+tests/compatibility/test_dynamodb_compat.py:925: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestBatchOperationsAdvanced" name="test_batch_write_multiple_tables" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced" name="test_update_item_with_condition_succeeds" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced" name="test_update_item_with_condition_fails" time="0.007"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced object at 0x10e38efc0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed11220&gt;
+table = 'test-compat-table-1313a9be'
 
     def test_update_item_with_condition_fails(self, dynamodb, table):
         """UpdateItem with failing condition raises error."""
@@ -545,9 +545,9 @@ table = 'test-compat-table-37063eab'
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_dynamodb_compat.py:988: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced" name="test_delete_item_with_condition_succeeds" time="0.011" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced" name="test_delete_item_with_condition_fails" time="0.008"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced object at 0x10be1f6e0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7cf230&gt;
-table = 'test-compat-table-deb147c2'
+tests/compatibility/test_dynamodb_compat.py:988: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced" name="test_delete_item_with_condition_succeeds" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced" name="test_delete_item_with_condition_fails" time="0.007"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced object at 0x10e38f800&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f104980&gt;
+table = 'test-compat-table-1beb66c7'
 
     def test_delete_item_with_condition_fails(self, dynamodb, table):
         """DeleteItem with failing condition raises error."""
@@ -559,9 +559,9 @@ table = 'test-compat-table-deb147c2'
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_dynamodb_compat.py:1023: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced" name="test_condition_attribute_exists" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestFilterExpressions" name="test_query_with_filter_expression" time="0.011"><failure message="assert 5 == 3">self = &lt;tests.compatibility.test_dynamodb_compat.TestFilterExpressions object at 0x10be1ff80&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7087a0&gt;
-composite_table = 'test-composite-20d3bd0b'
+tests/compatibility/test_dynamodb_compat.py:1023: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestConditionalWritesAdvanced" name="test_condition_attribute_exists" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestFilterExpressions" name="test_query_with_filter_expression" time="0.012"><failure message="assert 5 == 3">self = &lt;tests.compatibility.test_dynamodb_compat.TestFilterExpressions object at 0x10e3a4110&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ecd4d70&gt;
+composite_table = 'test-composite-06b97f29'
 
     def test_query_with_filter_expression(self, dynamodb, composite_table):
         """Query with FilterExpression filters results after key evaluation."""
@@ -587,9 +587,9 @@ composite_table = 'test-composite-20d3bd0b'
 &gt;       assert response["Count"] == 3
 E       assert 5 == 3
 
-tests/compatibility/test_dynamodb_compat.py:1077: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestFilterExpressions" name="test_scan_filter_with_contains" time="0.009"><failure message="assert 3 == 2">self = &lt;tests.compatibility.test_dynamodb_compat.TestFilterExpressions object at 0x10be343e0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7f39e0&gt;
-table = 'test-compat-table-04bdb7ce'
+tests/compatibility/test_dynamodb_compat.py:1077: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestFilterExpressions" name="test_scan_filter_with_contains" time="0.008"><failure message="assert 3 == 2">self = &lt;tests.compatibility.test_dynamodb_compat.TestFilterExpressions object at 0x10e3a4530&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f128590&gt;
+table = 'test-compat-table-61259a25'
 
     def test_scan_filter_with_contains(self, dynamodb, table):
         """Scan with FilterExpression using contains function."""
@@ -613,9 +613,9 @@ table = 'test-compat-table-04bdb7ce'
 &gt;       assert response["Count"] == 2
 E       assert 3 == 2
 
-tests/compatibility/test_dynamodb_compat.py:1098: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestFilterExpressions" name="test_scan_filter_with_size" time="0.008"><failure message="assert 2 == 1">self = &lt;tests.compatibility.test_dynamodb_compat.TestFilterExpressions object at 0x10be34800&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c91e8a0&gt;
-table = 'test-compat-table-d54ae900'
+tests/compatibility/test_dynamodb_compat.py:1098: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestFilterExpressions" name="test_scan_filter_with_size" time="0.009"><failure message="assert 2 == 1">self = &lt;tests.compatibility.test_dynamodb_compat.TestFilterExpressions object at 0x10e3a4950&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed13320&gt;
+table = 'test-compat-table-d3e3b863'
 
     def test_scan_filter_with_size(self, dynamodb, table):
         """Scan with FilterExpression using size function."""
@@ -636,9 +636,9 @@ table = 'test-compat-table-d54ae900'
 &gt;       assert response["Count"] == 1
 E       assert 2 == 1
 
-tests/compatibility/test_dynamodb_compat.py:1118: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestFilterExpressions" name="test_scan_filter_not_equals" time="0.011"><failure message="assert 4 == 2">self = &lt;tests.compatibility.test_dynamodb_compat.TestFilterExpressions object at 0x10be34c20&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cbf1520&gt;
-table = 'test-compat-table-0c17bacf'
+tests/compatibility/test_dynamodb_compat.py:1118: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestFilterExpressions" name="test_scan_filter_not_equals" time="0.010"><failure message="assert 4 == 2">self = &lt;tests.compatibility.test_dynamodb_compat.TestFilterExpressions object at 0x10e3a4d70&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed3dbb0&gt;
+table = 'test-compat-table-c4339174'
 
     def test_scan_filter_not_equals(self, dynamodb, table):
         """Scan with FilterExpression using &lt;&gt; operator."""
@@ -658,9 +658,9 @@ table = 'test-compat-table-0c17bacf'
 &gt;       assert response["Count"] == 2
 E       assert 4 == 2
 
-tests/compatibility/test_dynamodb_compat.py:1136: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced" name="test_set_nested_attribute" time="0.009"><failure message="AssertionError: assert '30' == '31'&#10;  &#10;  - 31&#10;  + 30">self = &lt;tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced object at 0x10be350a0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c779670&gt;
-table = 'test-compat-table-3294bd2e'
+tests/compatibility/test_dynamodb_compat.py:1136: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced" name="test_set_nested_attribute" time="0.008"><failure message="AssertionError: assert '30' == '31'&#10;  &#10;  - 31&#10;  + 30">self = &lt;tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced object at 0x10e3a51f0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f12bb00&gt;
+table = 'test-compat-table-88b7f494'
 
     def test_set_nested_attribute(self, dynamodb, table):
         """SET a nested map attribute."""
@@ -684,9 +684,9 @@ E
 E         - 31
 E         + 30
 
-tests/compatibility/test_dynamodb_compat.py:1161: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced" name="test_add_to_number" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced" name="test_add_to_set" time="0.010"><failure message="KeyError: 'SS'">self = &lt;tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced object at 0x10be1c050&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8da750&gt;
-table = 'test-compat-table-1ccf0a10'
+tests/compatibility/test_dynamodb_compat.py:1161: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced" name="test_add_to_number" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced" name="test_add_to_set" time="0.009"><failure message="KeyError: 'SS'">self = &lt;tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced object at 0x10e38c590&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee692e0&gt;
+table = 'test-compat-table-5994c893'
 
     def test_add_to_set(self, dynamodb, table):
         """ADD elements to a string set."""
@@ -705,9 +705,9 @@ table = 'test-compat-table-1ccf0a10'
                      ^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'SS'
 
-tests/compatibility/test_dynamodb_compat.py:1192: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced" name="test_delete_from_set" time="0.008"><failure message="AssertionError: assert {'a', 'b', 'c', 'd'} == {'a', 'c'}&#10;  &#10;  Extra items in the left set:&#10;  'b'&#10;  'd'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced object at 0x10be1d7f0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10bd63320&gt;
-table = 'test-compat-table-e3427426'
+tests/compatibility/test_dynamodb_compat.py:1192: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced" name="test_delete_from_set" time="0.009"><failure message="AssertionError: assert {'a', 'b', 'c', 'd'} == {'a', 'c'}&#10;  &#10;  Extra items in the left set:&#10;  'd'&#10;  'b'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced object at 0x10e38dd90&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed11970&gt;
+table = 'test-compat-table-64f85f2d'
 
     def test_delete_from_set(self, dynamodb, table):
         """DELETE elements from a string set."""
@@ -727,13 +727,13 @@ table = 'test-compat-table-e3427426'
 E       AssertionError: assert {'a', 'b', 'c', 'd'} == {'a', 'c'}
 E         
 E         Extra items in the left set:
-E         'b'
 E         'd'
+E         'b'
 E         Use -v to get more diff
 
-tests/compatibility/test_dynamodb_compat.py:1209: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced" name="test_add_creates_nonexistent_number" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced" name="test_set_if_not_exists" time="25.629"><failure message="botocore.exceptions.ClientError: An error occurred (500) when calling the UpdateItem operation (reached max retries: 9):">self = &lt;tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced object at 0x10be34da0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb6af90&gt;
-table = 'test-compat-table-0e3d284f'
+tests/compatibility/test_dynamodb_compat.py:1209: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced" name="test_add_creates_nonexistent_number" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced" name="test_set_if_not_exists" time="25.631"><failure message="botocore.exceptions.ClientError: An error occurred (500) when calling the UpdateItem operation (reached max retries: 9):">self = &lt;tests.compatibility.test_dynamodb_compat.TestUpdateExpressionsAdvanced object at 0x10e3a4e90&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10e2bede0&gt;
+table = 'test-compat-table-3a9c3cea'
 
     def test_set_if_not_exists(self, dynamodb, table):
         """SET with if_not_exists to provide a default value."""
@@ -764,9 +764,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.DynamoDB object at 0x10cb6af90&gt;
+self = &lt;botocore.client.DynamoDB object at 0x10e2bede0&gt;
 operation_name = 'UpdateItem'
-api_params = {'ExpressionAttributeValues': {':def1': {'S': 'default'}, ':def2': {'S': 'created'}}, 'Key': {'pk': {'S': 'ine-1'}}, '...d284f', 'UpdateExpression': 'SET existing = if_not_exists(existing, :def1), new_attr = if_not_exists(new_attr, :def2)'}
+api_params = {'ExpressionAttributeValues': {':def1': {'S': 'default'}, ':def2': {'S': 'created'}}, 'Key': {'pk': {'S': 'ine-1'}}, '...c3cea', 'UpdateExpression': 'SET existing = if_not_exists(existing, :def1), new_attr = if_not_exists(new_attr, :def2)'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -855,9 +855,9 @@ api_params = {'ExpressionAttributeValues': {':def1': {'S': 'default'}, ':def2': 
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (500) when calling the UpdateItem operation (reached max retries: 9):
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestProjectionExpressions" name="test_get_item_with_projection" time="0.008"><failure message="AssertionError: assert 'age' not in {'age': {'N': '30'}, 'name': {'S': 'alice'}, 'pk': {'S': 'proj-1'}, 'secret': {'S': 'hidden'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestProjectionExpressions object at 0x10be344d0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c6ce930&gt;
-table = 'test-compat-table-af837da6'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestProjectionExpressions" name="test_get_item_with_projection" time="0.008"><failure message="AssertionError: assert 'age' not in {'age': {'N': '30'}, 'name': {'S': 'alice'}, 'pk': {'S': 'proj-1'}, 'secret': {'S': 'hidden'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestProjectionExpressions object at 0x10e3a4290&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee6a450&gt;
+table = 'test-compat-table-d88f3f0a'
 
     def test_get_item_with_projection(self, dynamodb, table):
         """GetItem with ProjectionExpression returns only requested attrs."""
@@ -881,9 +881,9 @@ table = 'test-compat-table-af837da6'
 &gt;       assert "age" not in response["Item"]
 E       AssertionError: assert 'age' not in {'age': {'N': '30'}, 'name': {'S': 'alice'}, 'pk': {'S': 'proj-1'}, 'secret': {'S': 'hidden'}}
 
-tests/compatibility/test_dynamodb_compat.py:1274: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestProjectionExpressions" name="test_get_item_nested_projection" time="0.009"><failure message="AssertionError: assert 'other' not in {'other': {'S': 'excluded'}, 'pk': {'S': 'proj-nest'}, 'profile': {'M': {'address': {'M': {'city': {'S': 'NYC'}, 'zip': {'S': '10001'}}}, 'name': {'S': 'bob'}}}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestProjectionExpressions object at 0x10be353d0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cbbdac0&gt;
-table = 'test-compat-table-7d20b064'
+tests/compatibility/test_dynamodb_compat.py:1274: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestProjectionExpressions" name="test_get_item_nested_projection" time="0.007"><failure message="AssertionError: assert 'other' not in {'other': {'S': 'excluded'}, 'pk': {'S': 'proj-nest'}, 'profile': {'M': {'address': {'M': {'city': {'S': 'NYC'}, 'zip': {'S': '10001'}}}, 'name': {'S': 'bob'}}}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestProjectionExpressions object at 0x10e3a5520&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee7f410&gt;
+table = 'test-compat-table-86b1b6ba'
 
     def test_get_item_nested_projection(self, dynamodb, table):
         """GetItem projection on nested map attributes."""
@@ -914,9 +914,9 @@ table = 'test-compat-table-7d20b064'
 &gt;       assert "other" not in item
 E       AssertionError: assert 'other' not in {'other': {'S': 'excluded'}, 'pk': {'S': 'proj-nest'}, 'profile': {'M': {'address': {'M': {'city': {'S': 'NYC'}, 'zip': {'S': '10001'}}}, 'name': {'S': 'bob'}}}}
 
-tests/compatibility/test_dynamodb_compat.py:1303: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestProjectionExpressions" name="test_query_with_projection" time="0.008"><failure message="AssertionError: assert 'hidden' not in {'hidden': {'S': 'no'}, 'pk': {'S': 'qp-user'}, 'sk': {'S': 'item-1'}, 'visible': {'S': 'yes'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestProjectionExpressions object at 0x10be357f0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c71a090&gt;
-composite_table = 'test-composite-566ee451'
+tests/compatibility/test_dynamodb_compat.py:1303: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestProjectionExpressions" name="test_query_with_projection" time="0.007"><failure message="AssertionError: assert 'hidden' not in {'hidden': {'S': 'no'}, 'pk': {'S': 'qp-user'}, 'sk': {'S': 'item-1'}, 'visible': {'S': 'yes'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestProjectionExpressions object at 0x10e3a5940&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ec3ebd0&gt;
+composite_table = 'test-composite-c9b2e3e2'
 
     def test_query_with_projection(self, dynamodb, composite_table):
         """Query with ProjectionExpression."""
@@ -941,9 +941,9 @@ composite_table = 'test-composite-566ee451'
 &gt;       assert "hidden" not in item
 E       AssertionError: assert 'hidden' not in {'hidden': {'S': 'no'}, 'pk': {'S': 'qp-user'}, 'sk': {'S': 'item-1'}, 'visible': {'S': 'yes'}}
 
-tests/compatibility/test_dynamodb_compat.py:1326: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestProjectionExpressions" name="test_scan_with_projection" time="0.009"><failure message="AssertionError: assert 'drop' not in {'drop': {'S': 'no'}, 'keep': {'S': 'yes'}, 'pk': {'S': 'sp-1'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestProjectionExpressions object at 0x10be35c10&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cbb6360&gt;
-table = 'test-compat-table-34b889b4'
+tests/compatibility/test_dynamodb_compat.py:1326: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestProjectionExpressions" name="test_scan_with_projection" time="0.007"><failure message="AssertionError: assert 'drop' not in {'drop': {'S': 'no'}, 'keep': {'S': 'yes'}, 'pk': {'S': 'sp-1'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestProjectionExpressions object at 0x10e3a5d60&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f500470&gt;
+table = 'test-compat-table-7c44a300'
 
     def test_scan_with_projection(self, dynamodb, table):
         """Scan with ProjectionExpression limits returned attributes."""
@@ -967,9 +967,9 @@ table = 'test-compat-table-34b889b4'
 &gt;       assert "drop" not in item
 E       AssertionError: assert 'drop' not in {'drop': {'S': 'no'}, 'keep': {'S': 'yes'}, 'pk': {'S': 'sp-1'}}
 
-tests/compatibility/test_dynamodb_compat.py:1347: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced" name="test_transact_write_with_update" time="0.011"><failure message="AssertionError: assert '100' == '70'&#10;  &#10;  - 70&#10;  + 100">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced object at 0x10be36090&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cf6c7d0&gt;
-table = 'test-compat-table-0000cfd8'
+tests/compatibility/test_dynamodb_compat.py:1347: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced" name="test_transact_write_with_update" time="0.009"><failure message="AssertionError: assert '100' == '70'&#10;  &#10;  - 70&#10;  + 100">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced object at 0x10e3a61b0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f5a62a0&gt;
+table = 'test-compat-table-4dd7bfa5'
 
     def test_transact_write_with_update(self, dynamodb, table):
         """TransactWriteItems with Update operation."""
@@ -1011,9 +1011,9 @@ E
 E         - 70
 E         + 100
 
-tests/compatibility/test_dynamodb_compat.py:1390: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced" name="test_transact_get_items" time="0.009"><failure message="assert 0 == 3&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced object at 0x10be364b0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10bc53260&gt;
-table = 'test-compat-table-65ef4817'
+tests/compatibility/test_dynamodb_compat.py:1390: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced" name="test_transact_get_items" time="0.009"><failure message="assert 0 == 3&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced object at 0x10e3a65d0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f158110&gt;
+table = 'test-compat-table-1a82f087'
 
     def test_transact_get_items(self, dynamodb, table):
         """transact_get_items retrieves multiple items transactionally."""
@@ -1033,9 +1033,9 @@ table = 'test-compat-table-65ef4817'
 E       assert 0 == 3
 E        +  where 0 = len([])
 
-tests/compatibility/test_dynamodb_compat.py:1408: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced" name="test_transact_get_items_with_projection" time="0.008"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced object at 0x10be368d0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb14980&gt;
-table = 'test-compat-table-9736f6a1'
+tests/compatibility/test_dynamodb_compat.py:1408: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced" name="test_transact_get_items_with_projection" time="0.007"><failure message="IndexError: list index out of range">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced object at 0x10e3a69f0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f450680&gt;
+table = 'test-compat-table-0bc97a36'
 
     def test_transact_get_items_with_projection(self, dynamodb, table):
         """TransactGetItems with ProjectionExpression returns requested attrs."""
@@ -1058,9 +1058,9 @@ table = 'test-compat-table-9736f6a1'
                ^^^^^^^^^^^^^^^^^^^^^^^^
 E       IndexError: list index out of range
 
-tests/compatibility/test_dynamodb_compat.py:1429: IndexError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced" name="test_transact_write_put_update_delete" time="0.011"><failure message="KeyError: 'Item'">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced object at 0x10be36cf0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10caf44a0&gt;
-table = 'test-compat-table-59d1276d'
+tests/compatibility/test_dynamodb_compat.py:1429: IndexError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced" name="test_transact_write_put_update_delete" time="0.011"><failure message="KeyError: 'Item'">self = &lt;tests.compatibility.test_dynamodb_compat.TestTransactionsAdvanced object at 0x10e3a6e10&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4a8290&gt;
+table = 'test-compat-table-67b22c87'
 
     def test_transact_write_put_update_delete(self, dynamodb, table):
         """TransactWriteItems with Put, Update, and Delete in one transaction."""
@@ -1104,9 +1104,9 @@ table = 'test-compat-table-59d1276d'
                ^^^^^^^^^^^^^
 E       KeyError: 'Item'
 
-tests/compatibility/test_dynamodb_compat.py:1471: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTTLAdvanced" name="test_disable_ttl" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestTableTags" name="test_tag_and_list_tags" time="0.009"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_dynamodb_compat.TestTableTags object at 0x10be1e630&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb4c680&gt;
-table = 'test-compat-table-ccee08de'
+tests/compatibility/test_dynamodb_compat.py:1471: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTTLAdvanced" name="test_disable_ttl" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestTableTags" name="test_tag_and_list_tags" time="0.008"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_dynamodb_compat.TestTableTags object at 0x10e38e4b0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4d69f0&gt;
+table = 'test-compat-table-e9d0e958'
 
     def test_tag_and_list_tags(self, dynamodb, table):
         """TagResource and ListTagsOfResource."""
@@ -1126,9 +1126,9 @@ table = 'test-compat-table-ccee08de'
                ^^^^^^^^^^^
 E       KeyError: 'env'
 
-tests/compatibility/test_dynamodb_compat.py:1521: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTableTags" name="test_untag_resource" time="0.011"><failure message="AssertionError: assert 'keep' in []">self = &lt;tests.compatibility.test_dynamodb_compat.TestTableTags object at 0x10be1f050&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10caba870&gt;
-table = 'test-compat-table-2e39b609'
+tests/compatibility/test_dynamodb_compat.py:1521: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTableTags" name="test_untag_resource" time="0.010"><failure message="AssertionError: assert 'keep' in []">self = &lt;tests.compatibility.test_dynamodb_compat.TestTableTags object at 0x10e38c230&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4825a0&gt;
+table = 'test-compat-table-79cc86bd'
 
     def test_untag_resource(self, dynamodb, table):
         """UntagResource removes specific tags."""
@@ -1149,9 +1149,9 @@ table = 'test-compat-table-2e39b609'
 &gt;       assert "keep" in tag_keys
 E       AssertionError: assert 'keep' in []
 
-tests/compatibility/test_dynamodb_compat.py:1540: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTableTags" name="test_tag_overwrite" time="0.009"><failure message="KeyError: 'version'">self = &lt;tests.compatibility.test_dynamodb_compat.TestTableTags object at 0x10be36e10&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c6ce840&gt;
-table = 'test-compat-table-6eced65b'
+tests/compatibility/test_dynamodb_compat.py:1540: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestTableTags" name="test_tag_overwrite" time="0.009"><failure message="KeyError: 'version'">self = &lt;tests.compatibility.test_dynamodb_compat.TestTableTags object at 0x10e3a70b0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ecd6180&gt;
+table = 'test-compat-table-2bae3c21'
 
     def test_tag_overwrite(self, dynamodb, table):
         """Tagging with an existing key overwrites the value."""
@@ -1172,9 +1172,9 @@ table = 'test-compat-table-6eced65b'
                ^^^^^^^^^^^^^^^
 E       KeyError: 'version'
 
-tests/compatibility/test_dynamodb_compat.py:1558: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestExpressionAttributeNames" name="test_reserved_word_in_update" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestExpressionAttributeNames" name="test_reserved_word_in_condition" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestExpressionAttributeNames" name="test_reserved_word_in_filter" time="0.042"><failure message="AssertionError: assert 100 &gt; 150&#10; +  where 100 = int('100')">self = &lt;tests.compatibility.test_dynamodb_compat.TestExpressionAttributeNames object at 0x10be35190&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb05550&gt;
-table = 'test-compat-table-94a01039'
+tests/compatibility/test_dynamodb_compat.py:1558: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestExpressionAttributeNames" name="test_reserved_word_in_update" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestExpressionAttributeNames" name="test_reserved_word_in_condition" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestExpressionAttributeNames" name="test_reserved_word_in_filter" time="0.037"><failure message="AssertionError: assert 100 &gt; 150&#10; +  where 100 = int('100')">self = &lt;tests.compatibility.test_dynamodb_compat.TestExpressionAttributeNames object at 0x10e3a40e0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4c92e0&gt;
+table = 'test-compat-table-d57d3c86'
 
     def test_reserved_word_in_filter(self, dynamodb, table):
         """Use ExpressionAttributeNames for reserved word in FilterExpression."""
@@ -1198,9 +1198,9 @@ table = 'test-compat-table-94a01039'
 E           AssertionError: assert 100 &gt; 150
 E            +  where 100 = int('100')
 
-tests/compatibility/test_dynamodb_compat.py:1621: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestExpressionAttributeNames" name="test_multiple_reserved_words" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDescribeTable" name="test_describe_table_key_schema" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDescribeTable" name="test_describe_table_billing_mode" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDescribeTable" name="test_describe_table_item_count" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDescribeTable" name="test_describe_nonexistent_table" time="0.004" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestQueryAdvanced" name="test_query_with_limit" time="0.013" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestQueryAdvanced" name="test_query_scan_forward_false" time="0.011"><failure message="AssertionError: assert ['sk-000', 's...04', 'sk-002'] == ['sk-004', 's...01', 'sk-000']&#10;  &#10;  At index 0 diff: 'sk-000' != 'sk-004'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_dynamodb_compat.TestQueryAdvanced object at 0x10be50e60&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8d9ca0&gt;
-composite_table = 'test-composite-dd116e11'
+tests/compatibility/test_dynamodb_compat.py:1621: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestExpressionAttributeNames" name="test_multiple_reserved_words" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDescribeTable" name="test_describe_table_key_schema" time="0.005" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDescribeTable" name="test_describe_table_billing_mode" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDescribeTable" name="test_describe_table_item_count" time="0.005" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDescribeTable" name="test_describe_nonexistent_table" time="0.004" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestQueryAdvanced" name="test_query_with_limit" time="0.011" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestQueryAdvanced" name="test_query_scan_forward_false" time="0.010"><failure message="AssertionError: assert ['sk-001', 's...02', 'sk-004'] == ['sk-004', 's...01', 'sk-000']&#10;  &#10;  At index 0 diff: 'sk-001' != 'sk-004'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_dynamodb_compat.TestQueryAdvanced object at 0x10e3c0f50&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10e2bf9e0&gt;
+composite_table = 'test-composite-3e5c7d25'
 
     def test_query_scan_forward_false(self, dynamodb, composite_table):
         """Query with ScanIndexForward=False returns items in reverse order."""
@@ -1220,14 +1220,14 @@ composite_table = 'test-composite-dd116e11'
         )
         sks = [item["sk"]["S"] for item in response["Items"]]
 &gt;       assert sks == ["sk-004", "sk-003", "sk-002", "sk-001", "sk-000"]
-E       AssertionError: assert ['sk-000', 's...04', 'sk-002'] == ['sk-004', 's...01', 'sk-000']
+E       AssertionError: assert ['sk-001', 's...02', 'sk-004'] == ['sk-004', 's...01', 'sk-000']
 E         
-E         At index 0 diff: 'sk-000' != 'sk-004'
+E         At index 0 diff: 'sk-001' != 'sk-004'
 E         Use -v to get more diff
 
-tests/compatibility/test_dynamodb_compat.py:1730: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestQueryAdvanced" name="test_query_count_select" time="0.010"><failure message="AssertionError: assert 5 == 0&#10; +  where 5 = len([{'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-3'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-4'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-1'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-2'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-0'}}])&#10; +    where [{'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-3'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-4'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-1'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-2'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-0'}}] = &lt;built-in method get of dict object at 0x10bd4c740&gt;('Items', [])&#10; +      where &lt;built-in method get of dict object at 0x10bd4c740&gt; = {'Count': 5, 'Items': [{'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-3'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-4'}}, {....}, 'HTTPStatusCode': 200, 'RequestId': '92979e83-5977-4ae2-a29f-3ed5e6cba756', 'RetryAttempts': 0}, 'ScannedCount': 5}.get">self = &lt;tests.compatibility.test_dynamodb_compat.TestQueryAdvanced object at 0x10be51280&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb6c830&gt;
-composite_table = 'test-composite-11c14de0'
+tests/compatibility/test_dynamodb_compat.py:1730: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestQueryAdvanced" name="test_query_count_select" time="0.009"><failure message="AssertionError: assert 5 == 0&#10; +  where 5 = len([{'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-4'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-2'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-0'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-1'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-3'}}])&#10; +    where [{'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-4'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-2'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-0'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-1'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-3'}}] = &lt;built-in method get of dict object at 0x10eeb4300&gt;('Items', [])&#10; +      where &lt;built-in method get of dict object at 0x10eeb4300&gt; = {'Count': 5, 'Items': [{'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-4'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-2'}}, {....}, 'HTTPStatusCode': 200, 'RequestId': 'dde44a39-be69-4d14-b521-43ddd62e41a2', 'RetryAttempts': 0}, 'ScannedCount': 5}.get">self = &lt;tests.compatibility.test_dynamodb_compat.TestQueryAdvanced object at 0x10e3c1370&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4cb200&gt;
+composite_table = 'test-composite-4516feba'
 
     def test_query_count_select(self, dynamodb, composite_table):
         """Query with Select=COUNT returns count without items."""
@@ -1245,13 +1245,13 @@ composite_table = 'test-composite-11c14de0'
         assert response["Count"] == 5
 &gt;       assert len(response.get("Items", [])) == 0
 E       AssertionError: assert 5 == 0
-E        +  where 5 = len([{'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-3'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-4'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-1'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-2'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-0'}}])
-E        +    where [{'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-3'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-4'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-1'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-2'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-0'}}] = &lt;built-in method get of dict object at 0x10bd4c740&gt;('Items', [])
-E        +      where &lt;built-in method get of dict object at 0x10bd4c740&gt; = {'Count': 5, 'Items': [{'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-3'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-4'}}, {....}, 'HTTPStatusCode': 200, 'RequestId': '92979e83-5977-4ae2-a29f-3ed5e6cba756', 'RetryAttempts': 0}, 'ScannedCount': 5}.get
+E        +  where 5 = len([{'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-4'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-2'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-0'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-1'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-3'}}])
+E        +    where [{'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-4'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-2'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-0'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-1'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-3'}}] = &lt;built-in method get of dict object at 0x10eeb4300&gt;('Items', [])
+E        +      where &lt;built-in method get of dict object at 0x10eeb4300&gt; = {'Count': 5, 'Items': [{'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-4'}}, {'pk': {'S': 'cnt-user'}, 'sk': {'S': 'i-2'}}, {....}, 'HTTPStatusCode': 200, 'RequestId': 'dde44a39-be69-4d14-b521-43ddd62e41a2', 'RetryAttempts': 0}, 'ScannedCount': 5}.get
 
-tests/compatibility/test_dynamodb_compat.py:1746: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestScanAdvanced" name="test_scan_with_limit" time="0.012" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestScanAdvanced" name="test_scan_with_exclusive_start_key" time="0.011" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestErrorHandling" name="test_get_item_missing_key" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestErrorHandling" name="test_delete_nonexistent_table" time="0.004" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestErrorHandling" name="test_create_duplicate_table" time="0.008"><failure message="AssertionError: assert 'TableAlreadyExistsException' == 'ResourceInUseException'&#10;  &#10;  - ResourceInUseException&#10;  + TableAlreadyExistsException">self = &lt;tests.compatibility.test_dynamodb_compat.TestErrorHandling object at 0x10be50620&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb05070&gt;
-table = 'test-compat-table-2986f15b'
+tests/compatibility/test_dynamodb_compat.py:1746: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestScanAdvanced" name="test_scan_with_limit" time="0.014" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestScanAdvanced" name="test_scan_with_exclusive_start_key" time="0.011" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestErrorHandling" name="test_get_item_missing_key" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestErrorHandling" name="test_delete_nonexistent_table" time="0.004" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestErrorHandling" name="test_create_duplicate_table" time="0.006"><failure message="AssertionError: assert 'TableAlreadyExistsException' == 'ResourceInUseException'&#10;  &#10;  - ResourceInUseException&#10;  + TableAlreadyExistsException">self = &lt;tests.compatibility.test_dynamodb_compat.TestErrorHandling object at 0x10e3c13a0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4caae0&gt;
+table = 'test-compat-table-cb28c48c'
 
     def test_create_duplicate_table(self, dynamodb, table):
         """Creating a table that already exists raises ResourceInUseException."""
@@ -1268,8 +1268,8 @@ E
 E         - ResourceInUseException
 E         + TableAlreadyExistsException
 
-tests/compatibility/test_dynamodb_compat.py:1811: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDescribeEndpointsAndLimits" name="test_describe_endpoints" time="0.004"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDescribeEndpointsAndLimits object at 0x10be50b60&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cf782c0&gt;
+tests/compatibility/test_dynamodb_compat.py:1811: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDescribeEndpointsAndLimits" name="test_describe_endpoints" time="0.004"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDescribeEndpointsAndLimits object at 0x10e3c0c80&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f119370&gt;
 
     def test_describe_endpoints(self, dynamodb):
         """DescribeEndpoints returns a list of endpoints."""
@@ -1280,18 +1280,18 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10cf782c0&gt;
 E       assert 0 &gt;= 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_dynamodb_compat.py:1820: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDescribeEndpointsAndLimits" name="test_describe_limits" time="0.004"><failure message="AssertionError: assert 'AccountMaxReadCapacityUnits' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '65', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6902ba56-99d4-4fa9-8b49-61b5fa18511b', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDescribeEndpointsAndLimits object at 0x10be50200&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb69dc0&gt;
+tests/compatibility/test_dynamodb_compat.py:1820: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDescribeEndpointsAndLimits" name="test_describe_limits" time="0.004"><failure message="AssertionError: assert 'AccountMaxReadCapacityUnits' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '65', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0ad40ede-5394-4ca3-bce6-5cf3455454c9', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDescribeEndpointsAndLimits object at 0x10e3c0650&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ec78c50&gt;
 
     def test_describe_limits(self, dynamodb):
         """DescribeLimits returns account-level DynamoDB limits."""
         response = dynamodb.describe_limits()
 &gt;       assert "AccountMaxReadCapacityUnits" in response
-E       AssertionError: assert 'AccountMaxReadCapacityUnits' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '65', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6902ba56-99d4-4fa9-8b49-61b5fa18511b', 'RetryAttempts': 0}}
+E       AssertionError: assert 'AccountMaxReadCapacityUnits' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '65', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0ad40ede-5394-4ca3-bce6-5cf3455454c9', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:1829: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_describe_continuous_backups" time="0.007"><failure message="AssertionError: assert 'ContinuousBackupsStatus' in {}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10be51a60&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10d004c50&gt;
-table = 'test-compat-table-3cab2841'
+tests/compatibility/test_dynamodb_compat.py:1829: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_describe_continuous_backups" time="0.007"><failure message="AssertionError: assert 'ContinuousBackupsStatus' in {}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10e3c1b80&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f14ede0&gt;
+table = 'test-compat-table-1cd281e0'
 
     def test_describe_continuous_backups(self, dynamodb, table):
         """DescribeContinuousBackups returns point-in-time recovery status."""
@@ -1300,9 +1300,9 @@ table = 'test-compat-table-3cab2841'
 &gt;       assert "ContinuousBackupsStatus" in cb
 E       AssertionError: assert 'ContinuousBackupsStatus' in {}
 
-tests/compatibility/test_dynamodb_compat.py:1842: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_create_and_delete_backup" time="0.007"><failure message="KeyError: 'BackupDetails'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10be51e80&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cc27440&gt;
-table = 'test-compat-table-af6f447b'
+tests/compatibility/test_dynamodb_compat.py:1842: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_create_and_delete_backup" time="0.007"><failure message="KeyError: 'BackupDetails'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10e3c1fa0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4514f0&gt;
+table = 'test-compat-table-e4b7d491'
 
     def test_create_and_delete_backup(self, dynamodb, table):
         """CreateBackup, DescribeBackup, ListBackups, DeleteBackup lifecycle."""
@@ -1313,8 +1313,8 @@ table = 'test-compat-table-af6f447b'
                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'BackupDetails'
 
-tests/compatibility/test_dynamodb_compat.py:1850: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_create_and_describe_global_table" time="0.008"><failure message="KeyError: 'GlobalTableName'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10be522a0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8da270&gt;
+tests/compatibility/test_dynamodb_compat.py:1850: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_create_and_describe_global_table" time="0.007"><failure message="KeyError: 'GlobalTableName'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10e3c23c0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f14f890&gt;
 
     def test_create_and_describe_global_table(self, dynamodb):
         """CreateGlobalTable, DescribeGlobalTable, ListGlobalTables."""
@@ -1341,9 +1341,9 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8da270&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'GlobalTableName'
 
-tests/compatibility/test_dynamodb_compat.py:1897: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_execute_statement_partiql_select" time="0.010"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10be526c0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb6ba70&gt;
-table = 'test-compat-table-1aebb8b2'
+tests/compatibility/test_dynamodb_compat.py:1897: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_execute_statement_partiql_select" time="0.008"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10e3c27e0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f450f50&gt;
+table = 'test-compat-table-740977ad'
 
     def test_execute_statement_partiql_select(self, dynamodb, table):
         """ExecuteStatement with PartiQL SELECT."""
@@ -1363,9 +1363,9 @@ table = 'test-compat-table-1aebb8b2'
 E       assert 0 == 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_dynamodb_compat.py:1922: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_batch_execute_statement" time="0.009"><failure message="assert 0 == 2&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10be52ae0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb07fb0&gt;
-table = 'test-compat-table-8ae243ea'
+tests/compatibility/test_dynamodb_compat.py:1922: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_batch_execute_statement" time="0.009"><failure message="assert 0 == 2&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10e3c2c00&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f128500&gt;
+table = 'test-compat-table-dcd66741'
 
     def test_batch_execute_statement(self, dynamodb, table):
         """BatchExecuteStatement with multiple PartiQL statements."""
@@ -1388,9 +1388,35 @@ table = 'test-compat-table-8ae243ea'
 E       assert 0 == 2
 E        +  where 0 = len([])
 
-tests/compatibility/test_dynamodb_compat.py:1942: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_scan_with_filter_and_limit" time="0.013" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_update_item_add_to_number" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_update_item_add_to_set" time="0.009"><failure message="KeyError: 'SS'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10be53740&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cc255b0&gt;
-table = 'test-compat-table-47d57aaf'
+tests/compatibility/test_dynamodb_compat.py:1942: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_scan_with_filter_and_limit" time="0.013"><failure message="AssertionError: assert 'B' == 'A'&#10;  &#10;  - A&#10;  + B">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10e3c3020&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f450470&gt;
+table = 'test-compat-table-5e4323e2'
+
+    def test_scan_with_filter_and_limit(self, dynamodb, table):
+        """Scan with FilterExpression and Limit parameter."""
+        for i in range(10):
+            dynamodb.put_item(
+                TableName=table,
+                Item={"pk": {"S": f"scanlim-{i}"}, "category": {"S": "A" if i &lt; 7 else "B"}},
+            )
+        response = dynamodb.scan(
+            TableName=table,
+            FilterExpression="category = :cat",
+            ExpressionAttributeValues={":cat": {"S": "A"}},
+            Limit=3,
+        )
+        # Limit applies before filter, so we may get fewer than 3 matching items
+        assert response["ScannedCount"] &lt;= 3
+        for item in response["Items"]:
+&gt;           assert item["category"]["S"] == "A"
+E           AssertionError: assert 'B' == 'A'
+E             
+E             - A
+E             + B
+
+tests/compatibility/test_dynamodb_compat.py:1960: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_update_item_add_to_number" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_update_item_add_to_set" time="0.009"><failure message="KeyError: 'SS'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10e3c3860&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee68f50&gt;
+table = 'test-compat-table-80151fc2'
 
     def test_update_item_add_to_set(self, dynamodb, table):
         """UpdateItem with ADD on a string set attribute."""
@@ -1409,9 +1435,9 @@ table = 'test-compat-table-47d57aaf'
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'SS'
 
-tests/compatibility/test_dynamodb_compat.py:1990: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_update_item_delete_from_set" time="0.011"><failure message="AssertionError: assert {'x', 'y', 'z'} == {'x', 'z'}&#10;  &#10;  Extra items in the left set:&#10;  'y'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10be360c0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cbf3c50&gt;
-table = 'test-compat-table-fc720347'
+tests/compatibility/test_dynamodb_compat.py:1990: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_update_item_delete_from_set" time="0.010"><failure message="AssertionError: assert {'x', 'y', 'z'} == {'x', 'z'}&#10;  &#10;  Extra items in the left set:&#10;  'y'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10e3a6b10&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10edea5d0&gt;
+table = 'test-compat-table-a2559148'
 
     def test_update_item_delete_from_set(self, dynamodb, table):
         """UpdateItem with DELETE on a string set attribute."""
@@ -1433,9 +1459,9 @@ E         Extra items in the left set:
 E         'y'
 E         Use -v to get more diff
 
-tests/compatibility/test_dynamodb_compat.py:2005: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_delete_item_with_condition_expression" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_delete_item_condition_fails" time="0.008"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10be530b0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cc25100&gt;
-table = 'test-compat-table-ce9a26cc'
+tests/compatibility/test_dynamodb_compat.py:2005: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_delete_item_with_condition_expression" time="0.010" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_delete_item_condition_fails" time="0.008"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10e3c3200&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f1ab710&gt;
+table = 'test-compat-table-b49c2934'
 
     def test_delete_item_condition_fails(self, dynamodb, table):
         """DeleteItem with ConditionExpression fails when condition not met."""
@@ -1447,19 +1473,19 @@ table = 'test-compat-table-ce9a26cc'
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_dynamodb_compat.py:2029: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_describe_table_replica_auto_scaling" time="0.007"><failure message="AssertionError: assert 'TableAutoScalingDescription' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '41', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'cb76ec5e-fca2-4584-8f4a-b14367409ac9', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10be527e0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cfd92b0&gt;
-table = 'test-compat-table-b93d1fa8'
+tests/compatibility/test_dynamodb_compat.py:2029: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_describe_table_replica_auto_scaling" time="0.008"><failure message="AssertionError: assert 'TableAutoScalingDescription' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '41', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'cf0ca524-16dc-4517-a99e-0b4fa8a7b44b', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10e3c2930&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f0fb830&gt;
+table = 'test-compat-table-485bcb52'
 
     def test_describe_table_replica_auto_scaling(self, dynamodb, table):
         """DescribeTableReplicaAutoScaling returns auto scaling info."""
         response = dynamodb.describe_table_replica_auto_scaling(TableName=table)
 &gt;       assert "TableAutoScalingDescription" in response
-E       AssertionError: assert 'TableAutoScalingDescription' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '41', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'cb76ec5e-fca2-4584-8f4a-b14367409ac9', 'RetryAttempts': 0}}
+E       AssertionError: assert 'TableAutoScalingDescription' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '41', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'cf0ca524-16dc-4517-a99e-0b4fa8a7b44b', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:2042: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_tag_resource" time="0.009"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10be51eb0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cf8ed80&gt;
-table = 'test-compat-table-54001344'
+tests/compatibility/test_dynamodb_compat.py:2042: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations" name="test_tag_resource" time="0.008"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExtendedOperations object at 0x10e3c2360&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f590d70&gt;
+table = 'test-compat-table-0910e80b'
 
     def test_tag_resource(self, dynamodb, table):
         """TagResource, UntagResource, ListTagsOfResource on a table."""
@@ -1483,8 +1509,8 @@ table = 'test-compat-table-54001344'
                ^^^^^^^^^^^^^^
 E       KeyError: 'env'
 
-tests/compatibility/test_dynamodb_compat.py:2062: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_list_tables" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_list_tables_with_limit" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_update_table_add_gsi" time="0.009"><failure message="AssertionError: assert 'gsi-index' in []">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be53da0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7cd100&gt;
+tests/compatibility/test_dynamodb_compat.py:2062: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_list_tables" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_list_tables_with_limit" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_update_table_add_gsi" time="0.006"><failure message="AssertionError: assert 'gsi-index' in []">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e3c3f50&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f3eb440&gt;
 
     def test_update_table_add_gsi(self, dynamodb):
         """UpdateTable to add a Global Secondary Index."""
@@ -1518,8 +1544,8 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7cd100&gt;
 &gt;           assert "gsi-index" in gsi_names
 E           AssertionError: assert 'gsi-index' in []
 
-tests/compatibility/test_dynamodb_compat.py:2132: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_update_table_provisioned_throughput" time="0.006"><failure message="KeyError: 'ProvisionedThroughput'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be681a0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10bd805c0&gt;
+tests/compatibility/test_dynamodb_compat.py:2132: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_update_table_provisioned_throughput" time="0.006"><failure message="KeyError: 'ProvisionedThroughput'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e3d8350&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f1a9790&gt;
 
     def test_update_table_provisioned_throughput(self, dynamodb):
         """UpdateTable to change ProvisionedThroughput."""
@@ -1539,9 +1565,9 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10bd805c0&gt;
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'ProvisionedThroughput'
 
-tests/compatibility/test_dynamodb_compat.py:2150: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_transact_write_items" time="0.009"><failure message="KeyError: 'Item'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be68560&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c718ec0&gt;
-table = 'more-ops-50e75c41'
+tests/compatibility/test_dynamodb_compat.py:2150: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_transact_write_items" time="0.008"><failure message="KeyError: 'Item'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e3d8710&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4f8c20&gt;
+table = 'more-ops-97b0ab4a'
 
     def test_transact_write_items(self, dynamodb, table):
         """TransactWriteItems with Put and ConditionCheck."""
@@ -1567,9 +1593,9 @@ table = 'more-ops-50e75c41'
                ^^^^^^^^^^
 E       KeyError: 'Item'
 
-tests/compatibility/test_dynamodb_compat.py:2181: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_transact_get_items" time="0.010"><failure message="assert 0 == 2&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be68920&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7a6390&gt;
-table = 'more-ops-eecbb4d6'
+tests/compatibility/test_dynamodb_compat.py:2181: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_transact_get_items" time="0.008"><failure message="assert 0 == 2&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e3d8ad0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f15bce0&gt;
+table = 'more-ops-bf7b0a6b'
 
     def test_transact_get_items(self, dynamodb, table):
         """TransactGetItems reads multiple items atomically."""
@@ -1585,9 +1611,9 @@ table = 'more-ops-eecbb4d6'
 E       assert 0 == 2
 E        +  where 0 = len([])
 
-tests/compatibility/test_dynamodb_compat.py:2194: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_update_item_return_values" time="0.008"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be68ce0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cc26cf0&gt;
-table = 'more-ops-31096a6d'
+tests/compatibility/test_dynamodb_compat.py:2194: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_update_item_return_values" time="0.007"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e3d8e90&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f0fb800&gt;
+table = 'more-ops-d87372ea'
 
     def test_update_item_return_values(self, dynamodb, table):
         """UpdateItem with ReturnValues=ALL_NEW."""
@@ -1604,9 +1630,9 @@ table = 'more-ops-31096a6d'
                ^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Attributes'
 
-tests/compatibility/test_dynamodb_compat.py:2209: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_update_item_return_values_all_old" time="0.008"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be690a0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb4f860&gt;
-table = 'more-ops-3c228b64'
+tests/compatibility/test_dynamodb_compat.py:2209: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_update_item_return_values_all_old" time="0.007"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e3d9250&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ecd5400&gt;
+table = 'more-ops-8107b79d'
 
     def test_update_item_return_values_all_old(self, dynamodb, table):
         """UpdateItem with ReturnValues=ALL_OLD."""
@@ -1622,9 +1648,9 @@ table = 'more-ops-3c228b64'
                ^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Attributes'
 
-tests/compatibility/test_dynamodb_compat.py:2221: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_put_item_return_values" time="0.041"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be69460&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10b7dc200&gt;
-table = 'more-ops-85a4f8ca'
+tests/compatibility/test_dynamodb_compat.py:2221: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_put_item_return_values" time="0.035"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e3d9610&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f105af0&gt;
+table = 'more-ops-6ce1e85e'
 
     def test_put_item_return_values(self, dynamodb, table):
         """PutItem with ReturnValues=ALL_OLD for overwrite."""
@@ -1638,8 +1664,8 @@ table = 'more-ops-85a4f8ca'
                ^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Attributes'
 
-tests/compatibility/test_dynamodb_compat.py:2231: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_query_with_begins_with" time="0.008"><failure message="assert 3 == 2">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be69850&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb17ad0&gt;
+tests/compatibility/test_dynamodb_compat.py:2231: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_query_with_begins_with" time="0.009"><failure message="assert 3 == 2">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e3d9a00&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ece9b50&gt;
 
     def test_query_with_begins_with(self, dynamodb):
         """Query with begins_with on sort key."""
@@ -1670,8 +1696,8 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb17ad0&gt;
 &gt;           assert resp["Count"] == 2
 E           assert 3 == 2
 
-tests/compatibility/test_dynamodb_compat.py:2259: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_query_between" time="0.019"><failure message="assert 10 == 5">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be53d70&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10bd30ce0&gt;
+tests/compatibility/test_dynamodb_compat.py:2259: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_query_between" time="0.013"><failure message="assert 10 == 5">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e3c10d0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f501190&gt;
 
     def test_query_between(self, dynamodb):
         """Query with BETWEEN on sort key."""
@@ -1703,9 +1729,9 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10bd30ce0&gt;
 &gt;           assert resp["Count"] == 5
 E           assert 10 == 5
 
-tests/compatibility/test_dynamodb_compat.py:2292: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_execute_statement_insert" time="0.008"><failure message="KeyError: 'Item'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be51490&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cf79f10&gt;
-table = 'more-ops-e17b9338'
+tests/compatibility/test_dynamodb_compat.py:2292: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_execute_statement_insert" time="0.008"><failure message="KeyError: 'Item'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e3c2570&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10e1f3e60&gt;
+table = 'more-ops-36c488e3'
 
     def test_execute_statement_insert(self, dynamodb, table):
         """ExecuteStatement with PartiQL INSERT."""
@@ -1717,9 +1743,9 @@ table = 'more-ops-e17b9338'
                ^^^^^^^^^
 E       KeyError: 'Item'
 
-tests/compatibility/test_dynamodb_compat.py:2302: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_execute_statement_update" time="0.009"><failure message="AssertionError: assert 'old' == 'new'&#10;  &#10;  - new&#10;  + old">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be528a0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb6fe30&gt;
-table = 'more-ops-9e3479b4'
+tests/compatibility/test_dynamodb_compat.py:2302: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_execute_statement_update" time="0.009"><failure message="AssertionError: assert 'old' == 'new'&#10;  &#10;  - new&#10;  + old">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e3c3ad0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee68cb0&gt;
+table = 'more-ops-51c2230a'
 
     def test_execute_statement_update(self, dynamodb, table):
         """ExecuteStatement with PartiQL UPDATE."""
@@ -1734,9 +1760,9 @@ E
 E         - new
 E         + old
 
-tests/compatibility/test_dynamodb_compat.py:2311: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_execute_statement_delete" time="0.009"><failure message="AssertionError: assert 'Item' not in {'Item': {'pk': {'S': 'partiql-del'}, 'v': {'S': 'bye'}}, 'ResponseMetadata': {'HTTPHeaders': {'content-length': '51',...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '83992c07-5f09-40f3-9846-411a3200c36d', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be37da0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cbf3950&gt;
-table = 'more-ops-21ee1bae'
+tests/compatibility/test_dynamodb_compat.py:2311: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_execute_statement_delete" time="0.009"><failure message="AssertionError: assert 'Item' not in {'Item': {'pk': {'S': 'partiql-del'}, 'v': {'S': 'bye'}}, 'ResponseMetadata': {'HTTPHeaders': {'content-length': '51',...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'd2d99f3a-ce9d-43bf-a3d4-59c4454480cb', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e3a4980&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee49010&gt;
+table = 'more-ops-307dc259'
 
     def test_execute_statement_delete(self, dynamodb, table):
         """ExecuteStatement with PartiQL DELETE."""
@@ -1744,11 +1770,11 @@ table = 'more-ops-21ee1bae'
         dynamodb.execute_statement(Statement=f"DELETE FROM \"{table}\" WHERE pk='partiql-del'")
         r = dynamodb.get_item(TableName=table, Key={"pk": {"S": "partiql-del"}})
 &gt;       assert "Item" not in r
-E       AssertionError: assert 'Item' not in {'Item': {'pk': {'S': 'partiql-del'}, 'v': {'S': 'bye'}}, 'ResponseMetadata': {'HTTPHeaders': {'content-length': '51',...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '83992c07-5f09-40f3-9846-411a3200c36d', 'RetryAttempts': 0}}
+E       AssertionError: assert 'Item' not in {'Item': {'pk': {'S': 'partiql-del'}, 'v': {'S': 'bye'}}, 'ResponseMetadata': {'HTTPHeaders': {'content-length': '51',...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'd2d99f3a-ce9d-43bf-a3d4-59c4454480cb', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:2318: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_scan_with_projection_expression" time="0.008"><failure message="AssertionError: assert 'b' not in {'a': {'S': 'x'}, 'b': {'S': 'y'}, 'c': {'S': 'z'}, 'pk': {'S': 'proj-1'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10be37260&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7cf320&gt;
-table = 'more-ops-2c81bfe8'
+tests/compatibility/test_dynamodb_compat.py:2318: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_scan_with_projection_expression" time="0.008"><failure message="AssertionError: assert 'b' not in {'a': {'S': 'x'}, 'b': {'S': 'y'}, 'c': {'S': 'z'}, 'pk': {'S': 'proj-1'}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations object at 0x10e38ede0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10e213ef0&gt;
+table = 'more-ops-b844a8c9'
 
     def test_scan_with_projection_expression(self, dynamodb, table):
         """Scan with ProjectionExpression to return only specific attributes."""
@@ -1769,9 +1795,9 @@ table = 'more-ops-2c81bfe8'
 &gt;       assert "b" not in item
 E       AssertionError: assert 'b' not in {'a': {'S': 'x'}, 'b': {'S': 'y'}, 'c': {'S': 'z'}, 'pk': {'S': 'proj-1'}}
 
-tests/compatibility/test_dynamodb_compat.py:2336: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_update_item_remove" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_batch_write_item" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_batch_get_item" time="0.010" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_conditional_put_item" time="0.007"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced object at 0x10be682c0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb17c50&gt;
-table = 'adv-table-234352f3'
+tests/compatibility/test_dynamodb_compat.py:2336: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBMoreOperations" name="test_update_item_remove" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_batch_write_item" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_batch_get_item" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_conditional_put_item" time="0.007"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced object at 0x10e3d8110&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed10620&gt;
+table = 'adv-table-26be21c3'
 
     def test_conditional_put_item(self, dynamodb, table):
         dynamodb.put_item(TableName=table, Item={"pk": {"S": "cond-1"}, "v": {"S": "exists"}})
@@ -1779,9 +1805,9 @@ table = 'adv-table-234352f3'
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_dynamodb_compat.py:2396: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_update_item_add_number" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_update_item_set_if_not_exists" time="25.637"><failure message="botocore.exceptions.ClientError: An error occurred (500) when calling the UpdateItem operation (reached max retries: 9):">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced object at 0x10be69fa0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cf8deb0&gt;
-table = 'adv-table-48cf4f18'
+tests/compatibility/test_dynamodb_compat.py:2396: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_update_item_add_number" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_update_item_set_if_not_exists" time="25.643"><failure message="botocore.exceptions.ClientError: An error occurred (500) when calling the UpdateItem operation (reached max retries: 9):">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced object at 0x10e3da150&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f451ca0&gt;
+table = 'adv-table-451b244d'
 
     def test_update_item_set_if_not_exists(self, dynamodb, table):
         dynamodb.put_item(TableName=table, Item={"pk": {"S": "ifne-1"}})
@@ -1802,9 +1828,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.DynamoDB object at 0x10cf8deb0&gt;
+self = &lt;botocore.client.DynamoDB object at 0x10f451ca0&gt;
 operation_name = 'UpdateItem'
-api_params = {'ExpressionAttributeValues': {':default': {'S': 'default_val'}}, 'Key': {'pk': {'S': 'ifne-1'}}, 'TableName': 'adv-table-48cf4f18', 'UpdateExpression': 'SET v = if_not_exists(v, :default)'}
+api_params = {'ExpressionAttributeValues': {':default': {'S': 'default_val'}}, 'Key': {'pk': {'S': 'ifne-1'}}, 'TableName': 'adv-table-451b244d', 'UpdateExpression': 'SET v = if_not_exists(v, :default)'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1893,9 +1919,9 @@ api_params = {'ExpressionAttributeValues': {':default': {'S': 'default_val'}}, '
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (500) when calling the UpdateItem operation (reached max retries: 9):
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_scan_filter_expression" time="0.011"><failure message="assert False&#10; +  where False = all(&lt;generator object TestDynamoDBAdvanced.test_scan_filter_expression.&lt;locals&gt;.&lt;genexpr&gt; at 0x10bd48820&gt;)">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced object at 0x10be6a360&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb14650&gt;
-table = 'adv-table-240da544'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_scan_filter_expression" time="0.015"><failure message="assert False&#10; +  where False = all(&lt;generator object TestDynamoDBAdvanced.test_scan_filter_expression.&lt;locals&gt;.&lt;genexpr&gt; at 0x10e2bbe60&gt;)">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced object at 0x10e3da510&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4fa330&gt;
+table = 'adv-table-0aff2f44'
 
     def test_scan_filter_expression(self, dynamodb, table):
         for i in range(5):
@@ -1910,22 +1936,22 @@ table = 'adv-table-240da544'
         )
 &gt;       assert all(int(item["num"]["N"]) &gt; 20 for item in resp["Items"])
 E       assert False
-E        +  where False = all(&lt;generator object TestDynamoDBAdvanced.test_scan_filter_expression.&lt;locals&gt;.&lt;genexpr&gt; at 0x10bd48820&gt;)
+E        +  where False = all(&lt;generator object TestDynamoDBAdvanced.test_scan_filter_expression.&lt;locals&gt;.&lt;genexpr&gt; at 0x10e2bbe60&gt;)
 
-tests/compatibility/test_dynamodb_compat.py:2438: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_scan_with_limit" time="0.015" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_scan_pagination" time="0.015"><failure message="AssertionError: assert 'LastEvaluatedKey' in {'ConsumedCapacity': {'CapacityUnits': 1.0, 'TableName': 'adv-table-c666c77c'}, 'Count': 5, 'Items': [{'pk': {'S': 'pg...obotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '5d70f1c6-6878-4bd0-937e-d44cdd4bd02e', 'RetryAttempts': 0}, ...}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced object at 0x10be6aae0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8d8410&gt;
-table = 'adv-table-c666c77c'
+tests/compatibility/test_dynamodb_compat.py:2438: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_scan_with_limit" time="0.016" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_scan_pagination" time="0.013"><failure message="AssertionError: assert 'LastEvaluatedKey' in {'ConsumedCapacity': {'CapacityUnits': 1.0, 'TableName': 'adv-table-5558cb89'}, 'Count': 5, 'Items': [{'pk': {'S': 'pg...obotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'c25f3a3a-d018-4029-8568-d7d436c8f03a', 'RetryAttempts': 0}, ...}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced object at 0x10e3dac90&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed13560&gt;
+table = 'adv-table-5558cb89'
 
     def test_scan_pagination(self, dynamodb, table):
         for i in range(10):
             dynamodb.put_item(TableName=table, Item={"pk": {"S": f"pg-{i}"}})
         resp1 = dynamodb.scan(TableName=table, Limit=5)
 &gt;       assert "LastEvaluatedKey" in resp1
-E       AssertionError: assert 'LastEvaluatedKey' in {'ConsumedCapacity': {'CapacityUnits': 1.0, 'TableName': 'adv-table-c666c77c'}, 'Count': 5, 'Items': [{'pk': {'S': 'pg...obotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '5d70f1c6-6878-4bd0-937e-d44cdd4bd02e', 'RetryAttempts': 0}, ...}
+E       AssertionError: assert 'LastEvaluatedKey' in {'ConsumedCapacity': {'CapacityUnits': 1.0, 'TableName': 'adv-table-5558cb89'}, 'Count': 5, 'Items': [{'pk': {'S': 'pg...obotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'c25f3a3a-d018-4029-8568-d7d436c8f03a', 'RetryAttempts': 0}, ...}
 
-tests/compatibility/test_dynamodb_compat.py:2450: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_delete_item_return_values" time="0.008"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced object at 0x10be6aea0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10caf4050&gt;
-table = 'adv-table-f46ca195'
+tests/compatibility/test_dynamodb_compat.py:2450: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_delete_item_return_values" time="0.008"><failure message="KeyError: 'Attributes'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced object at 0x10e3db050&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4abe60&gt;
+table = 'adv-table-d9639a55'
 
     def test_delete_item_return_values(self, dynamodb, table):
         dynamodb.put_item(TableName=table, Item={"pk": {"S": "del-rv"}, "v": {"S": "gone"}})
@@ -1938,9 +1964,9 @@ table = 'adv-table-f46ca195'
                ^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Attributes'
 
-tests/compatibility/test_dynamodb_compat.py:2462: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_update_item_list_append" time="0.010"><failure message="KeyError: 'L'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced object at 0x10be36d20&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cfd8980&gt;
-table = 'adv-table-aa1380d5'
+tests/compatibility/test_dynamodb_compat.py:2462: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_update_item_list_append" time="0.010"><failure message="KeyError: 'L'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced object at 0x10e3a6f00&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4831a0&gt;
+table = 'adv-table-10a89f9f'
 
     def test_update_item_list_append(self, dynamodb, table):
         dynamodb.put_item(
@@ -1958,8 +1984,8 @@ table = 'adv-table-aa1380d5'
                                  ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'L'
 
-tests/compatibility/test_dynamodb_compat.py:2477: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_describe_table_fields" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_describe_table_item_count" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_put_item_with_map_type" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_put_item_with_boolean_and_null" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_put_item_with_binary" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_put_item_with_string_set" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_put_item_with_number_set" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestBackupRestore" name="test_restore_table_from_backup" time="0.008"><failure message="KeyError: 'BackupDetails'">self = &lt;tests.compatibility.test_dynamodb_compat.TestBackupRestore object at 0x10be6b320&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10d05b620&gt;
+tests/compatibility/test_dynamodb_compat.py:2477: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_describe_table_fields" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_describe_table_item_count" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_put_item_with_map_type" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_put_item_with_boolean_and_null" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_put_item_with_binary" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_put_item_with_string_set" time="0.008" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBAdvanced" name="test_put_item_with_number_set" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestBackupRestore" name="test_restore_table_from_backup" time="0.009"><failure message="KeyError: 'BackupDetails'">self = &lt;tests.compatibility.test_dynamodb_compat.TestBackupRestore object at 0x10e3db4a0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f1aab40&gt;
 
     def test_restore_table_from_backup(self, dynamodb):
         """CreateBackup then RestoreTableFromBackup creates a new table."""
@@ -1980,8 +2006,8 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10d05b620&gt;
                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'BackupDetails'
 
-tests/compatibility/test_dynamodb_compat.py:2565: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestBackupRestore" name="test_restore_table_to_point_in_time" time="0.008"><failure message="KeyError: 'TableName'">self = &lt;tests.compatibility.test_dynamodb_compat.TestBackupRestore object at 0x10be6b740&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cf8e930&gt;
+tests/compatibility/test_dynamodb_compat.py:2565: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestBackupRestore" name="test_restore_table_to_point_in_time" time="0.009"><failure message="KeyError: 'TableName'">self = &lt;tests.compatibility.test_dynamodb_compat.TestBackupRestore object at 0x10e3db8c0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed636b0&gt;
 
     def test_restore_table_to_point_in_time(self, dynamodb):
         """RestoreTableToPointInTime creates a restored copy of a table."""
@@ -2007,8 +2033,8 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10cf8e930&gt;
                    ^^^^^^^^^^^^^^^
 E           KeyError: 'TableName'
 
-tests/compatibility/test_dynamodb_compat.py:2604: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestBackupRestore" name="test_create_table_replica" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGapStubs" name="test_describe_endpoints" time="0.004"><failure message="assert 0 &gt; 0&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGapStubs object at 0x10be077d0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10be6a8a0&gt;
+tests/compatibility/test_dynamodb_compat.py:2604: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestBackupRestore" name="test_create_table_replica" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGapStubs" name="test_describe_endpoints" time="0.003"><failure message="assert 0 &gt; 0&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGapStubs object at 0x10e3dbe00&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f159850&gt;
 
     def test_describe_endpoints(self, dynamodb):
         resp = dynamodb.describe_endpoints()
@@ -2017,35 +2043,35 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10be6a8a0&gt;
 E       assert 0 &gt; 0
 E        +  where 0 = len([])
 
-tests/compatibility/test_dynamodb_compat.py:2650: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGapStubs" name="test_list_exports" time="0.004"><failure message="AssertionError: assert 'ExportSummaries' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '14', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6a248cf2-7b58-44a2-8b1d-48ef2d4323b6', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGapStubs object at 0x10be6bb30&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10bd80ef0&gt;
+tests/compatibility/test_dynamodb_compat.py:2650: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGapStubs" name="test_list_exports" time="0.004"><failure message="AssertionError: assert 'ExportSummaries' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '14', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e057afca-3e65-4f65-9bff-3fc7266c6592', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGapStubs object at 0x10e3db680&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee4b0b0&gt;
 
     def test_list_exports(self, dynamodb):
         resp = dynamodb.list_exports()
 &gt;       assert "ExportSummaries" in resp
-E       AssertionError: assert 'ExportSummaries' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '14', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6a248cf2-7b58-44a2-8b1d-48ef2d4323b6', 'RetryAttempts': 0}}
+E       AssertionError: assert 'ExportSummaries' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '14', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e057afca-3e65-4f65-9bff-3fc7266c6592', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:2657: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamodbAutoCoverage" name="test_list_contributor_insights" time="0.004"><failure message="AssertionError: assert 'ContributorInsightsSummaries' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '34', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6b55d86f-8510-4b9e-9746-67e2fa7d8993', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamodbAutoCoverage object at 0x10be6b6e0&gt;
-client = &lt;botocore.client.DynamoDB object at 0x10caf7020&gt;
+tests/compatibility/test_dynamodb_compat.py:2657: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamodbAutoCoverage" name="test_list_contributor_insights" time="0.004"><failure message="AssertionError: assert 'ContributorInsightsSummaries' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '34', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'ac743487-8868-4355-83e1-a98a8718e89a', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamodbAutoCoverage object at 0x10e3d9d60&gt;
+client = &lt;botocore.client.DynamoDB object at 0x10f14fe00&gt;
 
     def test_list_contributor_insights(self, client):
         """ListContributorInsights returns a response."""
         resp = client.list_contributor_insights()
 &gt;       assert "ContributorInsightsSummaries" in resp
-E       AssertionError: assert 'ContributorInsightsSummaries' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '34', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6b55d86f-8510-4b9e-9746-67e2fa7d8993', 'RetryAttempts': 0}}
+E       AssertionError: assert 'ContributorInsightsSummaries' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '34', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'ac743487-8868-4355-83e1-a98a8718e89a', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:2670: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamodbAutoCoverage" name="test_list_imports" time="0.004"><failure message="AssertionError: assert 'ImportSummaryList' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '14', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '9e8be47e-4712-485d-aec0-503456eec0fb', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamodbAutoCoverage object at 0x10be6a180&gt;
-client = &lt;botocore.client.DynamoDB object at 0x10cf8c590&gt;
+tests/compatibility/test_dynamodb_compat.py:2670: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamodbAutoCoverage" name="test_list_imports" time="0.004"><failure message="AssertionError: assert 'ImportSummaryList' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '14', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '04274959-5e73-45a0-af93-3b054ff41020', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamodbAutoCoverage object at 0x10e3da9c0&gt;
+client = &lt;botocore.client.DynamoDB object at 0x10edeb140&gt;
 
     def test_list_imports(self, client):
         """ListImports returns a response."""
         resp = client.list_imports()
 &gt;       assert "ImportSummaryList" in resp
-E       AssertionError: assert 'ImportSummaryList' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '14', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '9e8be47e-4712-485d-aec0-503456eec0fb', 'RetryAttempts': 0}}
+E       AssertionError: assert 'ImportSummaryList' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '14', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '04274959-5e73-45a0-af93-3b054ff41020', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:2675: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy" name="test_get_resource_policy_no_policy" time="0.009"><failure message="AssertionError: assert 'Policy' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'ef6d0507-682e-43ab-a02c-11a6060c3d22', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy object at 0x10be50b90&gt;
-client = &lt;botocore.client.DynamoDB object at 0x10c91e930&gt;
-table = 'test-rp-0fc8ac70'
+tests/compatibility/test_dynamodb_compat.py:2675: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy" name="test_get_resource_policy_no_policy" time="0.008"><failure message="AssertionError: assert 'Policy' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '761349f1-9916-495a-aae9-c10c494d78e6', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy object at 0x10e3c39b0&gt;
+client = &lt;botocore.client.DynamoDB object at 0x10f4cb4d0&gt;
+table = 'test-rp-64baee7b'
 
     def test_get_resource_policy_no_policy(self, client, table):
         """GetResourcePolicy on table with no policy returns empty or error."""
@@ -2054,11 +2080,11 @@ table = 'test-rp-0fc8ac70'
             resp = client.get_resource_policy(ResourceArn=table_arn)
             # May return empty policy
 &gt;           assert "Policy" in resp
-E           AssertionError: assert 'Policy' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'ef6d0507-682e-43ab-a02c-11a6060c3d22', 'RetryAttempts': 0}}
+E           AssertionError: assert 'Policy' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '761349f1-9916-495a-aae9-c10c494d78e6', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:2703: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy" name="test_put_resource_policy" time="0.008"><failure message="AssertionError: assert 'RevisionId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '9', 'content-type': 'application/x-amz-json-1.0', 'date': 'Su...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '02cf62bb-3dbd-4600-a8b5-86ab4d61321a', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy object at 0x10be1ff50&gt;
-client = &lt;botocore.client.DynamoDB object at 0x10cf7bc50&gt;
-table = 'test-rp-27ad2714'
+tests/compatibility/test_dynamodb_compat.py:2703: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy" name="test_put_resource_policy" time="0.007"><failure message="AssertionError: assert 'RevisionId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '9', 'content-type': 'application/x-amz-json-1.0', 'date': 'Su...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'ddf39a28-893e-48fe-a6db-a646f2570828', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy object at 0x10e3a6b40&gt;
+client = &lt;botocore.client.DynamoDB object at 0x10f4c9130&gt;
+table = 'test-rp-f107a313'
 
     def test_put_resource_policy(self, client, table):
         """PutResourcePolicy sets a resource-based policy on a table."""
@@ -2078,11 +2104,11 @@ table = 'test-rp-27ad2714'
         )
         resp = client.put_resource_policy(ResourceArn=table_arn, Policy=policy)
 &gt;       assert "RevisionId" in resp
-E       AssertionError: assert 'RevisionId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '9', 'content-type': 'application/x-amz-json-1.0', 'date': 'Su...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '02cf62bb-3dbd-4600-a8b5-86ab4d61321a', 'RetryAttempts': 0}}
+E       AssertionError: assert 'RevisionId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '9', 'content-type': 'application/x-amz-json-1.0', 'date': 'Su...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'ddf39a28-893e-48fe-a6db-a646f2570828', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:2727: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy" name="test_delete_resource_policy" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy" name="test_update_continuous_backups" time="0.008"><failure message="KeyError: 'ContinuousBackupsStatus'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy object at 0x10be7c680&gt;
-client = &lt;botocore.client.DynamoDB object at 0x10c7f3590&gt;
-table = 'test-rp-5430299a'
+tests/compatibility/test_dynamodb_compat.py:2727: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy" name="test_delete_resource_policy" time="0.009" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy" name="test_update_continuous_backups" time="0.009"><failure message="KeyError: 'ContinuousBackupsStatus'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBResourcePolicy object at 0x10e3ec890&gt;
+client = &lt;botocore.client.DynamoDB object at 0x10ee7f710&gt;
+table = 'test-rp-994f7c2a'
 
     def test_update_continuous_backups(self, client, table):
         """UpdateContinuousBackups enables point-in-time recovery."""
@@ -2095,8 +2121,8 @@ table = 'test-rp-5430299a'
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'ContinuousBackupsStatus'
 
-tests/compatibility/test_dynamodb_compat.py:2763: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBImportExport" name="test_import_table" time="0.006"><failure message="KeyError: 'ImportTableDescription'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBImportExport object at 0x10be7cad0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c70b8c0&gt;
+tests/compatibility/test_dynamodb_compat.py:2763: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBImportExport" name="test_import_table" time="0.005"><failure message="KeyError: 'ImportTableDescription'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBImportExport object at 0x10e3ecce0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10e438410&gt;
 
     def test_import_table(self, dynamodb):
         """ImportTable creates a table from an S3 import (status may be FAILED without real S3)."""
@@ -2116,8 +2142,8 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10c70b8c0&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'ImportTableDescription'
 
-tests/compatibility/test_dynamodb_compat.py:2788: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBImportExport" name="test_import_table_with_dynamodb_json_format" time="0.006"><failure message="KeyError: 'ImportTableDescription'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBImportExport object at 0x10be7cec0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb07110&gt;
+tests/compatibility/test_dynamodb_compat.py:2788: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBImportExport" name="test_import_table_with_dynamodb_json_format" time="0.005"><failure message="KeyError: 'ImportTableDescription'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBImportExport object at 0x10e3ed0d0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed3d940&gt;
 
     def test_import_table_with_dynamodb_json_format(self, dynamodb):
         """ImportTable with DYNAMODB_JSON input format."""
@@ -2137,9 +2163,9 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb07110&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'ImportTableDescription'
 
-tests/compatibility/test_dynamodb_compat.py:2812: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails" name="test_list_backups_empty" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails" name="test_list_backups_filters_by_table" time="0.007"><failure message="KeyError: 'BackupDetails'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails object at 0x10be7d790&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c878860&gt;
-table = 'test-bk-bdec8775'
+tests/compatibility/test_dynamodb_compat.py:2812: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails" name="test_list_backups_empty" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails" name="test_list_backups_filters_by_table" time="0.006"><failure message="KeyError: 'BackupDetails'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails object at 0x10e3ed9a0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f561040&gt;
+table = 'test-bk-5b1ea0d3'
 
     def test_list_backups_filters_by_table(self, dynamodb, table):
         """ListBackups with TableName filter only returns backups for that table."""
@@ -2149,9 +2175,9 @@ table = 'test-bk-bdec8775'
                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'BackupDetails'
 
-tests/compatibility/test_dynamodb_compat.py:2851: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails" name="test_describe_backup_details" time="0.006"><failure message="KeyError: 'BackupDetails'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails object at 0x10be7db50&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb07620&gt;
-table = 'test-bk-31be396e'
+tests/compatibility/test_dynamodb_compat.py:2851: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails" name="test_describe_backup_details" time="0.006"><failure message="KeyError: 'BackupDetails'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails object at 0x10e3edd60&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed3f9b0&gt;
+table = 'test-bk-971c4b74'
 
     def test_describe_backup_details(self, dynamodb, table):
         """DescribeBackup returns full backup description with table info."""
@@ -2160,9 +2186,9 @@ table = 'test-bk-31be396e'
                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'BackupDetails'
 
-tests/compatibility/test_dynamodb_compat.py:2867: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails" name="test_create_multiple_backups" time="0.007"><failure message="KeyError: 'BackupDetails'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails object at 0x10be7df10&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c6ce840&gt;
-table = 'test-bk-c555aeda'
+tests/compatibility/test_dynamodb_compat.py:2867: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails" name="test_create_multiple_backups" time="0.006"><failure message="KeyError: 'BackupDetails'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBBackupDetails object at 0x10e3ee120&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f1181a0&gt;
+table = 'test-bk-7ed45a67'
 
     def test_create_multiple_backups(self, dynamodb, table):
         """Multiple backups can be created for the same table."""
@@ -2174,8 +2200,8 @@ table = 'test-bk-c555aeda'
                             ^^^^^^^^^^^^^^^^^^^^^
 E               KeyError: 'BackupDetails'
 
-tests/compatibility/test_dynamodb_compat.py:2890: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableDetails" name="test_list_global_tables_empty" time="0.004" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableDetails" name="test_global_table_replication_group" time="0.006"><failure message="KeyError: 'GlobalTableName'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableDetails object at 0x10be6b2c0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7f3800&gt;
+tests/compatibility/test_dynamodb_compat.py:2890: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableDetails" name="test_list_global_tables_empty" time="0.004" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableDetails" name="test_global_table_replication_group" time="0.006"><failure message="KeyError: 'GlobalTableName'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableDetails object at 0x10e3db440&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ec3e5d0&gt;
 
     def test_global_table_replication_group(self, dynamodb):
         """CreateGlobalTable replication group is returned in describe."""
@@ -2203,8 +2229,8 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7f3800&gt;
                    ^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'GlobalTableName'
 
-tests/compatibility/test_dynamodb_compat.py:2935: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableDetails" name="test_list_global_tables_with_region_filter" time="0.008"><failure message="AssertionError: assert 'gt-filt-f3beeac7' in []">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableDetails object at 0x10be7dd00&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8db7a0&gt;
+tests/compatibility/test_dynamodb_compat.py:2935: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableDetails" name="test_list_global_tables_with_region_filter" time="0.010"><failure message="AssertionError: assert 'gt-filt-50309972' in []">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableDetails object at 0x10e3ede80&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f106ba0&gt;
 
     def test_list_global_tables_with_region_filter(self, dynamodb):
         """ListGlobalTables with RegionName filter."""
@@ -2228,11 +2254,11 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8db7a0&gt;
             assert "GlobalTables" in resp
             names = [g["GlobalTableName"] for g in resp["GlobalTables"]]
 &gt;           assert tname in names
-E           AssertionError: assert 'gt-filt-f3beeac7' in []
+E           AssertionError: assert 'gt-filt-50309972' in []
 
-tests/compatibility/test_dynamodb_compat.py:2980: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBContinuousBackupsDetails" name="test_describe_continuous_backups_default_disabled" time="0.007"><failure message="KeyError: 'ContinuousBackupsStatus'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBContinuousBackupsDetails object at 0x10be7d4c0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb69430&gt;
-table = 'test-cb-29f44393'
+tests/compatibility/test_dynamodb_compat.py:2980: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBContinuousBackupsDetails" name="test_describe_continuous_backups_default_disabled" time="0.007"><failure message="KeyError: 'ContinuousBackupsStatus'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBContinuousBackupsDetails object at 0x10e3ed3d0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee7e990&gt;
+table = 'test-cb-31245fc9'
 
     def test_describe_continuous_backups_default_disabled(self, dynamodb, table):
         """DescribeContinuousBackups returns DISABLED by default."""
@@ -2242,9 +2268,9 @@ table = 'test-cb-29f44393'
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'ContinuousBackupsStatus'
 
-tests/compatibility/test_dynamodb_compat.py:3011: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBContinuousBackupsDetails" name="test_enable_then_disable_pitr" time="0.007"><failure message="KeyError: 'ContinuousBackupsStatus'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBContinuousBackupsDetails object at 0x10be7cbc0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c8d97c0&gt;
-table = 'test-cb-5790c6bd'
+tests/compatibility/test_dynamodb_compat.py:3011: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBContinuousBackupsDetails" name="test_enable_then_disable_pitr" time="0.006"><failure message="KeyError: 'ContinuousBackupsStatus'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBContinuousBackupsDetails object at 0x10e3ecad0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f107f20&gt;
+table = 'test-cb-6280e7d5'
 
     def test_enable_then_disable_pitr(self, dynamodb, table):
         """Enable PITR, verify, then disable."""
@@ -2257,9 +2283,9 @@ table = 'test-cb-5790c6bd'
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'ContinuousBackupsStatus'
 
-tests/compatibility/test_dynamodb_compat.py:3026: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended" name="test_execute_statement_select_empty_table" time="0.007" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended" name="test_execute_statement_insert_and_select" time="0.008"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended object at 0x10be7e450&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c878fb0&gt;
-table = 'test-pq-2f47d80b'
+tests/compatibility/test_dynamodb_compat.py:3026: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended" name="test_execute_statement_select_empty_table" time="0.006" /><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended" name="test_execute_statement_insert_and_select" time="0.006"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended object at 0x10e3ee660&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ecd5100&gt;
+table = 'test-pq-5280ca0c'
 
     def test_execute_statement_insert_and_select(self, dynamodb, table):
         """ExecuteStatement INSERT then SELECT to verify."""
@@ -2273,9 +2299,9 @@ table = 'test-pq-2f47d80b'
 E       assert 0 == 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_dynamodb_compat.py:3077: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended" name="test_execute_statement_update" time="0.011"><failure message="AssertionError: assert 'old' == 'new'&#10;  &#10;  - new&#10;  + old">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended object at 0x10be7e810&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cf7a960&gt;
-table = 'test-pq-1d6d32e4'
+tests/compatibility/test_dynamodb_compat.py:3077: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended" name="test_execute_statement_update" time="0.009"><failure message="AssertionError: assert 'old' == 'new'&#10;  &#10;  - new&#10;  + old">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended object at 0x10e3eea20&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4767e0&gt;
+table = 'test-pq-3248f4fd'
 
     def test_execute_statement_update(self, dynamodb, table):
         """ExecuteStatement UPDATE modifies an existing item."""
@@ -2293,9 +2319,9 @@ E
 E         - new
 E         + old
 
-tests/compatibility/test_dynamodb_compat.py:3091: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended" name="test_execute_statement_delete" time="0.010"><failure message="AssertionError: assert 'Item' not in {'Item': {'pk': {'S': 'pq-del-1'}, 'val': {'S': 'gone'}}, 'ResponseMetadata': {'HTTPHeaders': {'content-length': '51',...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '15422d61-8d8e-464d-9d4f-c2d3216a60ca', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended object at 0x10be7ebd0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7f01a0&gt;
-table = 'test-pq-995fe1c8'
+tests/compatibility/test_dynamodb_compat.py:3091: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended" name="test_execute_statement_delete" time="0.009"><failure message="AssertionError: assert 'Item' not in {'Item': {'pk': {'S': 'pq-del-1'}, 'val': {'S': 'gone'}}, 'ResponseMetadata': {'HTTPHeaders': {'content-length': '51',...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '824d2936-3dfc-4d60-ab71-808c028605ce', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended object at 0x10e3eede0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f5016a0&gt;
+table = 'test-pq-7c25939d'
 
     def test_execute_statement_delete(self, dynamodb, table):
         """ExecuteStatement DELETE removes an item."""
@@ -2306,11 +2332,11 @@ table = 'test-pq-995fe1c8'
         dynamodb.execute_statement(Statement=f"DELETE FROM \"{table}\" WHERE pk = 'pq-del-1'")
         resp = dynamodb.get_item(TableName=table, Key={"pk": {"S": "pq-del-1"}})
 &gt;       assert "Item" not in resp
-E       AssertionError: assert 'Item' not in {'Item': {'pk': {'S': 'pq-del-1'}, 'val': {'S': 'gone'}}, 'ResponseMetadata': {'HTTPHeaders': {'content-length': '51',...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '15422d61-8d8e-464d-9d4f-c2d3216a60ca', 'RetryAttempts': 0}}
+E       AssertionError: assert 'Item' not in {'Item': {'pk': {'S': 'pq-del-1'}, 'val': {'S': 'gone'}}, 'ResponseMetadata': {'HTTPHeaders': {'content-length': '51',...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '824d2936-3dfc-4d60-ab71-808c028605ce', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:3101: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended" name="test_execute_statement_select_with_parameters" time="0.009"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended object at 0x10be7ef90&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7a7230&gt;
-table = 'test-pq-6f6c49cc'
+tests/compatibility/test_dynamodb_compat.py:3101: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended" name="test_execute_statement_select_with_parameters" time="0.009"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBPartiQLExtended object at 0x10e3ef1a0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10e3da5d0&gt;
+table = 'test-pq-da5d3e30'
 
     def test_execute_statement_select_with_parameters(self, dynamodb, table):
         """ExecuteStatement SELECT with parameterized query."""
@@ -2327,9 +2353,9 @@ table = 'test-pq-6f6c49cc'
 E       assert 0 == 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_dynamodb_compat.py:3114: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExecuteTransaction" name="test_execute_transaction_insert" time="0.008"><failure message="AssertionError: assert 'Responses' in {'ConsumedCapacity': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-a...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '421a1074-3e86-4e33-9670-c92c2977909c', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExecuteTransaction object at 0x10be7f470&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c709340&gt;
-table = 'test-exec-tx-46be6311'
+tests/compatibility/test_dynamodb_compat.py:3114: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExecuteTransaction" name="test_execute_transaction_insert" time="0.007"><failure message="AssertionError: assert 'Responses' in {'ConsumedCapacity': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-a...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '4203416e-c131-4eca-bc5b-d14f6565f7e4', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExecuteTransaction object at 0x10e3ef6b0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f5920f0&gt;
+table = 'test-exec-tx-bcc794b8'
 
     def test_execute_transaction_insert(self, dynamodb, table):
         """ExecuteTransaction inserts multiple items transactionally."""
@@ -2344,11 +2370,11 @@ table = 'test-exec-tx-46be6311'
             ]
         )
 &gt;       assert "Responses" in resp
-E       AssertionError: assert 'Responses' in {'ConsumedCapacity': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-a...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '421a1074-3e86-4e33-9670-c92c2977909c', 'RetryAttempts': 0}}
+E       AssertionError: assert 'Responses' in {'ConsumedCapacity': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-a...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '4203416e-c131-4eca-bc5b-d14f6565f7e4', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:3149: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExecuteTransaction" name="test_execute_transaction_select" time="0.009"><failure message="AssertionError: assert 'Responses' in {'ConsumedCapacity': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-a...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e76ee291-25bf-4d4f-ba5b-924c09384732', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExecuteTransaction object at 0x10be7f830&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c6cf1a0&gt;
-table = 'test-exec-tx-e02b3067'
+tests/compatibility/test_dynamodb_compat.py:3149: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExecuteTransaction" name="test_execute_transaction_select" time="0.007"><failure message="AssertionError: assert 'Responses' in {'ConsumedCapacity': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-a...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'a3cf26e7-834e-470f-aded-f003b7bc4365', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExecuteTransaction object at 0x10e3efa70&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10e29e8a0&gt;
+table = 'test-exec-tx-512d4350'
 
     def test_execute_transaction_select(self, dynamodb, table):
         """ExecuteTransaction with SELECT statements returns items."""
@@ -2364,11 +2390,11 @@ table = 'test-exec-tx-e02b3067'
             ]
         )
 &gt;       assert "Responses" in resp
-E       AssertionError: assert 'Responses' in {'ConsumedCapacity': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-a...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e76ee291-25bf-4d4f-ba5b-924c09384732', 'RetryAttempts': 0}}
+E       AssertionError: assert 'Responses' in {'ConsumedCapacity': [], 'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-a...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'a3cf26e7-834e-470f-aded-f003b7bc4365', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:3169: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExportImport" name="test_export_table_to_point_in_time" time="0.010"><failure message="AssertionError: assert 'ExportArn' in {}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExportImport object at 0x10be7fd40&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb4eff0&gt;
-table_with_pitr = 'test-export-3ff62dbc'
+tests/compatibility/test_dynamodb_compat.py:3169: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExportImport" name="test_export_table_to_point_in_time" time="0.009"><failure message="AssertionError: assert 'ExportArn' in {}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExportImport object at 0x10e3eff80&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee4b080&gt;
+table_with_pitr = 'test-export-590ec069'
 
     def test_export_table_to_point_in_time(self, dynamodb, table_with_pitr):
         """ExportTableToPointInTime starts an export and returns export description."""
@@ -2385,9 +2411,9 @@ table_with_pitr = 'test-export-3ff62dbc'
 &gt;       assert "ExportArn" in export_desc
 E       AssertionError: assert 'ExportArn' in {}
 
-tests/compatibility/test_dynamodb_compat.py:3210: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExportImport" name="test_describe_export_after_export" time="0.010"><failure message="KeyError: 'ExportArn'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExportImport object at 0x10be94170&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10bd80e90&gt;
-table_with_pitr = 'test-export-689a8d65'
+tests/compatibility/test_dynamodb_compat.py:3210: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExportImport" name="test_describe_export_after_export" time="0.010"><failure message="KeyError: 'ExportArn'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExportImport object at 0x10e4043b0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ec3ed50&gt;
+table_with_pitr = 'test-export-91a3b0fd'
 
     def test_describe_export_after_export(self, dynamodb, table_with_pitr):
         """DescribeExport returns details for an existing export."""
@@ -2403,17 +2429,17 @@ table_with_pitr = 'test-export-689a8d65'
                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'ExportArn'
 
-tests/compatibility/test_dynamodb_compat.py:3224: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExportImport" name="test_list_imports" time="0.004"><failure message="AssertionError: assert 'ImportSummaryList' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '14', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f6fa49de-bae4-41de-99f9-78def9032d9a', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExportImport object at 0x10be7fbc0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c91d130&gt;
+tests/compatibility/test_dynamodb_compat.py:3224: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBExportImport" name="test_list_imports" time="0.004"><failure message="AssertionError: assert 'ImportSummaryList' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '14', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0c23c2a2-a1b2-4f15-8e5b-14e704ccaf21', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBExportImport object at 0x10e3ef800&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4aa750&gt;
 
     def test_list_imports(self, dynamodb):
         """ListImports returns ImportSummaryList."""
         resp = dynamodb.list_imports()
 &gt;       assert "ImportSummaryList" in resp
-E       AssertionError: assert 'ImportSummaryList' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '14', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f6fa49de-bae4-41de-99f9-78def9032d9a', 'RetryAttempts': 0}}
+E       AssertionError: assert 'ImportSummaryList' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '14', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0c23c2a2-a1b2-4f15-8e5b-14e704ccaf21', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:3233: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreaming" name="test_describe_kinesis_streaming_destination_nonexistent" time="0.005"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreaming object at 0x10be7ed80&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c718200&gt;
+tests/compatibility/test_dynamodb_compat.py:3233: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreaming" name="test_describe_kinesis_streaming_destination_nonexistent" time="0.005"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreaming object at 0x10e3eec30&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f3e9df0&gt;
 
     def test_describe_kinesis_streaming_destination_nonexistent(self, dynamodb):
         """DescribeKinesisStreamingDestination for nonexistent table raises ResourceNotFoundException."""  # noqa: E501
@@ -2427,9 +2453,9 @@ E
 E         - ResourceNotFoundException
 E         + ValidationException
 
-tests/compatibility/test_dynamodb_compat.py:3249: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables" name="test_create_global_table" time="0.009"><failure message="KeyError: 'GlobalTableName'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables object at 0x10be7e570&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c91d010&gt;
-table = 'test-compat-table-280e77de'
+tests/compatibility/test_dynamodb_compat.py:3249: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables" name="test_create_global_table" time="0.008"><failure message="KeyError: 'GlobalTableName'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables object at 0x10e3ee420&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10e3c1010&gt;
+table = 'test-compat-table-17aaa688'
 
     def test_create_global_table(self, dynamodb, table):
         """CreateGlobalTable creates a global table from an existing table."""
@@ -2443,9 +2469,9 @@ table = 'test-compat-table-280e77de'
                ^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'GlobalTableName'
 
-tests/compatibility/test_dynamodb_compat.py:3263: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables" name="test_describe_global_table" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeGlobalTable operation: The operation DescribeGlobalTable is not implemented">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables object at 0x10be7c800&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7092b0&gt;
-table = 'test-compat-table-78438f8f'
+tests/compatibility/test_dynamodb_compat.py:3263: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables" name="test_describe_global_table" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeGlobalTable operation: The operation DescribeGlobalTable is not implemented">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables object at 0x10e3ece90&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f3e8da0&gt;
+table = 'test-compat-table-0b81ce45'
 
     def test_describe_global_table(self, dynamodb, table):
         """DescribeGlobalTable returns details for a global table."""
@@ -2466,9 +2492,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.DynamoDB object at 0x10c7092b0&gt;
+self = &lt;botocore.client.DynamoDB object at 0x10f3e8da0&gt;
 operation_name = 'DescribeGlobalTable'
-api_params = {'GlobalTableName': 'test-compat-table-78438f8f'}
+api_params = {'GlobalTableName': 'test-compat-table-0b81ce45'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2557,9 +2583,9 @@ api_params = {'GlobalTableName': 'test-compat-table-78438f8f'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DescribeGlobalTable operation: The operation DescribeGlobalTable is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables" name="test_update_global_table" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the UpdateGlobalTable operation: The operation UpdateGlobalTable is not implemented">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables object at 0x10be7d760&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7a7c20&gt;
-table = 'test-compat-table-c88e4509'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables" name="test_update_global_table" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the UpdateGlobalTable operation: The operation UpdateGlobalTable is not implemented">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables object at 0x10e3dbf50&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee4b5f0&gt;
+table = 'test-compat-table-a81b9b54'
 
     def test_update_global_table(self, dynamodb, table):
         """UpdateGlobalTable adds a replica to an existing global table."""
@@ -2582,9 +2608,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.DynamoDB object at 0x10c7a7c20&gt;
+self = &lt;botocore.client.DynamoDB object at 0x10ee4b5f0&gt;
 operation_name = 'UpdateGlobalTable'
-api_params = {'GlobalTableName': 'test-compat-table-c88e4509', 'ReplicaUpdates': [{'Create': {'RegionName': 'eu-west-1'}}]}
+api_params = {'GlobalTableName': 'test-compat-table-a81b9b54', 'ReplicaUpdates': [{'Create': {'RegionName': 'eu-west-1'}}]}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2673,8 +2699,8 @@ api_params = {'GlobalTableName': 'test-compat-table-c88e4509', 'ReplicaUpdates':
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the UpdateGlobalTable operation: The operation UpdateGlobalTable is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables" name="test_describe_global_table_not_found" time="0.005"><failure message="AssertionError: assert 'ValidationException' == 'GlobalTableNotFoundException'&#10;  &#10;  - GlobalTableNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables object at 0x10be37fe0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7f3da0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables" name="test_describe_global_table_not_found" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'GlobalTableNotFoundException'&#10;  &#10;  - GlobalTableNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTables object at 0x10e4043e0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee69010&gt;
 
     def test_describe_global_table_not_found(self, dynamodb):
         """DescribeGlobalTable for nonexistent table raises error."""
@@ -2686,17 +2712,17 @@ E
 E         - GlobalTableNotFoundException
 E         + ValidationException
 
-tests/compatibility/test_dynamodb_compat.py:3297: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBContributorInsights" name="test_list_contributor_insights" time="0.004"><failure message="AssertionError: assert 'ContributorInsightsSummaries' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '34', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e1c8afaa-fdd4-4196-bd2f-8b9c6d7d0b39', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBContributorInsights object at 0x10be94560&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7a5160&gt;
+tests/compatibility/test_dynamodb_compat.py:3297: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBContributorInsights" name="test_list_contributor_insights" time="0.004"><failure message="AssertionError: assert 'ContributorInsightsSummaries' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '34', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '2701eb09-0efc-47af-8f59-1a7d194c08ca', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBContributorInsights object at 0x10e404770&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f5925d0&gt;
 
     def test_list_contributor_insights(self, dynamodb):
         """ListContributorInsights returns a list."""
         resp = dynamodb.list_contributor_insights()
 &gt;       assert "ContributorInsightsSummaries" in resp
-E       AssertionError: assert 'ContributorInsightsSummaries' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '34', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e1c8afaa-fdd4-4196-bd2f-8b9c6d7d0b39', 'RetryAttempts': 0}}
+E       AssertionError: assert 'ContributorInsightsSummaries' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '34', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '2701eb09-0efc-47af-8f59-1a7d194c08ca', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:3306: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBContributorInsights" name="test_describe_contributor_insights_nonexistent" time="0.005"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBContributorInsights object at 0x10be94980&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cbbe510&gt;
+tests/compatibility/test_dynamodb_compat.py:3306: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBContributorInsights" name="test_describe_contributor_insights_nonexistent" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBContributorInsights object at 0x10e404b90&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed60590&gt;
 
     def test_describe_contributor_insights_nonexistent(self, dynamodb):
         """DescribeContributorInsights for nonexistent table raises ResourceNotFoundException."""
@@ -2708,8 +2734,8 @@ E
 E         - ResourceNotFoundException
 E         + ValidationException
 
-tests/compatibility/test_dynamodb_compat.py:3312: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBReplicaAutoScaling" name="test_describe_table_replica_auto_scaling_not_found" time="0.005"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBReplicaAutoScaling object at 0x10be94e00&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10bca9790&gt;
+tests/compatibility/test_dynamodb_compat.py:3312: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBReplicaAutoScaling" name="test_describe_table_replica_auto_scaling_not_found" time="0.004"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBReplicaAutoScaling object at 0x10e404c80&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f562b70&gt;
 
     def test_describe_table_replica_auto_scaling_not_found(self, dynamodb):
         """DescribeTableReplicaAutoScaling for nonexistent table raises error."""
@@ -2717,18 +2743,18 @@ dynamodb = &lt;botocore.client.DynamoDB object at 0x10bca9790&gt;
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_dynamodb_compat.py:3320: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBReplicaAutoScaling" name="test_describe_table_replica_auto_scaling" time="0.007"><failure message="AssertionError: assert 'TableAutoScalingDescription' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '41', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '101fe6e6-c9e7-4ed8-9df3-9defce65d8fc', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBReplicaAutoScaling object at 0x10be95220&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cbb59d0&gt;
-table = 'test-compat-table-55a63616'
+tests/compatibility/test_dynamodb_compat.py:3320: Failed</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBReplicaAutoScaling" name="test_describe_table_replica_auto_scaling" time="0.007"><failure message="AssertionError: assert 'TableAutoScalingDescription' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '41', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '203d95ba-1810-449f-9d3d-d102340da630', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBReplicaAutoScaling object at 0x10e405400&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10e3c3a70&gt;
+table = 'test-compat-table-b421ff9a'
 
     def test_describe_table_replica_auto_scaling(self, dynamodb, table):
         """DescribeTableReplicaAutoScaling returns info for existing table."""
         resp = dynamodb.describe_table_replica_auto_scaling(TableName=table)
 &gt;       assert "TableAutoScalingDescription" in resp
-E       AssertionError: assert 'TableAutoScalingDescription' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '41', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '101fe6e6-c9e7-4ed8-9df3-9defce65d8fc', 'RetryAttempts': 0}}
+E       AssertionError: assert 'TableAutoScalingDescription' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '41', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '203d95ba-1810-449f-9d3d-d102340da630', 'RetryAttempts': 0}}
 
-tests/compatibility/test_dynamodb_compat.py:3327: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableSettings" name="test_describe_global_table_settings_nonexistent" time="0.005"><failure message="AssertionError: assert 'ValidationException' == 'GlobalTableNotFoundException'&#10;  &#10;  - GlobalTableNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableSettings object at 0x10be956a0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cfdbb90&gt;
+tests/compatibility/test_dynamodb_compat.py:3327: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableSettings" name="test_describe_global_table_settings_nonexistent" time="0.004"><failure message="AssertionError: assert 'ValidationException' == 'GlobalTableNotFoundException'&#10;  &#10;  - GlobalTableNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBGlobalTableSettings object at 0x10e405880&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f480cb0&gt;
 
     def test_describe_global_table_settings_nonexistent(self, dynamodb):
         """DescribeGlobalTableSettings with nonexistent table raises GlobalTableNotFoundException."""  # noqa: E501
@@ -2740,8 +2766,8 @@ E
 E         - GlobalTableNotFoundException
 E         + ValidationException
 
-tests/compatibility/test_dynamodb_compat.py:3339: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBDescribeImport" name="test_describe_import_nonexistent" time="0.005"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBDescribeImport object at 0x10be95b20&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10ca7fb60&gt;
+tests/compatibility/test_dynamodb_compat.py:3339: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBDescribeImport" name="test_describe_import_nonexistent" time="0.006"><failure message="AssertionError: assert 'ValidationException' == 'ResourceNotFoundException'&#10;  &#10;  - ResourceNotFoundException&#10;  + ValidationException">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBDescribeImport object at 0x10e4058b0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f47df40&gt;
 
     def test_describe_import_nonexistent(self, dynamodb):
         """DescribeImport with nonexistent ARN raises ResourceNotFoundException."""
@@ -2755,9 +2781,9 @@ E
 E         - ResourceNotFoundException
 E         + ValidationException
 
-tests/compatibility/test_dynamodb_compat.py:3351: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps" name="test_enable_kinesis_streaming_destination" time="0.008"><failure message="KeyError: 'TableName'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps object at 0x10be96000&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10caf73e0&gt;
-table_name = 'test-kinesis-ea59dc29'
+tests/compatibility/test_dynamodb_compat.py:3351: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps" name="test_enable_kinesis_streaming_destination" time="0.007"><failure message="KeyError: 'TableName'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps object at 0x10e4061b0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10e3ef770&gt;
+table_name = 'test-kinesis-99fb7b3b'
 
     def test_enable_kinesis_streaming_destination(self, dynamodb, table_name):
         """EnableKinesisStreamingDestination sets up a stream."""
@@ -2769,9 +2795,9 @@ table_name = 'test-kinesis-ea59dc29'
                ^^^^^^^^^^^^^^^^^
 E       KeyError: 'TableName'
 
-tests/compatibility/test_dynamodb_compat.py:3375: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps" name="test_disable_kinesis_streaming_destination" time="0.010"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableKinesisStreamingDestination operation: The operation DisableKinesisStreamingDestination is not implemented">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps object at 0x10be6bfe0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c7f1dc0&gt;
-table_name = 'test-kinesis-afca67cb'
+tests/compatibility/test_dynamodb_compat.py:3375: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps" name="test_disable_kinesis_streaming_destination" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableKinesisStreamingDestination operation: The operation DisableKinesisStreamingDestination is not implemented">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps object at 0x10e3da3c0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed11b20&gt;
+table_name = 'test-kinesis-ed50e671'
 
     def test_disable_kinesis_streaming_destination(self, dynamodb, table_name):
         """DisableKinesisStreamingDestination removes a stream."""
@@ -2791,9 +2817,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.DynamoDB object at 0x10c7f1dc0&gt;
+self = &lt;botocore.client.DynamoDB object at 0x10ed11b20&gt;
 operation_name = 'DisableKinesisStreamingDestination'
-api_params = {'StreamArn': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-e327b27b', 'TableName': 'test-kinesis-afca67cb'}
+api_params = {'StreamArn': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-e86a6066', 'TableName': 'test-kinesis-ed50e671'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2882,9 +2908,9 @@ api_params = {'StreamArn': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-e
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the DisableKinesisStreamingDestination operation: The operation DisableKinesisStreamingDestination is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps" name="test_update_kinesis_streaming_destination" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the UpdateKinesisStreamingDestination operation: The operation UpdateKinesisStreamingDestination is not implemented">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps object at 0x10be7e5a0&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10caddb80&gt;
-table_name = 'test-kinesis-d00170a0'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps" name="test_update_kinesis_streaming_destination" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the UpdateKinesisStreamingDestination operation: The operation UpdateKinesisStreamingDestination is not implemented">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps object at 0x10e3ee450&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10f4ccc20&gt;
+table_name = 'test-kinesis-e001bf25'
 
     def test_update_kinesis_streaming_destination(self, dynamodb, table_name):
         """UpdateKinesisStreamingDestination modifies precision."""
@@ -2908,9 +2934,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.DynamoDB object at 0x10caddb80&gt;
+self = &lt;botocore.client.DynamoDB object at 0x10f4ccc20&gt;
 operation_name = 'UpdateKinesisStreamingDestination'
-api_params = {'StreamArn': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-5a272924', 'TableName': 'test-kinesis-d00170a0', 'UpdateKinesisStreamingConfiguration': {'ApproximateCreationDateTimePrecision': 'MICROSECOND'}}
+api_params = {'StreamArn': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-c3af158f', 'TableName': 'test-kinesis-e001bf25', 'UpdateKinesisStreamingConfiguration': {'ApproximateCreationDateTimePrecision': 'MICROSECOND'}}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2999,9 +3025,9 @@ api_params = {'StreamArn': 'arn:aws:kinesis:us-east-1:123456789012:stream/test-5
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (ValidationException) when calling the UpdateKinesisStreamingDestination operation: The operation UpdateKinesisStreamingDestination is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps" name="test_update_contributor_insights" time="0.007"><failure message="KeyError: 'ContributorInsightsStatus'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps object at 0x10be7ed50&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10ca7d100&gt;
-table_name = 'test-kinesis-9fd266c8'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps" name="test_update_contributor_insights" time="0.006"><failure message="KeyError: 'ContributorInsightsStatus'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps object at 0x10e3eeed0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10e2ed490&gt;
+table_name = 'test-kinesis-fe0411a4'
 
     def test_update_contributor_insights(self, dynamodb, table_name):
         """UpdateContributorInsights enables insights on a table."""
@@ -3012,9 +3038,9 @@ table_name = 'test-kinesis-9fd266c8'
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'ContributorInsightsStatus'
 
-tests/compatibility/test_dynamodb_compat.py:3405: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps" name="test_update_global_table_settings" time="0.007"><failure message="KeyError: 'GlobalTableName'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps object at 0x10be96030&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10c71bbf0&gt;
-table_name = 'test-kinesis-c11693aa'
+tests/compatibility/test_dynamodb_compat.py:3405: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps" name="test_update_global_table_settings" time="0.006"><failure message="KeyError: 'GlobalTableName'">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps object at 0x10e4061e0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ed3f560&gt;
+table_name = 'test-kinesis-391dad00'
 
     def test_update_global_table_settings(self, dynamodb, table_name):
         """UpdateGlobalTableSettings returns GlobalTableName."""
@@ -3023,14 +3049,14 @@ table_name = 'test-kinesis-c11693aa'
                ^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'GlobalTableName'
 
-tests/compatibility/test_dynamodb_compat.py:3410: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps" name="test_update_table_replica_auto_scaling" time="0.011"><failure message="AssertionError: assert 'TableAutoScalingDescription' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '41', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'a4d91fe0-592d-4290-8a7f-e36397acada7', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps object at 0x10be95400&gt;
-dynamodb = &lt;botocore.client.DynamoDB object at 0x10cb13590&gt;
-table_name = 'test-kinesis-4826b251'
+tests/compatibility/test_dynamodb_compat.py:3410: KeyError</failure></testcase><testcase classname="tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps" name="test_update_table_replica_auto_scaling" time="0.012"><failure message="AssertionError: assert 'TableAutoScalingDescription' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '41', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '616ffe61-fcc7-4136-8d9d-26233b38b3e2', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_dynamodb_compat.TestDynamoDBKinesisStreamingGapOps object at 0x10e4055e0&gt;
+dynamodb = &lt;botocore.client.DynamoDB object at 0x10ee7f440&gt;
+table_name = 'test-kinesis-77a180b0'
 
     def test_update_table_replica_auto_scaling(self, dynamodb, table_name):
         """UpdateTableReplicaAutoScaling returns table description."""
         resp = dynamodb.update_table_replica_auto_scaling(TableName=table_name)
 &gt;       assert "TableAutoScalingDescription" in resp
-E       AssertionError: assert 'TableAutoScalingDescription' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '41', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'a4d91fe0-592d-4290-8a7f-e36397acada7', 'RetryAttempts': 0}}
+E       AssertionError: assert 'TableAutoScalingDescription' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '41', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '616ffe61-fcc7-4136-8d9d-26233b38b3e2', 'RetryAttempts': 0}}
 
 tests/compatibility/test_dynamodb_compat.py:3415: AssertionError</failure></testcase></testsuite></testsuites>

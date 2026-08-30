@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="98" skipped="0" tests="223" time="35.689" timestamp="2026-08-30T02:02:41.769762-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_create_bucket" time="0.073" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_put_and_get_object" time="0.013" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_list_objects" time="0.015" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_delete_object" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_head_object" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_copy_object" time="0.014" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_list_buckets" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_put_object_with_content_type" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_list_objects_with_prefix" time="0.015" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_delete_objects_batch" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfiguration" name="test_get_bucket_versioning" time="0.010"><failure message="AssertionError: assert 'Suspended' in (None, '')&#10; +  where 'Suspended' = &lt;built-in method get of dict object at 0x10ef76a80&gt;('Status')&#10; +    where &lt;built-in method get of dict object at 0x10ef76a80&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '167', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug... 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': 'e73ab839-fe71-4778-a7f1-bdd540d2bf5a', ...}, 'Status': 'Suspended'}.get">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfiguration object at 0x10e43ad80&gt;
-s3 = &lt;botocore.client.S3 object at 0x10ef489e0&gt;, bucket = 'test-compat-bucket'
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="98" skipped="0" tests="223" time="36.861" timestamp="2026-08-30T02:45:37.841522-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_create_bucket" time="0.068" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_put_and_get_object" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_list_objects" time="0.013" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_delete_object" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_head_object" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_copy_object" time="0.013" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_list_buckets" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_put_object_with_content_type" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_list_objects_with_prefix" time="0.014" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BasicOperations" name="test_delete_objects_batch" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfiguration" name="test_get_bucket_versioning" time="0.009"><failure message="AssertionError: assert 'Suspended' in (None, '')&#10; +  where 'Suspended' = &lt;built-in method get of dict object at 0x10cf8c940&gt;('Status')&#10; +    where &lt;built-in method get of dict object at 0x10cf8c940&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '167', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug... 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '4f15bc50-5106-4385-b600-349f875e5442', ...}, 'Status': 'Suspended'}.get">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfiguration object at 0x10c29b020&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cf3a7e0&gt;, bucket = 'test-compat-bucket'
 
     def test_get_bucket_versioning(self, s3, bucket):
         """Test that versioning is not enabled by default."""
@@ -7,11 +7,11 @@ s3 = &lt;botocore.client.S3 object at 0x10ef489e0&gt;, bucket = 'test-compat-buc
         # A new bucket has no versioning status set
 &gt;       assert response.get("Status") in (None, "")
 E       AssertionError: assert 'Suspended' in (None, '')
-E        +  where 'Suspended' = &lt;built-in method get of dict object at 0x10ef76a80&gt;('Status')
-E        +    where &lt;built-in method get of dict object at 0x10ef76a80&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '167', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug... 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': 'e73ab839-fe71-4778-a7f1-bdd540d2bf5a', ...}, 'Status': 'Suspended'}.get
+E        +  where 'Suspended' = &lt;built-in method get of dict object at 0x10cf8c940&gt;('Status')
+E        +    where &lt;built-in method get of dict object at 0x10cf8c940&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '167', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug... 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '4f15bc50-5106-4385-b600-349f875e5442', ...}, 'Status': 'Suspended'}.get
 
-tests/compatibility/test_s3_compat.py:134: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfiguration" name="test_put_bucket_versioning" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfiguration" name="test_put_and_get_bucket_policy" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfiguration" name="test_put_get_delete_bucket_cors" time="0.011"><failure message="botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfiguration object at 0x10e43b950&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f26fda0&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:134: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfiguration" name="test_put_bucket_versioning" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfiguration" name="test_put_and_get_bucket_policy" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfiguration" name="test_put_get_delete_bucket_cors" time="0.011"><failure message="botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfiguration object at 0x10c29bbf0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce289b0&gt;, bucket = 'test-compat-bucket'
 
     def test_put_get_delete_bucket_cors(self, s3, bucket):
         """Test CORS configuration lifecycle."""
@@ -40,7 +40,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f26fda0&gt;
+self = &lt;botocore.client.S3 object at 0x10ce289b0&gt;
 operation_name = 'GetBucketCors', api_params = {'Bucket': 'test-compat-bucket'}
 
     @with_current_context()
@@ -130,8 +130,8 @@ operation_name = 'GetBucketCors', api_params = {'Bucket': 'test-compat-bucket'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3Multipart" name="test_multipart_upload" time="0.039"><failure message="KeyError: 'ETag'">self = &lt;tests.compatibility.test_s3_compat.TestS3Multipart object at 0x10e43bda0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10efff920&gt;, bucket = 'test-compat-bucket'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3Multipart" name="test_multipart_upload" time="0.034"><failure message="KeyError: 'ETag'">self = &lt;tests.compatibility.test_s3_compat.TestS3Multipart object at 0x10c2b80b0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce76ab0&gt;, bucket = 'test-compat-bucket'
 
     def test_multipart_upload(self, s3, bucket):
         # Create multipart upload
@@ -169,9 +169,9 @@ s3 = &lt;botocore.client.S3 object at 0x10efff920&gt;, bucket = 'test-compat-buc
         )
 E       KeyError: 'ETag'
 
-tests/compatibility/test_s3_compat.py:225: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3Multipart" name="test_abort_multipart_upload" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3EventNotifications" name="test_put_object_triggers_sqs_notification" time="0.526"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3EventNotifications object at 0x10e45c650&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f0d8a10&gt;
-sqs = &lt;botocore.client.SQS object at 0x10fa14740&gt;
+tests/compatibility/test_s3_compat.py:225: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3Multipart" name="test_abort_multipart_upload" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3EventNotifications" name="test_put_object_triggers_sqs_notification" time="0.526"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3EventNotifications object at 0x10c2b88c0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cf11640&gt;
+sqs = &lt;botocore.client.SQS object at 0x10d67c7d0&gt;
 
     def test_put_object_triggers_sqs_notification(self, s3, sqs):
         bucket_name = "notif-test-s3"
@@ -202,9 +202,9 @@ sqs = &lt;botocore.client.SQS object at 0x10fa14740&gt;
 E       assert 0 == 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_s3_compat.py:271: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3EventNotifications" name="test_delete_object_triggers_notification" time="0.517"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3EventNotifications object at 0x10e45ca70&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f99f920&gt;
-sqs = &lt;botocore.client.SQS object at 0x10f9887a0&gt;
+tests/compatibility/test_s3_compat.py:271: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3EventNotifications" name="test_delete_object_triggers_notification" time="0.527"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3EventNotifications object at 0x10c2b8ce0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d67ff50&gt;
+sqs = &lt;botocore.client.SQS object at 0x10d5f08c0&gt;
 
     def test_delete_object_triggers_notification(self, s3, sqs):
         bucket_name = "notif-delete-s3"
@@ -236,9 +236,9 @@ sqs = &lt;botocore.client.SQS object at 0x10f9887a0&gt;
 E       assert 0 == 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_s3_compat.py:308: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3EventNotifications" name="test_prefix_filter" time="0.522"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3EventNotifications object at 0x10e45ce90&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f7d7c20&gt;
-sqs = &lt;botocore.client.SQS object at 0x10f7a0aa0&gt;
+tests/compatibility/test_s3_compat.py:308: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3EventNotifications" name="test_prefix_filter" time="0.526"><failure message="assert 0 == 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3EventNotifications object at 0x10c2b9100&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d8c7c20&gt;
+sqs = &lt;botocore.client.SQS object at 0x10d8b8ad0&gt;
 
     def test_prefix_filter(self, s3, sqs):
         bucket_name = "notif-prefix-s3"
@@ -275,8 +275,8 @@ sqs = &lt;botocore.client.SQS object at 0x10f7a0aa0&gt;
 E       assert 0 == 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_s3_compat.py:346: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_get_bucket_location" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_bucket_versioning" time="0.007"><failure message="AssertionError: assert ('Suspended' is None or 'Suspended' == ''&#10; +  where 'Suspended' = &lt;built-in method get of dict object at 0x10f7b4b40&gt;('Status')&#10; +    where &lt;built-in method get of dict object at 0x10f7b4b40&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '167', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug... 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '668eadec-d6ff-4ec3-9b26-f40bb97cbcd1', ...}, 'Status': 'Suspended'}.get&#10;  &#10;  + Suspended)">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10e45d6d0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f7a5760&gt;
+tests/compatibility/test_s3_compat.py:346: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_get_bucket_location" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_bucket_versioning" time="0.007"><failure message="AssertionError: assert ('Suspended' is None or 'Suspended' == ''&#10; +  where 'Suspended' = &lt;built-in method get of dict object at 0x10d818900&gt;('Status')&#10; +    where &lt;built-in method get of dict object at 0x10d818900&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '167', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug... 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '64c1e831-45d5-4c75-b6d3-e723fe1a4c9d', ...}, 'Status': 'Suspended'}.get&#10;  &#10;  + Suspended)">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10c2b9970&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d864ce0&gt;
 
     def test_bucket_versioning(self, s3):
         vbucket = "test-versioning-bucket"
@@ -286,13 +286,13 @@ s3 = &lt;botocore.client.S3 object at 0x10f7a5760&gt;
             response = s3.get_bucket_versioning(Bucket=vbucket)
 &gt;           assert response.get("Status") is None or response.get("Status") == ""
 E           AssertionError: assert ('Suspended' is None or 'Suspended' == ''
-E            +  where 'Suspended' = &lt;built-in method get of dict object at 0x10f7b4b40&gt;('Status')
-E            +    where &lt;built-in method get of dict object at 0x10f7b4b40&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '167', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug... 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '668eadec-d6ff-4ec3-9b26-f40bb97cbcd1', ...}, 'Status': 'Suspended'}.get
+E            +  where 'Suspended' = &lt;built-in method get of dict object at 0x10d818900&gt;('Status')
+E            +    where &lt;built-in method get of dict object at 0x10d818900&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '167', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug... 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '64c1e831-45d5-4c75-b6d3-e723fe1a4c9d', ...}, 'Status': 'Suspended'}.get
 E             
 E             + Suspended)
 
-tests/compatibility/test_s3_compat.py:370: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_list_object_versions" time="0.014"><failure message="botocore.exceptions.ClientError: An error occurred (BucketNotEmpty) when calling the DeleteBucket operation: The bucket you tried to delete is not empty">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10e43bb00&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f8674d0&gt;
+tests/compatibility/test_s3_compat.py:370: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_list_object_versions" time="0.013"><failure message="botocore.exceptions.ClientError: An error occurred (BucketNotEmpty) when calling the DeleteBucket operation: The bucket you tried to delete is not empty">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10c29bd40&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d88ef90&gt;
 
     def test_list_object_versions(self, s3):
         vbucket = "test-list-versions-bucket"
@@ -317,8 +317,8 @@ tests/compatibility/test_s3_compat.py:405: AssertionError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10e43bb00&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f8674d0&gt;
+self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10c29bd40&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d88ef90&gt;
 
     def test_list_object_versions(self, s3):
         vbucket = "test-list-versions-bucket"
@@ -356,7 +356,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f8674d0&gt;
+self = &lt;botocore.client.S3 object at 0x10d88ef90&gt;
 operation_name = 'DeleteBucket'
 api_params = {'Bucket': 'test-list-versions-bucket'}
 
@@ -447,8 +447,8 @@ api_params = {'Bucket': 'test-list-versions-bucket'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (BucketNotEmpty) when calling the DeleteBucket operation: The bucket you tried to delete is not empty
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_bucket_cors" time="0.012"><failure message="botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10e43b2f0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f7a4c50&gt;, bucket = 'test-compat-bucket'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_bucket_cors" time="0.011"><failure message="botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10c29b170&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cf706e0&gt;, bucket = 'test-compat-bucket'
 
     def test_bucket_cors(self, s3, bucket):
         cors_config = {
@@ -476,7 +476,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f7a4c50&gt;
+self = &lt;botocore.client.S3 object at 0x10cf706e0&gt;
 operation_name = 'GetBucketCors', api_params = {'Bucket': 'test-compat-bucket'}
 
     @with_current_context()
@@ -566,8 +566,8 @@ operation_name = 'GetBucketCors', api_params = {'Bucket': 'test-compat-bucket'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_bucket_policy" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_bucket_encryption" time="0.010"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10e45d940&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f0db0e0&gt;, bucket = 'test-compat-bucket'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_bucket_policy" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_bucket_encryption" time="0.010"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10c2b96d0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d0b61b0&gt;, bucket = 'test-compat-bucket'
 
     def test_bucket_encryption(self, s3, bucket):
         enc_config = {
@@ -590,8 +590,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f0db0e0&gt;, bucket = 'test-compat-buc
                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Rules'
 
-tests/compatibility/test_s3_compat.py:483: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_bucket_website" time="0.011"><failure message="KeyError: 'IndexDocument'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10e45cfb0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10efe19d0&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:483: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_bucket_website" time="0.010"><failure message="KeyError: 'IndexDocument'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10c2b8f50&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cf39fd0&gt;, bucket = 'test-compat-bucket'
 
     def test_bucket_website(self, s3, bucket):
         website_config = {
@@ -605,8 +605,8 @@ s3 = &lt;botocore.client.S3 object at 0x10efe19d0&gt;, bucket = 'test-compat-buc
                ^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'IndexDocument'
 
-tests/compatibility/test_s3_compat.py:495: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_bucket_lifecycle_configuration" time="0.011"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10e45c3b0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10efff350&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:495: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketConfigurations" name="test_bucket_lifecycle_configuration" time="0.009"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketConfigurations object at 0x10c2b82c0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cda9250&gt;, bucket = 'test-compat-bucket'
 
     def test_bucket_lifecycle_configuration(self, s3, bucket):
         lifecycle_config = {
@@ -629,8 +629,8 @@ s3 = &lt;botocore.client.S3 object at 0x10efff350&gt;, bucket = 'test-compat-buc
                 ^^^^^^^^^^^^^^^^^
 E       KeyError: 'Rules'
 
-tests/compatibility/test_s3_compat.py:520: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AclOperations" name="test_get_bucket_acl" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AclOperations" name="test_get_object_acl" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3CopyObject" name="test_copy_object_between_buckets" time="0.016" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartLifecycle" name="test_create_and_abort_multipart" time="0.013" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartLifecycle" name="test_list_multipart_uploads" time="0.012"><failure message="AssertionError: assert '510b10f3-1dc0-4999-99e4-944e4f2e026e' in []">self = &lt;tests.compatibility.test_s3_compat.TestS3MultipartLifecycle object at 0x10e45edb0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10fa15c10&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:520: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AclOperations" name="test_get_bucket_acl" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AclOperations" name="test_get_object_acl" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3CopyObject" name="test_copy_object_between_buckets" time="0.014" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartLifecycle" name="test_create_and_abort_multipart" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartLifecycle" name="test_list_multipart_uploads" time="0.011"><failure message="AssertionError: assert 'd4113c95-3e61-443d-b00c-e6ce91e39e39' in []">self = &lt;tests.compatibility.test_s3_compat.TestS3MultipartLifecycle object at 0x10c2baff0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d6b2420&gt;, bucket = 'test-compat-bucket'
 
     def test_list_multipart_uploads(self, s3, bucket):
         response = s3.create_multipart_upload(Bucket=bucket, Key="list-multi.bin")
@@ -641,10 +641,10 @@ s3 = &lt;botocore.client.S3 object at 0x10fa15c10&gt;, bucket = 'test-compat-buc
             uploads = list_resp.get("Uploads", [])
             upload_ids = [u["UploadId"] for u in uploads]
 &gt;           assert upload_id in upload_ids
-E           AssertionError: assert '510b10f3-1dc0-4999-99e4-944e4f2e026e' in []
+E           AssertionError: assert 'd4113c95-3e61-443d-b00c-e6ce91e39e39' in []
 
-tests/compatibility/test_s3_compat.py:590: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_get_url" time="0.020" /><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_get_url_applies_response_content_disposition" time="0.012"><failure message="assert None == 'attachment; filename=&quot;download.txt&quot;'&#10; +  where None = get('Content-Disposition')&#10; +    where get = &lt;http.client.HTTPMessage object at 0x10f033050&gt;.get&#10; +      where &lt;http.client.HTTPMessage object at 0x10f033050&gt; = &lt;http.client.HTTPResponse object at 0x10f70d870&gt;.headers">self = &lt;tests.compatibility.test_s3_compat.TestS3PresignedUrls object at 0x10e45f5f0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f866f60&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:590: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_get_url" time="0.019" /><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_get_url_applies_response_content_disposition" time="0.011"><failure message="assert None == 'attachment; filename=&quot;download.txt&quot;'&#10; +  where None = get('Content-Disposition')&#10; +    where get = &lt;http.client.HTTPMessage object at 0x10d8d2900&gt;.get&#10; +      where &lt;http.client.HTTPMessage object at 0x10d8d2900&gt; = &lt;http.client.HTTPResponse object at 0x10d67ca30&gt;.headers">self = &lt;tests.compatibility.test_s3_compat.TestS3PresignedUrls object at 0x10c2bb830&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d070a10&gt;, bucket = 'test-compat-bucket'
 
     def test_presigned_get_url_applies_response_content_disposition(self, s3, bucket):
         """Test that presigned GET URLs honor response header override params."""
@@ -666,11 +666,11 @@ s3 = &lt;botocore.client.S3 object at 0x10f866f60&gt;, bucket = 'test-compat-buc
 &gt;       assert resp.headers.get("Content-Disposition") == 'attachment; filename="download.txt"'
 E       assert None == 'attachment; filename="download.txt"'
 E        +  where None = get('Content-Disposition')
-E        +    where get = &lt;http.client.HTTPMessage object at 0x10f033050&gt;.get
-E        +      where &lt;http.client.HTTPMessage object at 0x10f033050&gt; = &lt;http.client.HTTPResponse object at 0x10f70d870&gt;.headers
+E        +    where get = &lt;http.client.HTTPMessage object at 0x10d8d2900&gt;.get
+E        +      where &lt;http.client.HTTPMessage object at 0x10d8d2900&gt; = &lt;http.client.HTTPResponse object at 0x10d67ca30&gt;.headers
 
-tests/compatibility/test_s3_compat.py:630: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_put_url" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_put_url_with_form_urlencoded_content_type" time="0.012"><failure message="AssertionError: assert b'\x00uploade...f\xbdvia-form' == b'\x00uploaded\xffvia-form'&#10;  &#10;  At index 9 diff: b'\xef' != b'\xff'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_s3_compat.TestS3PresignedUrls object at 0x10e45fe30&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f212600&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:630: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_put_url" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_put_url_with_form_urlencoded_content_type" time="0.011"><failure message="AssertionError: assert b'\x00uploade...f\xbdvia-form' == b'\x00uploaded\xffvia-form'&#10;  &#10;  At index 9 diff: b'\xef' != b'\xff'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_s3_compat.TestS3PresignedUrls object at 0x10c2cc0b0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce76360&gt;, bucket = 'test-compat-bucket'
 
     def test_presigned_put_url_with_form_urlencoded_content_type(self, s3, bucket):
         """Presigned PUT should preserve raw bytes regardless of form content type."""
@@ -693,8 +693,8 @@ E
 E         At index 9 diff: b'\xef' != b'\xff'
 E         Use -v to get more diff
 
-tests/compatibility/test_s3_compat.py:664: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_upload_part_with_form_urlencoded_content_type" time="0.012"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid type for parameter MultipartUpload.Parts[0].ETag, value: None, type: &lt;class 'NoneType'&gt;, valid types: &lt;class 'str'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3PresignedUrls object at 0x10e43b6e0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f7a46e0&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:664: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_upload_part_with_form_urlencoded_content_type" time="0.010"><failure message="botocore.exceptions.ParamValidationError: Parameter validation failed:&#10;Invalid type for parameter MultipartUpload.Parts[0].ETag, value: None, type: &lt;class 'NoneType'&gt;, valid types: &lt;class 'str'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3PresignedUrls object at 0x10c2bbc20&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d86a180&gt;, bucket = 'test-compat-bucket'
 
     def test_presigned_upload_part_with_form_urlencoded_content_type(self, s3, bucket):
         """Presigned UploadPart should treat form content type as opaque bytes."""
@@ -742,8 +742,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     request_dict = self._serializer.serialize_to_request(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.validate.ParamValidationDecorator object at 0x10f030c50&gt;
-parameters = {'Bucket': 'test-compat-bucket', 'Key': 'presigned-form-multipart.bin', 'MultipartUpload': {'Parts': [{'ETag': None, 'PartNumber': 1}]}, 'UploadId': 'cfb362b4-001e-407c-a6d8-da1beb16c13b'}
+self = &lt;botocore.validate.ParamValidationDecorator object at 0x10d638380&gt;
+parameters = {'Bucket': 'test-compat-bucket', 'Key': 'presigned-form-multipart.bin', 'MultipartUpload': {'Parts': [{'ETag': None, 'PartNumber': 1}]}, 'UploadId': 'ba102aff-5db0-4489-839a-1c07afdd50b3'}
 operation_model = OperationModel(name=CompleteMultipartUpload)
 
     def serialize_to_request(self, parameters, operation_model):
@@ -757,8 +757,8 @@ operation_model = OperationModel(name=CompleteMultipartUpload)
 E               botocore.exceptions.ParamValidationError: Parameter validation failed:
 E               Invalid type for parameter MultipartUpload.Parts[0].ETag, value: None, type: &lt;class 'NoneType'&gt;, valid types: &lt;class 'str'&gt;
 
-.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_head_url" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_delete_url" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrlExpiration" name="test_expired_sigv4_presigned_get_returns_403" time="2.022"><failure message="Failed: DID NOT RAISE &lt;class 'urllib.error.HTTPError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3PresignedUrlExpiration object at 0x10e45e690&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f23d0a0&gt;, bucket = 'test-compat-bucket'
+.venv/lib/python3.12/site-packages/botocore/validate.py:424: ParamValidationError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_head_url" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrls" name="test_presigned_delete_url" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrlExpiration" name="test_expired_sigv4_presigned_get_returns_403" time="2.023"><failure message="Failed: DID NOT RAISE &lt;class 'urllib.error.HTTPError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3PresignedUrlExpiration object at 0x10c2b9d60&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d616630&gt;, bucket = 'test-compat-bucket'
 
     def test_expired_sigv4_presigned_get_returns_403(self, s3, bucket):
         """An expired SigV4 presigned GET URL must return 403 AccessDenied."""
@@ -776,8 +776,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f23d0a0&gt;, bucket = 'test-compat-buc
              ^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'urllib.error.HTTPError'&gt;
 
-tests/compatibility/test_s3_compat.py:753: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrlExpiration" name="test_expired_sigv2_presigned_get_returns_403" time="2.016"><failure message="Failed: DID NOT RAISE &lt;class 'urllib.error.HTTPError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3PresignedUrlExpiration object at 0x10e45dca0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f9ba1b0&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:753: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrlExpiration" name="test_expired_sigv2_presigned_get_returns_403" time="2.027"><failure message="Failed: DID NOT RAISE &lt;class 'urllib.error.HTTPError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3PresignedUrlExpiration object at 0x10c2b9370&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d67c650&gt;, bucket = 'test-compat-bucket'
 
     def test_expired_sigv2_presigned_get_returns_403(self, s3, bucket):
         """An expired SigV2 presigned GET URL must return 403 AccessDenied."""
@@ -805,8 +805,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f9ba1b0&gt;, bucket = 'test-compat-buc
              ^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'urllib.error.HTTPError'&gt;
 
-tests/compatibility/test_s3_compat.py:782: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrlExpiration" name="test_valid_presigned_url_still_works" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartExtended" name="test_multipart_upload_three_parts_verify_content" time="0.042"><failure message="KeyError: 'ETag'">self = &lt;tests.compatibility.test_s3_compat.TestS3MultipartExtended object at 0x10e4701a0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f6c1190&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:782: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PresignedUrlExpiration" name="test_valid_presigned_url_still_works" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartExtended" name="test_multipart_upload_three_parts_verify_content" time="0.042"><failure message="KeyError: 'ETag'">self = &lt;tests.compatibility.test_s3_compat.TestS3MultipartExtended object at 0x10c2cc410&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d353860&gt;, bucket = 'test-compat-bucket'
 
     def test_multipart_upload_three_parts_verify_content(self, s3, bucket):
         """Initiate multipart, upload 3 parts, complete, verify concatenated content."""
@@ -826,8 +826,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f6c1190&gt;, bucket = 'test-compat-buc
                                                        ^^^^^^^^^^^^
 E               KeyError: 'ETag'
 
-tests/compatibility/test_s3_compat.py:819: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartExtended" name="test_abort_multipart_upload_no_object_created" time="0.013" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartExtended" name="test_list_parts" time="0.015"><failure message="botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the ListParts operation: The specified key does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3MultipartExtended object at 0x10e4709e0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f5cbc50&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:819: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartExtended" name="test_abort_multipart_upload_no_object_created" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartExtended" name="test_list_parts" time="0.013"><failure message="botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the ListParts operation: The specified key does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3MultipartExtended object at 0x10c2ccc50&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d3d64b0&gt;, bucket = 'test-compat-bucket'
 
     def test_list_parts(self, s3, bucket):
         """List parts of an in-progress multipart upload."""
@@ -854,8 +854,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f5cbc50&gt;, operation_name = 'ListParts'
-api_params = {'Bucket': 'test-compat-bucket', 'Key': 'multipart-list-parts.bin', 'UploadId': '0e9ff376-9d4e-436f-9ccd-b359deb0b872'}
+self = &lt;botocore.client.S3 object at 0x10d3d64b0&gt;, operation_name = 'ListParts'
+api_params = {'Bucket': 'test-compat-bucket', 'Key': 'multipart-list-parts.bin', 'UploadId': '033b2d58-c436-404f-b8a2-ed99bc346109'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -944,8 +944,8 @@ api_params = {'Bucket': 'test-compat-bucket', 'Key': 'multipart-list-parts.bin',
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the ListParts operation: The specified key does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: NoSuchKey</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3CopyObjectExtended" name="test_copy_within_same_bucket" time="0.014" /><testcase classname="tests.compatibility.test_s3_compat.TestS3CopyObjectExtended" name="test_copy_cross_bucket" time="0.016" /><testcase classname="tests.compatibility.test_s3_compat.TestS3CopyObjectExtended" name="test_copy_preserves_content_type" time="0.049" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectMetadata" name="test_put_with_custom_metadata_and_head" time="0.012"><failure message="KeyError: 'author'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectMetadata object at 0x10e471b20&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f74b680&gt;, bucket = 'test-compat-bucket'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: NoSuchKey</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3CopyObjectExtended" name="test_copy_within_same_bucket" time="0.014" /><testcase classname="tests.compatibility.test_s3_compat.TestS3CopyObjectExtended" name="test_copy_cross_bucket" time="0.017" /><testcase classname="tests.compatibility.test_s3_compat.TestS3CopyObjectExtended" name="test_copy_preserves_content_type" time="0.051" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectMetadata" name="test_put_with_custom_metadata_and_head" time="0.011"><failure message="KeyError: 'author'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectMetadata object at 0x10c2cdd30&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d39b230&gt;, bucket = 'test-compat-bucket'
 
     def test_put_with_custom_metadata_and_head(self, s3, bucket):
         """Put an object with custom metadata, retrieve via HeadObject."""
@@ -961,8 +961,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f74b680&gt;, bucket = 'test-compat-buc
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'author'
 
-tests/compatibility/test_s3_compat.py:935: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectMetadata" name="test_get_object_returns_metadata" time="0.013"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectMetadata object at 0x10e471f40&gt;
-s3 = &lt;botocore.client.S3 object at 0x10d03e480&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:935: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectMetadata" name="test_get_object_returns_metadata" time="0.013"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectMetadata object at 0x10c2ce150&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d67e9c0&gt;, bucket = 'test-compat-bucket'
 
     def test_get_object_returns_metadata(self, s3, bucket):
         """GetObject also returns custom metadata."""
@@ -978,8 +978,8 @@ s3 = &lt;botocore.client.S3 object at 0x10d03e480&gt;, bucket = 'test-compat-buc
                    ^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'env'
 
-tests/compatibility/test_s3_compat.py:950: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectMetadata" name="test_metadata_keys_lowercased" time="0.012"><failure message="AssertionError: assert 'mykey' in {}">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectMetadata object at 0x10e45d2b0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10effc1d0&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:950: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectMetadata" name="test_metadata_keys_lowercased" time="0.012"><failure message="AssertionError: assert 'mykey' in {}">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectMetadata object at 0x10c29b9e0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d0cecf0&gt;, bucket = 'test-compat-bucket'
 
     def test_metadata_keys_lowercased(self, s3, bucket):
         """AWS lowercases metadata keys."""
@@ -994,8 +994,8 @@ s3 = &lt;botocore.client.S3 object at 0x10effc1d0&gt;, bucket = 'test-compat-buc
 &gt;           assert "mykey" in head["Metadata"]
 E           AssertionError: assert 'mykey' in {}
 
-tests/compatibility/test_s3_compat.py:964: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ContentType" name="test_put_with_content_type_json" time="0.013" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ContentType" name="test_put_with_content_type_octet_stream" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketVersioning" name="test_enable_versioning" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketVersioning" name="test_put_same_key_twice_list_versions" time="0.016"><failure message="assert 0 == 2&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketVersioning object at 0x10e4717c0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f6ab590&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:964: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ContentType" name="test_put_with_content_type_json" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ContentType" name="test_put_with_content_type_octet_stream" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketVersioning" name="test_enable_versioning" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketVersioning" name="test_put_same_key_twice_list_versions" time="0.014"><failure message="assert 0 == 2&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketVersioning object at 0x10c2cd6a0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d8bbb00&gt;, bucket = 'test-compat-bucket'
 
     def test_put_same_key_twice_list_versions(self, s3, bucket):
         """Put the same key twice with versioning, list both versions."""
@@ -1010,8 +1010,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f6ab590&gt;, bucket = 'test-compat-buc
 E           assert 0 == 2
 E            +  where 0 = len([])
 
-tests/compatibility/test_s3_compat.py:1017: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketVersioning" name="test_get_specific_version" time="0.015"><failure message="KeyError: 'VersionId'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketVersioning object at 0x10e471250&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f9bc530&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:1017: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketVersioning" name="test_get_specific_version" time="0.015"><failure message="KeyError: 'VersionId'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketVersioning object at 0x10c2cce00&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d8bb6b0&gt;, bucket = 'test-compat-bucket'
 
     def test_get_specific_version(self, s3, bucket):
         """Get a specific version of an object."""
@@ -1024,8 +1024,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f9bc530&gt;, bucket = 'test-compat-buc
                                                                           ^^^^^^^^^^^^^^^
 E           KeyError: 'VersionId'
 
-tests/compatibility/test_s3_compat.py:1033: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketVersioning" name="test_delete_specific_version" time="0.015"><failure message="KeyError: 'VersionId'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketVersioning object at 0x10e4703b0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f82c1d0&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:1033: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketVersioning" name="test_delete_specific_version" time="0.015"><failure message="KeyError: 'VersionId'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketVersioning object at 0x10c2cc530&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cfa7d70&gt;, bucket = 'test-compat-bucket'
 
     def test_delete_specific_version(self, s3, bucket):
         """Delete a specific version, other version still accessible."""
@@ -1038,8 +1038,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f82c1d0&gt;, bucket = 'test-compat-buc
                                                                       ^^^^^^^^^^^^^^^
 E           KeyError: 'VersionId'
 
-tests/compatibility/test_s3_compat.py:1050: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectTagging" name="test_put_and_get_object_tagging" time="0.013"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectTagging object at 0x10e472660&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f71c140&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:1050: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectTagging" name="test_put_and_get_object_tagging" time="0.012"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectTagging object at 0x10c2ce810&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d351910&gt;, bucket = 'test-compat-bucket'
 
     def test_put_and_get_object_tagging(self, s3, bucket):
         try:
@@ -1057,8 +1057,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f71c140&gt;, bucket = 'test-compat-buc
                    ^^^^^^^^^^^
 E           KeyError: 'env'
 
-tests/compatibility/test_s3_compat.py:1079: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectTagging" name="test_delete_object_tagging" time="0.013" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectTagging" name="test_put_object_with_tagging_header" time="0.012"><failure message="KeyError: 'color'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectTagging object at 0x10e472ea0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f111dc0&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:1079: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectTagging" name="test_delete_object_tagging" time="0.013" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectTagging" name="test_put_object_with_tagging_header" time="0.010"><failure message="KeyError: 'color'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectTagging object at 0x10c2cf050&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cda9550&gt;, bucket = 'test-compat-bucket'
 
     def test_put_object_with_tagging_header(self, s3, bucket):
         """Put object with Tagging parameter (query-string encoding)."""
@@ -1075,8 +1075,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f111dc0&gt;, bucket = 'test-compat-buc
                    ^^^^^^^^^^^^^
 E           KeyError: 'color'
 
-tests/compatibility/test_s3_compat.py:1109: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketTagging" name="test_put_and_get_bucket_tagging" time="0.011"><failure message="KeyError: 'project'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketTagging object at 0x10e473320&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f99c1d0&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:1109: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketTagging" name="test_put_and_get_bucket_tagging" time="0.010"><failure message="KeyError: 'project'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketTagging object at 0x10c2cf440&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d057cb0&gt;, bucket = 'test-compat-bucket'
 
     def test_put_and_get_bucket_tagging(self, s3, bucket):
         s3.put_bucket_tagging(
@@ -1089,8 +1089,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f99c1d0&gt;, bucket = 'test-compat-buc
                ^^^^^^^^^^^^^^^
 E       KeyError: 'project'
 
-tests/compatibility/test_s3_compat.py:1125: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketTagging" name="test_delete_bucket_tagging" time="0.011"><failure message="Failed: DID NOT RAISE &lt;class 'Exception'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketTagging object at 0x10e473740&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f256060&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:1125: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketTagging" name="test_delete_bucket_tagging" time="0.011"><failure message="Failed: DID NOT RAISE &lt;class 'Exception'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketTagging object at 0x10c2cf860&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cfbc920&gt;, bucket = 'test-compat-bucket'
 
     def test_delete_bucket_tagging(self, s3, bucket):
         s3.put_bucket_tagging(
@@ -1102,8 +1102,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f256060&gt;, bucket = 'test-compat-buc
              ^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'Exception'&gt;
 
-tests/compatibility/test_s3_compat.py:1133: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketCORS" name="test_put_and_get_cors" time="0.011"><failure message="botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketCORS object at 0x10e473bc0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f6baf60&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:1133: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketCORS" name="test_put_and_get_cors" time="0.011"><failure message="botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketCORS object at 0x10c2cfc80&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d31d2e0&gt;, bucket = 'test-compat-bucket'
 
     def test_put_and_get_cors(self, s3, bucket):
         cors_config = {
@@ -1130,7 +1130,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f6baf60&gt;
+self = &lt;botocore.client.S3 object at 0x10d31d2e0&gt;
 operation_name = 'GetBucketCors', api_params = {'Bucket': 'test-compat-bucket'}
 
     @with_current_context()
@@ -1220,8 +1220,8 @@ operation_name = 'GetBucketCors', api_params = {'Bucket': 'test-compat-bucket'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketCORS" name="test_delete_cors" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended" name="test_list_with_delimiter" time="0.019" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended" name="test_list_with_prefix_and_delimiter" time="0.018" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended" name="test_list_with_max_keys" time="0.018"><failure message="assert False is True">self = &lt;tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended object at 0x10e472840&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f63eae0&gt;, bucket = 'test-compat-bucket'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketCORS" name="test_delete_cors" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended" name="test_list_with_delimiter" time="0.017" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended" name="test_list_with_prefix_and_delimiter" time="0.017" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended" name="test_list_with_max_keys" time="0.018"><failure message="assert False is True">self = &lt;tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended object at 0x10c2ce960&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d1ad130&gt;, bucket = 'test-compat-bucket'
 
     def test_list_with_max_keys(self, s3, bucket):
         keys = self._populate(s3, bucket)
@@ -1231,8 +1231,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f63eae0&gt;, bucket = 'test-compat-buc
 &gt;           assert resp["IsTruncated"] is True
 E           assert False is True
 
-tests/compatibility/test_s3_compat.py:1223: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended" name="test_list_with_start_after" time="0.019"><failure message="AssertionError: assert 'dir1/a.txt' &gt; 'dir2/'">self = &lt;tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended object at 0x10e470b90&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f58bd40&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:1223: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended" name="test_list_with_start_after" time="0.020"><failure message="AssertionError: assert 'dir1/b.txt' &gt; 'dir2/'">self = &lt;tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended object at 0x10c2cc980&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d187da0&gt;, bucket = 'test-compat-bucket'
 
     def test_list_with_start_after(self, s3, bucket):
         keys = self._populate(s3, bucket)
@@ -1242,10 +1242,10 @@ s3 = &lt;botocore.client.S3 object at 0x10f58bd40&gt;, bucket = 'test-compat-buc
             # All keys should be lexicographically after "dir2/"
             for k in listed:
 &gt;               assert k &gt; "dir2/"
-E               AssertionError: assert 'dir1/a.txt' &gt; 'dir2/'
+E               AssertionError: assert 'dir1/b.txt' &gt; 'dir2/'
 
-tests/compatibility/test_s3_compat.py:1234: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended" name="test_list_with_continuation_token" time="0.019"><failure message="assert False is True">self = &lt;tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended object at 0x10e471d90&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f780560&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:1234: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended" name="test_list_with_continuation_token" time="0.018"><failure message="assert False is True">self = &lt;tests.compatibility.test_s3_compat.TestS3ListObjectsV2Extended object at 0x10c2cdf10&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cfbfdd0&gt;, bucket = 'test-compat-bucket'
 
     def test_list_with_continuation_token(self, s3, bucket):
         keys = self._populate(s3, bucket)
@@ -1254,8 +1254,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f780560&gt;, bucket = 'test-compat-buc
 &gt;           assert resp1["IsTruncated"] is True
 E           assert False is True
 
-tests/compatibility/test_s3_compat.py:1242: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3DeleteObjectsBatch" name="test_batch_delete_multiple_objects" time="0.016" /><testcase classname="tests.compatibility.test_s3_compat.TestS3DeleteObjectsBatch" name="test_batch_delete_nonexistent_keys" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketLifecycle" name="test_put_and_get_lifecycle" time="0.010"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketLifecycle object at 0x10e4849e0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f63c080&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:1242: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3DeleteObjectsBatch" name="test_batch_delete_multiple_objects" time="0.017" /><testcase classname="tests.compatibility.test_s3_compat.TestS3DeleteObjectsBatch" name="test_batch_delete_nonexistent_keys" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketLifecycle" name="test_put_and_get_lifecycle" time="0.009"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketLifecycle object at 0x10c2e4a10&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d072d80&gt;, bucket = 'test-compat-bucket'
 
     def test_put_and_get_lifecycle(self, s3, bucket):
         config = {
@@ -1274,8 +1274,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f63c080&gt;, bucket = 'test-compat-buc
                 ^^^^^^^^^^^^^
 E       KeyError: 'Rules'
 
-tests/compatibility/test_s3_compat.py:1302: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketLifecycle" name="test_lifecycle_multiple_rules" time="0.010"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketLifecycle object at 0x10e484e00&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f58bb00&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:1302: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketLifecycle" name="test_lifecycle_multiple_rules" time="0.010"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketLifecycle object at 0x10c2e4e30&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d1aecf0&gt;, bucket = 'test-compat-bucket'
 
     def test_lifecycle_multiple_rules(self, s3, bucket):
         config = {
@@ -1300,9 +1300,9 @@ s3 = &lt;botocore.client.S3 object at 0x10f58bb00&gt;, bucket = 'test-compat-buc
                                 ^^^^^^^^^^^^^
 E       KeyError: 'Rules'
 
-tests/compatibility/test_s3_compat.py:1326: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketPolicy" name="test_put_and_get_policy" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketPolicy" name="test_delete_policy" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3Versioning" name="test_put_bucket_versioning_enabled" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3Versioning" name="test_put_bucket_versioning_suspended" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3Versioning" name="test_multiple_versions_of_same_key" time="0.014"><failure message="KeyError: 'Versions'">self = &lt;tests.compatibility.test_s3_compat.TestS3Versioning object at 0x10e4863c0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f021d30&gt;
-versioned_bucket = 'ver-bucket-de56d554'
+tests/compatibility/test_s3_compat.py:1326: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketPolicy" name="test_put_and_get_policy" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketPolicy" name="test_delete_policy" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3Versioning" name="test_put_bucket_versioning_enabled" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3Versioning" name="test_put_bucket_versioning_suspended" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3Versioning" name="test_multiple_versions_of_same_key" time="0.013"><failure message="KeyError: 'Versions'">self = &lt;tests.compatibility.test_s3_compat.TestS3Versioning object at 0x10c2e6360&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d31d220&gt;
+versioned_bucket = 'ver-bucket-601ddd3b'
 
     def test_multiple_versions_of_same_key(self, s3, versioned_bucket):
         s3.put_object(Bucket=versioned_bucket, Key="doc.txt", Body=b"v1")
@@ -1312,9 +1312,9 @@ versioned_bucket = 'ver-bucket-de56d554'
                    ^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Versions'
 
-tests/compatibility/test_s3_compat.py:1419: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3Versioning" name="test_get_specific_version" time="0.014"><failure message="KeyError: 'VersionId'">self = &lt;tests.compatibility.test_s3_compat.TestS3Versioning object at 0x10e4867e0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f1e3bf0&gt;
-versioned_bucket = 'ver-bucket-61b465db'
+tests/compatibility/test_s3_compat.py:1419: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3Versioning" name="test_get_specific_version" time="0.012"><failure message="KeyError: 'VersionId'">self = &lt;tests.compatibility.test_s3_compat.TestS3Versioning object at 0x10c2e6780&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cdaaf60&gt;
+versioned_bucket = 'ver-bucket-27f344fd'
 
     def test_get_specific_version(self, s3, versioned_bucket):
         r1 = s3.put_object(Bucket=versioned_bucket, Key="ver.txt", Body=b"first")
@@ -1323,9 +1323,9 @@ versioned_bucket = 'ver-bucket-61b465db'
                                                                                ^^^^^^^^^^^^^^^
 E       KeyError: 'VersionId'
 
-tests/compatibility/test_s3_compat.py:1424: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3Versioning" name="test_delete_creates_delete_marker" time="0.014"><failure message="AssertionError: assert 0 &gt;= 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10f223840&gt;('DeleteMarkers', [])&#10; +      where &lt;built-in method get of dict object at 0x10f223840&gt; = {'EncodingType': 'url', 'IsTruncated': False, 'MaxKeys': 1000, 'Name': 'ver-bucket-6d78fcd5', ...}.get">self = &lt;tests.compatibility.test_s3_compat.TestS3Versioning object at 0x10e470f50&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f864290&gt;
-versioned_bucket = 'ver-bucket-6d78fcd5'
+tests/compatibility/test_s3_compat.py:1424: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3Versioning" name="test_delete_creates_delete_marker" time="0.012"><failure message="AssertionError: assert 0 &gt;= 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10d16cf40&gt;('DeleteMarkers', [])&#10; +      where &lt;built-in method get of dict object at 0x10d16cf40&gt; = {'EncodingType': 'url', 'IsTruncated': False, 'MaxKeys': 1000, 'Name': 'ver-bucket-30400e18', ...}.get">self = &lt;tests.compatibility.test_s3_compat.TestS3Versioning object at 0x10c2cc5f0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d067e60&gt;
+versioned_bucket = 'ver-bucket-30400e18'
 
     def test_delete_creates_delete_marker(self, s3, versioned_bucket):
         s3.put_object(Bucket=versioned_bucket, Key="dm.txt", Body=b"data")
@@ -1334,12 +1334,12 @@ versioned_bucket = 'ver-bucket-6d78fcd5'
 &gt;       assert len(versions.get("DeleteMarkers", [])) &gt;= 1
 E       AssertionError: assert 0 &gt;= 1
 E        +  where 0 = len([])
-E        +    where [] = &lt;built-in method get of dict object at 0x10f223840&gt;('DeleteMarkers', [])
-E        +      where &lt;built-in method get of dict object at 0x10f223840&gt; = {'EncodingType': 'url', 'IsTruncated': False, 'MaxKeys': 1000, 'Name': 'ver-bucket-6d78fcd5', ...}.get
+E        +    where [] = &lt;built-in method get of dict object at 0x10d16cf40&gt;('DeleteMarkers', [])
+E        +      where &lt;built-in method get of dict object at 0x10d16cf40&gt; = {'EncodingType': 'url', 'IsTruncated': False, 'MaxKeys': 1000, 'Name': 'ver-bucket-30400e18', ...}.get
 
-tests/compatibility/test_s3_compat.py:1433: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3Versioning" name="test_delete_specific_version" time="0.013"><failure message="KeyError: 'VersionId'">self = &lt;tests.compatibility.test_s3_compat.TestS3Versioning object at 0x10e473530&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f99c950&gt;
-versioned_bucket = 'ver-bucket-4bdeef9f'
+tests/compatibility/test_s3_compat.py:1433: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3Versioning" name="test_delete_specific_version" time="0.013"><failure message="KeyError: 'VersionId'">self = &lt;tests.compatibility.test_s3_compat.TestS3Versioning object at 0x10c2cf5f0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d88d460&gt;
+versioned_bucket = 'ver-bucket-a9b84fad'
 
     def test_delete_specific_version(self, s3, versioned_bucket):
         r1 = s3.put_object(Bucket=versioned_bucket, Key="del-ver.txt", Body=b"v1")
@@ -1348,8 +1348,8 @@ versioned_bucket = 'ver-bucket-4bdeef9f'
                                                                                ^^^^^^^^^^^^^^^
 E       KeyError: 'VersionId'
 
-tests/compatibility/test_s3_compat.py:1438: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartUpload" name="test_create_and_abort_multipart" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartUpload" name="test_list_multipart_uploads" time="0.012"><failure message="AssertionError: assert 'listed.bin' in []">self = &lt;tests.compatibility.test_s3_compat.TestS3MultipartUpload object at 0x10e485970&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f819010&gt;, bucket = 'mp-bucket-d599d1ba'
+tests/compatibility/test_s3_compat.py:1438: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartUpload" name="test_create_and_abort_multipart" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartUpload" name="test_list_multipart_uploads" time="0.011"><failure message="AssertionError: assert 'listed.bin' in []">self = &lt;tests.compatibility.test_s3_compat.TestS3MultipartUpload object at 0x10c2e5910&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d0625d0&gt;, bucket = 'mp-bucket-65884e84'
 
     def test_list_multipart_uploads(self, s3, bucket):
         resp = s3.create_multipart_upload(Bucket=bucket, Key="listed.bin")
@@ -1360,8 +1360,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f819010&gt;, bucket = 'mp-bucket-d599d
 &gt;           assert "listed.bin" in upload_keys
 E           AssertionError: assert 'listed.bin' in []
 
-tests/compatibility/test_s3_compat.py:1473: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartUpload" name="test_complete_multipart_upload" time="0.034"><failure message="KeyError: 'ETag'">self = &lt;tests.compatibility.test_s3_compat.TestS3MultipartUpload object at 0x10e484f80&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f79cb60&gt;, bucket = 'mp-bucket-62a9acce'
+tests/compatibility/test_s3_compat.py:1473: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartUpload" name="test_complete_multipart_upload" time="0.034"><failure message="KeyError: 'ETag'">self = &lt;tests.compatibility.test_s3_compat.TestS3MultipartUpload object at 0x10c2e4f80&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d6393d0&gt;, bucket = 'mp-bucket-c53c414c'
 
     def test_complete_multipart_upload(self, s3, bucket):
         resp = s3.create_multipart_upload(Bucket=bucket, Key="complete.bin")
@@ -1382,8 +1382,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f79cb60&gt;, bucket = 'mp-bucket-62a9a
         )
 E       KeyError: 'ETag'
 
-tests/compatibility/test_s3_compat.py:1491: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartUpload" name="test_list_parts" time="0.037"><failure message="botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the ListParts operation: The specified key does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3MultipartUpload object at 0x10e484710&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f99eff0&gt;, bucket = 'mp-bucket-29e70aa1'
+tests/compatibility/test_s3_compat.py:1491: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3MultipartUpload" name="test_list_parts" time="0.036"><failure message="botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the ListParts operation: The specified key does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3MultipartUpload object at 0x10c2e4740&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d3d06e0&gt;, bucket = 'mp-bucket-20738598'
 
     def test_list_parts(self, s3, bucket):
         resp = s3.create_multipart_upload(Bucket=bucket, Key="parts.bin")
@@ -1409,8 +1409,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f99eff0&gt;, operation_name = 'ListParts'
-api_params = {'Bucket': 'mp-bucket-29e70aa1', 'Key': 'parts.bin', 'UploadId': 'a8c25951-d39b-44a6-ba43-2bcb506bb5f2'}
+self = &lt;botocore.client.S3 object at 0x10d3d06e0&gt;, operation_name = 'ListParts'
+api_params = {'Bucket': 'mp-bucket-20738598', 'Key': 'parts.bin', 'UploadId': '18bdddc7-a3da-430e-8461-9a7ffd715ed9'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1499,8 +1499,8 @@ api_params = {'Bucket': 'mp-bucket-29e70aa1', 'Key': 'parts.bin', 'UploadId': 'a
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the ListParts operation: The specified key does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: NoSuchKey</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3CORS" name="test_put_get_delete_cors" time="0.010"><failure message="botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3CORS object at 0x10e484320&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f23f140&gt;, bucket = 'cors-bucket-e956248c'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: NoSuchKey</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3CORS" name="test_put_get_delete_cors" time="0.010"><failure message="botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3CORS object at 0x10c2e6a80&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d319a00&gt;, bucket = 'cors-bucket-06ae29e0'
 
     def test_put_get_delete_cors(self, s3, bucket):
         cors_config = {
@@ -1527,9 +1527,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f23f140&gt;
+self = &lt;botocore.client.S3 object at 0x10d319a00&gt;
 operation_name = 'GetBucketCors'
-api_params = {'Bucket': 'cors-bucket-e956248c'}
+api_params = {'Bucket': 'cors-bucket-06ae29e0'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1618,8 +1618,8 @@ api_params = {'Bucket': 'cors-bucket-e956248c'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3CORS" name="test_multiple_cors_rules" time="0.010"><failure message="botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3CORS object at 0x10e486f00&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f2110a0&gt;, bucket = 'cors-bucket-ee4ef431'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3CORS" name="test_multiple_cors_rules" time="0.010"><failure message="botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3CORS object at 0x10c2e6e70&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce2a810&gt;, bucket = 'cors-bucket-9e05c444'
 
     def test_multiple_cors_rules(self, s3, bucket):
         cors_config = {
@@ -1649,9 +1649,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f2110a0&gt;
+self = &lt;botocore.client.S3 object at 0x10ce2a810&gt;
 operation_name = 'GetBucketCors'
-api_params = {'Bucket': 'cors-bucket-ee4ef431'}
+api_params = {'Bucket': 'cors-bucket-9e05c444'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1740,8 +1740,8 @@ api_params = {'Bucket': 'cors-bucket-ee4ef431'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (NoSuchCORSConfiguration) when calling the GetBucketCors operation: The CORS configuration does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_copy_object" time="0.014" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_head_object" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_put_object_with_content_type" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_put_object_with_metadata" time="0.012"><failure message="KeyError: 'author'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectOperations object at 0x10e487f50&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f0da1b0&gt;, bucket = 'obj-bucket-53526dde'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_copy_object" time="0.015" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_head_object" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_put_object_with_content_type" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_put_object_with_metadata" time="0.011"><failure message="KeyError: 'author'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectOperations object at 0x10c2e7ef0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d5f3440&gt;, bucket = 'obj-bucket-c9df519a'
 
     def test_put_object_with_metadata(self, s3, bucket):
         s3.put_object(
@@ -1755,8 +1755,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f0da1b0&gt;, bucket = 'obj-bucket-5352
                ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'author'
 
-tests/compatibility/test_s3_compat.py:1618: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_get_object_range" time="0.013"><failure message="AssertionError: assert b'0123456789' == b'3456'&#10;  &#10;  At index 0 diff: b'0' != b'3'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectOperations object at 0x10e49c380&gt;
-s3 = &lt;botocore.client.S3 object at 0x10ef49250&gt;, bucket = 'obj-bucket-245df065'
+tests/compatibility/test_s3_compat.py:1618: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_get_object_range" time="0.013"><failure message="AssertionError: assert b'0123456789' == b'3456'&#10;  &#10;  At index 0 diff: b'0' != b'3'&#10;  Use -v to get more diff">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectOperations object at 0x10c2fc320&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d621040&gt;, bucket = 'obj-bucket-8e070286'
 
     def test_get_object_range(self, s3, bucket):
         s3.put_object(Bucket=bucket, Key="range.txt", Body=b"0123456789")
@@ -1767,8 +1767,8 @@ E
 E         At index 0 diff: b'0' != b'3'
 E         Use -v to get more diff
 
-tests/compatibility/test_s3_compat.py:1624: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_put_get_object_tagging" time="0.013"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectOperations object at 0x10e49c770&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f806fc0&gt;, bucket = 'obj-bucket-069d25a3'
+tests/compatibility/test_s3_compat.py:1624: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_put_get_object_tagging" time="0.013"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectOperations object at 0x10c2fc710&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d6b0080&gt;, bucket = 'obj-bucket-e1590f5d'
 
     def test_put_get_object_tagging(self, s3, bucket):
         s3.put_object(Bucket=bucket, Key="tagged.txt", Body=b"data")
@@ -1783,8 +1783,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f806fc0&gt;, bucket = 'obj-bucket-069d
                ^^^^^^^^^^^
 E       KeyError: 'env'
 
-tests/compatibility/test_s3_compat.py:1635: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_delete_object_tagging" time="0.014" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_put_object_acl" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_list_objects_v2_prefix_delimiter" time="0.017" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_delete_objects_batch" time="0.015" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_put_bucket_acl" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOwnershipControls" name="test_put_get_delete_ownership_controls" time="0.046"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketOwnershipControls object at 0x10e472750&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f575be0&gt;
+tests/compatibility/test_s3_compat.py:1635: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_delete_object_tagging" time="0.014" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_put_object_acl" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_list_objects_v2_prefix_delimiter" time="0.015" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_delete_objects_batch" time="0.013" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectOperations" name="test_put_bucket_acl" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOwnershipControls" name="test_put_get_delete_ownership_controls" time="0.044"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketOwnershipControls object at 0x10c2ce7e0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d2efb00&gt;
 
     def test_put_get_delete_ownership_controls(self, s3):
         bucket_name = f"ownership-{uuid.uuid4().hex[:8]}"
@@ -1799,8 +1799,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f575be0&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'Rules'
 
-tests/compatibility/test_s3_compat.py:1690: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOwnershipControls" name="test_put_and_get_bucket_ownership_controls" time="0.010"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketOwnershipControls object at 0x10e45d8e0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f7a7d70&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:1690: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOwnershipControls" name="test_put_and_get_bucket_ownership_controls" time="0.010"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketOwnershipControls object at 0x10c2bbd70&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cfbf3e0&gt;, bucket = 'test-compat-bucket'
 
     def test_put_and_get_bucket_ownership_controls(self, s3, bucket):
         s3.put_bucket_ownership_controls(
@@ -1812,8 +1812,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f7a7d70&gt;, bucket = 'test-compat-buc
                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Rules'
 
-tests/compatibility/test_s3_compat.py:1702: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PublicAccessBlock" name="test_put_get_delete_public_access_block" time="0.008"><failure message="KeyError: 'BlockPublicAcls'">self = &lt;tests.compatibility.test_s3_compat.TestS3PublicAccessBlock object at 0x10e49caa0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f82c1d0&gt;
+tests/compatibility/test_s3_compat.py:1702: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3PublicAccessBlock" name="test_put_get_delete_public_access_block" time="0.008"><failure message="KeyError: 'BlockPublicAcls'">self = &lt;tests.compatibility.test_s3_compat.TestS3PublicAccessBlock object at 0x10c2fc980&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d31b560&gt;
 
     def test_put_get_delete_public_access_block(self, s3):
         bucket_name = f"pab-{uuid.uuid4().hex[:8]}"
@@ -1834,8 +1834,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f82c1d0&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'BlockPublicAcls'
 
-tests/compatibility/test_s3_compat.py:1723: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketLogging" name="test_put_get_bucket_logging" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketAccelerateConfiguration" name="test_put_get_accelerate_configuration" time="0.008"><failure message="KeyError: 'Status'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketAccelerateConfiguration object at 0x10e49d010&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f6ab440&gt;
+tests/compatibility/test_s3_compat.py:1723: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketLogging" name="test_put_get_bucket_logging" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketAccelerateConfiguration" name="test_put_get_accelerate_configuration" time="0.007"><failure message="KeyError: 'Status'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketAccelerateConfiguration object at 0x10c2fcf50&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d5f3c80&gt;
 
     def test_put_get_accelerate_configuration(self, s3):
         bucket_name = f"accel-{uuid.uuid4().hex[:8]}"
@@ -1850,8 +1850,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f6ab440&gt;
                    ^^^^^^^^^^^^^^
 E           KeyError: 'Status'
 
-tests/compatibility/test_s3_compat.py:1752: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketRequestPayment" name="test_put_get_request_payment" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketRequestPayment" name="test_get_bucket_request_payment_default" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketAnalyticsConfiguration" name="test_put_get_list_delete_analytics" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketIntelligentTiering" name="test_put_get_list_delete_intelligent_tiering" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetricsConfiguration" name="test_put_get_list_delete_metrics" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketLifecycleLegacy" name="test_put_get_delete_lifecycle" time="0.009"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketLifecycleLegacy object at 0x10e484530&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f707b30&gt;
+tests/compatibility/test_s3_compat.py:1752: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketRequestPayment" name="test_put_get_request_payment" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketRequestPayment" name="test_get_bucket_request_payment_default" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketAnalyticsConfiguration" name="test_put_get_list_delete_analytics" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketIntelligentTiering" name="test_put_get_list_delete_intelligent_tiering" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetricsConfiguration" name="test_put_get_list_delete_metrics" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketLifecycleLegacy" name="test_put_get_delete_lifecycle" time="0.007"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketLifecycleLegacy object at 0x10c2e6480&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce2a4b0&gt;
 
     def test_put_get_delete_lifecycle(self, s3):
         bucket_name = f"lifecycle-{uuid.uuid4().hex[:8]}"
@@ -1875,8 +1875,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f707b30&gt;
                        ^^^^^^^^^^^^^
 E           KeyError: 'Rules'
 
-tests/compatibility/test_s3_compat.py:1869: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketReplication" name="test_put_get_delete_replication" time="0.011"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketReplication object at 0x10e4878f0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f021dc0&gt;
+tests/compatibility/test_s3_compat.py:1869: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketReplication" name="test_put_get_delete_replication" time="0.010"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketReplication object at 0x10c2e78c0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d7fed50&gt;
 
     def test_put_get_delete_replication(self, s3):
         bucket_name = f"replication-{uuid.uuid4().hex[:8]}"
@@ -1902,8 +1902,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f021dc0&gt;
                        ^^^^^^^^^^^^^^^
 E           KeyError: 'Rules'
 
-tests/compatibility/test_s3_compat.py:1897: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectLockConfiguration" name="test_put_get_object_lock_configuration" time="0.009"><failure message="KeyError: 'ObjectLockEnabled'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectLockConfiguration object at 0x10e49df70&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f7a4f80&gt;
+tests/compatibility/test_s3_compat.py:1897: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectLockConfiguration" name="test_put_get_object_lock_configuration" time="0.008"><failure message="KeyError: 'ObjectLockEnabled'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectLockConfiguration object at 0x10c2fe360&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d7fede0&gt;
 
     def test_put_get_object_lock_configuration(self, s3):
         bucket_name = f"objlock-{uuid.uuid4().hex[:8]}"
@@ -1921,8 +1921,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f7a4f80&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'ObjectLockEnabled'
 
-tests/compatibility/test_s3_compat.py:1917: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectLegalHold" name="test_put_get_object_legal_hold" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectRetention" name="test_put_get_object_retention" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketNotification" name="test_put_get_bucket_notification" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketEncryption" name="test_delete_bucket_encryption" time="0.009"><failure message="botocore.errorfactory.NoSuchBucket: An error occurred (NoSuchBucket) when calling the DeleteBucket operation: The specified bucket does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketEncryption object at 0x10e49e960&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f7a5a90&gt;
+tests/compatibility/test_s3_compat.py:1917: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectLegalHold" name="test_put_get_object_legal_hold" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectRetention" name="test_put_get_object_retention" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketNotification" name="test_put_get_bucket_notification" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketEncryption" name="test_delete_bucket_encryption" time="0.008"><failure message="botocore.errorfactory.NoSuchBucket: An error occurred (NoSuchBucket) when calling the DeleteBucket operation: The specified bucket does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketEncryption object at 0x10c2fe870&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce82840&gt;
 
     def test_delete_bucket_encryption(self, s3):
         bucket_name = f"enc-{uuid.uuid4().hex[:8]}"
@@ -1949,8 +1949,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f7a5a90&gt;
-operation_name = 'DeleteBucket', api_params = {'Bucket': 'enc-d5856d56'}
+self = &lt;botocore.client.S3 object at 0x10ce82840&gt;
+operation_name = 'DeleteBucket', api_params = {'Bucket': 'enc-21adac0e'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2039,8 +2039,8 @@ operation_name = 'DeleteBucket', api_params = {'Bucket': 'enc-d5856d56'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.NoSuchBucket: An error occurred (NoSuchBucket) when calling the DeleteBucket operation: The specified bucket does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: NoSuchBucket</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3GetObjectAttributes" name="test_get_object_attributes" time="5.898"><failure message="botocore.exceptions.ClientError: An error occurred (500) when calling the GetObjectAttributes operation (reached max retries: 4): Internal Server Error">self = &lt;tests.compatibility.test_s3_compat.TestS3GetObjectAttributes object at 0x10e49ede0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f6943e0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: NoSuchBucket</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3GetObjectAttributes" name="test_get_object_attributes" time="9.359"><failure message="botocore.exceptions.ClientError: An error occurred (500) when calling the GetObjectAttributes operation (reached max retries: 4): Internal Server Error">self = &lt;tests.compatibility.test_s3_compat.TestS3GetObjectAttributes object at 0x10c2fecf0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d868530&gt;
 
     def test_get_object_attributes(self, s3):
         bucket_name = f"objattrs-{uuid.uuid4().hex[:8]}"
@@ -2063,9 +2063,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f6943e0&gt;
+self = &lt;botocore.client.S3 object at 0x10d868530&gt;
 operation_name = 'GetObjectAttributes'
-api_params = {'Bucket': 'objattrs-56ccc080', 'Key': 'test.txt', 'ObjectAttributes': ['ETag', 'ObjectSize']}
+api_params = {'Bucket': 'objattrs-3c3c220d', 'Key': 'test.txt', 'ObjectAttributes': ['ETag', 'ObjectSize']}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2154,8 +2154,8 @@ api_params = {'Bucket': 'objattrs-56ccc080', 'Key': 'test.txt', 'ObjectAttribute
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (500) when calling the GetObjectAttributes operation (reached max retries: 4): Internal Server Error
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3HeadBucket" name="test_head_bucket_exists" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3HeadBucket" name="test_head_bucket_not_found" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListObjects" name="test_list_objects" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListDirectoryBuckets" name="test_list_directory_buckets" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3UploadPartCopy" name="test_upload_part_copy" time="0.041"><failure message="KeyError: 'ETag'">self = &lt;tests.compatibility.test_s3_compat.TestS3UploadPartCopy object at 0x10e49e720&gt;
-s3 = &lt;botocore.client.S3 object at 0x10fa158e0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3HeadBucket" name="test_head_bucket_exists" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3HeadBucket" name="test_head_bucket_not_found" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListObjects" name="test_list_objects" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListDirectoryBuckets" name="test_list_directory_buckets" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3UploadPartCopy" name="test_upload_part_copy" time="0.040"><failure message="KeyError: 'ETag'">self = &lt;tests.compatibility.test_s3_compat.TestS3UploadPartCopy object at 0x10c2fe9c0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d3614c0&gt;
 
     def test_upload_part_copy(self, s3):
         bucket_name = f"mpu-{uuid.uuid4().hex[:8]}"
@@ -2176,8 +2176,8 @@ s3 = &lt;botocore.client.S3 object at 0x10fa158e0&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'ETag'
 
-tests/compatibility/test_s3_compat.py:2096: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3GetObjectTorrent" name="test_get_object_torrent" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3CreateSession" name="test_create_session" time="0.009"><failure message="AssertionError: assert 'Credentials' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '312', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '82c37cbb-52d7-42d0-a613-e90f50125625', ...}}">self = &lt;tests.compatibility.test_s3_compat.TestS3CreateSession object at 0x10e49fa10&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f7496a0&gt;
+tests/compatibility/test_s3_compat.py:2096: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3GetObjectTorrent" name="test_get_object_torrent" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3CreateSession" name="test_create_session" time="0.008"><failure message="AssertionError: assert 'Credentials' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '312', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '0b468ee0-d4b4-460e-85d3-d6be9ea5e724', ...}}">self = &lt;tests.compatibility.test_s3_compat.TestS3CreateSession object at 0x10c2ff8f0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce2ba40&gt;
 
     def test_create_session(self, s3):
         bucket_name = f"session-{uuid.uuid4().hex[:8]}"
@@ -2185,10 +2185,10 @@ s3 = &lt;botocore.client.S3 object at 0x10f7496a0&gt;
         try:
             resp = s3.create_session(Bucket=bucket_name)
 &gt;           assert "Credentials" in resp
-E           AssertionError: assert 'Credentials' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '312', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '82c37cbb-52d7-42d0-a613-e90f50125625', ...}}
+E           AssertionError: assert 'Credentials' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '312', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '0b468ee0-d4b4-460e-85d3-d6be9ea5e724', ...}}
 
-tests/compatibility/test_s3_compat.py:2132: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketPolicyStatus" name="test_get_bucket_policy_status" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MetadataConfiguration" name="test_get_bucket_metadata_configuration" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MetadataConfiguration" name="test_get_bucket_metadata_table_configuration" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3InventoryConfiguration" name="test_list_bucket_inventory_configurations" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketNotificationConfiguration" name="test_get_bucket_notification_configuration" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketInventoryConfiguration" name="test_put_get_list_delete_inventory" time="0.008"><failure message="KeyError: 'Id'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketInventoryConfiguration object at 0x10e4b9460&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f6951f0&gt;
+tests/compatibility/test_s3_compat.py:2132: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketPolicyStatus" name="test_get_bucket_policy_status" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MetadataConfiguration" name="test_get_bucket_metadata_configuration" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3MetadataConfiguration" name="test_get_bucket_metadata_table_configuration" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3InventoryConfiguration" name="test_list_bucket_inventory_configurations" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketNotificationConfiguration" name="test_get_bucket_notification_configuration" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketInventoryConfiguration" name="test_put_get_list_delete_inventory" time="0.008"><failure message="KeyError: 'Id'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketInventoryConfiguration object at 0x10c319340&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d33e000&gt;
 
     def test_put_get_list_delete_inventory(self, s3):
         bucket_name = f"inv-{uuid.uuid4().hex[:8]}"
@@ -2217,8 +2217,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f6951f0&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'Id'
 
-tests/compatibility/test_s3_compat.py:2227: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketInventoryConfiguration" name="test_delete_inventory_nonexistent_bucket" time="0.040" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketInventoryConfiguration" name="test_get_inventory_nonexistent_bucket" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketInventoryConfiguration" name="test_list_inventory_nonexistent_bucket" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketAbac" name="test_put_and_get_bucket_abac" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketAbac" name="test_get_bucket_abac_nonexistent_bucket" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataConfiguration" name="test_create_and_get_metadata_configuration" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (NotImplemented) when calling the CreateBucketMetadataConfiguration operation: The operation  is not implemented">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketMetadataConfiguration object at 0x10e4b9160&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f76d1f0&gt;
+tests/compatibility/test_s3_compat.py:2227: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketInventoryConfiguration" name="test_delete_inventory_nonexistent_bucket" time="0.041" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketInventoryConfiguration" name="test_get_inventory_nonexistent_bucket" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketInventoryConfiguration" name="test_list_inventory_nonexistent_bucket" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketAbac" name="test_put_and_get_bucket_abac" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketAbac" name="test_get_bucket_abac_nonexistent_bucket" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataConfiguration" name="test_create_and_get_metadata_configuration" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (NotImplemented) when calling the CreateBucketMetadataConfiguration operation: The operation  is not implemented">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketMetadataConfiguration object at 0x10c319700&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d867560&gt;
 
     def test_create_and_get_metadata_configuration(self, s3):
         bucket_name = f"metacfg-{uuid.uuid4().hex[:8]}"
@@ -2244,9 +2244,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f76d1f0&gt;
+self = &lt;botocore.client.S3 object at 0x10d867560&gt;
 operation_name = 'CreateBucketMetadataConfiguration'
-api_params = {'Bucket': 'metacfg-5a2ad4a0', 'MetadataConfiguration': {'InventoryTableConfiguration': {'ConfigurationState': 'ENABLED'}, 'JournalTableConfiguration': {'RecordExpiration': {'Days': 30, 'Expiration': 'ENABLED'}}}}
+api_params = {'Bucket': 'metacfg-0214dc64', 'MetadataConfiguration': {'InventoryTableConfiguration': {'ConfigurationState': 'ENABLED'}, 'JournalTableConfiguration': {'RecordExpiration': {'Days': 30, 'Expiration': 'ENABLED'}}}}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2335,8 +2335,8 @@ api_params = {'Bucket': 'metacfg-5a2ad4a0', 'MetadataConfiguration': {'Inventory
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (NotImplemented) when calling the CreateBucketMetadataConfiguration operation: The operation  is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataConfiguration" name="test_delete_metadata_configuration" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataConfiguration" name="test_get_metadata_configuration_nonexistent_bucket" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataConfiguration" name="test_delete_metadata_configuration_nonexistent_bucket" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataTableConfiguration" name="test_create_get_delete_metadata_table_configuration" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (NotImplemented) when calling the CreateBucketMetadataTableConfiguration operation: The operation  is not implemented">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketMetadataTableConfiguration object at 0x10e4ba810&gt;
-s3 = &lt;botocore.client.S3 object at 0x10effde80&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataConfiguration" name="test_delete_metadata_configuration" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataConfiguration" name="test_get_metadata_configuration_nonexistent_bucket" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataConfiguration" name="test_delete_metadata_configuration_nonexistent_bucket" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataTableConfiguration" name="test_create_get_delete_metadata_table_configuration" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (NotImplemented) when calling the CreateBucketMetadataTableConfiguration operation: The operation  is not implemented">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketMetadataTableConfiguration object at 0x10c31a690&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d0658e0&gt;
 
     def test_create_get_delete_metadata_table_configuration(self, s3):
         bucket_name = f"metatbl-{uuid.uuid4().hex[:8]}"
@@ -2362,9 +2362,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10effde80&gt;
+self = &lt;botocore.client.S3 object at 0x10d0658e0&gt;
 operation_name = 'CreateBucketMetadataTableConfiguration'
-api_params = {'Bucket': 'metatbl-ffc76bc5', 'MetadataTableConfiguration': {'S3TablesDestination': {'TableBucketArn': 'arn:aws:s3:::test-table-bucket', 'TableName': 'test-table'}}}
+api_params = {'Bucket': 'metatbl-a5c5c737', 'MetadataTableConfiguration': {'S3TablesDestination': {'TableBucketArn': 'arn:aws:s3:::test-table-bucket', 'TableName': 'test-table'}}}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2453,7 +2453,7 @@ api_params = {'Bucket': 'metatbl-ffc76bc5', 'MetadataTableConfiguration': {'S3Ta
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (NotImplemented) when calling the CreateBucketMetadataTableConfiguration operation: The operation  is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataTableConfiguration" name="test_get_metadata_table_configuration_nonexistent_bucket" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataTableConfiguration" name="test_delete_metadata_table_configuration_nonexistent_bucket" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3UpdateBucketMetadataTableConfigurations" name="test_update_metadata_inventory_table_configuration" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3UpdateBucketMetadataTableConfigurations" name="test_update_metadata_journal_table_configuration" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3WriteGetObjectResponse" name="test_write_get_object_response" time="6.293"><failure message="botocore.exceptions.EndpointConnectionError: Could not connect to the endpoint URL: &quot;http://route-placeholder.127.0.0.1:4567/WriteGetObjectResponse&quot;">self = &lt;AWSHTTPConnection(host='route-placeholder.127.0.0.1', port=4567) at 0x10f989730&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataTableConfiguration" name="test_get_metadata_table_configuration_nonexistent_bucket" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketMetadataTableConfiguration" name="test_delete_metadata_table_configuration_nonexistent_bucket" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3UpdateBucketMetadataTableConfigurations" name="test_update_metadata_inventory_table_configuration" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3UpdateBucketMetadataTableConfigurations" name="test_update_metadata_journal_table_configuration" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3WriteGetObjectResponse" name="test_write_get_object_response" time="9.690"><failure message="botocore.exceptions.EndpointConnectionError: Could not connect to the endpoint URL: &quot;http://route-placeholder.127.0.0.1:4567/WriteGetObjectResponse&quot;">self = &lt;AWSHTTPConnection(host='route-placeholder.127.0.0.1', port=4567) at 0x10d363ad0&gt;
 
     def _new_conn(self) -&gt; socket.socket:
         """Establish a socket connection and set nodelay settings on it.
@@ -2504,8 +2504,8 @@ E       socket.gaierror: [Errno 8] nodename nor servname provided, or not known
 
 The above exception was the direct cause of the following exception:
 
-self = &lt;botocore.httpsession.URLLib3Session object at 0x10f989130&gt;
-request = &lt;AWSPreparedRequest stream_output=False, method=POST, url=http://route-placeholder.127.0.0.1:4567/WriteGetObjectRespon...vocation-id': b'd29b1218-f818-48a9-811e-df9082fa2ee7', 'amz-sdk-request': b'attempt=5; max=5', 'Content-Length': '24'}&gt;
+self = &lt;botocore.httpsession.URLLib3Session object at 0x10cfbed50&gt;
+request = &lt;AWSPreparedRequest stream_output=False, method=POST, url=http://route-placeholder.127.0.0.1:4567/WriteGetObjectRespon...vocation-id': b'cc2193b4-4676-491a-ba25-1043a79e6491', 'amz-sdk-request': b'attempt=5; max=5', 'Content-Length': '24'}&gt;
 
     def send(self, request):
         try:
@@ -2568,7 +2568,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                 ^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;AWSHTTPConnection(host='route-placeholder.127.0.0.1', port=4567) at 0x10f989730&gt;
+self = &lt;AWSHTTPConnection(host='route-placeholder.127.0.0.1', port=4567) at 0x10d363ad0&gt;
 
     def _new_conn(self) -&gt; socket.socket:
         """Establish a socket connection and set nodelay settings on it.
@@ -2590,8 +2590,8 @@ E           urllib3.exceptions.NameResolutionError: AWSHTTPConnection(host='rout
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_s3_compat.TestS3WriteGetObjectResponse object at 0x10e4bbda0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f75f0b0&gt;
+self = &lt;tests.compatibility.test_s3_compat.TestS3WriteGetObjectResponse object at 0x10c31bc20&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cfbd400&gt;
 
     def test_write_get_object_response(self, s3):
 &gt;       resp = s3.write_get_object_response(
@@ -2651,8 +2651,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.httpsession.URLLib3Session object at 0x10f989130&gt;
-request = &lt;AWSPreparedRequest stream_output=False, method=POST, url=http://route-placeholder.127.0.0.1:4567/WriteGetObjectRespon...vocation-id': b'd29b1218-f818-48a9-811e-df9082fa2ee7', 'amz-sdk-request': b'attempt=5; max=5', 'Content-Length': '24'}&gt;
+self = &lt;botocore.httpsession.URLLib3Session object at 0x10cfbed50&gt;
+request = &lt;AWSPreparedRequest stream_output=False, method=POST, url=http://route-placeholder.127.0.0.1:4567/WriteGetObjectRespon...vocation-id': b'cc2193b4-4676-491a-ba25-1043a79e6491', 'amz-sdk-request': b'attempt=5; max=5', 'Content-Length': '24'}&gt;
 
     def send(self, request):
         try:
@@ -2703,8 +2703,8 @@ request = &lt;AWSPreparedRequest stream_output=False, method=POST, url=http://ro
 &gt;           raise EndpointConnectionError(endpoint_url=request.url, error=e)
 E           botocore.exceptions.EndpointConnectionError: Could not connect to the endpoint URL: "http://route-placeholder.127.0.0.1:4567/WriteGetObjectResponse"
 
-.venv/lib/python3.12/site-packages/botocore/httpsession.py:506: EndpointConnectionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3RestoreObject" name="test_restore_object_nonexistent_bucket" time="0.005"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3RestoreObject object at 0x10e4c8260&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f71ed50&gt;
+.venv/lib/python3.12/site-packages/botocore/httpsession.py:506: EndpointConnectionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3RestoreObject" name="test_restore_object_nonexistent_bucket" time="0.005"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3RestoreObject object at 0x10c3280e0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d7fc7a0&gt;
 
     def test_restore_object_nonexistent_bucket(self, s3):
         """RestoreObject with nonexistent bucket returns NoSuchBucket."""
@@ -2712,8 +2712,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f71ed50&gt;
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_s3_compat.py:2442: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3GapOps" name="test_rename_object_no_such_bucket" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3GapOps" name="test_select_object_content_no_such_bucket" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3UpdateObjectEncryptionGapOp" name="test_update_object_encryption_no_such_bucket" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_list_objects_v2_prefix" time="0.015" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_list_objects_v2_delimiter" time="0.016" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_list_objects_v2_max_keys" time="0.020"><failure message="assert False is True">self = &lt;tests.compatibility.test_s3_compat.TestS3AdvancedOperations object at 0x10e4c8380&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f594d10&gt;, bucket = 'adv-bucket-45a737f1'
+tests/compatibility/test_s3_compat.py:2442: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3GapOps" name="test_rename_object_no_such_bucket" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3GapOps" name="test_select_object_content_no_such_bucket" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3UpdateObjectEncryptionGapOp" name="test_update_object_encryption_no_such_bucket" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_list_objects_v2_prefix" time="0.016" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_list_objects_v2_delimiter" time="0.017" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_list_objects_v2_max_keys" time="0.018"><failure message="assert False is True">self = &lt;tests.compatibility.test_s3_compat.TestS3AdvancedOperations object at 0x10c3281d0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce757c0&gt;, bucket = 'adv-bucket-7a5e53ce'
 
     def test_list_objects_v2_max_keys(self, s3, bucket):
         for i in range(5):
@@ -2723,8 +2723,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f594d10&gt;, bucket = 'adv-bucket-45a7
 &gt;       assert resp["IsTruncated"] is True
 E       assert False is True
 
-tests/compatibility/test_s3_compat.py:2562: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_list_objects_v2_continuation" time="0.020"><failure message="assert False is True">self = &lt;tests.compatibility.test_s3_compat.TestS3AdvancedOperations object at 0x10e4c86e0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10effed20&gt;, bucket = 'adv-bucket-5c0f61b9'
+tests/compatibility/test_s3_compat.py:2562: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_list_objects_v2_continuation" time="0.019"><failure message="assert False is True">self = &lt;tests.compatibility.test_s3_compat.TestS3AdvancedOperations object at 0x10c328500&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d33ecf0&gt;, bucket = 'adv-bucket-aa378a91'
 
     def test_list_objects_v2_continuation(self, s3, bucket):
         for i in range(5):
@@ -2733,8 +2733,8 @@ s3 = &lt;botocore.client.S3 object at 0x10effed20&gt;, bucket = 'adv-bucket-5c0f
 &gt;       assert resp1["IsTruncated"] is True
 E       assert False is True
 
-tests/compatibility/test_s3_compat.py:2568: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_put_object_content_type" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_put_object_metadata" time="0.012"><failure message="KeyError: 'custom-key'">self = &lt;tests.compatibility.test_s3_compat.TestS3AdvancedOperations object at 0x10e4c8e60&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f1e1520&gt;, bucket = 'adv-bucket-3797ee34'
+tests/compatibility/test_s3_compat.py:2568: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_put_object_content_type" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_put_object_metadata" time="0.011"><failure message="KeyError: 'custom-key'">self = &lt;tests.compatibility.test_s3_compat.TestS3AdvancedOperations object at 0x10c328c80&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce76900&gt;, bucket = 'adv-bucket-c8da3805'
 
     def test_put_object_metadata(self, s3, bucket):
         s3.put_object(
@@ -2745,8 +2745,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f1e1520&gt;, bucket = 'adv-bucket-3797
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'custom-key'
 
-tests/compatibility/test_s3_compat.py:2585: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_copy_object_preserves_metadata" time="0.014" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_object_exists_after_put" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_object_not_found_raises_error" time="0.044" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_put_and_get_large_object" time="0.017" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_put_object_with_storage_class" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_put_bucket_policy" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_delete_bucket_policy" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_head_bucket" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOperations" name="test_head_bucket_nonexistent" time="0.005" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOperations" name="test_put_get_bucket_tagging" time="0.009"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketOperations object at 0x10e4c9af0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f79c110&gt;, bucket = 'bkt-ops-c014c9c8'
+tests/compatibility/test_s3_compat.py:2585: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_copy_object_preserves_metadata" time="0.014" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_object_exists_after_put" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_object_not_found_raises_error" time="0.049" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_put_and_get_large_object" time="0.019" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_put_object_with_storage_class" time="0.014" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_put_bucket_policy" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_delete_bucket_policy" time="0.013" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AdvancedOperations" name="test_head_bucket" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOperations" name="test_head_bucket_nonexistent" time="0.006" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOperations" name="test_put_get_bucket_tagging" time="0.009"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketOperations object at 0x10c3299a0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce2be00&gt;, bucket = 'bkt-ops-3501200d'
 
     def test_put_get_bucket_tagging(self, s3, bucket):
         s3.put_bucket_tagging(
@@ -2764,8 +2764,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f79c110&gt;, bucket = 'bkt-ops-c014c9c
                ^^^^^^^^^^^
 E       KeyError: 'env'
 
-tests/compatibility/test_s3_compat.py:2693: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOperations" name="test_put_get_bucket_lifecycle" time="0.010"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketOperations object at 0x10e4c9250&gt;
-s3 = &lt;botocore.client.S3 object at 0x10efe0140&gt;, bucket = 'bkt-ops-bdbebc32'
+tests/compatibility/test_s3_compat.py:2693: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOperations" name="test_put_get_bucket_lifecycle" time="0.009"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketOperations object at 0x10c329160&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce91df0&gt;, bucket = 'bkt-ops-5ff87d5e'
 
     def test_put_get_bucket_lifecycle(self, s3, bucket):
         s3.put_bucket_lifecycle_configuration(
@@ -2786,8 +2786,8 @@ s3 = &lt;botocore.client.S3 object at 0x10efe0140&gt;, bucket = 'bkt-ops-bdbebc3
                    ^^^^^^^^^^^^^
 E       KeyError: 'Rules'
 
-tests/compatibility/test_s3_compat.py:2711: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOperations" name="test_put_get_bucket_encryption" time="0.009"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketOperations object at 0x10e4c8d10&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f23fda0&gt;, bucket = 'bkt-ops-acd14a8b'
+tests/compatibility/test_s3_compat.py:2711: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOperations" name="test_put_get_bucket_encryption" time="0.008"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketOperations object at 0x10c328a10&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d7fefc0&gt;, bucket = 'bkt-ops-dbda7296'
 
     def test_put_get_bucket_encryption(self, s3, bucket):
         s3.put_bucket_encryption(
@@ -2809,8 +2809,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f23fda0&gt;, bucket = 'bkt-ops-acd14a8
         ]["SSEAlgorithm"]
 E       KeyError: 'Rules'
 
-tests/compatibility/test_s3_compat.py:2728: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOperations" name="test_put_get_bucket_website" time="0.009"><failure message="KeyError: 'IndexDocument'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketOperations object at 0x10e4c86b0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f7da8a0&gt;, bucket = 'bkt-ops-1d3fde9b'
+tests/compatibility/test_s3_compat.py:2728: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketOperations" name="test_put_get_bucket_website" time="0.008"><failure message="KeyError: 'IndexDocument'">self = &lt;tests.compatibility.test_s3_compat.TestS3BucketOperations object at 0x10c3283b0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d0ce9c0&gt;, bucket = 'bkt-ops-44a35b4a'
 
     def test_put_get_bucket_website(self, s3, bucket):
         s3.put_bucket_website(
@@ -2825,8 +2825,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f7da8a0&gt;, bucket = 'bkt-ops-1d3fde9
                ^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'IndexDocument'
 
-tests/compatibility/test_s3_compat.py:2742: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AccelerateConfiguration" name="test_get_bucket_accelerate_default" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AccelerateConfiguration" name="test_put_bucket_accelerate_enabled" time="0.011"><failure message="KeyError: 'Status'">self = &lt;tests.compatibility.test_s3_compat.TestS3AccelerateConfiguration object at 0x10e4cae40&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f6ab800&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:2742: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AccelerateConfiguration" name="test_get_bucket_accelerate_default" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AccelerateConfiguration" name="test_put_bucket_accelerate_enabled" time="0.009"><failure message="KeyError: 'Status'">self = &lt;tests.compatibility.test_s3_compat.TestS3AccelerateConfiguration object at 0x10c32ac00&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d63bbf0&gt;, bucket = 'test-compat-bucket'
 
     def test_put_bucket_accelerate_enabled(self, s3, bucket):
         s3.put_bucket_accelerate_configuration(
@@ -2838,8 +2838,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f6ab800&gt;, bucket = 'test-compat-buc
                ^^^^^^^^^^^^^^
 E       KeyError: 'Status'
 
-tests/compatibility/test_s3_compat.py:2761: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AccelerateConfiguration" name="test_put_bucket_accelerate_suspended" time="0.012"><failure message="KeyError: 'Status'">self = &lt;tests.compatibility.test_s3_compat.TestS3AccelerateConfiguration object at 0x10e4cb260&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f1103e0&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:2761: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AccelerateConfiguration" name="test_put_bucket_accelerate_suspended" time="0.011"><failure message="KeyError: 'Status'">self = &lt;tests.compatibility.test_s3_compat.TestS3AccelerateConfiguration object at 0x10c32b020&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce91190&gt;, bucket = 'test-compat-bucket'
 
     def test_put_bucket_accelerate_suspended(self, s3, bucket):
         s3.put_bucket_accelerate_configuration(
@@ -2855,8 +2855,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f1103e0&gt;, bucket = 'test-compat-buc
                ^^^^^^^^^^^^^^
 E       KeyError: 'Status'
 
-tests/compatibility/test_s3_compat.py:2773: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3DeleteBucketConfigurations" name="test_delete_bucket_lifecycle" time="0.011"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3DeleteBucketConfigurations object at 0x10e4cb710&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f637d70&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:2773: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3DeleteBucketConfigurations" name="test_delete_bucket_lifecycle" time="0.010"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3DeleteBucketConfigurations object at 0x10c32b470&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d86a240&gt;, bucket = 'test-compat-bucket'
 
     def test_delete_bucket_lifecycle(self, s3, bucket):
         s3.put_bucket_lifecycle_configuration(
@@ -2877,8 +2877,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f637d70&gt;, bucket = 'test-compat-buc
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_s3_compat.py:2794: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3DeleteBucketConfigurations" name="test_delete_bucket_website" time="0.011"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3DeleteBucketConfigurations object at 0x10e4cbb30&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f7820c0&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:2794: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3DeleteBucketConfigurations" name="test_delete_bucket_website" time="0.010"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3DeleteBucketConfigurations object at 0x10c32b890&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d830440&gt;, bucket = 'test-compat-bucket'
 
     def test_delete_bucket_website(self, s3, bucket):
         s3.put_bucket_website(
@@ -2892,9 +2892,9 @@ s3 = &lt;botocore.client.S3 object at 0x10f7820c0&gt;, bucket = 'test-compat-buc
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_s3_compat.py:2806: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectLocking" name="test_put_and_get_object_lock_configuration" time="0.012"><failure message="KeyError: 'ObjectLockEnabled'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectLocking object at 0x10e4e8050&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f022f60&gt;
-lock_bucket = 'lock-bucket-85095925'
+tests/compatibility/test_s3_compat.py:2806: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectLocking" name="test_put_and_get_object_lock_configuration" time="0.010"><failure message="KeyError: 'ObjectLockEnabled'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectLocking object at 0x10c32bd70&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cda8dd0&gt;
+lock_bucket = 'lock-bucket-94b4150c'
 
     def test_put_and_get_object_lock_configuration(self, s3, lock_bucket):
         s3.put_object_lock_configuration(
@@ -2906,9 +2906,9 @@ lock_bucket = 'lock-bucket-85095925'
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'ObjectLockEnabled'
 
-tests/compatibility/test_s3_compat.py:2838: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectLocking" name="test_put_object_lock_configuration_with_retention" time="0.010"><failure message="KeyError: 'Rule'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectLocking object at 0x10e4e8470&gt;
-s3 = &lt;botocore.client.S3 object at 0x10ef71610&gt;
-lock_bucket = 'lock-bucket-29977399'
+tests/compatibility/test_s3_compat.py:2838: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectLocking" name="test_put_object_lock_configuration_with_retention" time="0.009"><failure message="KeyError: 'Rule'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectLocking object at 0x10c34c1d0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d6b1fa0&gt;
+lock_bucket = 'lock-bucket-80c57855'
 
     def test_put_object_lock_configuration_with_retention(self, s3, lock_bucket):
         s3.put_object_lock_configuration(
@@ -2928,8 +2928,8 @@ lock_bucket = 'lock-bucket-29977399'
                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Rule'
 
-tests/compatibility/test_s3_compat.py:2854: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectLocking" name="test_put_and_get_object_legal_hold" time="0.015" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketNotificationConfig" name="test_get_bucket_notification_configuration_empty" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketLoggingExtended" name="test_get_bucket_logging_empty" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListBucketConfigurations" name="test_list_bucket_analytics_configurations_empty" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListBucketConfigurations" name="test_list_bucket_metrics_configurations_empty" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListBucketConfigurations" name="test_list_bucket_intelligent_tiering_configurations_empty" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_put_get_analytics_configuration" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_put_get_metrics_configuration" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_put_get_intelligent_tiering" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_put_list_inventory_configuration" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_delete_bucket_analytics_configuration" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_delete_bucket_metrics_configuration" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_delete_bucket_intelligent_tiering" time="0.040" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_delete_bucket_inventory_configuration" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_get_bucket_inventory_configuration_nonexistent" time="0.009"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory object at 0x10e4eaa20&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f24bf50&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:2854: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectLocking" name="test_put_and_get_object_legal_hold" time="0.013" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketNotificationConfig" name="test_get_bucket_notification_configuration_empty" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3BucketLoggingExtended" name="test_get_bucket_logging_empty" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListBucketConfigurations" name="test_list_bucket_analytics_configurations_empty" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListBucketConfigurations" name="test_list_bucket_metrics_configurations_empty" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ListBucketConfigurations" name="test_list_bucket_intelligent_tiering_configurations_empty" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_put_get_analytics_configuration" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_put_get_metrics_configuration" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_put_get_intelligent_tiering" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_put_list_inventory_configuration" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_delete_bucket_analytics_configuration" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_delete_bucket_metrics_configuration" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_delete_bucket_intelligent_tiering" time="0.042" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_delete_bucket_inventory_configuration" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory" name="test_get_bucket_inventory_configuration_nonexistent" time="0.008"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3AnalyticsMetricsInventory object at 0x10c34e780&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d391400&gt;, bucket = 'test-compat-bucket'
 
     def test_get_bucket_inventory_configuration_nonexistent(self, s3, bucket):
         """GetBucketInventoryConfiguration on missing config returns 404."""
@@ -2937,8 +2937,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f24bf50&gt;, bucket = 'test-compat-buc
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_s3_compat.py:3013: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationAndRequestPayment" name="test_put_bucket_request_payment" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationAndRequestPayment" name="test_get_bucket_replication_not_configured" time="0.009"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3ReplicationAndRequestPayment object at 0x10e4cb3b0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10e350170&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:3013: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationAndRequestPayment" name="test_put_bucket_request_payment" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationAndRequestPayment" name="test_get_bucket_replication_not_configured" time="0.010"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3ReplicationAndRequestPayment object at 0x10c32a5a0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cf11520&gt;, bucket = 'test-compat-bucket'
 
     def test_get_bucket_replication_not_configured(self, s3, bucket):
         """GetBucketReplication when not configured returns error."""
@@ -2946,8 +2946,8 @@ s3 = &lt;botocore.client.S3 object at 0x10e350170&gt;, bucket = 'test-compat-buc
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_s3_compat.py:3034: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationAndRequestPayment" name="test_delete_bucket_replication_noop" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationAndRequestPayment" name="test_put_bucket_replication_invalid" time="0.010"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3ReplicationAndRequestPayment object at 0x10e4e99d0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f769880&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:3034: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationAndRequestPayment" name="test_delete_bucket_replication_noop" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationAndRequestPayment" name="test_put_bucket_replication_invalid" time="0.009"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3ReplicationAndRequestPayment object at 0x10c34d8b0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d3d7410&gt;, bucket = 'test-compat-bucket'
 
     def test_put_bucket_replication_invalid(self, s3, bucket):
         """PutBucketReplication with bad config returns 400."""
@@ -2955,8 +2955,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f769880&gt;, bucket = 'test-compat-buc
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_s3_compat.py:3046: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3OwnershipControls" name="test_delete_bucket_ownership_controls" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectRetentionAndTorrent" name="test_put_object_retention_without_lock" time="0.011"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectRetentionAndTorrent object at 0x10e4e81a0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f98b470&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:3046: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3OwnershipControls" name="test_delete_bucket_ownership_controls" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectRetentionAndTorrent" name="test_put_object_retention_without_lock" time="0.012"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectRetentionAndTorrent object at 0x10c34c470&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d833f20&gt;, bucket = 'test-compat-bucket'
 
     def test_put_object_retention_without_lock(self, s3, bucket):
         """PutObjectRetention on non-lock bucket returns error."""
@@ -2965,8 +2965,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f98b470&gt;, bucket = 'test-compat-buc
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_s3_compat.py:3080: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectRetentionAndTorrent" name="test_get_object_retention_not_set" time="8.599"><failure message="AssertionError: assert 'NoSuch' in '500'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectRetentionAndTorrent object at 0x10e4eadb0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10fa5bef0&gt;
+tests/compatibility/test_s3_compat.py:3080: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectRetentionAndTorrent" name="test_get_object_retention_not_set" time="3.119"><failure message="AssertionError: assert 'NoSuch' in '500'">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectRetentionAndTorrent object at 0x10c34eb10&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d85b8c0&gt;
 
     def test_get_object_retention_not_set(self, s3):
         """GetObjectRetention on object without retention returns error."""
@@ -2979,8 +2979,8 @@ s3 = &lt;botocore.client.S3 object at 0x10fa5bef0&gt;
 &gt;           assert "NoSuch" in exc.value.response["Error"]["Code"]
 E           AssertionError: assert 'NoSuch' in '500'
 
-tests/compatibility/test_s3_compat.py:3119: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectRetentionAndTorrent" name="test_restore_object_not_glacier" time="0.013"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectRetentionAndTorrent object at 0x10e4eb1d0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f6346e0&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:3119: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ObjectRetentionAndTorrent" name="test_restore_object_not_glacier" time="0.012"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_s3_compat.TestS3ObjectRetentionAndTorrent object at 0x10c34ef30&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d31c0b0&gt;, bucket = 'test-compat-bucket'
 
     def test_restore_object_not_glacier(self, s3, bucket):
         """RestoreObject on non-Glacier object returns error."""
@@ -2989,8 +2989,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f6346e0&gt;, bucket = 'test-compat-buc
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_s3_compat.py:3126: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3DeprecatedNotification" name="test_put_bucket_notification_deprecated" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3SessionAndSelect" name="test_select_object_content" time="0.013"><failure message="botocore.eventstream.ChecksumMismatch: Checksum mismatch: expected 0x7273696f, calculated 0x62b8354c">self = &lt;tests.compatibility.test_s3_compat.TestS3SessionAndSelect object at 0x10e4ebb90&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f6b8c80&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:3126: Failed</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3DeprecatedNotification" name="test_put_bucket_notification_deprecated" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3SessionAndSelect" name="test_select_object_content" time="0.012"><failure message="botocore.eventstream.ChecksumMismatch: Checksum mismatch: expected 0x7273696f, calculated 0x62b8354c">self = &lt;tests.compatibility.test_s3_compat.TestS3SessionAndSelect object at 0x10c34f8f0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10c2e4ef0&gt;, bucket = 'test-compat-bucket'
 
     def test_select_object_content(self, s3, bucket):
         """SelectObjectContent with CSV input returns results."""
@@ -3036,8 +3036,8 @@ data = b'&lt;?xml ve', checksum = 1920166255, crc = 0
 &gt;           raise ChecksumMismatch(checksum, computed_checksum)
 E           botocore.eventstream.ChecksumMismatch: Checksum mismatch: expected 0x7273696f, calculated 0x62b8354c
 
-.venv/lib/python3.12/site-packages/botocore/eventstream.py:289: ChecksumMismatch</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_get_bucket_abac" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_put_bucket_abac" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_delete_bucket_metadata_config_succeeds" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_delete_bucket_metadata_table_config_succeeds" time="0.010" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_create_bucket_metadata_configuration" time="0.010"><failure message="botocore.exceptions.ClientError: An error occurred (NotImplemented) when calling the CreateBucketMetadataConfiguration operation: The operation  is not implemented">self = &lt;tests.compatibility.test_s3_compat.TestS3AbacAndMetadata object at 0x10e4eb3e0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f79ebd0&gt;, bucket = 'test-compat-bucket'
+.venv/lib/python3.12/site-packages/botocore/eventstream.py:289: ChecksumMismatch</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_get_bucket_abac" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_put_bucket_abac" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_delete_bucket_metadata_config_succeeds" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_delete_bucket_metadata_table_config_succeeds" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_create_bucket_metadata_configuration" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (NotImplemented) when calling the CreateBucketMetadataConfiguration operation: The operation  is not implemented">self = &lt;tests.compatibility.test_s3_compat.TestS3AbacAndMetadata object at 0x10c34f6b0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d810ad0&gt;, bucket = 'test-compat-bucket'
 
     def test_create_bucket_metadata_configuration(self, s3, bucket):
         """CreateBucketMetadataConfiguration returns 200."""
@@ -3061,7 +3061,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f79ebd0&gt;
+self = &lt;botocore.client.S3 object at 0x10d810ad0&gt;
 operation_name = 'CreateBucketMetadataConfiguration'
 api_params = {'Bucket': 'test-compat-bucket', 'MetadataConfiguration': {'InventoryTableConfiguration': {'ConfigurationState': 'ENABLED'}, 'JournalTableConfiguration': {'RecordExpiration': {'Expiration': 'ENABLED'}}}}
 
@@ -3152,8 +3152,8 @@ api_params = {'Bucket': 'test-compat-bucket', 'MetadataConfiguration': {'Invento
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (NotImplemented) when calling the CreateBucketMetadataConfiguration operation: The operation  is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_create_bucket_metadata_table_configuration" time="0.010"><failure message="botocore.exceptions.ClientError: An error occurred (NotImplemented) when calling the CreateBucketMetadataTableConfiguration operation: The operation  is not implemented">self = &lt;tests.compatibility.test_s3_compat.TestS3AbacAndMetadata object at 0x10e4eaba0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f26d850&gt;, bucket = 'test-compat-bucket'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_create_bucket_metadata_table_configuration" time="0.010"><failure message="botocore.exceptions.ClientError: An error occurred (NotImplemented) when calling the CreateBucketMetadataTableConfiguration operation: The operation  is not implemented">self = &lt;tests.compatibility.test_s3_compat.TestS3AbacAndMetadata object at 0x10c34ec60&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d8d2060&gt;, bucket = 'test-compat-bucket'
 
     def test_create_bucket_metadata_table_configuration(self, s3, bucket):
         """CreateBucketMetadataTableConfiguration returns 200."""
@@ -3177,7 +3177,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f26d850&gt;
+self = &lt;botocore.client.S3 object at 0x10d8d2060&gt;
 operation_name = 'CreateBucketMetadataTableConfiguration'
 api_params = {'Bucket': 'test-compat-bucket', 'MetadataTableConfiguration': {'S3TablesDestination': {'TableBucketArn': 'arn:aws:s3tables:us-east-1:123456789012:bucket/test', 'TableName': 'test-table'}}}
 
@@ -3268,8 +3268,8 @@ api_params = {'Bucket': 'test-compat-bucket', 'MetadataTableConfiguration': {'S3
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (NotImplemented) when calling the CreateBucketMetadataTableConfiguration operation: The operation  is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_update_metadata_inventory_table" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_update_metadata_journal_table" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3RenameAndEncryption" name="test_rename_object" time="0.007"><error message="failed on setup with &quot;botocore.errorfactory.NoSuchBucket: An error occurred (NoSuchBucket) when calling the CreateSession operation: The specified bucket does not exist&quot;">self = &lt;tests.compatibility.test_s3_compat.TestS3RenameAndEncryption object at 0x10e4fca70&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f597ce0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_update_metadata_inventory_table" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3AbacAndMetadata" name="test_update_metadata_journal_table" time="0.007" /><testcase classname="tests.compatibility.test_s3_compat.TestS3RenameAndEncryption" name="test_rename_object" time="0.006"><error message="failed on setup with &quot;botocore.errorfactory.NoSuchBucket: An error occurred (NoSuchBucket) when calling the CreateSession operation: The specified bucket does not exist&quot;">self = &lt;tests.compatibility.test_s3_compat.TestS3RenameAndEncryption object at 0x10c328650&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cfbee10&gt;
 
     @pytest.fixture
     def dir_bucket(self, s3):
@@ -3342,9 +3342,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f597ce0&gt;
+self = &lt;botocore.client.S3 object at 0x10cfbee10&gt;
 operation_name = 'CreateSession'
-api_params = {'Bucket': 'compat-ren-ed1097b8--use1-az1--x-s3'}
+api_params = {'Bucket': 'compat-ren-aaf27774--use1-az1--x-s3'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3433,8 +3433,8 @@ api_params = {'Bucket': 'compat-ren-ed1097b8--use1-az1--x-s3'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.NoSuchBucket: An error occurred (NoSuchBucket) when calling the CreateSession operation: The specified bucket does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: NoSuchBucket</error></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3RenameAndEncryption" name="test_update_object_encryption" time="0.012" /><testcase classname="tests.compatibility.test_s3_compat.TestS3DeprecatedLifecycle" name="test_get_bucket_lifecycle_deprecated" time="0.010"><failure message="AssertionError: assert 'Rules' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '135', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': 'fa3abce9-d79b-4e7c-b853-eaefecaf9207', ...}}">self = &lt;tests.compatibility.test_s3_compat.TestS3DeprecatedLifecycle object at 0x10e4fd100&gt;
-s3 = &lt;botocore.client.S3 object at 0x10efe0950&gt;, bucket = 'test-compat-bucket'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: NoSuchBucket</error></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3RenameAndEncryption" name="test_update_object_encryption" time="0.011" /><testcase classname="tests.compatibility.test_s3_compat.TestS3DeprecatedLifecycle" name="test_get_bucket_lifecycle_deprecated" time="0.010"><failure message="AssertionError: assert 'Rules' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '135', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '40731260-9436-44a6-b496-6c0f0ba92be4', ...}}">self = &lt;tests.compatibility.test_s3_compat.TestS3DeprecatedLifecycle object at 0x10c35ce60&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d1ad850&gt;, bucket = 'test-compat-bucket'
 
     def test_get_bucket_lifecycle_deprecated(self, s3, bucket):
         """GetBucketLifecycle (deprecated) returns rules after PutBucketLifecycleConfiguration."""
@@ -3453,10 +3453,10 @@ s3 = &lt;botocore.client.S3 object at 0x10efe0950&gt;, bucket = 'test-compat-buc
         )
         resp = s3.get_bucket_lifecycle(Bucket=bucket)
 &gt;       assert "Rules" in resp
-E       AssertionError: assert 'Rules' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '135', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': 'fa3abce9-d79b-4e7c-b853-eaefecaf9207', ...}}
+E       AssertionError: assert 'Rules' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '135', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '40731260-9436-44a6-b496-6c0f0ba92be4', ...}}
 
-tests/compatibility/test_s3_compat.py:3319: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationLifecycle" name="test_put_get_delete_bucket_replication" time="0.012"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3ReplicationLifecycle object at 0x10e4fd550&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f71e210&gt;
+tests/compatibility/test_s3_compat.py:3319: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationLifecycle" name="test_put_get_delete_bucket_replication" time="0.011"><failure message="KeyError: 'Rules'">self = &lt;tests.compatibility.test_s3_compat.TestS3ReplicationLifecycle object at 0x10c35d280&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce811f0&gt;
 
     def test_put_get_delete_bucket_replication(self, s3):
         """Full replication configuration lifecycle with versioned buckets."""
@@ -3489,8 +3489,8 @@ s3 = &lt;botocore.client.S3 object at 0x10f71e210&gt;
                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'Rules'
 
-tests/compatibility/test_s3_compat.py:3354: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3InventoryGetAfterPut" name="test_get_bucket_inventory_configuration_existing" time="0.012"><failure message="KeyError: 'Id'">self = &lt;tests.compatibility.test_s3_compat.TestS3InventoryGetAfterPut object at 0x10e4fd9d0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10fa38fe0&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:3354: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3InventoryGetAfterPut" name="test_get_bucket_inventory_configuration_existing" time="0.011"><failure message="KeyError: 'Id'">self = &lt;tests.compatibility.test_s3_compat.TestS3InventoryGetAfterPut object at 0x10c35d700&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d7fe4e0&gt;, bucket = 'test-compat-bucket'
 
     def test_get_bucket_inventory_configuration_existing(self, s3, bucket):
         """GetBucketInventoryConfiguration returns the config after put."""
@@ -3515,8 +3515,8 @@ s3 = &lt;botocore.client.S3 object at 0x10fa38fe0&gt;, bucket = 'test-compat-buc
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'Id'
 
-tests/compatibility/test_s3_compat.py:3388: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3NotificationWithTopic" name="test_put_get_notification_configuration_with_topic" time="0.012"><failure message="AssertionError: assert 'TopicConfigurations' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '314', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '0d4f0706-7d57-49fa-9d54-4bfde1df8a34', ...}}">self = &lt;tests.compatibility.test_s3_compat.TestS3NotificationWithTopic object at 0x10e4fde50&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f6c0740&gt;, bucket = 'test-compat-bucket'
+tests/compatibility/test_s3_compat.py:3388: KeyError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3NotificationWithTopic" name="test_put_get_notification_configuration_with_topic" time="0.010"><failure message="AssertionError: assert 'TopicConfigurations' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '314', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '4e3142f5-c4a8-4526-8a5d-daf1936d5f6e', ...}}">self = &lt;tests.compatibility.test_s3_compat.TestS3NotificationWithTopic object at 0x10c35db80&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d864410&gt;, bucket = 'test-compat-bucket'
 
     def test_put_get_notification_configuration_with_topic(self, s3, bucket):
         """PutBucketNotificationConfiguration with TopicConfigurations."""
@@ -3533,10 +3533,10 @@ s3 = &lt;botocore.client.S3 object at 0x10f6c0740&gt;, bucket = 'test-compat-buc
         )
         resp = s3.get_bucket_notification_configuration(Bucket=bucket)
 &gt;       assert "TopicConfigurations" in resp
-E       AssertionError: assert 'TopicConfigurations' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '314', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '0d4f0706-7d57-49fa-9d54-4bfde1df8a34', ...}}
+E       AssertionError: assert 'TopicConfigurations' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '314', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '4e3142f5-c4a8-4526-8a5d-daf1936d5f6e', ...}}
 
-tests/compatibility/test_s3_compat.py:3409: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3LegacyOps" name="test_list_objects_v1" time="0.009" /><testcase classname="tests.compatibility.test_s3_compat.TestS3LegacyOps" name="test_get_bucket_notification" time="0.055" /><testcase classname="tests.compatibility.test_s3_compat.TestS3LegacyOps" name="test_put_bucket_lifecycle_v1" time="0.011"><failure message="AssertionError: assert 'Rules' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '135', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '73e3aae7-16a9-43f6-9704-40e724b749eb', ...}}">self = &lt;tests.compatibility.test_s3_compat.TestS3LegacyOps object at 0x10e4fea50&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f82c6b0&gt;, bucket = 'legacy-test-fec9e922'
+tests/compatibility/test_s3_compat.py:3409: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3LegacyOps" name="test_list_objects_v1" time="0.008" /><testcase classname="tests.compatibility.test_s3_compat.TestS3LegacyOps" name="test_get_bucket_notification" time="0.040" /><testcase classname="tests.compatibility.test_s3_compat.TestS3LegacyOps" name="test_put_bucket_lifecycle_v1" time="0.009"><failure message="AssertionError: assert 'Rules' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '135', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '70f39860-9144-4bc3-923e-3e94d96b1cda', ...}}">self = &lt;tests.compatibility.test_s3_compat.TestS3LegacyOps object at 0x10c35e7b0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce90d40&gt;, bucket = 'legacy-test-d45e51cf'
 
     def test_put_bucket_lifecycle_v1(self, s3, bucket):
         """PutBucketLifecycle (v1) sets lifecycle rules."""
@@ -3555,11 +3555,11 @@ s3 = &lt;botocore.client.S3 object at 0x10f82c6b0&gt;, bucket = 'legacy-test-fec
         )
         resp = s3.get_bucket_lifecycle(Bucket=bucket)
 &gt;       assert "Rules" in resp
-E       AssertionError: assert 'Rules' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '135', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '73e3aae7-16a9-43f6-9704-40e724b749eb', ...}}
+E       AssertionError: assert 'Rules' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '135', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '70f39860-9144-4bc3-923e-3e94d96b1cda', ...}}
 
-tests/compatibility/test_s3_compat.py:3461: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3EventBridgeNotification" name="test_eventbridge_configuration_round_trip" time="0.011"><failure message="AssertionError: assert 'EventBridgeConfiguration' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '318', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': 'cd25a4c0-cd02-4312-b550-925a7d6ae659', ...}}">self = &lt;tests.compatibility.test_s3_compat.TestS3EventBridgeNotification object at 0x10e4e96d0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10efe3e30&gt;
-unique_bucket = 'test-eb-notif-b1ddfc96'
+tests/compatibility/test_s3_compat.py:3461: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3EventBridgeNotification" name="test_eventbridge_configuration_round_trip" time="0.009"><failure message="AssertionError: assert 'EventBridgeConfiguration' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '318', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '41cb3789-c357-4e41-b29f-eac25cc7e5b9', ...}}">self = &lt;tests.compatibility.test_s3_compat.TestS3EventBridgeNotification object at 0x10c34eb40&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce76d80&gt;
+unique_bucket = 'test-eb-notif-396f7f78'
 
     def test_eventbridge_configuration_round_trip(self, s3, unique_bucket):
         """PUT notification config with EventBridgeConfiguration, GET and assert it's preserved."""
@@ -3569,13 +3569,13 @@ unique_bucket = 'test-eb-notif-b1ddfc96'
         )
         resp = s3.get_bucket_notification_configuration(Bucket=unique_bucket)
 &gt;       assert "EventBridgeConfiguration" in resp
-E       AssertionError: assert 'EventBridgeConfiguration' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '318', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': 'cd25a4c0-cd02-4312-b550-925a7d6ae659', ...}}
+E       AssertionError: assert 'EventBridgeConfiguration' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '318', 'content-type': 'application/xml', 'date': 'Sun, 30 Aug...r': 'robotocore', ...}, 'HTTPStatusCode': 200, 'HostId': '', 'RequestId': '41cb3789-c357-4e41-b29f-eac25cc7e5b9', ...}}
 
-tests/compatibility/test_s3_compat.py:3498: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3EventBridgeNotification" name="test_put_object_fires_eventbridge_event" time="0.532"><failure message="assert 0 &gt; 0&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3EventBridgeNotification object at 0x10e4fd640&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f033560&gt;
-sqs = &lt;botocore.client.SQS object at 0x10e327740&gt;
-unique_bucket = 'test-eb-notif-a0b8c504'
-unique_queue = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-eb-q-eb3b7f5f'
+tests/compatibility/test_s3_compat.py:3498: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3EventBridgeNotification" name="test_put_object_fires_eventbridge_event" time="0.527"><failure message="assert 0 &gt; 0&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3EventBridgeNotification object at 0x10c35dc70&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d3907d0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10ce77770&gt;
+unique_bucket = 'test-eb-notif-d347ff9e'
+unique_queue = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-eb-q-45946e14'
 
     def test_put_object_fires_eventbridge_event(self, s3, sqs, unique_bucket, unique_queue):
         """Enable EB notifications, put EB rule targeting SQS, put object, assert event arrives."""
@@ -3604,11 +3604,11 @@ unique_queue = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/12345678901
 E       assert 0 &gt; 0
 E        +  where 0 = len([])
 
-tests/compatibility/test_s3_compat.py:3523: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AdditionalEventTypes" name="test_copy_object_fires_copy_event" time="0.334"><failure message="assert 0 &gt; 0&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3AdditionalEventTypes object at 0x10e4fdfd0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f6a9190&gt;
-sqs = &lt;botocore.client.SQS object at 0x10f6366c0&gt;
-unique_bucket = 'test-evt-c02a4257'
-unique_queue = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-evt-q-0a6658d2'
+tests/compatibility/test_s3_compat.py:3523: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AdditionalEventTypes" name="test_copy_object_fires_copy_event" time="0.336"><failure message="assert 0 &gt; 0&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3AdditionalEventTypes object at 0x10c35ddc0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cf70350&gt;
+sqs = &lt;botocore.client.SQS object at 0x10ce285f0&gt;
+unique_bucket = 'test-evt-055542c7'
+unique_queue = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-evt-q-f8edfc4f'
 
     def test_copy_object_fires_copy_event(self, s3, sqs, unique_bucket, unique_queue):
         """Set SQS notification for s3:ObjectCreated:Copy, copy object, assert eventName is Copy."""
@@ -3636,11 +3636,11 @@ unique_queue = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/12345678901
 E       assert 0 &gt; 0
 E        +  where 0 = len([])
 
-tests/compatibility/test_s3_compat.py:3582: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AdditionalEventTypes" name="test_delete_marker_fires_delete_marker_event" time="0.332"><failure message="assert 0 &gt; 0&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3AdditionalEventTypes object at 0x10e4fd370&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f712f60&gt;
-sqs = &lt;botocore.client.SQS object at 0x10f6c3b90&gt;
-unique_bucket = 'test-evt-9256067f'
-unique_queue = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-evt-q-6ffa6aa1'
+tests/compatibility/test_s3_compat.py:3582: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3AdditionalEventTypes" name="test_delete_marker_fires_delete_marker_event" time="0.320"><failure message="assert 0 &gt; 0&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3AdditionalEventTypes object at 0x10c35d3d0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10ce81460&gt;
+sqs = &lt;botocore.client.SQS object at 0x10d31e690&gt;
+unique_bucket = 'test-evt-883ce9bc'
+unique_queue = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-evt-q-2da08ca3'
 
     def test_delete_marker_fires_delete_marker_event(self, s3, sqs, unique_bucket, unique_queue):
         """Enable versioning, set notification for DeleteMarkerCreated, delete, assert event."""
@@ -3670,9 +3670,9 @@ unique_queue = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/12345678901
 E       assert 0 &gt; 0
 E        +  where 0 = len([])
 
-tests/compatibility/test_s3_compat.py:3610: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationEngine" name="test_put_object_replicates_to_dest_bucket" time="0.521"><failure message="botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the GetObject operation: The specified key does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3ReplicationEngine object at 0x10e4fc9b0&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f15e180&gt;
-src_bucket = 'test-repl-src-d555a396', dest_bucket = 'test-repl-dst-7c330801'
+tests/compatibility/test_s3_compat.py:3610: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationEngine" name="test_put_object_replicates_to_dest_bucket" time="0.524"><failure message="botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the GetObject operation: The specified key does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3ReplicationEngine object at 0x10c35ca10&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cf70f20&gt;
+src_bucket = 'test-repl-src-38d0e19d', dest_bucket = 'test-repl-dst-600fd009'
 
     def test_put_object_replicates_to_dest_bucket(self, s3, src_bucket, dest_bucket):
         """Configure replication, put object, assert it appears in dest bucket."""
@@ -3705,8 +3705,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f15e180&gt;, operation_name = 'GetObject'
-api_params = {'Bucket': 'test-repl-dst-7c330801', 'ChecksumMode': 'ENABLED', 'Key': 'replicated.txt'}
+self = &lt;botocore.client.S3 object at 0x10cf70f20&gt;, operation_name = 'GetObject'
+api_params = {'Bucket': 'test-repl-dst-600fd009', 'ChecksumMode': 'ENABLED', 'Key': 'replicated.txt'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3795,9 +3795,9 @@ api_params = {'Bucket': 'test-repl-dst-7c330801', 'ChecksumMode': 'ENABLED', 'Ke
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the GetObject operation: The specified key does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: NoSuchKey</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationEngine" name="test_replication_respects_prefix_filter" time="0.535"><failure message="botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the GetObject operation: The specified key does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3ReplicationEngine object at 0x10e4fef60&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f212480&gt;
-src_bucket = 'test-repl-src-3f13bdc5', dest_bucket = 'test-repl-dst-31135e43'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: NoSuchKey</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3ReplicationEngine" name="test_replication_respects_prefix_filter" time="0.530"><failure message="botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the GetObject operation: The specified key does not exist">self = &lt;tests.compatibility.test_s3_compat.TestS3ReplicationEngine object at 0x10c35ecf0&gt;
+s3 = &lt;botocore.client.S3 object at 0x10cda8ef0&gt;
+src_bucket = 'test-repl-src-5df774e6', dest_bucket = 'test-repl-dst-4f8ae26b'
 
     def test_replication_respects_prefix_filter(self, s3, src_bucket, dest_bucket):
         """Keys matching prefix get replicated; keys not matching do not."""
@@ -3831,8 +3831,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.S3 object at 0x10f212480&gt;, operation_name = 'GetObject'
-api_params = {'Bucket': 'test-repl-dst-31135e43', 'ChecksumMode': 'ENABLED', 'Key': 'logs/access.log'}
+self = &lt;botocore.client.S3 object at 0x10cda8ef0&gt;, operation_name = 'GetObject'
+api_params = {'Bucket': 'test-repl-dst-4f8ae26b', 'ChecksumMode': 'ENABLED', 'Key': 'logs/access.log'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3921,11 +3921,11 @@ api_params = {'Bucket': 'test-repl-dst-31135e43', 'ChecksumMode': 'ENABLED', 'Ke
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.NoSuchKey: An error occurred (NoSuchKey) when calling the GetObject operation: The specified key does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: NoSuchKey</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3RestoreObjectNotification" name="test_restore_object_fires_restore_event" time="0.535"><failure message="assert 0 &gt; 0&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3RestoreObjectNotification object at 0x10e4ff500&gt;
-s3 = &lt;botocore.client.S3 object at 0x10f23d070&gt;
-sqs = &lt;botocore.client.SQS object at 0x10f7486b0&gt;
-unique_bucket = 'test-restore-notif-cff399f0'
-unique_queue = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-restore-q-eaafe1dc'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: NoSuchKey</failure></testcase><testcase classname="tests.compatibility.test_s3_compat.TestS3RestoreObjectNotification" name="test_restore_object_fires_restore_event" time="0.536"><failure message="assert 0 &gt; 0&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_s3_compat.TestS3RestoreObjectNotification object at 0x10c35f290&gt;
+s3 = &lt;botocore.client.S3 object at 0x10d3997f0&gt;
+sqs = &lt;botocore.client.SQS object at 0x10d8313a0&gt;
+unique_bucket = 'test-restore-notif-2b8ed0f3'
+unique_queue = 'http://sqs.us-east-1.localhost.robotocore.cloud:4566/123456789012/test-restore-q-9ce5448d'
 
     def test_restore_object_fires_restore_event(self, s3, sqs, unique_bucket, unique_queue):
         """Put Glacier object, set SQS notification, restore — assert ObjectRestore:Post arrives."""

@@ -457,8 +457,8 @@ impl SsmHandler {
                 &format!("Parameter {} not found", name)),
         };
         let history = param.history.read();
-        let versions: Vec<Value> = history.iter().map(|v| {
-            json!({
+        let mut versions: Vec<Value> = history.iter().map(|v| {
+            let mut entry = json!({
                 "Name": param.name,
                 "Value": v.value,
                 "Type": param.parameter_type,
@@ -466,9 +466,20 @@ impl SsmHandler {
                 "LastModifiedDate": v.timestamp as f64,
                 "LastModifiedBy": param.last_modified_by,
                 "ARN": format!("arn:aws:ssm:{}:123456789012:parameter/{}", req.region, param.name),
-            })
+            });
+            if !v.label.is_empty() {
+                let labels: Vec<&str> = v.label.split(',').collect();
+                entry["Labels"] = json!(labels);
+            }
+            entry
         }).collect();
-        AwsResponse::json(200, json!({ "Parameters": versions }))
+        let max_results = req.params.get("MaxResults").and_then(|v| v.as_u64()).unwrap_or(10);
+        let mut next_token = Value::Null;
+        if versions.len() > max_results as usize {
+            next_token = json!(format!("offset-{}", max_results));
+            versions.truncate(max_results as usize);
+        }
+        AwsResponse::json(200, json!({ "Parameters": versions, "NextToken": next_token }))
     }
 
     fn list_parameter_versions(&self, req: &AwsRequest) -> AwsResponse {

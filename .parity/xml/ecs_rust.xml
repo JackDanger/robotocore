@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="12" failures="64" skipped="0" tests="94" time="2.043" timestamp="2026-08-30T02:00:34.148641-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_create_cluster" time="0.080" /><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_describe_clusters" time="0.006" /><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_list_clusters" time="0.006" /><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_delete_cluster" time="0.006" /><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_register_task_definition" time="0.005"><failure message="KeyError: 'taskDefinition'">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10dde4e60&gt;
-ecs = &lt;botocore.client.ECS object at 0x10d986ff0&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="12" failures="64" skipped="0" tests="94" time="1.870" timestamp="2026-08-30T02:43:36.292035-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_create_cluster" time="0.074" /><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_describe_clusters" time="0.006" /><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_list_clusters" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestClusterOperations" name="test_delete_cluster" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_register_task_definition" time="0.004"><failure message="KeyError: 'taskDefinition'">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e14ce00&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ea6fef0&gt;
 
     def test_register_task_definition(self, ecs):
         family = _unique("task-fam")
@@ -17,8 +17,8 @@ ecs = &lt;botocore.client.ECS object at 0x10d986ff0&gt;
              ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:72: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_describe_task_definition" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10dde5220&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e6a5fd0&gt;
+tests/compatibility/test_ecs_compat.py:72: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_describe_task_definition" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e14d1c0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ea09be0&gt;
 
     def test_describe_task_definition(self, ecs):
         family = _unique("desc-td")
@@ -46,9 +46,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10e6a5fd0&gt;
+self = &lt;botocore.client.ECS object at 0x10ea09be0&gt;
 operation_name = 'DescribeTaskDefinition'
-api_params = {'taskDefinition': 'desc-td-2d804f49:1'}
+api_params = {'taskDefinition': 'desc-td-ea391b2e:1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -135,14 +135,14 @@ api_params = {'taskDefinition': 'desc-td-2d804f49:1'}
             ) or error_info.get("Code")
             error_class = self.exceptions.from_code(error_code)
 &gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeTaskDefinition operation: Task definition desc-td-2d804f49:1 not found
+E           botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeTaskDefinition operation: Task definition desc-td-ea391b2e:1 not found
 
 .venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10dde5220&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e6a5fd0&gt;
+self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e14d1c0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ea09be0&gt;
 
     def test_describe_task_definition(self, ecs):
         family = _unique("desc-td")
@@ -172,9 +172,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10e6a5fd0&gt;
+self = &lt;botocore.client.ECS object at 0x10ea09be0&gt;
 operation_name = 'DeregisterTaskDefinition'
-api_params = {'taskDefinition': 'desc-td-2d804f49:1'}
+api_params = {'taskDefinition': 'desc-td-ea391b2e:1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -263,8 +263,8 @@ api_params = {'taskDefinition': 'desc-td-2d804f49:1'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_list_task_definitions" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10dde55e0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e73d5b0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_list_task_definitions" time="0.010"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e14d580&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ea9a390&gt;
 
     def test_list_task_definitions(self, ecs):
         family = _unique("list-td")
@@ -288,8 +288,8 @@ tests/compatibility/test_ecs_compat.py:109: AssertionError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10dde55e0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e73d5b0&gt;
+self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e14d580&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ea9a390&gt;
 
     def test_list_task_definitions(self, ecs):
         family = _unique("list-td")
@@ -319,9 +319,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10e73d5b0&gt;
+self = &lt;botocore.client.ECS object at 0x10ea9a390&gt;
 operation_name = 'DeregisterTaskDefinition'
-api_params = {'taskDefinition': 'list-td-ca2d9aa7:1'}
+api_params = {'taskDefinition': 'list-td-6b69563f:1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -410,8 +410,8 @@ api_params = {'taskDefinition': 'list-td-ca2d9aa7:1'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_task_definition_revisions" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10dde59a0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10d986ff0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_task_definition_revisions" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e14d940&gt;
+ecs = &lt;botocore.client.ECS object at 0x10dbc6690&gt;
 
     def test_task_definition_revisions(self, ecs):
         family = _unique("rev-td")
@@ -437,9 +437,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10d986ff0&gt;
+self = &lt;botocore.client.ECS object at 0x10dbc6690&gt;
 operation_name = 'DescribeTaskDefinition'
-api_params = {'taskDefinition': 'rev-td-3294d105:2'}
+api_params = {'taskDefinition': 'rev-td-5aa8965c:2'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -526,14 +526,14 @@ api_params = {'taskDefinition': 'rev-td-3294d105:2'}
             ) or error_info.get("Code")
             error_class = self.exceptions.from_code(error_code)
 &gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeTaskDefinition operation: Task definition rev-td-3294d105:2 not found
+E           botocore.exceptions.ClientError: An error occurred (400) when calling the DescribeTaskDefinition operation: Task definition rev-td-5aa8965c:2 not found
 
 .venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10dde59a0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10d986ff0&gt;
+self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e14d940&gt;
+ecs = &lt;botocore.client.ECS object at 0x10dbc6690&gt;
 
     def test_task_definition_revisions(self, ecs):
         family = _unique("rev-td")
@@ -561,9 +561,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10d986ff0&gt;
+self = &lt;botocore.client.ECS object at 0x10dbc6690&gt;
 operation_name = 'DeregisterTaskDefinition'
-api_params = {'taskDefinition': 'rev-td-3294d105:1'}
+api_params = {'taskDefinition': 'rev-td-5aa8965c:1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -652,8 +652,8 @@ api_params = {'taskDefinition': 'rev-td-3294d105:1'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_list_task_definition_families" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10dde5d60&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e6d2cf0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskDefinitions" name="test_list_task_definition_families" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e14dd00&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ea36c60&gt;
 
     def test_list_task_definition_families(self, ecs):
         family = _unique("fam-list")
@@ -671,8 +671,8 @@ tests/compatibility/test_ecs_compat.py:138: KeyError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10dde5d60&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e6d2cf0&gt;
+self = &lt;tests.compatibility.test_ecs_compat.TestTaskDefinitions object at 0x10e14dd00&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ea36c60&gt;
 
     def test_list_task_definition_families(self, ecs):
         family = _unique("fam-list")
@@ -696,9 +696,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10e6d2cf0&gt;
+self = &lt;botocore.client.ECS object at 0x10ea36c60&gt;
 operation_name = 'DeregisterTaskDefinition'
-api_params = {'taskDefinition': 'fam-list-de511453:1'}
+api_params = {'taskDefinition': 'fam-list-642eb21c:1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -787,8 +787,8 @@ api_params = {'taskDefinition': 'fam-list-de511453:1'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_create_service" time="0.007"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10dde62d0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7a3b60&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_create_service" time="0.007"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10e14dee0&gt;
+ecs = &lt;botocore.client.ECS object at 0x109f2b050&gt;
 
     @pytest.fixture
     def task_def(self, ecs):
@@ -801,8 +801,8 @@ ecs = &lt;botocore.client.ECS object at 0x10e7a3b60&gt;
               ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:158: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_describe_services" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10dde66c0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7bdbe0&gt;
+tests/compatibility/test_ecs_compat.py:158: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_describe_services" time="0.007"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10e14e630&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eb81af0&gt;
 
     @pytest.fixture
     def task_def(self, ecs):
@@ -815,8 +815,8 @@ ecs = &lt;botocore.client.ECS object at 0x10e7bdbe0&gt;
               ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:158: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_list_services" time="0.007"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10dde6ab0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb3c320&gt;
+tests/compatibility/test_ecs_compat.py:158: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_list_services" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10e14ea20&gt;
+ecs = &lt;botocore.client.ECS object at 0x10efaccb0&gt;
 
     @pytest.fixture
     def task_def(self, ecs):
@@ -829,8 +829,8 @@ ecs = &lt;botocore.client.ECS object at 0x10eb3c320&gt;
               ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:158: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_update_service" time="0.007"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10dde6ed0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ca17a40&gt;
+tests/compatibility/test_ecs_compat.py:158: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_update_service" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10e14ee40&gt;
+ecs = &lt;botocore.client.ECS object at 0x10e029b20&gt;
 
     @pytest.fixture
     def task_def(self, ecs):
@@ -843,8 +843,8 @@ ecs = &lt;botocore.client.ECS object at 0x10ca17a40&gt;
               ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:158: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_tag_resource" time="0.006"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10dde72c0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7bd310&gt;
+tests/compatibility/test_ecs_compat.py:158: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_tag_resource" time="0.006"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10e14f230&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eb811f0&gt;
 
     def test_tag_resource(self, ecs):
         cluster_name = _unique("tag-cluster")
@@ -885,8 +885,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10e83f290&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '2235a587-c5c9-4ff7-a5a5-3cca8c0ae5b1', 'server': '...re-request-id': '20c8d5e5-c8c1-47bd-8f42-d502981b6a62', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 09:00:34 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10ebe3a70&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '970083cb-c7e5-4e95-959d-9bb6685a800b', 'server': '...re-request-id': 'e4b92dbc-7a6d-41a7-b9c6-fa2de2f1c70d', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 09:43:36 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -896,8 +896,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '22
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_untag_resource" time="0.006"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10c2ff590&gt;
-ecs = &lt;botocore.client.ECS object at 0x10c484d10&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestServices" name="test_untag_resource" time="0.006"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_ecs_compat.TestServices object at 0x10cab6240&gt;
+ecs = &lt;botocore.client.ECS object at 0x10e14f9b0&gt;
 
     def test_untag_resource(self, ecs):
         cluster_name = _unique("untag-cluster")
@@ -935,8 +935,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10e718200&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '871b2084-b02d-4b21-ba22-a6992bc6de37', 'server': '...re-request-id': '6c989048-ab76-4144-be7b-9921a863a543', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 09:00:34 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10ea6ee40&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'server': 'robotocore', 'x-amzn-requestid': '3b430e9b-4cd0-4e58-8330-ba...re-request-id': 'f1edbae3-6c50-45bb-93b2-a7fb468ec633', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 09:43:36 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -946,8 +946,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '87
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_list_clusters" time="0.006" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_describe_clusters" time="0.006" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_create_cluster_with_tags" time="0.006"><failure message="AssertionError: assert None == 'staging'&#10; +  where None = &lt;built-in method get of dict object at 0x10ec13000&gt;('env')&#10; +    where &lt;built-in method get of dict object at 0x10ec13000&gt; = {}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10dde5d30&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb4fce0&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_list_clusters" time="0.006" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_describe_clusters" time="0.006" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_create_cluster_with_tags" time="0.005"><failure message="AssertionError: assert None == 'staging'&#10; +  where None = &lt;built-in method get of dict object at 0x10ec88300&gt;('env')&#10; +    where &lt;built-in method get of dict object at 0x10ec88300&gt; = {}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10e14daf0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef85400&gt;
 
     def test_create_cluster_with_tags(self, ecs):
         name = _unique("tagged-cluster")
@@ -959,11 +959,11 @@ ecs = &lt;botocore.client.ECS object at 0x10eb4fce0&gt;
             tags = {t["key"]: t["value"] for t in resp["cluster"].get("tags", [])}
 &gt;           assert tags.get("env") == "staging"
 E           AssertionError: assert None == 'staging'
-E            +  where None = &lt;built-in method get of dict object at 0x10ec13000&gt;('env')
-E            +    where &lt;built-in method get of dict object at 0x10ec13000&gt; = {}.get
+E            +  where None = &lt;built-in method get of dict object at 0x10ec88300&gt;('env')
+E            +    where &lt;built-in method get of dict object at 0x10ec88300&gt; = {}.get
 
-tests/compatibility/test_ecs_compat.py:281: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_register_deregister_task_definition" time="0.004"><failure message="KeyError: 'taskDefinition'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10dde4fb0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb4e2d0&gt;
+tests/compatibility/test_ecs_compat.py:281: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_register_deregister_task_definition" time="0.004"><failure message="KeyError: 'taskDefinition'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10e14d1f0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eb83050&gt;
 
     def test_register_deregister_task_definition(self, ecs):
         import uuid
@@ -984,8 +984,8 @@ ecs = &lt;botocore.client.ECS object at 0x10eb4e2d0&gt;
                  ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:300: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_list_task_definitions" time="0.005"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10dde47a0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ea8d2b0&gt;
+tests/compatibility/test_ecs_compat.py:300: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_list_task_definitions" time="0.005"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10e14c830&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef72270&gt;
 
     def test_list_task_definitions(self, ecs):
         import uuid
@@ -1000,16 +1000,16 @@ ecs = &lt;botocore.client.ECS object at 0x10ea8d2b0&gt;
 E       assert 0 &gt;= 1
 E        +  where 0 = len([])
 
-tests/compatibility/test_ecs_compat.py:320: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_list_task_definition_families" time="0.004"><failure message="AssertionError: assert 'families' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '29', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '66f8b28f-819c-4b04-b5da-29f072b76d0c', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10dde7980&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ea8fef0&gt;
+tests/compatibility/test_ecs_compat.py:320: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_list_task_definition_families" time="0.003"><failure message="AssertionError: assert 'families' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '29', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e6332364-f60b-4582-8efc-30c311185da0', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10e14f8c0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef73860&gt;
 
     def test_list_task_definition_families(self, ecs):
         resp = ecs.list_task_definition_families()
 &gt;       assert "families" in resp
-E       AssertionError: assert 'families' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '29', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '66f8b28f-819c-4b04-b5da-29f072b76d0c', 'RetryAttempts': 0}}
+E       AssertionError: assert 'families' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '29', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e6332364-f60b-4582-8efc-30c311185da0', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:325: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_create_cluster_with_settings" time="0.006"><failure message="AssertionError: assert None == 'enabled'&#10; +  where None = &lt;built-in method get of dict object at 0x10e99ae40&gt;('containerInsights')&#10; +    where &lt;built-in method get of dict object at 0x10e99ae40&gt; = {}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10dde7d70&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb34dd0&gt;
+tests/compatibility/test_ecs_compat.py:325: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_create_cluster_with_settings" time="0.005"><failure message="AssertionError: assert None == 'enabled'&#10; +  where None = &lt;built-in method get of dict object at 0x10edd7040&gt;('containerInsights')&#10; +    where &lt;built-in method get of dict object at 0x10edd7040&gt; = {}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10e14fcb0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef45010&gt;
 
     def test_create_cluster_with_settings(self, ecs):
         name = _unique("settings-cluster")
@@ -1021,11 +1021,11 @@ ecs = &lt;botocore.client.ECS object at 0x10eb34dd0&gt;
             settings = {s["name"]: s["value"] for s in resp["cluster"].get("settings", [])}
 &gt;           assert settings.get("containerInsights") == "enabled"
 E           AssertionError: assert None == 'enabled'
-E            +  where None = &lt;built-in method get of dict object at 0x10e99ae40&gt;('containerInsights')
-E            +    where &lt;built-in method get of dict object at 0x10e99ae40&gt; = {}.get
+E            +  where None = &lt;built-in method get of dict object at 0x10edd7040&gt;('containerInsights')
+E            +    where &lt;built-in method get of dict object at 0x10edd7040&gt; = {}.get
 
-tests/compatibility/test_ecs_compat.py:335: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_put_cluster_capacity_providers" time="0.008"><failure message="AssertionError: assert 'FARGATE' in []&#10; +  where [] = &lt;built-in method get of dict object at 0x10e99a5c0&gt;('capacityProviders', [])&#10; +    where &lt;built-in method get of dict object at 0x10e99a5c0&gt; = {'activeServicesCount': 0, 'clusterArn': 'arn:aws:ecs:us-east-1:123456789012:cluster/cap-cluster-90af1235', 'clusterName': 'cap-cluster-90af1235', 'pendingTasksCount': 0, ...}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10de0c1a0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb4fe30&gt;
+tests/compatibility/test_ecs_compat.py:335: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtended" name="test_put_cluster_capacity_providers" time="0.007"><failure message="AssertionError: assert 'FARGATE' in []&#10; +  where [] = &lt;built-in method get of dict object at 0x10edd5900&gt;('capacityProviders', [])&#10; +    where &lt;built-in method get of dict object at 0x10edd5900&gt; = {'activeServicesCount': 0, 'clusterArn': 'arn:aws:ecs:us-east-1:123456789012:cluster/cap-cluster-42d57edd', 'clusterName': 'cap-cluster-42d57edd', 'pendingTasksCount': 0, ...}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtended object at 0x10e1700e0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef9aa50&gt;
 
     def test_put_cluster_capacity_providers(self, ecs):
         name = _unique("cap-cluster")
@@ -1040,11 +1040,11 @@ ecs = &lt;botocore.client.ECS object at 0x10eb4fe30&gt;
             cluster = desc["clusters"][0]
 &gt;           assert "FARGATE" in cluster.get("capacityProviders", [])
 E           AssertionError: assert 'FARGATE' in []
-E            +  where [] = &lt;built-in method get of dict object at 0x10e99a5c0&gt;('capacityProviders', [])
-E            +    where &lt;built-in method get of dict object at 0x10e99a5c0&gt; = {'activeServicesCount': 0, 'clusterArn': 'arn:aws:ecs:us-east-1:123456789012:cluster/cap-cluster-90af1235', 'clusterName': 'cap-cluster-90af1235', 'pendingTasksCount': 0, ...}.get
+E            +  where [] = &lt;built-in method get of dict object at 0x10edd5900&gt;('capacityProviders', [])
+E            +    where &lt;built-in method get of dict object at 0x10edd5900&gt; = {'activeServicesCount': 0, 'clusterArn': 'arn:aws:ecs:us-east-1:123456789012:cluster/cap-cluster-42d57edd', 'clusterName': 'cap-cluster-42d57edd', 'pendingTasksCount': 0, ...}.get
 
-tests/compatibility/test_ecs_compat.py:350: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_cluster_has_arn" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_cluster_status_active" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_cluster_registered_count_zero" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_delete_cluster_returns_inactive" time="0.006"><failure message="AssertionError: assert 'ACTIVE' == 'INACTIVE'&#10;  &#10;  - INACTIVE&#10;  ? --&#10;  + ACTIVE">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10de0d1f0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e9fe570&gt;
+tests/compatibility/test_ecs_compat.py:350: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_cluster_has_arn" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_cluster_status_active" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_cluster_registered_count_zero" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_delete_cluster_returns_inactive" time="0.005"><failure message="AssertionError: assert 'ACTIVE' == 'INACTIVE'&#10;  &#10;  - INACTIVE&#10;  ? --&#10;  + ACTIVE">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e171130&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecde6c0&gt;
 
     def test_delete_cluster_returns_inactive(self, ecs):
         name = _unique("del-cluster")
@@ -1057,19 +1057,19 @@ E         - INACTIVE
 E         ? --
 E         + ACTIVE
 
-tests/compatibility/test_ecs_compat.py:389: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_describe_nonexistent_cluster" time="0.004"><failure message="AssertionError: assert 0 &gt;= 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10ea0f400&gt;('failures', [])&#10; +      where &lt;built-in method get of dict object at 0x10ea0f400&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '146', 'content-type': 'application/x-amz-json-1.0', 'date': '...:aws:ecs:us-east-1:123456789012:cluster/nonexist-844ec093', 'clusterName': 'nonexist-844ec093', 'status': 'INACTIVE'}]}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10de0d5e0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb4f710&gt;
+tests/compatibility/test_ecs_compat.py:389: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_describe_nonexistent_cluster" time="0.004"><failure message="AssertionError: assert 0 &gt;= 1&#10; +  where 0 = len([])&#10; +    where [] = &lt;built-in method get of dict object at 0x10edd67c0&gt;('failures', [])&#10; +      where &lt;built-in method get of dict object at 0x10edd67c0&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '146', 'content-type': 'application/x-amz-json-1.0', 'date': '...:aws:ecs:us-east-1:123456789012:cluster/nonexist-1679189f', 'clusterName': 'nonexist-1679189f', 'status': 'INACTIVE'}]}.get">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e171520&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eca2990&gt;
 
     def test_describe_nonexistent_cluster(self, ecs):
         resp = ecs.describe_clusters(clusters=[_unique("nonexist")])
 &gt;       assert len(resp.get("failures", [])) &gt;= 1
 E       AssertionError: assert 0 &gt;= 1
 E        +  where 0 = len([])
-E        +    where [] = &lt;built-in method get of dict object at 0x10ea0f400&gt;('failures', [])
-E        +      where &lt;built-in method get of dict object at 0x10ea0f400&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '146', 'content-type': 'application/x-amz-json-1.0', 'date': '...:aws:ecs:us-east-1:123456789012:cluster/nonexist-844ec093', 'clusterName': 'nonexist-844ec093', 'status': 'INACTIVE'}]}.get
+E        +    where [] = &lt;built-in method get of dict object at 0x10edd67c0&gt;('failures', [])
+E        +      where &lt;built-in method get of dict object at 0x10edd67c0&gt; = {'ResponseMetadata': {'HTTPHeaders': {'content-length': '146', 'content-type': 'application/x-amz-json-1.0', 'date': '...:aws:ecs:us-east-1:123456789012:cluster/nonexist-1679189f', 'clusterName': 'nonexist-1679189f', 'status': 'INACTIVE'}]}.get
 
-tests/compatibility/test_ecs_compat.py:393: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_has_arn" time="0.004"><failure message="KeyError: 'taskDefinition'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10de0d9d0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb47c20&gt;
+tests/compatibility/test_ecs_compat.py:393: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_has_arn" time="0.004"><failure message="KeyError: 'taskDefinition'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e171910&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef45b20&gt;
 
     def test_task_definition_has_arn(self, ecs):
         family = _unique("td-arn")
@@ -1087,8 +1087,8 @@ ecs = &lt;botocore.client.ECS object at 0x10eb47c20&gt;
                                       ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:407: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_status_active" time="0.004"><failure message="KeyError: 'taskDefinition'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10dde77a0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ea8d7f0&gt;
+tests/compatibility/test_ecs_compat.py:407: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_status_active" time="0.004"><failure message="KeyError: 'taskDefinition'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e14f6e0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef73b00&gt;
 
     def test_task_definition_status_active(self, ecs):
         family = _unique("td-status")
@@ -1106,8 +1106,8 @@ ecs = &lt;botocore.client.ECS object at 0x10ea8d7f0&gt;
                ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:423: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_deregister_task_definition" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10dde56a0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10dd9ff80&gt;
+tests/compatibility/test_ecs_compat.py:423: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_deregister_task_definition" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e14d670&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eb82fc0&gt;
 
     def test_deregister_task_definition(self, ecs):
         family = _unique("td-dereg")
@@ -1134,9 +1134,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10dd9ff80&gt;
+self = &lt;botocore.client.ECS object at 0x10eb82fc0&gt;
 operation_name = 'DeregisterTaskDefinition'
-api_params = {'taskDefinition': 'td-dereg-d5745138:1'}
+api_params = {'taskDefinition': 'td-dereg-0bcb667a:1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1225,8 +1225,8 @@ api_params = {'taskDefinition': 'td-dereg-d5745138:1'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_cpu_and_memory" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10dde6b70&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7bea20&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_cpu_and_memory" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e14eb40&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecdc6e0&gt;
 
     def test_task_definition_with_cpu_and_memory(self, ecs):
         family = _unique("td-res")
@@ -1250,8 +1250,8 @@ tests/compatibility/test_ecs_compat.py:455: KeyError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10dde6b70&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7bea20&gt;
+self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e14eb40&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecdc6e0&gt;
 
     def test_task_definition_with_cpu_and_memory(self, ecs):
         family = _unique("td-res")
@@ -1283,9 +1283,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10e7bea20&gt;
+self = &lt;botocore.client.ECS object at 0x10ecdc6e0&gt;
 operation_name = 'DeregisterTaskDefinition'
-api_params = {'taskDefinition': 'td-res-1126ba05:1'}
+api_params = {'taskDefinition': 'td-res-6f917c7b:1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1374,8 +1374,8 @@ api_params = {'taskDefinition': 'td-res-1126ba05:1'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_port_mappings" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10de0daf0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e9b63c0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_port_mappings" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e171a30&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ec1a6f0&gt;
 
     def test_task_definition_with_port_mappings(self, ecs):
         family = _unique("td-ports")
@@ -1402,8 +1402,8 @@ tests/compatibility/test_ecs_compat.py:478: KeyError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10de0daf0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e9b63c0&gt;
+self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e171a30&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ec1a6f0&gt;
 
     def test_task_definition_with_port_mappings(self, ecs):
         family = _unique("td-ports")
@@ -1439,9 +1439,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10e9b63c0&gt;
+self = &lt;botocore.client.ECS object at 0x10ec1a6f0&gt;
 operation_name = 'DeregisterTaskDefinition'
-api_params = {'taskDefinition': 'td-ports-eb80f173:1'}
+api_params = {'taskDefinition': 'td-ports-afd1e670:1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1530,8 +1530,8 @@ api_params = {'taskDefinition': 'td-ports-eb80f173:1'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_environment" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10de0d010&gt;
-ecs = &lt;botocore.client.ECS object at 0x10dde4a40&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_environment" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e170f50&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecdd370&gt;
 
     def test_task_definition_with_environment(self, ecs):
         family = _unique("td-env")
@@ -1558,8 +1558,8 @@ tests/compatibility/test_ecs_compat.py:502: KeyError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10de0d010&gt;
-ecs = &lt;botocore.client.ECS object at 0x10dde4a40&gt;
+self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e170f50&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecdd370&gt;
 
     def test_task_definition_with_environment(self, ecs):
         family = _unique("td-env")
@@ -1595,9 +1595,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10dde4a40&gt;
+self = &lt;botocore.client.ECS object at 0x10ecdd370&gt;
 operation_name = 'DeregisterTaskDefinition'
-api_params = {'taskDefinition': 'td-env-ec04c8d3:1'}
+api_params = {'taskDefinition': 'td-env-55601099:1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1686,8 +1686,8 @@ api_params = {'taskDefinition': 'td-env-ec04c8d3:1'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_multiple_containers" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10de0c7a0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ea27ef0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_with_multiple_containers" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e1706e0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef99790&gt;
 
     def test_task_definition_with_multiple_containers(self, ecs):
         family = _unique("td-multi")
@@ -1707,8 +1707,8 @@ tests/compatibility/test_ecs_compat.py:519: KeyError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10de0c7a0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ea27ef0&gt;
+self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e1706e0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef99790&gt;
 
     def test_task_definition_with_multiple_containers(self, ecs):
         family = _unique("td-multi")
@@ -1737,9 +1737,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ea27ef0&gt;
+self = &lt;botocore.client.ECS object at 0x10ef99790&gt;
 operation_name = 'DeregisterTaskDefinition'
-api_params = {'taskDefinition': 'td-multi-ed415478:1'}
+api_params = {'taskDefinition': 'td-multi-adbaea6d:1'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -1828,8 +1828,8 @@ api_params = {'taskDefinition': 'td-multi-ed415478:1'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeregisterTaskDefinition operation: The operation DeregisterTaskDefinition is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_revision_increments" time="0.005"><failure message="KeyError: 'taskDefinition'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10de0db20&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eac2930&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_task_definition_revision_increments" time="0.005"><failure message="KeyError: 'taskDefinition'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e171a60&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ec1ae70&gt;
 
     def test_task_definition_revision_increments(self, ecs):
         family = _unique("td-rev")
@@ -1845,8 +1845,8 @@ ecs = &lt;botocore.client.ECS object at 0x10eac2930&gt;
                ^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:536: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_list_tags_for_cluster" time="0.007"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10de0df10&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7e42f0&gt;
+tests/compatibility/test_ecs_compat.py:536: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_list_tags_for_cluster" time="0.005"><failure message="KeyError: 'env'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e171e50&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef69b50&gt;
 
     def test_list_tags_for_cluster(self, ecs):
         name = _unique("tag-cluster")
@@ -1862,8 +1862,8 @@ ecs = &lt;botocore.client.ECS object at 0x10e7e42f0&gt;
                    ^^^^^^^^^^^^^^
 E           KeyError: 'env'
 
-tests/compatibility/test_ecs_compat.py:551: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_tag_and_untag_cluster" time="0.007"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10de0e300&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ea25010&gt;
+tests/compatibility/test_ecs_compat.py:551: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExtendedV2" name="test_tag_and_untag_cluster" time="0.006"><failure message="AttributeError: 'NoneType' object has no attribute 'setdefault'">self = &lt;tests.compatibility.test_ecs_compat.TestECSExtendedV2 object at 0x10e172240&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ebb2570&gt;
 
     def test_tag_and_untag_cluster(self, ecs):
         name = _unique("tagop-cluster")
@@ -1904,8 +1904,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     self._inject_response_metadata(parsed, response['headers'])
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.parsers.JSONParser object at 0x10e83cb00&gt;, parsed = None
-headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '5f9364ef-84bc-482d-8420-0971cf8130c9', 'server': '...re-request-id': 'fb205176-8dea-4c52-8446-243bb3a8d896', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 09:00:35 GMT'}
+self = &lt;botocore.parsers.JSONParser object at 0x10ea340e0&gt;, parsed = None
+headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '95556067-e683-4786-9449-6b711c85f320', 'server': '...re-request-id': '26d00255-5a99-40cd-9322-5e8628963601', 'content-length': '4', 'date': 'Sun, 30 Aug 2026 09:43:37 GMT'}
 
     def _inject_response_metadata(self, parsed, headers):
         if 'x-amzn-requestid' in headers:
@@ -1915,8 +1915,8 @@ headers = {'content-type': 'application/x-amz-json-1.0', 'x-amzn-requestid': '5f
             ]
 E           AttributeError: 'NoneType' object has no attribute 'setdefault'
 
-.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_run_task" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10de0e4e0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eac3920&gt;
+.venv/lib/python3.12/site-packages/botocore/parsers.py:765: AttributeError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_run_task" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10e1727e0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef729c0&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -1929,8 +1929,8 @@ ecs = &lt;botocore.client.ECS object at 0x10eac3920&gt;
               ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:592: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_run_task_with_count" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10de0ecc0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7e7b00&gt;
+tests/compatibility/test_ecs_compat.py:592: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_run_task_with_count" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10e172c30&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef6aa80&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -1943,8 +1943,8 @@ ecs = &lt;botocore.client.ECS object at 0x10e7e7b00&gt;
               ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:592: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_stop_task" time="0.007"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10de0f110&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eac0fe0&gt;
+tests/compatibility/test_ecs_compat.py:592: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_stop_task" time="0.007"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10e173080&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ea35370&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -1957,8 +1957,8 @@ ecs = &lt;botocore.client.ECS object at 0x10eac0fe0&gt;
               ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:592: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_describe_tasks" time="0.007"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10de0f560&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e83fef0&gt;
+tests/compatibility/test_ecs_compat.py:592: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_describe_tasks" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10e1734d0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ec193d0&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -1971,8 +1971,8 @@ ecs = &lt;botocore.client.ECS object at 0x10e83fef0&gt;
               ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:592: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_start_task_nonexistent_cluster" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10de0f950&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e718140&gt;
+tests/compatibility/test_ecs_compat.py:592: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskOperations" name="test_start_task_nonexistent_cluster" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestTaskOperations object at 0x10e1738c0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef47230&gt;
 
     def test_start_task_nonexistent_cluster(self, ecs):
         from botocore.exceptions import ClientError
@@ -1989,26 +1989,26 @@ E
 E         - ClusterNotFoundException
 E         + 400
 
-tests/compatibility/test_ecs_compat.py:630: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_discover_poll_endpoint" time="0.005"><failure message="AssertionError: assert 'endpoint' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '27', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '721f7dc9-6b07-48e8-a062-c2f8f43e54c3', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestEcsAutoCoverage object at 0x10dde68a0&gt;
-client = &lt;botocore.client.ECS object at 0x10e6a6390&gt;
+tests/compatibility/test_ecs_compat.py:630: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_discover_poll_endpoint" time="0.004"><failure message="AssertionError: assert 'endpoint' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '27', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '08cf15dc-6063-4f70-b274-0d178f7ae613', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestEcsAutoCoverage object at 0x10e14ea50&gt;
+client = &lt;botocore.client.ECS object at 0x10ef47d70&gt;
 
     def test_discover_poll_endpoint(self, client):
         """DiscoverPollEndpoint returns a response."""
         resp = client.discover_poll_endpoint()
 &gt;       assert "endpoint" in resp
-E       AssertionError: assert 'endpoint' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '27', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '721f7dc9-6b07-48e8-a062-c2f8f43e54c3', 'RetryAttempts': 0}}
+E       AssertionError: assert 'endpoint' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '27', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '08cf15dc-6063-4f70-b274-0d178f7ae613', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:643: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_list_account_settings" time="0.004"><failure message="AssertionError: assert 'settings' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '93e13803-c4a2-4403-97c4-d67f129b7810', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestEcsAutoCoverage object at 0x10dde7f50&gt;
-client = &lt;botocore.client.ECS object at 0x10e83ba40&gt;
+tests/compatibility/test_ecs_compat.py:643: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_list_account_settings" time="0.003"><failure message="AssertionError: assert 'settings' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'cf11f120-e3e0-4935-95eb-7a669f23ed0a', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestEcsAutoCoverage object at 0x10e14fe90&gt;
+client = &lt;botocore.client.ECS object at 0x10ec0cd10&gt;
 
     def test_list_account_settings(self, client):
         """ListAccountSettings returns a response."""
         resp = client.list_account_settings()
 &gt;       assert "settings" in resp
-E       AssertionError: assert 'settings' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '93e13803-c4a2-4403-97c4-d67f129b7810', 'RetryAttempts': 0}}
+E       AssertionError: assert 'settings' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'cf11f120-e3e0-4935-95eb-7a669f23ed0a', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:648: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_list_container_instances" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_list_tasks" time="0.003" /><testcase classname="tests.compatibility.test_ecs_compat.TestCapacityProviderOperations" name="test_create_capacity_provider" time="0.003"><failure message="KeyError: 'capacityProvider'">self = &lt;tests.compatibility.test_ecs_compat.TestCapacityProviderOperations object at 0x10de0e0f0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb61ee0&gt;
+tests/compatibility/test_ecs_compat.py:648: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_list_container_instances" time="0.003" /><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAutoCoverage" name="test_list_tasks" time="0.003" /><testcase classname="tests.compatibility.test_ecs_compat.TestCapacityProviderOperations" name="test_create_capacity_provider" time="0.003"><failure message="KeyError: 'capacityProvider'">self = &lt;tests.compatibility.test_ecs_compat.TestCapacityProviderOperations object at 0x10e171f70&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eb63e30&gt;
 
     def test_create_capacity_provider(self, ecs):
         cp_name = _unique("cp")
@@ -2025,8 +2025,8 @@ ecs = &lt;botocore.client.ECS object at 0x10eb61ee0&gt;
                ^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'capacityProvider'
 
-tests/compatibility/test_ecs_compat.py:679: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestCapacityProviderOperations" name="test_delete_capacity_provider" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCapacityProvider operation: The operation DeleteCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestCapacityProviderOperations object at 0x10de0c9b0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb22a20&gt;
+tests/compatibility/test_ecs_compat.py:679: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestCapacityProviderOperations" name="test_delete_capacity_provider" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCapacityProvider operation: The operation DeleteCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestCapacityProviderOperations object at 0x10e170920&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecdd610&gt;
 
     def test_delete_capacity_provider(self, ecs):
         cp_name = _unique("del-cp")
@@ -2052,9 +2052,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10eb22a20&gt;
+self = &lt;botocore.client.ECS object at 0x10ecdd610&gt;
 operation_name = 'DeleteCapacityProvider'
-api_params = {'capacityProvider': 'del-cp-95293b6f'}
+api_params = {'capacityProvider': 'del-cp-c928a25d'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2143,8 +2143,8 @@ api_params = {'capacityProvider': 'del-cp-95293b6f'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCapacityProvider operation: The operation DeleteCapacityProvider is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestCapacityProviderOperations" name="test_create_capacity_provider_with_managed_scaling" time="0.004"><failure message="KeyError: 'capacityProvider'">self = &lt;tests.compatibility.test_ecs_compat.TestCapacityProviderOperations object at 0x10de0d610&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7a2630&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestCapacityProviderOperations" name="test_create_capacity_provider_with_managed_scaling" time="0.003"><failure message="KeyError: 'capacityProvider'">self = &lt;tests.compatibility.test_ecs_compat.TestCapacityProviderOperations object at 0x10e171730&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ec19a90&gt;
 
     def test_create_capacity_provider_with_managed_scaling(self, ecs):
         cp_name = _unique("ms-cp")
@@ -2165,8 +2165,8 @@ ecs = &lt;botocore.client.ECS object at 0x10e7a2630&gt;
              ^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'capacityProvider'
 
-tests/compatibility/test_ecs_compat.py:712: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAccountSettingOperations" name="test_put_account_setting" time="0.004"><failure message="KeyError: 'setting'">self = &lt;tests.compatibility.test_ecs_compat.TestAccountSettingOperations object at 0x10de24110&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7e40e0&gt;
+tests/compatibility/test_ecs_compat.py:712: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAccountSettingOperations" name="test_put_account_setting" time="0.003"><failure message="KeyError: 'setting'">self = &lt;tests.compatibility.test_ecs_compat.TestAccountSettingOperations object at 0x10e188110&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef462d0&gt;
 
     def test_put_account_setting(self, ecs):
         resp = ecs.put_account_setting(name="containerInstanceLongArnFormat", value="enabled")
@@ -2174,17 +2174,17 @@ ecs = &lt;botocore.client.ECS object at 0x10e7e40e0&gt;
                ^^^^^^^^^^^^^^^
 E       KeyError: 'setting'
 
-tests/compatibility/test_ecs_compat.py:727: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAccountSettingOperations" name="test_put_and_list_account_settings" time="0.006"><failure message="AssertionError: assert 'settings' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '1d4229cc-d235-41d2-ad45-838ee1bd7a28', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestAccountSettingOperations object at 0x10de24500&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eac1ca0&gt;
+tests/compatibility/test_ecs_compat.py:727: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAccountSettingOperations" name="test_put_and_list_account_settings" time="0.006"><failure message="AssertionError: assert 'settings' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'dab24572-bd6f-4e21-b83c-894af464fa04', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestAccountSettingOperations object at 0x10e188500&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ebe0a40&gt;
 
     def test_put_and_list_account_settings(self, ecs):
         ecs.put_account_setting(name="serviceLongArnFormat", value="enabled")
         resp = ecs.list_account_settings()
 &gt;       assert "settings" in resp
-E       AssertionError: assert 'settings' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '1d4229cc-d235-41d2-ad45-838ee1bd7a28', 'RetryAttempts': 0}}
+E       AssertionError: assert 'settings' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'dab24572-bd6f-4e21-b83c-894af464fa04', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:733: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAccountSettingOperations" name="test_put_account_setting_effective" time="0.005"><failure message="KeyError: 'settings'">self = &lt;tests.compatibility.test_ecs_compat.TestAccountSettingOperations object at 0x10de248f0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e839d60&gt;
+tests/compatibility/test_ecs_compat.py:733: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAccountSettingOperations" name="test_put_account_setting_effective" time="0.005"><failure message="KeyError: 'settings'">self = &lt;tests.compatibility.test_ecs_compat.TestAccountSettingOperations object at 0x10e1888f0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ec6c8c0&gt;
 
     def test_put_account_setting_effective(self, ecs):
         ecs.put_account_setting(name="taskLongArnFormat", value="enabled")
@@ -2193,8 +2193,8 @@ ecs = &lt;botocore.client.ECS object at 0x10e839d60&gt;
                             ^^^^^^^^^^^^^^^^
 E       KeyError: 'settings'
 
-tests/compatibility/test_ecs_compat.py:740: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestListAttributesOperation" name="test_list_attributes_empty" time="0.007"><failure message="AssertionError: assert 'attributes' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '17', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6724b6d6-3699-4e72-8f8c-5b154059e033', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestListAttributesOperation object at 0x10de24dd0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7a1940&gt;
+tests/compatibility/test_ecs_compat.py:740: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestListAttributesOperation" name="test_list_attributes_empty" time="0.005"><failure message="AssertionError: assert 'attributes' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '17', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e6eba5af-4192-48fe-8479-a6af41ef3563', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestListAttributesOperation object at 0x10e188dd0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecde690&gt;
 
     def test_list_attributes_empty(self, ecs):
         name = _unique("attr-cluster")
@@ -2202,18 +2202,18 @@ ecs = &lt;botocore.client.ECS object at 0x10e7a1940&gt;
         try:
             resp = ecs.list_attributes(cluster=name, targetType="container-instance")
 &gt;           assert "attributes" in resp
-E           AssertionError: assert 'attributes' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '17', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6724b6d6-3699-4e72-8f8c-5b154059e033', 'RetryAttempts': 0}}
+E           AssertionError: assert 'attributes' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '17', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e6eba5af-4192-48fe-8479-a6af41ef3563', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:757: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders" name="test_describe_capacity_providers_empty" time="0.004"><failure message="AssertionError: assert 'capacityProviders' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '24', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '713f523e-511a-4966-ab35-674da08c31d9', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders object at 0x10de25250&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e9b7050&gt;
+tests/compatibility/test_ecs_compat.py:757: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders" name="test_describe_capacity_providers_empty" time="0.003"><failure message="AssertionError: assert 'capacityProviders' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '24', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e37f35e8-1371-4b5a-bc73-48bf7c475ce6', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders object at 0x10e189250&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eb069f0&gt;
 
     def test_describe_capacity_providers_empty(self, ecs):
         resp = ecs.describe_capacity_providers(capacityProviders=["nonexistent-cp"])
 &gt;       assert "capacityProviders" in resp
-E       AssertionError: assert 'capacityProviders' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '24', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '713f523e-511a-4966-ab35-674da08c31d9', 'RetryAttempts': 0}}
+E       AssertionError: assert 'capacityProviders' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '24', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e37f35e8-1371-4b5a-bc73-48bf7c475ce6', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:772: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders" name="test_describe_capacity_providers_after_create" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCapacityProvider operation: The operation DeleteCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders object at 0x10de25640&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb47d70&gt;
+tests/compatibility/test_ecs_compat.py:772: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders" name="test_describe_capacity_providers_after_create" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCapacityProvider operation: The operation DeleteCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders object at 0x10e189640&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ea9af30&gt;
 
     def test_describe_capacity_providers_after_create(self, ecs):
         cp_name = _unique("desc-cp")
@@ -2236,8 +2236,8 @@ tests/compatibility/test_ecs_compat.py:787: KeyError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders object at 0x10de25640&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb47d70&gt;
+self = &lt;tests.compatibility.test_ecs_compat.TestDescribeCapacityProviders object at 0x10e189640&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ea9af30&gt;
 
     def test_describe_capacity_providers_after_create(self, ecs):
         cp_name = _unique("desc-cp")
@@ -2268,9 +2268,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10eb47d70&gt;
+self = &lt;botocore.client.ECS object at 0x10ea9af30&gt;
 operation_name = 'DeleteCapacityProvider'
-api_params = {'capacityProvider': 'desc-cp-064c0fba'}
+api_params = {'capacityProvider': 'desc-cp-ebd7e7d3'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2359,8 +2359,8 @@ api_params = {'capacityProvider': 'desc-cp-064c0fba'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCapacityProvider operation: The operation DeleteCapacityProvider is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestUpdateCapacityProvider" name="test_update_capacity_provider_managed_scaling" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCapacityProvider operation: The operation DeleteCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestUpdateCapacityProvider object at 0x10de25b20&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ea255b0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestUpdateCapacityProvider" name="test_update_capacity_provider_managed_scaling" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCapacityProvider operation: The operation DeleteCapacityProvider is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestUpdateCapacityProvider object at 0x10e189b20&gt;
+ecs = &lt;botocore.client.ECS object at 0x10e188590&gt;
 
     def test_update_capacity_provider_managed_scaling(self, ecs):
         cp_name = _unique("upd-cp")
@@ -2398,9 +2398,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ea255b0&gt;
+self = &lt;botocore.client.ECS object at 0x10e188590&gt;
 operation_name = 'UpdateCapacityProvider'
-api_params = {'autoScalingGroupProvider': {'managedScaling': {'status': 'ENABLED', 'targetCapacity': 80}}, 'name': 'upd-cp-31e1c579'}
+api_params = {'autoScalingGroupProvider': {'managedScaling': {'status': 'ENABLED', 'targetCapacity': 80}}, 'name': 'upd-cp-10d6109d'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2493,8 +2493,8 @@ E           botocore.exceptions.ClientError: An error occurred (400) when callin
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ecs_compat.TestUpdateCapacityProvider object at 0x10de25b20&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ea255b0&gt;
+self = &lt;tests.compatibility.test_ecs_compat.TestUpdateCapacityProvider object at 0x10e189b20&gt;
+ecs = &lt;botocore.client.ECS object at 0x10e188590&gt;
 
     def test_update_capacity_provider_managed_scaling(self, ecs):
         cp_name = _unique("upd-cp")
@@ -2538,9 +2538,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ea255b0&gt;
+self = &lt;botocore.client.ECS object at 0x10e188590&gt;
 operation_name = 'DeleteCapacityProvider'
-api_params = {'capacityProvider': 'upd-cp-31e1c579'}
+api_params = {'capacityProvider': 'upd-cp-10d6109d'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2629,8 +2629,8 @@ api_params = {'capacityProvider': 'upd-cp-31e1c579'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCapacityProvider operation: The operation DeleteCapacityProvider is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions" name="test_delete_task_definitions" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteTaskDefinitions operation: The operation DeleteTaskDefinitions is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions object at 0x10de0d730&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7bf560&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions" name="test_delete_task_definitions" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteTaskDefinitions operation: The operation DeleteTaskDefinitions is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions object at 0x10e171550&gt;
+ecs = &lt;botocore.client.ECS object at 0x10efac740&gt;
 
     def test_delete_task_definitions(self, ecs):
         family = _unique("del-tds")
@@ -2651,9 +2651,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10e7bf560&gt;
+self = &lt;botocore.client.ECS object at 0x10efac740&gt;
 operation_name = 'DeleteTaskDefinitions'
-api_params = {'taskDefinitions': ['del-tds-3545240d:1']}
+api_params = {'taskDefinitions': ['del-tds-13af880d:1']}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2742,8 +2742,8 @@ api_params = {'taskDefinitions': ['del-tds-3545240d:1']}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteTaskDefinitions operation: The operation DeleteTaskDefinitions is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions" name="test_delete_task_definitions_marks_deleted" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteTaskDefinitions operation: The operation DeleteTaskDefinitions is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions object at 0x10de0f350&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e83a960&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions" name="test_delete_task_definitions_marks_deleted" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteTaskDefinitions operation: The operation DeleteTaskDefinitions is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestDeleteTaskDefinitions object at 0x10e1732c0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ebe18b0&gt;
 
     def test_delete_task_definitions_marks_deleted(self, ecs):
         family = _unique("del-tds-status")
@@ -2764,9 +2764,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10e83a960&gt;
+self = &lt;botocore.client.ECS object at 0x10ebe18b0&gt;
 operation_name = 'DeleteTaskDefinitions'
-api_params = {'taskDefinitions': ['del-tds-status-16d7055a:1']}
+api_params = {'taskDefinitions': ['del-tds-status-4fed82bf:1']}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -2855,9 +2855,9 @@ api_params = {'taskDefinitions': ['del-tds-status-16d7055a:1']}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteTaskDefinitions operation: The operation DeleteTaskDefinitions is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_register_container_instance" time="0.007"><failure message="AssertionError: assert 'REGISTERED' == 'ACTIVE'&#10;  &#10;  - ACTIVE&#10;  + REGISTERED">self = &lt;tests.compatibility.test_ecs_compat.TestContainerInstanceOperations object at 0x10de24f20&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb358b0&gt;
-cluster = 'ci-cluster-4e0f3592'
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_register_container_instance" time="0.006"><failure message="AssertionError: assert 'REGISTERED' == 'ACTIVE'&#10;  &#10;  - ACTIVE&#10;  + REGISTERED">self = &lt;tests.compatibility.test_ecs_compat.TestContainerInstanceOperations object at 0x10e188ec0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef9bb30&gt;
+cluster = 'ci-cluster-30f58f69'
 
     def test_register_container_instance(self, ecs, cluster):
         resp = ecs.register_container_instance(
@@ -2874,9 +2874,9 @@ E
 E         - ACTIVE
 E         + REGISTERED
 
-tests/compatibility/test_ecs_compat.py:885: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_describe_container_instances" time="0.010" /><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_deregister_container_instance" time="0.008"><failure message="AssertionError: assert 'DEREGISTERED' == 'INACTIVE'&#10;  &#10;  - INACTIVE&#10;  + DEREGISTERED">self = &lt;tests.compatibility.test_ecs_compat.TestContainerInstanceOperations object at 0x10de24b30&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb637d0&gt;
-cluster = 'ci-cluster-9c313527'
+tests/compatibility/test_ecs_compat.py:885: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_describe_container_instances" time="0.008" /><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_deregister_container_instance" time="0.007"><failure message="AssertionError: assert 'DEREGISTERED' == 'INACTIVE'&#10;  &#10;  - INACTIVE&#10;  + DEREGISTERED">self = &lt;tests.compatibility.test_ecs_compat.TestContainerInstanceOperations object at 0x10e188b30&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef97e00&gt;
+cluster = 'ci-cluster-6002d7ce'
 
     def test_deregister_container_instance(self, ecs, cluster):
         reg = ecs.register_container_instance(
@@ -2896,9 +2896,9 @@ E
 E         - INACTIVE
 E         + DEREGISTERED
 
-tests/compatibility/test_ecs_compat.py:917: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_update_container_instances_state" time="0.009"><failure message="KeyError: 'containerInstances'">self = &lt;tests.compatibility.test_ecs_compat.TestContainerInstanceOperations object at 0x10de24260&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ea58aa0&gt;
-cluster = 'ci-cluster-2f00ac79'
+tests/compatibility/test_ecs_compat.py:917: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestContainerInstanceOperations" name="test_update_container_instances_state" time="0.007"><failure message="KeyError: 'containerInstances'">self = &lt;tests.compatibility.test_ecs_compat.TestContainerInstanceOperations object at 0x10e188260&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef3ef30&gt;
+cluster = 'ci-cluster-18713b5a'
 
     def test_update_container_instances_state(self, ecs, cluster):
         reg = ecs.register_container_instance(
@@ -2918,8 +2918,8 @@ cluster = 'ci-cluster-2f00ac79'
                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'containerInstances'
 
-tests/compatibility/test_ecs_compat.py:933: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_create_task_set" time="0.007"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10de26210&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ecae780&gt;
+tests/compatibility/test_ecs_compat.py:933: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_create_task_set" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10e18a240&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eebe8d0&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -2932,8 +2932,8 @@ ecs = &lt;botocore.client.ECS object at 0x10ecae780&gt;
               ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:960: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_describe_task_sets" time="0.007"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10de26660&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e839b50&gt;
+tests/compatibility/test_ecs_compat.py:960: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_describe_task_sets" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10e18a690&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ec19af0&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -2946,8 +2946,8 @@ ecs = &lt;botocore.client.ECS object at 0x10e839b50&gt;
               ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:960: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_update_task_set" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10de26ab0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ecf53d0&gt;
+tests/compatibility/test_ecs_compat.py:960: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_update_task_set" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10e18aae0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ede94f0&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -2960,8 +2960,8 @@ ecs = &lt;botocore.client.ECS object at 0x10ecf53d0&gt;
               ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:960: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_delete_task_set" time="0.006"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10de26f00&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ed43a40&gt;
+tests/compatibility/test_ecs_compat.py:960: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestTaskSetOperations" name="test_delete_task_set" time="0.005"><error message="failed on setup with &quot;KeyError: 'taskDefinition'&quot;">self = &lt;tests.compatibility.test_ecs_compat.TestTaskSetOperations object at 0x10e18af30&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ee17c20&gt;
 
     @pytest.fixture
     def task_def_arn(self, ecs):
@@ -2974,8 +2974,8 @@ ecs = &lt;botocore.client.ECS object at 0x10ed43a40&gt;
               ^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'taskDefinition'
 
-tests/compatibility/test_ecs_compat.py:960: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestGetTaskProtection" name="test_get_task_protection_nonexistent_cluster" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestGetTaskProtection object at 0x10de27380&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e6a6ea0&gt;
+tests/compatibility/test_ecs_compat.py:960: KeyError</error></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestGetTaskProtection" name="test_get_task_protection_nonexistent_cluster" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestGetTaskProtection object at 0x10e18b3b0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10db672c0&gt;
 
     def test_get_task_protection_nonexistent_cluster(self, ecs):
         """GetTaskProtection returns ClusterNotFoundException for a fake cluster."""
@@ -2989,17 +2989,17 @@ E
 E         - ClusterNotFoundException
 E         + 400
 
-tests/compatibility/test_ecs_compat.py:1047: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestListServicesByNamespace" name="test_list_services_by_namespace" time="0.004"><failure message="AssertionError: assert 'serviceArns' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6e8499b6-0fc8-42d3-b1a4-dec10030b591', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestListServicesByNamespace object at 0x10de27830&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ed42210&gt;
+tests/compatibility/test_ecs_compat.py:1047: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestListServicesByNamespace" name="test_list_services_by_namespace" time="0.003"><failure message="AssertionError: assert 'serviceArns' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'ec87bf5c-89c2-4205-9599-17ff409df039', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestListServicesByNamespace object at 0x10e18b860&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ee14da0&gt;
 
     def test_list_services_by_namespace(self, ecs):
         resp = ecs.list_services_by_namespace(namespace="test-namespace")
 &gt;       assert "serviceArns" in resp
-E       AssertionError: assert 'serviceArns' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6e8499b6-0fc8-42d3-b1a4-dec10030b591', 'RetryAttempts': 0}}
+E       AssertionError: assert 'serviceArns' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'ec87bf5c-89c2-4205-9599-17ff409df039', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:1059: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAttributeOperations" name="test_put_attributes" time="0.007"><failure message="AssertionError: assert 'attributes' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '17', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '04628a4a-809f-432c-88c9-6aee5cbc405c', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestAttributeOperations object at 0x10de27d40&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ed17c20&gt;
-cluster = 'attr-cluster-f1dde925'
+tests/compatibility/test_ecs_compat.py:1059: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAttributeOperations" name="test_put_attributes" time="0.006"><failure message="AssertionError: assert 'attributes' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '17', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'c6595edc-95a3-41bb-9839-d6ace25f2166', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestAttributeOperations object at 0x10e18bd40&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eeb3da0&gt;
+cluster = 'attr-cluster-dc7dc938'
 
     def test_put_attributes(self, ecs, cluster):
         resp = ecs.put_attributes(
@@ -3014,11 +3014,11 @@ cluster = 'attr-cluster-f1dde925'
             ],
         )
 &gt;       assert "attributes" in resp
-E       AssertionError: assert 'attributes' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '17', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '04628a4a-809f-432c-88c9-6aee5cbc405c', 'RetryAttempts': 0}}
+E       AssertionError: assert 'attributes' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '17', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'c6595edc-95a3-41bb-9839-d6ace25f2166', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:1089: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAttributeOperations" name="test_list_attributes_after_put" time="0.009"><failure message="AssertionError: assert 'attributes' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '17', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6a290fd1-c054-4d38-bf56-ce2325abfd1d', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestAttributeOperations object at 0x10dde5040&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e92d7c0&gt;
-cluster = 'attr-cluster-0302dac8'
+tests/compatibility/test_ecs_compat.py:1089: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAttributeOperations" name="test_list_attributes_after_put" time="0.008"><failure message="AssertionError: assert 'attributes' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '17', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'bb7304b7-2f7e-4284-ae79-6689ab3dd7ca', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestAttributeOperations object at 0x10e14d190&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ed0df70&gt;
+cluster = 'attr-cluster-44c75c48'
 
     def test_list_attributes_after_put(self, ecs, cluster):
         ecs.put_attributes(
@@ -3034,11 +3034,11 @@ cluster = 'attr-cluster-0302dac8'
         )
         resp = ecs.list_attributes(cluster=cluster, targetType="container-instance")
 &gt;       assert "attributes" in resp
-E       AssertionError: assert 'attributes' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '17', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6a290fd1-c054-4d38-bf56-ce2325abfd1d', 'RetryAttempts': 0}}
+E       AssertionError: assert 'attributes' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '17', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'bb7304b7-2f7e-4284-ae79-6689ab3dd7ca', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:1106: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAttributeOperations" name="test_delete_attributes" time="0.009"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteAttributes operation: The operation DeleteAttributes is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAttributeOperations object at 0x10de27bc0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ecadf10&gt;
-cluster = 'attr-cluster-78e221eb'
+tests/compatibility/test_ecs_compat.py:1106: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestAttributeOperations" name="test_delete_attributes" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteAttributes operation: The operation DeleteAttributes is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestAttributeOperations object at 0x10e18ba10&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eebe060&gt;
+cluster = 'attr-cluster-4f38a1af'
 
     def test_delete_attributes(self, ecs, cluster):
         ecs.put_attributes(
@@ -3073,9 +3073,9 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ecadf10&gt;
+self = &lt;botocore.client.ECS object at 0x10eebe060&gt;
 operation_name = 'DeleteAttributes'
-api_params = {'attributes': [{'name': 'temp-attr', 'targetId': 'fake-ci-id-3', 'targetType': 'container-instance'}], 'cluster': 'attr-cluster-78e221eb'}
+api_params = {'attributes': [{'name': 'temp-attr', 'targetId': 'fake-ci-id-3', 'targetType': 'container-instance'}], 'cluster': 'attr-cluster-4f38a1af'}
 
     @with_current_context()
     def _make_api_call(self, operation_name, api_params):
@@ -3164,8 +3164,8 @@ api_params = {'attributes': [{'name': 'temp-attr', 'targetId': 'fake-ci-id-3', '
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteAttributes operation: The operation DeleteAttributes is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_put_account_setting_default" time="0.004"><failure message="KeyError: 'setting'">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10de26cc0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7e6a80&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_put_account_setting_default" time="0.003"><failure message="KeyError: 'setting'">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e18b0e0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef69b80&gt;
 
     def test_put_account_setting_default(self, ecs):
         resp = ecs.put_account_setting_default(
@@ -3175,8 +3175,8 @@ ecs = &lt;botocore.client.ECS object at 0x10e7e6a80&gt;
                ^^^^^^^^^^^^^^^
 E       KeyError: 'setting'
 
-tests/compatibility/test_ecs_compat.py:1150: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_cluster_nonexistent" time="0.005"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10de26390&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb35eb0&gt;
+tests/compatibility/test_ecs_compat.py:1150: KeyError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_cluster_nonexistent" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e18a450&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef6b650&gt;
 
     def test_update_cluster_nonexistent(self, ecs):
         """UpdateCluster returns ClusterNotFoundException for nonexistent cluster."""
@@ -3193,8 +3193,8 @@ E
 E         - ClusterNotFoundException
 E         + 400
 
-tests/compatibility/test_ecs_compat.py:1162: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_cluster_settings_nonexistent" time="0.005"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10de246e0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10dde7a40&gt;
+tests/compatibility/test_ecs_compat.py:1162: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_cluster_settings_nonexistent" time="0.005"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e1886b0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef6a090&gt;
 
     def test_update_cluster_settings_nonexistent(self, ecs):
         """UpdateClusterSettings returns ClusterNotFoundException for nonexistent cluster."""
@@ -3211,8 +3211,8 @@ E
 E         - ClusterNotFoundException
 E         + 400
 
-tests/compatibility/test_ecs_compat.py:1173: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_submit_container_state_change" time="0.006"><failure message="AssertionError: assert 'acknowledgment' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '33', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '90deb50c-17f5-4672-9a48-6e1f387e5281', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10de25910&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ea8da60&gt;
+tests/compatibility/test_ecs_compat.py:1173: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_submit_container_state_change" time="0.006"><failure message="AssertionError: assert 'acknowledgment' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '33', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '57d122ff-54c7-419a-bf28-f5587c1578c7', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e1898e0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eb60890&gt;
 
     def test_submit_container_state_change(self, ecs):
         name = _unique("scsc-cluster")
@@ -3220,10 +3220,10 @@ ecs = &lt;botocore.client.ECS object at 0x10ea8da60&gt;
         try:
             resp = ecs.submit_container_state_change(cluster=name, status="RUNNING")
 &gt;           assert "acknowledgment" in resp
-E           AssertionError: assert 'acknowledgment' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '33', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '90deb50c-17f5-4672-9a48-6e1f387e5281', 'RetryAttempts': 0}}
+E           AssertionError: assert 'acknowledgment' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '33', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '57d122ff-54c7-419a-bf28-f5587c1578c7', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:1180: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_submit_task_state_change" time="0.007"><failure message="AssertionError: assert 'acknowledgment' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '28', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6df66d33-fe02-4c0f-89a6-e68c655f83b2', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10de0fdd0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ea8dfd0&gt;
+tests/compatibility/test_ecs_compat.py:1180: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_submit_task_state_change" time="0.006"><failure message="AssertionError: assert 'acknowledgment' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '28', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '8bd8c2c0-ea9d-477d-8111-051b3224d81e', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e173dd0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eb601a0&gt;
 
     def test_submit_task_state_change(self, ecs):
         name = _unique("stsc-cluster")
@@ -3231,10 +3231,10 @@ ecs = &lt;botocore.client.ECS object at 0x10ea8dfd0&gt;
         try:
             resp = ecs.submit_task_state_change(cluster=name, status="RUNNING")
 &gt;           assert "acknowledgment" in resp
-E           AssertionError: assert 'acknowledgment' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '28', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '6df66d33-fe02-4c0f-89a6-e68c655f83b2', 'RetryAttempts': 0}}
+E           AssertionError: assert 'acknowledgment' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '28', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '8bd8c2c0-ea9d-477d-8111-051b3224d81e', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:1189: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_execute_command_nonexistent" time="0.006"><failure message="AssertionError: assert '400' in ('ClusterNotFoundException', 'InvalidParameterException')">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10de44440&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ed22bd0&gt;
+tests/compatibility/test_ecs_compat.py:1189: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_execute_command_nonexistent" time="0.005"><failure message="AssertionError: assert '400' in ('ClusterNotFoundException', 'InvalidParameterException')">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e1a8440&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef3cd10&gt;
 
     def test_execute_command_nonexistent(self, ecs):
         """ExecuteCommand returns error for nonexistent cluster/task."""
@@ -3253,8 +3253,8 @@ ecs = &lt;botocore.client.ECS object at 0x10ed22bd0&gt;
         )
 E       AssertionError: assert '400' in ('ClusterNotFoundException', 'InvalidParameterException')
 
-tests/compatibility/test_ecs_compat.py:1204: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_container_agent_nonexistent" time="0.005"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10de44830&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ea8cb30&gt;
+tests/compatibility/test_ecs_compat.py:1204: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_container_agent_nonexistent" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e1a8830&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eb615b0&gt;
 
     def test_update_container_agent_nonexistent(self, ecs):
         """UpdateContainerAgent returns error for nonexistent cluster."""
@@ -3271,8 +3271,8 @@ E
 E         - ClusterNotFoundException
 E         + 400
 
-tests/compatibility/test_ecs_compat.py:1218: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_task_protection_nonexistent" time="0.005"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10de44c20&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb210d0&gt;
+tests/compatibility/test_ecs_compat.py:1218: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSAdditionalOperations" name="test_update_task_protection_nonexistent" time="0.004"><failure message="AssertionError: assert '400' == 'ClusterNotFoundException'&#10;  &#10;  - ClusterNotFoundException&#10;  + 400">self = &lt;tests.compatibility.test_ecs_compat.TestECSAdditionalOperations object at 0x10e1a8c20&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eca2330&gt;
 
     def test_update_task_protection_nonexistent(self, ecs):
         """UpdateTaskProtection returns error for nonexistent cluster."""
@@ -3290,8 +3290,8 @@ E
 E         - ClusterNotFoundException
 E         + 400
 
-tests/compatibility/test_ecs_compat.py:1230: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAccountSettings" name="test_delete_account_setting" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAccountSettings" name="test_delete_account_setting_after_put" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteAccountSetting operation: The operation DeleteAccountSetting is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsAccountSettings object at 0x10de454f0&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e9861b0&gt;
+tests/compatibility/test_ecs_compat.py:1230: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAccountSettings" name="test_delete_account_setting" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestEcsAccountSettings" name="test_delete_account_setting_after_put" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteAccountSetting operation: The operation DeleteAccountSetting is not implemented">self = &lt;tests.compatibility.test_ecs_compat.TestEcsAccountSettings object at 0x10e1a94f0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ecdd5e0&gt;
 
     def test_delete_account_setting_after_put(self, ecs):
         """DeleteAccountSetting after PutAccountSetting removes the value."""
@@ -3309,7 +3309,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10e9861b0&gt;
+self = &lt;botocore.client.ECS object at 0x10ecdd5e0&gt;
 operation_name = 'DeleteAccountSetting'
 api_params = {'name': 'containerInsights'}
 
@@ -3400,28 +3400,28 @@ api_params = {'name': 'containerInsights'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteAccountSetting operation: The operation DeleteAccountSetting is not implemented
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeployments" name="test_describe_service_deployments_empty" time="0.004"><failure message="AssertionError: assert 'serviceDeployments' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '87e46665-2244-4eaf-8e9a-493fe19be707', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10de45940&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ecaeab0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeployments" name="test_describe_service_deployments_empty" time="0.004"><failure message="AssertionError: assert 'serviceDeployments' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '87f52d64-6b8e-4ad8-99d2-36e7460b70d1', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10e1a9940&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef6a0f0&gt;
 
     def test_describe_service_deployments_empty(self, ecs):
         """DescribeServiceDeployments with unknown ARNs returns empty list."""
         fake_arn = "arn:aws:ecs:us-east-1:123456789012:service-deployment/fake-id"
         resp = ecs.describe_service_deployments(serviceDeploymentArns=[fake_arn])
 &gt;       assert "serviceDeployments" in resp
-E       AssertionError: assert 'serviceDeployments' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '87e46665-2244-4eaf-8e9a-493fe19be707', 'RetryAttempts': 0}}
+E       AssertionError: assert 'serviceDeployments' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '87f52d64-6b8e-4ad8-99d2-36e7460b70d1', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:1268: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeployments" name="test_describe_service_revisions_empty" time="0.004"><failure message="AssertionError: assert 'serviceRevisions' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e0601587-056f-445b-b050-6a350ffcc678', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10de45d60&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7e61e0&gt;
+tests/compatibility/test_ecs_compat.py:1268: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeployments" name="test_describe_service_revisions_empty" time="0.003"><failure message="AssertionError: assert 'serviceRevisions' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'eb162e34-0308-4851-ab3f-83ca67ffb984', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10e1a9d60&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eebe480&gt;
 
     def test_describe_service_revisions_empty(self, ecs):
         """DescribeServiceRevisions with unknown ARNs returns empty list."""
         fake_arn = "arn:aws:ecs:us-east-1:123456789012:service-revision/fake-id"
         resp = ecs.describe_service_revisions(serviceRevisionArns=[fake_arn])
 &gt;       assert "serviceRevisions" in resp
-E       AssertionError: assert 'serviceRevisions' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e0601587-056f-445b-b050-6a350ffcc678', 'RetryAttempts': 0}}
+E       AssertionError: assert 'serviceRevisions' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'eb162e34-0308-4851-ab3f-83ca67ffb984', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:1275: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeployments" name="test_list_service_deployments_nonexistent_service" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCluster operation: Cluster arn:aws:ecs:us-east-1:123456789012:cluster/test-svc-deploy-cls not found">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10de46180&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ed43590&gt;
+tests/compatibility/test_ecs_compat.py:1275: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeployments" name="test_list_service_deployments_nonexistent_service" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCluster operation: Cluster arn:aws:ecs:us-east-1:123456789012:cluster/test-svc-deploy-cls not found">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10e1aa180&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eca3fe0&gt;
 
     def test_list_service_deployments_nonexistent_service(self, ecs):
         """ListServiceDeployments with a nonexistent service raises ServiceNotFoundException."""
@@ -3443,8 +3443,8 @@ tests/compatibility/test_ecs_compat.py:1288: AssertionError
 
 During handling of the above exception, another exception occurred:
 
-self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10de46180&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ed43590&gt;
+self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeployments object at 0x10e1aa180&gt;
+ecs = &lt;botocore.client.ECS object at 0x10eca3fe0&gt;
 
     def test_list_service_deployments_nonexistent_service(self, ecs):
         """ListServiceDeployments with a nonexistent service raises ServiceNotFoundException."""
@@ -3470,7 +3470,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.ECS object at 0x10ed43590&gt;
+self = &lt;botocore.client.ECS object at 0x10eca3fe0&gt;
 operation_name = 'DeleteCluster'
 api_params = {'cluster': 'arn:aws:ecs:us-east-1:123456789012:cluster/test-svc-deploy-cls'}
 
@@ -3561,8 +3561,8 @@ api_params = {'cluster': 'arn:aws:ecs:us-east-1:123456789012:cluster/test-svc-de
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.exceptions.ClientError: An error occurred (400) when calling the DeleteCluster operation: Cluster arn:aws:ecs:us-east-1:123456789012:cluster/test-svc-deploy-cls not found
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsUpdateServicePrimaryTaskSet" name="test_update_service_primary_task_set_nonexistent" time="0.005"><failure message="AssertionError: assert '400' in ('ClusterNotFoundException', 'ServiceNotFoundException', 'InvalidParameterException')">self = &lt;tests.compatibility.test_ecs_compat.TestEcsUpdateServicePrimaryTaskSet object at 0x10de24620&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e7e7bf0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsUpdateServicePrimaryTaskSet" name="test_update_service_primary_task_set_nonexistent" time="0.004"><failure message="AssertionError: assert '400' in ('ClusterNotFoundException', 'ServiceNotFoundException', 'InvalidParameterException')">self = &lt;tests.compatibility.test_ecs_compat.TestEcsUpdateServicePrimaryTaskSet object at 0x10e1886e0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ea0b4d0&gt;
 
     def test_update_service_primary_task_set_nonexistent(self, ecs):
         """UpdateServicePrimaryTaskSet with fake IDs raises error."""
@@ -3581,26 +3581,26 @@ ecs = &lt;botocore.client.ECS object at 0x10e7e7bf0&gt;
         )
 E       AssertionError: assert '400' in ('ClusterNotFoundException', 'ServiceNotFoundException', 'InvalidParameterException')
 
-tests/compatibility/test_ecs_compat.py:1306: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations" name="test_describe_service_deployments_empty" time="0.004"><failure message="AssertionError: assert 'serviceDeployments' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'b93644ef-de64-42df-8b43-882976983ef1', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations object at 0x10de27530&gt;
-ecs = &lt;botocore.client.ECS object at 0x10ed42c00&gt;
+tests/compatibility/test_ecs_compat.py:1306: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations" name="test_describe_service_deployments_empty" time="0.004"><failure message="AssertionError: assert 'serviceDeployments' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '3bb5c4a0-f30b-45f4-8a80-347c0367ef70', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations object at 0x10e18b560&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef6b710&gt;
 
     def test_describe_service_deployments_empty(self, ecs):
         """DescribeServiceDeployments with empty list returns response structure."""
         resp = ecs.describe_service_deployments(serviceDeploymentArns=[])
 &gt;       assert "serviceDeployments" in resp
-E       AssertionError: assert 'serviceDeployments' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'b93644ef-de64-42df-8b43-882976983ef1', 'RetryAttempts': 0}}
+E       AssertionError: assert 'serviceDeployments' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '3bb5c4a0-f30b-45f4-8a80-347c0367ef70', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:1323: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations" name="test_describe_service_revisions_empty" time="0.004"><failure message="AssertionError: assert 'serviceRevisions' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f1738da4-a984-4a1c-81e5-d85565d2ca8e', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations object at 0x10de46270&gt;
-ecs = &lt;botocore.client.ECS object at 0x10e6a5dc0&gt;
+tests/compatibility/test_ecs_compat.py:1323: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations" name="test_describe_service_revisions_empty" time="0.004"><failure message="AssertionError: assert 'serviceRevisions' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '817dd0b2-20e1-4121-b9b8-873ff74a52f5', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestEcsServiceDeploymentOperations object at 0x10e1aa2a0&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ea6c1a0&gt;
 
     def test_describe_service_revisions_empty(self, ecs):
         """DescribeServiceRevisions with empty list returns response structure."""
         resp = ecs.describe_service_revisions(serviceRevisionArns=[])
 &gt;       assert "serviceRevisions" in resp
-E       AssertionError: assert 'serviceRevisions' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f1738da4-a984-4a1c-81e5-d85565d2ca8e', 'RetryAttempts': 0}}
+E       AssertionError: assert 'serviceRevisions' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '23', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '817dd0b2-20e1-4121-b9b8-873ff74a52f5', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:1329: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSMissingGapOps" name="test_stop_service_deployment" time="0.005" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSMissingGapOps" name="test_submit_attachment_state_changes" time="0.003"><failure message="AssertionError: assert 'acknowledgment' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '35', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0b11fae1-6f65-4c6d-a4fb-669b064a2581', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestECSMissingGapOps object at 0x10de44e00&gt;
-ecs = &lt;botocore.client.ECS object at 0x10eb22390&gt;
+tests/compatibility/test_ecs_compat.py:1329: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSMissingGapOps" name="test_stop_service_deployment" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSMissingGapOps" name="test_submit_attachment_state_changes" time="0.003"><failure message="AssertionError: assert 'acknowledgment' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '35', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'd30e3caf-66d1-4836-9873-0a7115c23678', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_ecs_compat.TestECSMissingGapOps object at 0x10e1a8d70&gt;
+ecs = &lt;botocore.client.ECS object at 0x10ef694c0&gt;
 
     def test_submit_attachment_state_changes(self, ecs):
         """SubmitAttachmentStateChanges returns an acknowledgment."""
@@ -3614,6 +3614,6 @@ ecs = &lt;botocore.client.ECS object at 0x10eb22390&gt;
             ],
         )
 &gt;       assert "acknowledgment" in resp
-E       AssertionError: assert 'acknowledgment' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '35', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0b11fae1-6f65-4c6d-a4fb-669b064a2581', 'RetryAttempts': 0}}
+E       AssertionError: assert 'acknowledgment' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '35', 'content-type': 'application/x-amz-json-1.0', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'd30e3caf-66d1-4836-9873-0a7115c23678', 'RetryAttempts': 0}}
 
-tests/compatibility/test_ecs_compat.py:1353: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_create_express_gateway_service" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_describe_express_gateway_service" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_update_express_gateway_service" time="0.004" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_delete_express_gateway_service" time="0.005" /></testsuite></testsuites>
+tests/compatibility/test_ecs_compat.py:1353: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_create_express_gateway_service" time="0.003" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_describe_express_gateway_service" time="0.003" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_update_express_gateway_service" time="0.003" /><testcase classname="tests.compatibility.test_ecs_compat.TestECSExpressGatewayService" name="test_delete_express_gateway_service" time="0.005" /></testsuite></testsuites>
