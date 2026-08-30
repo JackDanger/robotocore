@@ -96,12 +96,30 @@ impl SsmHandler {
         let state = self.get_state(req.account, &req.region);
         let now = chrono::Utc::now().timestamp() as u64;
 
+        // Check Overwrite parameter
+        let overwrite = req.params.get("Overwrite").and_then(|v| v.as_bool()).unwrap_or(true);
+        if !overwrite && state.get_parameter(&name).is_some() {
+            return AwsResponse::error(400, "ParameterAlreadyExists",
+                &format!("An error occurred (ParameterAlreadyExists) when calling the PutParameter operation: Parameter {} already exists", name));
+        }
+
         if let Some(existing) = state.get_parameter(&name) {
+            let new_version = *existing.version.read() + 1;
+            // Record history
+            existing.history.write().push(crate::models::ParameterVersion {
+                version: new_version,
+                value: value.clone(),
+                timestamp: now,
+                label: req.params.get("Label").and_then(|v| v.as_str()).unwrap_or("").to_string(),
+            });
             *existing.value.write() = value;
-            *existing.version.write() += 1;
+            *existing.version.write() = new_version;
             *existing.modified.write() = now;
+            if let Some(tags) = req.params.get("Tags").and_then(|v| v.as_array()).cloned() {
+                *existing.tags.write() = tags;
+            }
             return AwsResponse::json(200, json!({
-                "Version": *existing.version.read(),
+                "Version": new_version,
                 "Tier": "Standard"
             }));
         }
@@ -295,7 +313,9 @@ impl SsmHandler {
     }
 
     fn add_tags(&self, req: &AwsRequest) -> AwsResponse {
-        let name = req.params.get("ResourceName").and_then(|v| v.as_str()).unwrap_or("");
+        let name = req.params.get("ResourceId").and_then(|v| v.as_str())
+            .or_else(|| req.params.get("ResourceName").and_then(|v| v.as_str()))
+            .unwrap_or("");
         let tags = req.params.get("Tags").and_then(|v| v.as_array()).cloned().unwrap_or_default();
         let state = self.get_state(req.account, &req.region);
         if let Some(param) = state.get_parameter(&name) {
@@ -307,7 +327,9 @@ impl SsmHandler {
     }
 
     fn remove_tags(&self, req: &AwsRequest) -> AwsResponse {
-        let name = req.params.get("ResourceName").and_then(|v| v.as_str()).unwrap_or("");
+        let name = req.params.get("ResourceId").and_then(|v| v.as_str())
+            .or_else(|| req.params.get("ResourceName").and_then(|v| v.as_str()))
+            .unwrap_or("");
         let keys: Vec<String> = req.params.get("Keys")
             .and_then(|v| v.as_array())
             .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
@@ -324,12 +346,14 @@ impl SsmHandler {
     }
 
     fn list_tags(&self, req: &AwsRequest) -> AwsResponse {
-        let name = req.params.get("ResourceName").and_then(|v| v.as_str()).unwrap_or("");
+        let name = req.params.get("ResourceId").and_then(|v| v.as_str())
+            .or_else(|| req.params.get("ResourceName").and_then(|v| v.as_str()))
+            .unwrap_or("");
         let state = self.get_state(req.account, &req.region);
-        let tags = state.get_parameter(&name)
+        let tags = state.get_parameter(name)
             .map(|p| p.tags.read().clone())
             .unwrap_or_default();
-        AwsResponse::json(200, json!({ "Tags": tags }))
+        AwsResponse::json(200, json!({ "TagList": tags }))
     }
 
     fn create_activation(&self, _req: &AwsRequest) -> AwsResponse {
