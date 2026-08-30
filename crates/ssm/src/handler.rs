@@ -46,8 +46,8 @@ impl SsmHandler {
             "CreateMaintenanceWindow" => self.json_stub(&req, "WindowId"),
             "GetMaintenanceWindow" => self.json_stub(&req, "WindowId"),
             "DeleteMaintenanceWindow" => self.json_stub(&req, "WindowId"),
-            "DeleteParameters" => self.json_stub(&req, "DeletedParameters"),
-            "LabelParameterVersion" => self.json_stub(&req, "Parameter"),
+            "DeleteParameters" => self.delete_parameters(&req),
+            "LabelParameterVersion" => self.label_parameter_version(&req),
             "GetParameterHistory" => self.get_parameter_history(&req),
             "ListParameterVersions" => self.list_parameter_versions(&req),
             "GetParametersByPath" => self.json_stub_list(&req, "Parameters"),
@@ -63,7 +63,6 @@ impl SsmHandler {
             "GetDocument" => self.json_stub(&req, "DocumentId"),
             "ListDocuments" => self.json_stub_list(&req, "Documents"),
             "AddTagsToResource" => self.json_stub(&req, "ResourceId"),
-            "ListTagsForResource" => self.json_stub_tags(&req),
             "DescribeInstanceInformation" => self.json_stub_list(&req, "InstanceInformationList"),
             "GetInventory" => self.json_stub_list(&req, "Entities"),
             other => AwsResponse::error(400, "InvalidParameterException",
@@ -394,6 +393,55 @@ impl SsmHandler {
             })
         }).collect();
         AwsResponse::json(200, json!({ "Parameters": versions }))
+    }
+
+    fn delete_parameters(&self, req: &AwsRequest) -> AwsResponse {
+        let names: Vec<String> = req.params.get("Names")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut deleted = Vec::new();
+        let mut invalid = serde_json::Map::new();
+        for name in &names {
+            if state.get_parameter(name).is_some() {
+                state.delete_parameter(name);
+                deleted.push(name.clone());
+            } else {
+                invalid.insert(name.clone(), json!(json!([])));
+            }
+        }
+        AwsResponse::json(200, json!({
+            "DeletedParameters": deleted,
+            "InvalidParameters": invalid
+        }))
+    }
+
+    fn label_parameter_version(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("Name").and_then(|v| v.as_str()).unwrap_or("");
+        let version = req.params.get("ParameterVersion").and_then(|v| v.as_u64()).unwrap_or(0);
+        let labels: Vec<String> = req.params.get("Labels")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        if let Some(param) = state.get_parameter(name) {
+            if let Some(v) = param.history.write().iter_mut().find(|v| v.version == version) {
+                v.label = labels.join(",");
+            }
+        }
+        // Return the parameter with labels
+        match state.get_parameter(name) {
+            Some(p) => {
+                let mut resp = Self::param_response(&p);
+                if !labels.is_empty() {
+                    resp["Labels"] = json!(labels);
+                }
+                AwsResponse::json(200, json!({ "Parameter": resp }))
+            }
+            None => AwsResponse::error(400, "ParameterNotFound",
+                &format!("Parameter {} not found", name)),
+        }
     }
 
     // ---- JSON stub helpers ----
