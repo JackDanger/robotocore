@@ -270,11 +270,11 @@ impl IamHandler {
         let desc = get_param(req, "Description").unwrap_or_else(|| "service-linked-role".into());
         let id = uuid::Uuid::new_v4().simple();
         AwsResponse::xml(200, "CreateServiceLinkedRole", format!(
-            "<Role><Path>/aws-service-role/</Path><RoleName>SLR-{}-{}<</RoleName><RoleId>AROA{}<</RoleId><Arn>arn:aws:iam::{}:role/aws-service-role/SLR-{}<</Arn><CreateDate>{}</CreateDate><Description>{}</Description></Role>",
+            "<Role><Path>/aws-service-role/</Path><RoleName>SLR-{}-{}</RoleName><RoleId>AROA{}</RoleId><Arn>arn:aws:iam::{}:role/aws-service-role/SLR-{}-{}</Arn><CreateDate>{}</CreateDate><Description>{}</Description></Role>",
             desc, id,
             uuid::Uuid::new_v4().simple(),
             req.account,
-            desc,
+            desc, id,
             chrono::Utc::now().to_rfc3339(),
             desc
         ))
