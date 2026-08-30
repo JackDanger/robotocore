@@ -102,7 +102,7 @@ impl LogsHandler {
     fn group_value(g: &LogGroup) -> Value {
         json!({
             "arn": g.arn,
-            "name": g.name,
+            "logGroupName": g.name,
             "creationTime": g.created,
             "retentionInDays": *g.retention_in_days.read(),
             "storedBytes": 0,
