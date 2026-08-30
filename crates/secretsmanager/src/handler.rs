@@ -49,6 +49,7 @@ impl SecretsManagerHandler {
             "RotateSecret" => self.rotate_secret(&req),
             "CancelRotateSecret" => self.cancel_rotate_secret(&req),
             "UpdateSecretVersionStage" => self.update_secret_version_stage(&req),
+            "ListTagsForResource" => self.list_tags_for_resource(&req),
             other => AwsResponse::error(
                 400,
                 "InvalidParameterException",
@@ -343,12 +344,51 @@ impl SecretsManagerHandler {
         }))
     }
 
-    fn tag_resource(&self, _req: &AwsRequest) -> AwsResponse {
+    fn tag_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("SecretId").and_then(|v| v.as_str()).unwrap_or("");
+        let tags = req.params.get("Tags").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        // Find the secret by ARN or name
+        let secret = state.get_secret(arn);
+        if let Some(s) = secret {
+            let mut existing = s.tags.write().clone();
+            for t in tags {
+                if let Some(key) = t.get("Key").and_then(|k| k.as_str()) {
+                    // Replace existing tag with same key
+                    existing.retain(|e| e.get("Key").and_then(|k| k.as_str()) != Some(key));
+                    existing.push(t);
+                }
+            }
+            *s.tags.write() = existing;
+        }
         AwsResponse::json(200, json!({}))
     }
 
-    fn untag_resource(&self, _req: &AwsRequest) -> AwsResponse {
+    fn untag_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("SecretId").and_then(|v| v.as_str()).unwrap_or("");
+        let tag_keys: Vec<String> = req.params.get("TagKeys")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let secret = state.get_secret(arn);
+        if let Some(s) = secret {
+            s.tags.write().retain(|t| {
+                t.get("Key").and_then(|k| k.as_str())
+                    .map(|k| !tag_keys.contains(&k.to_string()))
+                    .unwrap_or(true)
+            });
+        }
         AwsResponse::json(200, json!({}))
+    }
+
+    fn list_tags_for_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("SecretId").and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        let tags = state.get_secret(arn)
+            .map(|s| s.tags.read().clone())
+            .unwrap_or_default();
+        AwsResponse::json(200, json!({ "TagKeys": tags.iter().filter_map(|t| t.get("Key").and_then(|k| k.as_str()).map(String::from)).collect::<Vec<_>>() }))
     }
 
     fn get_resource_policy(&self, _req: &AwsRequest) -> AwsResponse {
