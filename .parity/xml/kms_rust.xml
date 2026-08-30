@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="48" skipped="0" tests="81" time="1.477" timestamp="2026-08-29T21:19:06.084035-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key" time="0.074" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_keys" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_data_key" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_alias" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_with_alias" time="0.006"><failure message="botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the Encrypt operation: Key not found">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x1099306b0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a1c6720&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="45" skipped="0" tests="81" time="1.132" timestamp="2026-08-29T22:14:49.463826-07:00" hostname="hardcall"><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key" time="0.075" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_keys" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_data_key" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_alias" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_with_alias" time="0.006"><failure message="botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the Encrypt operation: Key not found">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a6fa690&gt;
+kms = &lt;botocore.client.KMS object at 0x10af66d20&gt;
 
     def test_encrypt_with_alias(self, kms):
         key = kms.create_key(Description="alias encrypt")
@@ -19,7 +19,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10a1c6720&gt;, operation_name = 'Encrypt'
+self = &lt;botocore.client.KMS object at 0x10af66d20&gt;, operation_name = 'Encrypt'
 api_params = {'KeyId': 'alias/enc-test', 'Plaintext': b'test data'}
 
     @with_current_context()
@@ -109,8 +109,8 @@ api_params = {'KeyId': 'alias/enc-test', 'Plaintext': b'test data'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the Encrypt operation: Key not found
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: NotFoundException</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_key_rotation_status" time="0.005"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109930a70&gt;
-kms = &lt;botocore.client.KMS object at 0x10a216360&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: NotFoundException</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_key_rotation_status" time="0.005"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a6faa50&gt;
+kms = &lt;botocore.client.KMS object at 0x10b084200&gt;
 
     def test_get_key_rotation_status(self, kms):
         key = kms.create_key(Description="rotation status key")
@@ -121,8 +121,8 @@ kms = &lt;botocore.client.KMS object at 0x10a216360&gt;
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'KeyRotationEnabled'
 
-tests/compatibility/test_kms_compat.py:89: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_key_enable_disable" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_key" time="0.005"><failure message="AssertionError: assert None == 'test'&#10; +  where None = &lt;built-in method get of dict object at 0x10989e480&gt;('env')&#10; +    where &lt;built-in method get of dict object at 0x10989e480&gt; = {}.get">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x1099311f0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a1c7500&gt;
+tests/compatibility/test_kms_compat.py:89: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_key_enable_disable" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_key" time="0.004"><failure message="AssertionError: assert None == 'test'&#10; +  where None = &lt;built-in method get of dict object at 0x10a66e940&gt;('env')&#10; +    where &lt;built-in method get of dict object at 0x10a66e940&gt; = {}.get">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a6fb1d0&gt;
+kms = &lt;botocore.client.KMS object at 0x10af64410&gt;
 
     def test_tag_key(self, kms):
         key = kms.create_key(Description="tag key", Tags=[{"TagKey": "env", "TagValue": "test"}])
@@ -132,11 +132,11 @@ kms = &lt;botocore.client.KMS object at 0x10a1c7500&gt;
         tag_map = {t["TagKey"]: t["TagValue"] for t in tags["Tags"]}
 &gt;       assert tag_map.get("env") == "test"
 E       AssertionError: assert None == 'test'
-E        +  where None = &lt;built-in method get of dict object at 0x10989e480&gt;('env')
-E        +    where &lt;built-in method get of dict object at 0x10989e480&gt; = {}.get
+E        +  where None = &lt;built-in method get of dict object at 0x10a66e940&gt;('env')
+E        +    where &lt;built-in method get of dict object at 0x10a66e940&gt; = {}.get
 
-tests/compatibility/test_kms_compat.py:113: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_key_rotation" time="0.005"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x1098f7c20&gt;
-kms = &lt;botocore.client.KMS object at 0x10a15a930&gt;
+tests/compatibility/test_kms_compat.py:113: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_key_rotation" time="0.005"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a6faf90&gt;
+kms = &lt;botocore.client.KMS object at 0x10af1d1c0&gt;
 
     def test_enable_key_rotation(self, kms):
         key = kms.create_key(Description="rotation key")
@@ -148,121 +148,8 @@ kms = &lt;botocore.client.KMS object at 0x10a15a930&gt;
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'KeyRotationEnabled'
 
-tests/compatibility/test_kms_compat.py:121: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_aliases_for_key" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_update_alias" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the UpdateAlias operation: The operation UpdateAlias is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x1098f6a50&gt;
-kms = &lt;botocore.client.KMS object at 0x10a389760&gt;
-
-    def test_update_alias(self, kms):
-        key1 = kms.create_key(Description="alias update key 1")
-        key1_id = key1["KeyMetadata"]["KeyId"]
-        key2 = kms.create_key(Description="alias update key 2")
-        key2_id = key2["KeyMetadata"]["KeyId"]
-    
-        kms.create_alias(AliasName="alias/update-test", TargetKeyId=key1_id)
-&gt;       kms.update_alias(AliasName="alias/update-test", TargetKeyId=key2_id)
-
-tests/compatibility/test_kms_compat.py:148: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a389760&gt;
-operation_name = 'UpdateAlias'
-api_params = {'AliasName': 'alias/update-test', 'TargetKeyId': 'db7cec87594a430c93889cae3c7afc36'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the UpdateAlias operation: The operation UpdateAlias is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_untag_resource" time="0.006"><failure message="KeyError: 'team'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109930aa0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a1c4440&gt;
+tests/compatibility/test_kms_compat.py:121: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_aliases_for_key" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_update_alias" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_untag_resource" time="0.006"><failure message="KeyError: 'team'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a6f94c0&gt;
+kms = &lt;botocore.client.KMS object at 0x10b3a72f0&gt;
 
     def test_tag_untag_resource(self, kms):
         key = kms.create_key(Description="tag untag key")
@@ -281,230 +168,31 @@ kms = &lt;botocore.client.KMS object at 0x10a1c4440&gt;
                ^^^^^^^^^^^^^^^
 E       KeyError: 'team'
 
-tests/compatibility/test_kms_compat.py:169: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_key_policy" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_key_policies" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyPolicies operation: The operation ListKeyPolicies is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109931790&gt;
-kms = &lt;botocore.client.KMS object at 0x10a1e7860&gt;
+tests/compatibility/test_kms_compat.py:169: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_key_policy" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_list_key_policies" time="0.004"><failure message="KeyError: 'PolicyNames'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a6fb770&gt;
+kms = &lt;botocore.client.KMS object at 0x10af1f290&gt;
 
     def test_list_key_policies(self, kms):
         key = kms.create_key(Description="list policy key")
         key_id = key["KeyMetadata"]["KeyId"]
     
-&gt;       response = kms.list_key_policies(KeyId=key_id)
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        response = kms.list_key_policies(KeyId=key_id)
+&gt;       assert "default" in response["PolicyNames"]
+                            ^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'PolicyNames'
 
-tests/compatibility/test_kms_compat.py:189: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a1e7860&gt;
-operation_name = 'ListKeyPolicies'
-api_params = {'KeyId': '8bd19f898510469b9cfa48b073765bc2'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyPolicies operation: The operation ListKeyPolicies is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt_with_context" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_data_key_without_plaintext_basic" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyWithoutPlaintext operation: The operation GenerateDataKeyWithoutPlaintext is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109931fd0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a388380&gt;
+tests/compatibility/test_kms_compat.py:190: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt_with_context" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_data_key_without_plaintext_basic" time="0.004"><failure message="AssertionError: assert 'CiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '38', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'a97f738b-1e5e-4494-a00a-a2d2ac896436', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a6fbfb0&gt;
+kms = &lt;botocore.client.KMS object at 0x10afc5a60&gt;
 
     def test_generate_data_key_without_plaintext_basic(self, kms):
         key = kms.create_key(Description="data key no pt")
         key_id = key["KeyMetadata"]["KeyId"]
     
-&gt;       response = kms.generate_data_key_without_plaintext(KeyId=key_id, KeySpec="AES_256")
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        response = kms.generate_data_key_without_plaintext(KeyId=key_id, KeySpec="AES_256")
+&gt;       assert "CiphertextBlob" in response
+E       AssertionError: assert 'CiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '38', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'a97f738b-1e5e-4494-a00a-a2d2ac896436', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:209: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a388380&gt;
-operation_name = 'GenerateDataKeyWithoutPlaintext'
-api_params = {'KeyId': '16b411e192e142f28329bafb2232175f', 'KeySpec': 'AES_256'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyWithoutPlaintext operation: The operation GenerateDataKeyWithoutPlaintext is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_re_encrypt" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key_with_alias" time="0.006"><failure message="botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the DescribeKey operation: The operation references an alias that does not exist">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109932810&gt;
-kms = &lt;botocore.client.KMS object at 0x10a3a9df0&gt;
+tests/compatibility/test_kms_compat.py:210: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_re_encrypt" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key_with_alias" time="0.006"><failure message="botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the DescribeKey operation: The operation references an alias that does not exist">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a728830&gt;
+kms = &lt;botocore.client.KMS object at 0x10b06ecf0&gt;
 
     def test_describe_key_with_alias(self, kms):
         key = kms.create_key(Description="alias desc key")
@@ -524,7 +212,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
            ^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = &lt;botocore.client.KMS object at 0x10a3a9df0&gt;
+self = &lt;botocore.client.KMS object at 0x10b06ecf0&gt;
 operation_name = 'DescribeKey', api_params = {'KeyId': 'alias/desc-test'}
 
     @with_current_context()
@@ -614,8 +302,8 @@ operation_name = 'DescribeKey', api_params = {'KeyId': 'alias/desc-test'}
 &gt;           raise error_class(parsed_response, operation_name)
 E           botocore.errorfactory.NotFoundException: An error occurred (NotFoundException) when calling the DescribeKey operation: The operation references an alias that does not exist
 
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: NotFoundException</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_schedule_and_cancel_key_deletion" time="0.006"><failure message="AssertionError: assert 'Enabled' == 'PendingDeletion'&#10;  &#10;  - PendingDeletion&#10;  + Enabled">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109932c30&gt;
-kms = &lt;botocore.client.KMS object at 0x10a3881d0&gt;
+.venv/lib/python3.12/site-packages/botocore/client.py:1078: NotFoundException</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_schedule_and_cancel_key_deletion" time="0.006"><failure message="AssertionError: assert 'Enabled' == 'PendingDeletion'&#10;  &#10;  - PendingDeletion&#10;  + Enabled">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a728c50&gt;
+kms = &lt;botocore.client.KMS object at 0x10af66780&gt;
 
     def test_schedule_and_cancel_key_deletion(self, kms):
         key = kms.create_key(Description="delete cancel key")
@@ -631,8 +319,8 @@ E
 E         - PendingDeletion
 E         + Enabled
 
-tests/compatibility/test_kms_compat.py:248: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_grant" time="0.005"><failure message="AssertionError: assert 'GrantId' in {'GrantToken': '35490f5a85424177b3327b508ed00fc0', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '998425bc-f34e-43b3-96f2-474cc7c0254d', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109933050&gt;
-kms = &lt;botocore.client.KMS object at 0x10a302c30&gt;
+tests/compatibility/test_kms_compat.py:248: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_grant" time="0.006"><failure message="AssertionError: assert 'GrantId' in {'GrantToken': 'ba9d51a820ad469ea528b8375e5a4699', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e6c092d6-bda2-42a0-8c9c-65c5eb1941ea', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a729070&gt;
+kms = &lt;botocore.client.KMS object at 0x10a610350&gt;
 
     def test_create_grant(self, kms):
         key = kms.create_key(Description="grant key")
@@ -644,10 +332,10 @@ kms = &lt;botocore.client.KMS object at 0x10a302c30&gt;
             Operations=["Encrypt", "Decrypt"],
         )
 &gt;       assert "GrantId" in grant
-E       AssertionError: assert 'GrantId' in {'GrantToken': '35490f5a85424177b3327b508ed00fc0', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '998425bc-f34e-43b3-96f2-474cc7c0254d', 'RetryAttempts': 0}}
+E       AssertionError: assert 'GrantId' in {'GrantToken': 'ba9d51a820ad469ea528b8375e5a4699', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e6c092d6-bda2-42a0-8c9c-65c5eb1941ea', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:263: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_put_key_policy" time="0.008"><failure message="KeyError: 'Id'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109933470&gt;
-kms = &lt;botocore.client.KMS object at 0x10a310290&gt;
+tests/compatibility/test_kms_compat.py:263: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_put_key_policy" time="0.006"><failure message="KeyError: 'Id'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a729490&gt;
+kms = &lt;botocore.client.KMS object at 0x10af1d6d0&gt;
 
     def test_put_key_policy(self, kms):
         """PutKeyPolicy sets a key policy and GetKeyPolicy retrieves it."""
@@ -679,8 +367,8 @@ kms = &lt;botocore.client.KMS object at 0x10a310290&gt;
                ^^^^^^^^^^^^^^^
 E       KeyError: 'Id'
 
-tests/compatibility/test_kms_compat.py:301: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_key_rotation_status" time="0.005"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x1099338c0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a3a9ac0&gt;
+tests/compatibility/test_kms_compat.py:301: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_key_rotation_status" time="0.005"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a7298e0&gt;
+kms = &lt;botocore.client.KMS object at 0x10b339190&gt;
 
     def test_key_rotation_status(self, kms):
         """Enable, check, and disable key rotation."""
@@ -693,8 +381,8 @@ kms = &lt;botocore.client.KMS object at 0x10a3a9ac0&gt;
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'KeyRotationEnabled'
 
-tests/compatibility/test_kms_compat.py:310: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_random" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key_symmetric_default" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key_rsa_2048" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key_all_fields" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_update_delete_alias" time="0.010"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the UpdateAlias operation: The operation UpdateAlias is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x1099321e0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a2fc890&gt;
+tests/compatibility/test_kms_compat.py:310: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_random" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key_symmetric_default" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_key_rsa_2048" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_describe_key_all_fields" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_create_update_delete_alias" time="0.011"><failure message="AssertionError: assert '466d9d4a7486...2298633f0d6a6' == 'dd732032936a...a583f55b801ea'&#10;  &#10;  - dd732032936a41c0a0ea583f55b801ea&#10;  + 466d9d4a74864caba052298633f0d6a6">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a7296d0&gt;
+kms = &lt;botocore.client.KMS object at 0x10afc6ab0&gt;
 
     def test_create_update_delete_alias(self, kms):
         """Test CreateAlias, ListAliases, UpdateAlias, DeleteAlias."""
@@ -714,111 +402,17 @@ kms = &lt;botocore.client.KMS object at 0x10a2fc890&gt;
             assert alias_entry["TargetKeyId"] == key1_id
     
             # Update alias to point to key2
-&gt;           kms.update_alias(AliasName=alias_name, TargetKeyId=key2_id)
+            kms.update_alias(AliasName=alias_name, TargetKeyId=key2_id)
+            aliases2 = kms.list_aliases()
+            alias_entry2 = next(a for a in aliases2["Aliases"] if a["AliasName"] == alias_name)
+&gt;           assert alias_entry2["TargetKeyId"] == key2_id
+E           AssertionError: assert '466d9d4a7486...2298633f0d6a6' == 'dd732032936a...a583f55b801ea'
+E             
+E             - dd732032936a41c0a0ea583f55b801ea
+E             + 466d9d4a74864caba052298633f0d6a6
 
-tests/compatibility/test_kms_compat.py:392: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a2fc890&gt;
-operation_name = 'UpdateAlias'
-api_params = {'AliasName': 'alias/compat-alias-crud', 'TargetKeyId': 'ed04742b1de34d02912dc8fd1d82dc91'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the UpdateAlias operation: The operation UpdateAlias is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt_roundtrip" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key_rotation" time="0.005"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109930860&gt;
-kms = &lt;botocore.client.KMS object at 0x10a35e0f0&gt;
+tests/compatibility/test_kms_compat.py:395: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_encrypt_decrypt_roundtrip" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key_rotation" time="0.006"><failure message="KeyError: 'KeyRotationEnabled'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a728530&gt;
+kms = &lt;botocore.client.KMS object at 0x10b2b4770&gt;
 
     def test_enable_disable_key_rotation(self, kms):
         """Test EnableKeyRotation, GetKeyRotationStatus, DisableKeyRotation."""
@@ -830,8 +424,8 @@ kms = &lt;botocore.client.KMS object at 0x10a35e0f0&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'KeyRotationEnabled'
 
-tests/compatibility/test_kms_compat.py:427: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key_state" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_untag_list_resource_tags" time="0.006"><failure message="KeyError: 'project'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109944410&gt;
-kms = &lt;botocore.client.KMS object at 0x10a2fea80&gt;
+tests/compatibility/test_kms_compat.py:427: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_enable_disable_key_state" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_tag_untag_list_resource_tags" time="0.006"><failure message="KeyError: 'project'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a72a3f0&gt;
+kms = &lt;botocore.client.KMS object at 0x10b06fef0&gt;
 
     def test_tag_untag_list_resource_tags(self, kms):
         """Test TagResource, UntagResource, ListResourceTags."""
@@ -851,8 +445,8 @@ kms = &lt;botocore.client.KMS object at 0x10a2fea80&gt;
                    ^^^^^^^^^^^^^^^^^^
 E           KeyError: 'project'
 
-tests/compatibility/test_kms_compat.py:468: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_sign_verify_rsa" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the Sign operation: The operation Sign is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109944830&gt;
-kms = &lt;botocore.client.KMS object at 0x10a3ab770&gt;
+tests/compatibility/test_kms_compat.py:468: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_sign_verify_rsa" time="0.006"><failure message="AssertionError: assert 'Signature' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'be8a3e09-8072-4cfc-950d-0fb2dd260871', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a72a810&gt;
+kms = &lt;botocore.client.KMS object at 0x10b33d3d0&gt;
 
     def test_sign_verify_rsa(self, kms):
         """Test Sign and Verify with an RSA key."""
@@ -864,115 +458,17 @@ kms = &lt;botocore.client.KMS object at 0x10a3ab770&gt;
         key_id = key["KeyMetadata"]["KeyId"]
         try:
             message = b"message to sign"
-&gt;           sign_resp = kms.sign(
+            sign_resp = kms.sign(
                 KeyId=key_id,
                 Message=message,
                 MessageType="RAW",
                 SigningAlgorithm="RSASSA_PKCS1_V1_5_SHA_256",
             )
+&gt;           assert "Signature" in sign_resp
+E           AssertionError: assert 'Signature' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'be8a3e09-8072-4cfc-950d-0fb2dd260871', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:489: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a3ab770&gt;, operation_name = 'Sign'
-api_params = {'KeyId': '5fac6f50ad3d469e91a4315306a9a58c', 'Message': b'message to sign', 'MessageType': 'RAW', 'SigningAlgorithm': 'RSASSA_PKCS1_V1_5_SHA_256'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the Sign operation: The operation Sign is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_update_key_description" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_put_key_policy" time="0.005"><failure message="AssertionError: assert 'Statement' in {}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109945070&gt;
-kms = &lt;botocore.client.KMS object at 0x10a300860&gt;
+tests/compatibility/test_kms_compat.py:495: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_update_key_description" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_put_key_policy" time="0.005"><failure message="AssertionError: assert 'Statement' in {}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a72b050&gt;
+kms = &lt;botocore.client.KMS object at 0x10b0ba780&gt;
 
     def test_get_put_key_policy(self, kms):
         """Test GetKeyPolicy and PutKeyPolicy."""
@@ -987,8 +483,8 @@ kms = &lt;botocore.client.KMS object at 0x10a300860&gt;
 &gt;           assert "Statement" in parsed
 E           AssertionError: assert 'Statement' in {}
 
-tests/compatibility/test_kms_compat.py:529: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_public_key" time="0.006"><failure message="AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e39b4f54-e133-4752-be52-93546dcc0ea4', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109945490&gt;
-kms = &lt;botocore.client.KMS object at 0x10a550050&gt;
+tests/compatibility/test_kms_compat.py:529: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_get_public_key" time="0.006"><failure message="AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'ae6f7ea1-eeb1-4d5b-9b3b-b1eb65932deb', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a72b470&gt;
+kms = &lt;botocore.client.KMS object at 0x10b36fd10&gt;
 
     def test_get_public_key(self, kms):
         """Test GetPublicKey for an asymmetric key."""
@@ -1002,10 +498,10 @@ kms = &lt;botocore.client.KMS object at 0x10a550050&gt;
             resp = kms.get_public_key(KeyId=key_id)
             assert "PublicKey" in resp
 &gt;           assert "KeyId" in resp
-E           AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e39b4f54-e133-4752-be52-93546dcc0ea4', 'RetryAttempts': 0}}
+E           AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'ae6f7ea1-eeb1-4d5b-9b3b-b1eb65932deb', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:565: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_retire_grant" time="0.006"><failure message="KeyError: 'GrantId'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x1099458b0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a5446e0&gt;
+tests/compatibility/test_kms_compat.py:565: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_retire_grant" time="0.006"><failure message="KeyError: 'GrantId'">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a72b890&gt;
+kms = &lt;botocore.client.KMS object at 0x10b2b4350&gt;
 
     def test_retire_grant(self, kms):
         """Test RetireGrant removes a grant."""
@@ -1021,8 +517,8 @@ kms = &lt;botocore.client.KMS object at 0x10a5446e0&gt;
                        ^^^^^^^^^^^^^^^^
 E           KeyError: 'GrantId'
 
-tests/compatibility/test_kms_compat.py:581: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_mac_and_verify_mac" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateMac operation: The operation GenerateMac is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x109945cd0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a531cd0&gt;
+tests/compatibility/test_kms_compat.py:581: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSOperations" name="test_generate_mac_and_verify_mac" time="0.005"><failure message="AssertionError: assert 'Mac' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '966992a9-a8a3-4be4-a970-39057244656d', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSOperations object at 0x10a72bcb0&gt;
+kms = &lt;botocore.client.KMS object at 0x10af1f920&gt;
 
     def test_generate_mac_and_verify_mac(self, kms):
         """Test GenerateMac and VerifyMac with HMAC key."""
@@ -1034,337 +530,38 @@ kms = &lt;botocore.client.KMS object at 0x10a531cd0&gt;
         key_id = key["KeyMetadata"]["KeyId"]
         try:
             message = b"message to authenticate"
-&gt;           mac_resp = kms.generate_mac(
+            mac_resp = kms.generate_mac(
                 KeyId=key_id,
                 Message=message,
                 MacAlgorithm="HMAC_SHA_256",
             )
+&gt;           assert "Mac" in mac_resp
+E           AssertionError: assert 'Mac' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '966992a9-a8a3-4be4-a970-39057244656d', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:609: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a531cd0&gt;
-operation_name = 'GenerateMac'
-api_params = {'KeyId': '8951203f7a004666ad538aa0c049dfee', 'MacAlgorithm': 'HMAC_SHA_256', 'Message': b'message to authenticate'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateMac operation: The operation GenerateMac is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_data_key" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_data_key_without_plaintext" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyWithoutPlaintext operation: The operation GenerateDataKeyWithoutPlaintext is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x109931970&gt;
-kms = &lt;botocore.client.KMS object at 0x10a544140&gt;
+tests/compatibility/test_kms_compat.py:614: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_data_key" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_data_key_without_plaintext" time="0.006"><failure message="AssertionError: assert 'CiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '38', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '09435f81-d205-4582-abce-af1ba59562f4', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10a72b8c0&gt;
+kms = &lt;botocore.client.KMS object at 0x10b187740&gt;
 
     def test_generate_data_key_without_plaintext(self, kms):
         key = kms.create_key()
         key_id = key["KeyMetadata"]["KeyId"]
         try:
-&gt;           resp = kms.generate_data_key_without_plaintext(KeyId=key_id, KeySpec="AES_256")
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            resp = kms.generate_data_key_without_plaintext(KeyId=key_id, KeySpec="AES_256")
+&gt;           assert "CiphertextBlob" in resp
+E           AssertionError: assert 'CiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '38', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '09435f81-d205-4582-abce-af1ba59562f4', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:653: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a544140&gt;
-operation_name = 'GenerateDataKeyWithoutPlaintext'
-api_params = {'KeyId': 'cd75d9fe64ad4e88be8a9032f667822e', 'KeySpec': 'AES_256'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyWithoutPlaintext operation: The operation GenerateDataKeyWithoutPlaintext is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_random" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_keys" time="0.030" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_aliases" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_update_key_description" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_enable_disable_key" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_key_policies" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyPolicies operation: The operation ListKeyPolicies is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x1099441d0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a3aa600&gt;
+tests/compatibility/test_kms_compat.py:654: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_generate_random" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_keys" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_aliases" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_update_key_description" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_enable_disable_key" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_list_key_policies" time="0.006"><failure message="AssertionError: assert 'PolicyNames' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f3f92f87-59fc-43cd-a3eb-962fc987e329', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10a6fbd70&gt;
+kms = &lt;botocore.client.KMS object at 0x10b36e300&gt;
 
     def test_list_key_policies(self, kms):
         key = kms.create_key()
         key_id = key["KeyMetadata"]["KeyId"]
         try:
-&gt;           resp = kms.list_key_policies(KeyId=key_id)
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            resp = kms.list_key_policies(KeyId=key_id)
+&gt;           assert "PolicyNames" in resp
+E           AssertionError: assert 'PolicyNames' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '18', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'f3f92f87-59fc-43cd-a3eb-962fc987e329', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:701: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a3aa600&gt;
-operation_name = 'ListKeyPolicies'
-api_params = {'KeyId': '0c57444ba0a545be95b573b1cd5aba44'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyPolicies operation: The operation ListKeyPolicies is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_create_grant" time="0.006"><failure message="AssertionError: assert 'GrantId' in {'GrantToken': 'f2b658bb1751479582f9c932a3451913', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'c7295e3f-df4f-4a9d-b975-bb429c577381', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x109946510&gt;
-kms = &lt;botocore.client.KMS object at 0x10a311af0&gt;
+tests/compatibility/test_kms_compat.py:702: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_create_grant" time="0.005"><failure message="AssertionError: assert 'GrantId' in {'GrantToken': '107b931baac14c52a4e6d64bd1bda61d', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e3aaf904-b3ef-46a8-abca-548f70126b51', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSExtended object at 0x10a738530&gt;
+kms = &lt;botocore.client.KMS object at 0x10b179850&gt;
 
     def test_create_grant(self, kms):
         key = kms.create_key()
@@ -1376,452 +573,45 @@ kms = &lt;botocore.client.KMS object at 0x10a311af0&gt;
                 Operations=["Encrypt", "Decrypt"],
             )
 &gt;           assert "GrantId" in resp
-E           AssertionError: assert 'GrantId' in {'GrantToken': 'f2b658bb1751479582f9c932a3451913', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'c7295e3f-df4f-4a9d-b975-bb429c577381', 'RetryAttempts': 0}}
+E           AssertionError: assert 'GrantId' in {'GrantToken': '107b931baac14c52a4e6d64bd1bda61d', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e3aaf904-b3ef-46a8-abca-548f70126b51', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:716: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_encrypt_decrypt_roundtrip" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_re_encrypt" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_describe_custom_key_stores" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the DescribeCustomKeyStores operation: The operation DescribeCustomKeyStores is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x109946de0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a375a60&gt;
-
-    def test_describe_custom_key_stores(self, kms):
-        """DescribeCustomKeyStores returns a list (possibly empty)."""
-&gt;       resp = kms.describe_custom_key_stores()
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-tests/compatibility/test_kms_compat.py:768: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a375a60&gt;
-operation_name = 'DescribeCustomKeyStores', api_params = {}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the DescribeCustomKeyStores operation: The operation DescribeCustomKeyStores is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_grants" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_retirable_grants" time="0.003"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListRetirableGrants operation: The operation ListRetirableGrants is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x109947980&gt;
-kms = &lt;botocore.client.KMS object at 0x10a310da0&gt;
+tests/compatibility/test_kms_compat.py:716: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_encrypt_decrypt_roundtrip" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSExtended" name="test_re_encrypt" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_describe_custom_key_stores" time="0.031" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_grants" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_retirable_grants" time="0.003"><failure message="AssertionError: assert 'Grants' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0e4ff798-af76-4de2-b608-c57ab5d15f98', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10a739940&gt;
+kms = &lt;botocore.client.KMS object at 0x10b2e5580&gt;
 
     def test_list_retirable_grants(self, kms):
         """ListRetirableGrants returns grants for a principal (possibly empty)."""
-&gt;       resp = kms.list_retirable_grants(
+        resp = kms.list_retirable_grants(
             RetiringPrincipal="arn:aws:iam::123456789012:root",
         )
+&gt;       assert "Grants" in resp
+E       AssertionError: assert 'Grants' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '22', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0e4ff798-af76-4de2-b608-c57ab5d15f98', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:785: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a310da0&gt;
-operation_name = 'ListRetirableGrants'
-api_params = {'RetiringPrincipal': 'arn:aws:iam::123456789012:root'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListRetirableGrants operation: The operation ListRetirableGrants is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_rotate_key_on_demand" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the RotateKeyOnDemand operation: The operation RotateKeyOnDemand is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x109947da0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a389730&gt;
+tests/compatibility/test_kms_compat.py:788: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_rotate_key_on_demand" time="0.005"><failure message="AssertionError: assert 'KeyId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '24', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '7db28f0a-3e8a-4ea9-b7c2-dfdab55c88e5', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10a739d60&gt;
+kms = &lt;botocore.client.KMS object at 0x10b2f00e0&gt;
 
     def test_rotate_key_on_demand(self, kms):
         """RotateKeyOnDemand triggers an on-demand rotation."""
         key = kms.create_key(Description="rotate-on-demand-test")
         key_id = key["KeyMetadata"]["KeyId"]
         try:
-&gt;           resp = kms.rotate_key_on_demand(KeyId=key_id)
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            resp = kms.rotate_key_on_demand(KeyId=key_id)
+&gt;           assert "KeyId" in resp
+E           AssertionError: assert 'KeyId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '24', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '7db28f0a-3e8a-4ea9-b7c2-dfdab55c88e5', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:796: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a389730&gt;
-operation_name = 'RotateKeyOnDemand'
-api_params = {'KeyId': 'ba61294af7744d9988034faef74e1144'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the RotateKeyOnDemand operation: The operation RotateKeyOnDemand is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_key_rotations" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyRotations operation: The operation ListKeyRotations is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x109958200&gt;
-kms = &lt;botocore.client.KMS object at 0x10a1c47a0&gt;
+tests/compatibility/test_kms_compat.py:797: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_list_key_rotations" time="0.005"><failure message="AssertionError: assert 'Rotations' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '19', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '7437a967-02d5-4832-b0f1-670c163d8635', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10a73a180&gt;
+kms = &lt;botocore.client.KMS object at 0x10b1524b0&gt;
 
     def test_list_key_rotations(self, kms):
         """ListKeyRotations returns rotation history for a key."""
         key = kms.create_key(Description="list-rotations-test")
         key_id = key["KeyMetadata"]["KeyId"]
         try:
-&gt;           resp = kms.list_key_rotations(KeyId=key_id)
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            resp = kms.list_key_rotations(KeyId=key_id)
+&gt;           assert "Rotations" in resp
+E           AssertionError: assert 'Rotations' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '19', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '7437a967-02d5-4832-b0f1-670c163d8635', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:806: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a1c47a0&gt;
-operation_name = 'ListKeyRotations'
-api_params = {'KeyId': 'cddb22a2b8804f4a87f373d31f15faa8'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ListKeyRotations operation: The operation ListKeyRotations is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_replicate_key" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ReplicateKey operation: The operation ReplicateKey is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x109947a70&gt;
-kms = &lt;botocore.client.KMS object at 0x10a38b350&gt;
+tests/compatibility/test_kms_compat.py:807: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_replicate_key" time="0.006"><failure message="AssertionError: assert 'ReplicaKeyMetadata' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '19', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e03a0c6c-3ceb-4332-a8fc-f31bade1119e', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10a729e50&gt;
+kms = &lt;botocore.client.KMS object at 0x108a605c0&gt;
 
     def test_replicate_key(self, kms):
         """ReplicateKey replicates a multi-region key to another region."""
@@ -1831,114 +621,15 @@ kms = &lt;botocore.client.KMS object at 0x10a38b350&gt;
         )
         key_id = key["KeyMetadata"]["KeyId"]
         try:
-&gt;           resp = kms.replicate_key(
+            resp = kms.replicate_key(
                 KeyId=key_id,
                 ReplicaRegion="eu-west-1",
             )
+&gt;           assert "ReplicaKeyMetadata" in resp
+E           AssertionError: assert 'ReplicaKeyMetadata' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '19', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e03a0c6c-3ceb-4332-a8fc-f31bade1119e', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:820: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a38b350&gt;
-operation_name = 'ReplicateKey'
-api_params = {'KeyId': 'c0983b99f08f409d80d56068af497910', 'ReplicaRegion': 'eu-west-1'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the ReplicateKey operation: The operation ReplicateKey is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_multi_region" time="0.005"><failure message="KeyError: 'MultiRegion'">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x109946f30&gt;
-kms = &lt;botocore.client.KMS object at 0x10a58aa80&gt;
+tests/compatibility/test_kms_compat.py:824: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_multi_region" time="0.005"><failure message="KeyError: 'MultiRegion'">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10a72a390&gt;
+kms = &lt;botocore.client.KMS object at 0x10b2e7980&gt;
 
     def test_create_key_multi_region(self, kms):
         """CreateKey with MultiRegion=True sets the flag."""
@@ -1949,8 +640,8 @@ kms = &lt;botocore.client.KMS object at 0x10a58aa80&gt;
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E           KeyError: 'MultiRegion'
 
-tests/compatibility/test_kms_compat.py:834: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_external_origin" time="0.005"><failure message="AssertionError: assert 'AWS_KMS' == 'EXTERNAL'&#10;  &#10;  - EXTERNAL&#10;  + AWS_KMS">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x109946660&gt;
-kms = &lt;botocore.client.KMS object at 0x10a56d4f0&gt;
+tests/compatibility/test_kms_compat.py:834: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_external_origin" time="0.005"><failure message="AssertionError: assert 'AWS_KMS' == 'EXTERNAL'&#10;  &#10;  - EXTERNAL&#10;  + AWS_KMS">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10a72b5f0&gt;
+kms = &lt;botocore.client.KMS object at 0x10b087590&gt;
 
     def test_create_key_external_origin(self, kms):
         """CreateKey with Origin=EXTERNAL creates a key with EXTERNAL origin."""
@@ -1964,8 +655,8 @@ E
 E             - EXTERNAL
 E             + AWS_KMS
 
-tests/compatibility/test_kms_compat.py:846: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_grant_with_constraints" time="0.006"><failure message="AssertionError: assert 'GrantId' in {'GrantToken': '1d3dc8a285ee466b8a4d2e45cbaf20aa', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '9ffb2482-52f7-4c8b-9f1d-f069d954b8a1', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x109944170&gt;
-kms = &lt;botocore.client.KMS object at 0x109985d30&gt;
+tests/compatibility/test_kms_compat.py:846: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_grant_with_constraints" time="0.006"><failure message="AssertionError: assert 'GrantId' in {'GrantToken': '4bac9b202aae4c278fa0e10339074da5', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '8ef9e1db-7c14-456f-bd0b-d33d794c1365', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10a739b20&gt;
+kms = &lt;botocore.client.KMS object at 0x10b387650&gt;
 
     def test_grant_with_constraints(self, kms):
         """CreateGrant with EncryptionContextSubset constraint."""
@@ -1981,10 +672,10 @@ kms = &lt;botocore.client.KMS object at 0x109985d30&gt;
                 },
             )
 &gt;           assert "GrantId" in grant
-E           AssertionError: assert 'GrantId' in {'GrantToken': '1d3dc8a285ee466b8a4d2e45cbaf20aa', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '9ffb2482-52f7-4c8b-9f1d-f069d954b8a1', 'RetryAttempts': 0}}
+E           AssertionError: assert 'GrantId' in {'GrantToken': '4bac9b202aae4c278fa0e10339074da5', 'ResponseMetadata': {'HTTPHeaders': {'content-length': '49', 'conte...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '8ef9e1db-7c14-456f-bd0b-d33d794c1365', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:865: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_generate_random_various_sizes" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_ecc" time="0.005"><failure message="AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '60c60ebd-2f58-4e1f-8290-4f0eebfbbbbc', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x109933200&gt;
-kms = &lt;botocore.client.KMS object at 0x10a56c5f0&gt;
+tests/compatibility/test_kms_compat.py:865: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_generate_random_various_sizes" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_create_key_ecc" time="0.005"><failure message="AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '67a17c77-0306-4bf1-ade7-457418d15f10', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10a738ce0&gt;
+kms = &lt;botocore.client.KMS object at 0x10ae47e90&gt;
 
     def test_create_key_ecc(self, kms):
         """CreateKey with ECC_NIST_P256 for sign/verify."""
@@ -1999,10 +690,10 @@ kms = &lt;botocore.client.KMS object at 0x10a56c5f0&gt;
             pub = kms.get_public_key(KeyId=key_id)
             assert "PublicKey" in pub
 &gt;           assert "KeyId" in pub
-E           AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '60c60ebd-2f58-4e1f-8290-4f0eebfbbbbc', 'RetryAttempts': 0}}
+E           AssertionError: assert 'KeyId' in {'PublicKey': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '67a17c77-0306-4bf1-ade7-457418d15f10', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:894: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_encrypt_decrypt_with_algorithm" time="0.006" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_re_encrypt_with_context" time="0.009" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_sign_verify_ecc" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the Sign operation: The operation Sign is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x109958b90&gt;
-kms = &lt;botocore.client.KMS object at 0x10a35cc80&gt;
+tests/compatibility/test_kms_compat.py:894: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_encrypt_decrypt_with_algorithm" time="0.007" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_re_encrypt_with_context" time="0.008" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_sign_verify_ecc" time="0.005"><failure message="AssertionError: assert 'Signature' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '51c045e4-9c7e-45c8-a0fc-d542ef52b919', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10a73ab10&gt;
+kms = &lt;botocore.client.KMS object at 0x10b393b60&gt;
 
     def test_sign_verify_ecc(self, kms):
         """Sign and Verify with ECC key."""
@@ -2014,115 +705,17 @@ kms = &lt;botocore.client.KMS object at 0x10a35cc80&gt;
         key_id = key["KeyMetadata"]["KeyId"]
         try:
             msg = b"ecc sign test"
-&gt;           sig = kms.sign(
+            sig = kms.sign(
                 KeyId=key_id,
                 Message=msg,
                 MessageType="RAW",
                 SigningAlgorithm="ECDSA_SHA_256",
             )
+&gt;           assert "Signature" in sig
+E           AssertionError: assert 'Signature' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '11', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '51c045e4-9c7e-45c8-a0fc-d542ef52b919', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:959: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a35cc80&gt;, operation_name = 'Sign'
-api_params = {'KeyId': 'a63a553c3a404e5b9f364ede39700818', 'Message': b'ecc sign test', 'MessageType': 'RAW', 'SigningAlgorithm': 'ECDSA_SHA_256'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the Sign operation: The operation Sign is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_generate_data_key_number_of_bytes" time="0.006"><failure message="AssertionError: assert 32 == 64&#10; +  where 32 = len(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x109958fb0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a38fbf0&gt;
+tests/compatibility/test_kms_compat.py:965: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSGapStubs" name="test_generate_data_key_number_of_bytes" time="0.006"><failure message="AssertionError: assert 32 == 64&#10; +  where 32 = len(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')">self = &lt;tests.compatibility.test_kms_compat.TestKMSGapStubs object at 0x10a73af30&gt;
+kms = &lt;botocore.client.KMS object at 0x10b33b3b0&gt;
 
     def test_generate_data_key_number_of_bytes(self, kms):
         """GenerateDataKey with NumberOfBytes instead of KeySpec."""
@@ -2134,464 +727,68 @@ kms = &lt;botocore.client.KMS object at 0x10a38fbf0&gt;
 E           AssertionError: assert 32 == 64
 E            +  where 32 = len(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
 
-tests/compatibility/test_kms_compat.py:985: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_random_fixed" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_random_min_max" time="0.005" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_rsa" time="0.005"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPair operation: The operation GenerateDataKeyPair is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x109959be0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a38f470&gt;
+tests/compatibility/test_kms_compat.py:985: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_random_fixed" time="0.003" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_random_min_max" time="0.004" /><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_rsa" time="0.005"><failure message="AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'a354fdc0-03b3-4192-bc7e-5215d830f453', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10a73bb30&gt;
+kms = &lt;botocore.client.KMS object at 0x10af65820&gt;
 
     def test_generate_data_key_pair_rsa(self, kms):
         """GenerateDataKeyPair with RSA_2048 returns key pair components."""
         key = kms.create_key(Description="dkp-rsa-test")
         key_id = key["KeyMetadata"]["KeyId"]
         try:
-&gt;           resp = kms.generate_data_key_pair(
+            resp = kms.generate_data_key_pair(
                 KeyId=key_id,
                 KeyPairSpec="RSA_2048",
             )
+&gt;           assert "PrivateKeyCiphertextBlob" in resp
+E           AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'a354fdc0-03b3-4192-bc7e-5215d830f453', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1017: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a38f470&gt;
-operation_name = 'GenerateDataKeyPair'
-api_params = {'KeyId': '783c9f2a780349f1950da3516707a71c', 'KeyPairSpec': 'RSA_2048'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPair operation: The operation GenerateDataKeyPair is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_ecc" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPair operation: The operation GenerateDataKeyPair is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x109959fd0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a2a87d0&gt;
+tests/compatibility/test_kms_compat.py:1021: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_ecc" time="0.006"><failure message="AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '83b7f74b-f035-4805-8263-6c9b06ba5ed7', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10a73bf20&gt;
+kms = &lt;botocore.client.KMS object at 0x10b2f34a0&gt;
 
     def test_generate_data_key_pair_ecc(self, kms):
         """GenerateDataKeyPair with ECC_NIST_P256."""
         key = kms.create_key(Description="dkp-ecc-test")
         key_id = key["KeyMetadata"]["KeyId"]
         try:
-&gt;           resp = kms.generate_data_key_pair(
+            resp = kms.generate_data_key_pair(
                 KeyId=key_id,
                 KeyPairSpec="ECC_NIST_P256",
             )
+&gt;           assert "PrivateKeyCiphertextBlob" in resp
+E           AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '83b7f74b-f035-4805-8263-6c9b06ba5ed7', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1035: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a2a87d0&gt;
-operation_name = 'GenerateDataKeyPair'
-api_params = {'KeyId': '3a6febf942c84f3e9b48ee7f4b1e1be2', 'KeyPairSpec': 'ECC_NIST_P256'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPair operation: The operation GenerateDataKeyPair is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_without_plaintext_rsa" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPairWithoutPlaintext operation: The operation GenerateDataKeyPairWithoutPlaintext is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10995a3c0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a2b0350&gt;
+tests/compatibility/test_kms_compat.py:1039: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_without_plaintext_rsa" time="0.006"><failure message="AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '42', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '1f4a7071-13ce-4dfc-8f51-1bd92d50a3ba', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10a750350&gt;
+kms = &lt;botocore.client.KMS object at 0x10b338830&gt;
 
     def test_generate_data_key_pair_without_plaintext_rsa(self, kms):
         """GenerateDataKeyPairWithoutPlaintext omits private key plaintext."""
         key = kms.create_key(Description="dkpnp-rsa-test")
         key_id = key["KeyMetadata"]["KeyId"]
         try:
-&gt;           resp = kms.generate_data_key_pair_without_plaintext(
+            resp = kms.generate_data_key_pair_without_plaintext(
                 KeyId=key_id,
                 KeyPairSpec="RSA_2048",
             )
+&gt;           assert "PrivateKeyCiphertextBlob" in resp
+E           AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '42', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '1f4a7071-13ce-4dfc-8f51-1bd92d50a3ba', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1051: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a2b0350&gt;
-operation_name = 'GenerateDataKeyPairWithoutPlaintext'
-api_params = {'KeyId': '20866cfde06649b8b539db97cb3a89c1', 'KeyPairSpec': 'RSA_2048'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPairWithoutPlaintext operation: The operation GenerateDataKeyPairWithoutPlaintext is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_without_plaintext_ecc" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPairWithoutPlaintext operation: The operation GenerateDataKeyPairWithoutPlaintext is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x1099449b0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a532030&gt;
+tests/compatibility/test_kms_compat.py:1055: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_generate_data_key_pair_without_plaintext_ecc" time="0.006"><failure message="AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '42', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e9b0d733-18c2-4ac8-a267-2b1cd83e4a2f', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10a73b890&gt;
+kms = &lt;botocore.client.KMS object at 0x10b3a4470&gt;
 
     def test_generate_data_key_pair_without_plaintext_ecc(self, kms):
         """GenerateDataKeyPairWithoutPlaintext with ECC_NIST_P256."""
         key = kms.create_key(Description="dkpnp-ecc-test")
         key_id = key["KeyMetadata"]["KeyId"]
         try:
-&gt;           resp = kms.generate_data_key_pair_without_plaintext(
+            resp = kms.generate_data_key_pair_without_plaintext(
                 KeyId=key_id,
                 KeyPairSpec="ECC_NIST_P256",
             )
+&gt;           assert "PrivateKeyCiphertextBlob" in resp
+E           AssertionError: assert 'PrivateKeyCiphertextBlob' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '42', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'e9b0d733-18c2-4ac8-a267-2b1cd83e4a2f', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1068: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a532030&gt;
-operation_name = 'GenerateDataKeyPairWithoutPlaintext'
-api_params = {'KeyId': 'f1e060508b1841bcb3e3e2b5ca50b4a5', 'KeyPairSpec': 'ECC_NIST_P256'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GenerateDataKeyPairWithoutPlaintext operation: The operation GenerateDataKeyPairWithoutPlaintext is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_custom_key_store_lifecycle" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x109946ae0&gt;
-kms = &lt;botocore.client.KMS object at 0x1098b4f80&gt;
+tests/compatibility/test_kms_compat.py:1072: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_custom_key_store_lifecycle" time="0.003"><failure message="AssertionError: assert 'CustomKeyStoreId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0d835806-fef1-4f6f-a576-47398897a533', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10a73b080&gt;
+kms = &lt;botocore.client.KMS object at 0x10b33c200&gt;
 
     def test_custom_key_store_lifecycle(self, kms):
         """CreateCustomKeyStore, DescribeCustomKeyStores, DeleteCustomKeyStore."""
@@ -2609,231 +806,33 @@ kms = &lt;botocore.client.KMS object at 0x1098b4f80&gt;
             "EHrJKVHRw/SRZAmLYv3aGMi/0BXk2Q==\n"
             "-----END CERTIFICATE-----"
         )
-&gt;       resp = kms.create_custom_key_store(
+        resp = kms.create_custom_key_store(
             CustomKeyStoreName="test-cks",
             CloudHsmClusterId="cluster-1234567890abc",
             TrustAnchorCertificate=cert,
             KeyStorePassword="kmsP@ssw0rd!",
         )
+&gt;       assert "CustomKeyStoreId" in resp
+E       AssertionError: assert 'CustomKeyStoreId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '21', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '0d835806-fef1-4f6f-a576-47398897a533', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1095: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x1098b4f80&gt;
-operation_name = 'CreateCustomKeyStore'
-api_params = {'CloudHsmClusterId': 'cluster-1234567890abc', 'CustomKeyStoreName': 'test-cks', 'KeyStorePassword': 'kmsP@ssw0rd!', '...H/\nMA0GCSqGSIb3DQEBCwUAA0EAYiWXhZk9WsP46PqFi+sJlBFVKs7v\nEHrJKVHRw/SRZAmLYv3aGMi/0BXk2Q==\n-----END CERTIFICATE-----'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_get_parameters_for_import" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetParametersForImport operation: The operation GetParametersForImport is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x109947f20&gt;
-kms = &lt;botocore.client.KMS object at 0x10a5479e0&gt;
+tests/compatibility/test_kms_compat.py:1101: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_get_parameters_for_import" time="0.006"><failure message="AssertionError: assert 'KeyId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'df84f9aa-e151-4d2c-b369-d138f9331132', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10a73aab0&gt;
+kms = &lt;botocore.client.KMS object at 0x10b178410&gt;
 
     def test_get_parameters_for_import(self, kms):
         """GetParametersForImport returns wrapping key and import token."""
         key = kms.create_key(Description="import-test", Origin="EXTERNAL")
         key_id = key["KeyMetadata"]["KeyId"]
         try:
-&gt;           resp = kms.get_parameters_for_import(
+            resp = kms.get_parameters_for_import(
                 KeyId=key_id,
                 WrappingAlgorithm="RSAES_OAEP_SHA_256",
                 WrappingKeySpec="RSA_2048",
             )
+&gt;           assert "KeyId" in resp
+E           AssertionError: assert 'KeyId' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '26', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': 'df84f9aa-e151-4d2c-b369-d138f9331132', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1123: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a5479e0&gt;
-operation_name = 'GetParametersForImport'
-api_params = {'KeyId': 'faf719ffbf1b4e99931138b54cd740e8', 'WrappingAlgorithm': 'RSAES_OAEP_SHA_256', 'WrappingKeySpec': 'RSA_2048'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetParametersForImport operation: The operation GetParametersForImport is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_import_key_material_and_delete" time="0.006"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetParametersForImport operation: The operation GetParametersForImport is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x109959d90&gt;
-kms = &lt;botocore.client.KMS object at 0x10a2b03e0&gt;
+tests/compatibility/test_kms_compat.py:1128: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_import_key_material_and_delete" time="0.005"><failure message="KeyError: 'ImportToken'">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10a73a2a0&gt;
+kms = &lt;botocore.client.KMS object at 0x10ae47770&gt;
 
     def test_import_key_material_and_delete(self, kms):
         """Full key import flow: create EXTERNAL key, get params, import, delete material."""
@@ -2845,115 +844,17 @@ kms = &lt;botocore.client.KMS object at 0x10a2b03e0&gt;
         key_id = key["KeyMetadata"]["KeyId"]
         try:
             # Get parameters for import
-&gt;           params = kms.get_parameters_for_import(
+            params = kms.get_parameters_for_import(
                 KeyId=key_id,
                 WrappingAlgorithm="RSAES_OAEP_SHA_256",
                 WrappingKeySpec="RSA_2048",
             )
+&gt;           import_token = params["ImportToken"]
+                           ^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'ImportToken'
 
-tests/compatibility/test_kms_compat.py:1145: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a2b03e0&gt;
-operation_name = 'GetParametersForImport'
-api_params = {'KeyId': '91ac714c13584293ac1802a44c2ffabe', 'WrappingAlgorithm': 'RSAES_OAEP_SHA_256', 'WrappingKeySpec': 'RSA_2048'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the GetParametersForImport operation: The operation GetParametersForImport is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_delete_custom_key_store_nonexistent" time="0.004"><failure message="AssertionError: assert 'InvalidException' in ('CustomKeyStoreNotFoundException', 'NotFoundException')">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x109959610&gt;
-kms = &lt;botocore.client.KMS object at 0x10a4e0e00&gt;
+tests/compatibility/test_kms_compat.py:1150: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_delete_custom_key_store_nonexistent" time="0.004"><failure message="AssertionError: assert 'InvalidException' in ('CustomKeyStoreNotFoundException', 'NotFoundException')">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10a739d30&gt;
+kms = &lt;botocore.client.KMS object at 0x10b3a6e10&gt;
 
     def test_delete_custom_key_store_nonexistent(self, kms):
         """DeleteCustomKeyStore with fake ID raises an error."""
@@ -2966,26 +867,20 @@ kms = &lt;botocore.client.KMS object at 0x10a4e0e00&gt;
         )
 E       AssertionError: assert 'InvalidException' in ('CustomKeyStoreNotFoundException', 'NotFoundException')
 
-tests/compatibility/test_kms_compat.py:1187: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_get_parameters_for_import_wrong_origin" time="0.007"><failure message="AssertionError: assert 'InvalidException' in ('UnsupportedOperationException', 'ValidationException')">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x109958cb0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a4e3b60&gt;
+tests/compatibility/test_kms_compat.py:1187: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_get_parameters_for_import_wrong_origin" time="0.005"><failure message="Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10a728140&gt;
+kms = &lt;botocore.client.KMS object at 0x10aff4bc0&gt;
 
     def test_get_parameters_for_import_wrong_origin(self, kms):
         """GetParametersForImport on a non-EXTERNAL key raises error."""
         key = kms.create_key(Description="non-external")
         key_id = key["KeyMetadata"]["KeyId"]
         try:
-            with pytest.raises(kms.exceptions.ClientError) as exc_info:
-                kms.get_parameters_for_import(
-                    KeyId=key_id,
-                    WrappingAlgorithm="RSAES_OAEP_SHA_256",
-                    WrappingKeySpec="RSA_2048",
-                )
-            err_code = exc_info.value.response["Error"]["Code"]
-&gt;           assert err_code in ("UnsupportedOperationException", "ValidationException")
-E           AssertionError: assert 'InvalidException' in ('UnsupportedOperationException', 'ValidationException')
+&gt;           with pytest.raises(kms.exceptions.ClientError) as exc_info:
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE &lt;class 'botocore.exceptions.ClientError'&gt;
 
-tests/compatibility/test_kms_compat.py:1204: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_connect_disconnect_custom_key_store" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x1099584a0&gt;
-kms = &lt;botocore.client.KMS object at 0x10a531f10&gt;
+tests/compatibility/test_kms_compat.py:1197: Failed</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_connect_disconnect_custom_key_store" time="0.005"><failure message="KeyError: 'CustomKeyStoreId'">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10a750110&gt;
+kms = &lt;botocore.client.KMS object at 0x10a6fb860&gt;
 
     def test_connect_disconnect_custom_key_store(self, kms):
         """ConnectCustomKeyStore and DisconnectCustomKeyStore lifecycle."""
@@ -3003,116 +898,18 @@ kms = &lt;botocore.client.KMS object at 0x10a531f10&gt;
             "EHrJKVHRw/SRZAmLYv3aGMi/0BXk2Q==\n"
             "-----END CERTIFICATE-----"
         )
-&gt;       resp = kms.create_custom_key_store(
+        resp = kms.create_custom_key_store(
             CustomKeyStoreName="connect-test-cks",
             CloudHsmClusterId="cluster-1234567890abc",
             TrustAnchorCertificate=cert,
             KeyStorePassword="kmsP@ssw0rd!",
         )
+&gt;       store_id = resp["CustomKeyStoreId"]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'CustomKeyStoreId'
 
-tests/compatibility/test_kms_compat.py:1224: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a531f10&gt;
-operation_name = 'CreateCustomKeyStore'
-api_params = {'CloudHsmClusterId': 'cluster-1234567890abc', 'CustomKeyStoreName': 'connect-test-cks', 'KeyStorePassword': 'kmsP@ssw...H/\nMA0GCSqGSIb3DQEBCwUAA0EAYiWXhZk9WsP46PqFi+sJlBFVKs7v\nEHrJKVHRw/SRZAmLYv3aGMi/0BXk2Q==\n-----END CERTIFICATE-----'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_update_custom_key_store" time="0.004"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10995a7b0&gt;
-kms = &lt;botocore.client.KMS object at 0x1098842c0&gt;
+tests/compatibility/test_kms_compat.py:1230: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_update_custom_key_store" time="0.003"><failure message="KeyError: 'CustomKeyStoreId'">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10a750740&gt;
+kms = &lt;botocore.client.KMS object at 0x10b178f20&gt;
 
     def test_update_custom_key_store(self, kms):
         """UpdateCustomKeyStore changes the store name."""
@@ -3130,116 +927,18 @@ kms = &lt;botocore.client.KMS object at 0x1098842c0&gt;
             "EHrJKVHRw/SRZAmLYv3aGMi/0BXk2Q==\n"
             "-----END CERTIFICATE-----"
         )
-&gt;       resp = kms.create_custom_key_store(
+        resp = kms.create_custom_key_store(
             CustomKeyStoreName="update-cks-orig",
             CloudHsmClusterId="cluster-1234567890abc",
             TrustAnchorCertificate=cert,
             KeyStorePassword="kmsP@ssw0rd!",
         )
+&gt;       store_id = resp["CustomKeyStoreId"]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'CustomKeyStoreId'
 
-tests/compatibility/test_kms_compat.py:1258: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x1098842c0&gt;
-operation_name = 'CreateCustomKeyStore'
-api_params = {'CloudHsmClusterId': 'cluster-1234567890abc', 'CustomKeyStoreName': 'update-cks-orig', 'KeyStorePassword': 'kmsP@ssw0...H/\nMA0GCSqGSIb3DQEBCwUAA0EAYiWXhZk9WsP46PqFi+sJlBFVKs7v\nEHrJKVHRw/SRZAmLYv3aGMi/0BXk2Q==\n-----END CERTIFICATE-----'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the CreateCustomKeyStore operation: The operation CreateCustomKeyStore is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_derive_shared_secret" time="0.007"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the DeriveSharedSecret operation: The operation DeriveSharedSecret is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10995aba0&gt;
-kms = &lt;botocore.client.KMS object at 0x10985ff20&gt;
+tests/compatibility/test_kms_compat.py:1264: KeyError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_derive_shared_secret" time="0.007"><failure message="AssertionError: assert 'SharedSecret' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '39d33b86-c0be-4b98-99b3-5b1328a694f4', 'RetryAttempts': 0}}">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10a750b30&gt;
+kms = &lt;botocore.client.KMS object at 0x10aff7c20&gt;
 
     def test_derive_shared_secret(self, kms):
         """DeriveSharedSecret with ECC KEY_AGREEMENT key."""
@@ -3251,225 +950,12 @@ kms = &lt;botocore.client.KMS object at 0x10985ff20&gt;
         key_id = key["KeyMetadata"]["KeyId"]
         try:
             pub = kms.get_public_key(KeyId=key_id)
-&gt;           resp = kms.derive_shared_secret(
+            resp = kms.derive_shared_secret(
                 KeyId=key_id,
                 KeyAgreementAlgorithm="ECDH",
                 PublicKey=pub["PublicKey"],
             )
+&gt;           assert "SharedSecret" in resp
+E           AssertionError: assert 'SharedSecret' in {'ResponseMetadata': {'HTTPHeaders': {'content-length': '25', 'content-type': 'application/x-amz-json-1.1', 'date': 'S...': 'robotocore', ...}, 'HTTPStatusCode': 200, 'RequestId': '39d33b86-c0be-4b98-99b3-5b1328a694f4', 'RetryAttempts': 0}}
 
-tests/compatibility/test_kms_compat.py:1287: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10985ff20&gt;
-operation_name = 'DeriveSharedSecret'
-api_params = {'KeyAgreementAlgorithm': 'ECDH', 'KeyId': 'e590932f9a154595a4648065f00e5e1b', 'PublicKey': b'\x00\x00\x00\x00\x00\x00...0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the DeriveSharedSecret operation: The operation DeriveSharedSecret is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_update_primary_region" time="0.008"><failure message="botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the UpdatePrimaryRegion operation: The operation UpdatePrimaryRegion is not implemented">self = &lt;tests.compatibility.test_kms_compat.TestKMSNewOps object at 0x10995af90&gt;
-kms = &lt;botocore.client.KMS object at 0x10a2158e0&gt;
-
-    def test_update_primary_region(self, kms):
-        """UpdatePrimaryRegion on a multi-region key."""
-        key = kms.create_key(Description="upr-test", MultiRegion=True)
-        key_id = key["KeyMetadata"]["KeyId"]
-        try:
-&gt;           resp = kms.update_primary_region(
-                KeyId=key_id,
-                PrimaryRegion="eu-west-1",
-            )
-
-tests/compatibility/test_kms_compat.py:1305: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-.venv/lib/python3.12/site-packages/botocore/client.py:602: in _api_call
-    return self._make_api_call(operation_name, kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.venv/lib/python3.12/site-packages/botocore/context.py:123: in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;botocore.client.KMS object at 0x10a2158e0&gt;
-operation_name = 'UpdatePrimaryRegion'
-api_params = {'KeyId': '987ce2762eab42af979645c74e1a442e', 'PrimaryRegion': 'eu-west-1'}
-
-    @with_current_context()
-    def _make_api_call(self, operation_name, api_params):
-        operation_model = self._service_model.operation_model(operation_name)
-        service_name = self._service_model.service_name
-        history_recorder.record(
-            'API_CALL',
-            {
-                'service': service_name,
-                'operation': operation_name,
-                'params': api_params,
-            },
-        )
-        if operation_model.deprecated:
-            logger.debug(
-                'Warning: %s.%s() is deprecated', service_name, operation_name
-            )
-        request_context = {
-            'client_region': self.meta.region_name,
-            'client_config': self.meta.config,
-            'has_streaming_input': operation_model.has_streaming_input,
-            'auth_type': operation_model.resolved_auth_type,
-            'unsigned_payload': operation_model.unsigned_payload,
-            'auth_options': self._service_model.metadata.get('auth'),
-        }
-    
-        api_params = self._emit_api_params(
-            api_params=api_params,
-            operation_model=operation_model,
-            context=request_context,
-        )
-        (
-            endpoint_url,
-            additional_headers,
-            properties,
-        ) = self._resolve_endpoint_ruleset(
-            operation_model, api_params, request_context
-        )
-        if properties:
-            # Pass arbitrary endpoint info with the Request
-            # for use during construction.
-            request_context['endpoint_properties'] = properties
-        request_dict = self._convert_to_request_dict(
-            api_params=api_params,
-            operation_model=operation_model,
-            endpoint_url=endpoint_url,
-            context=request_context,
-            headers=additional_headers,
-        )
-        resolve_checksum_context(request_dict, operation_model, api_params)
-    
-        service_id = self._service_model.service_id.hyphenize()
-        handler, event_response = self.meta.events.emit_until_response(
-            f'before-call.{service_id}.{operation_name}',
-            model=operation_model,
-            params=request_dict,
-            request_signer=self._request_signer,
-            context=request_context,
-        )
-    
-        if event_response is not None:
-            http, parsed_response = event_response
-        else:
-            maybe_compress_request(
-                self.meta.config, request_dict, operation_model
-            )
-            apply_request_checksum(request_dict)
-            http, parsed_response = self._make_request(
-                operation_model, request_dict, request_context
-            )
-    
-        self.meta.events.emit(
-            f'after-call.{service_id}.{operation_name}',
-            http_response=http,
-            parsed=parsed_response,
-            model=operation_model,
-            context=request_context,
-        )
-    
-        if http.status_code &gt;= 300:
-            error_info = parsed_response.get("Error", {})
-            error_code = request_context.get(
-                'error_code_override'
-            ) or error_info.get("Code")
-            error_class = self.exceptions.from_code(error_code)
-&gt;           raise error_class(parsed_response, operation_name)
-E           botocore.exceptions.ClientError: An error occurred (InvalidException) when calling the UpdatePrimaryRegion operation: The operation UpdatePrimaryRegion is not implemented
-
-.venv/lib/python3.12/site-packages/botocore/client.py:1078: ClientError</failure></testcase></testsuite></testsuites>
+tests/compatibility/test_kms_compat.py:1292: AssertionError</failure></testcase><testcase classname="tests.compatibility.test_kms_compat.TestKMSNewOps" name="test_update_primary_region" time="0.007" /></testsuite></testsuites>

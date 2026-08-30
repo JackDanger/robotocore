@@ -270,10 +270,16 @@ impl SsmHandler {
             }).collect()
         };
 
-        let param_list: Vec<Value> = params.iter().map(|p| Self::param_response(p)).collect();
+        let max_results = req.params.get("MaxResults").and_then(|v| v.as_u64()).unwrap_or(10);
+        let mut param_list: Vec<Value> = params.iter().map(|p| Self::param_response(p)).collect();
+        let mut next_token = Value::Null;
+        if param_list.len() > max_results as usize {
+            next_token = json!(format!("offset-{}", max_results));
+            param_list.truncate(max_results as usize);
+        }
         AwsResponse::json(200, json!({
             "Parameters": param_list,
-            "NextToken": null
+            "NextToken": next_token
         }))
     }
 
@@ -396,7 +402,8 @@ impl SsmHandler {
         let name = req.params.get("ResourceId").and_then(|v| v.as_str())
             .or_else(|| req.params.get("ResourceName").and_then(|v| v.as_str()))
             .unwrap_or("");
-        let keys: Vec<String> = req.params.get("Keys")
+        let keys: Vec<String> = req.params.get("TagKeys")
+            .or_else(|| req.params.get("Keys"))
             .and_then(|v| v.as_array())
             .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
             .unwrap_or_default();
@@ -474,13 +481,18 @@ impl SsmHandler {
         };
         let history = param.history.read();
         let versions: Vec<Value> = history.iter().map(|v| {
-            json!({
+            let mut entry = json!({
                 "Name": param.name,
                 "Type": param.parameter_type,
                 "Version": v.version,
                 "LastModifiedDate": v.timestamp as f64,
                 "LastModifiedBy": param.last_modified_by,
-            })
+            });
+            if !v.label.is_empty() {
+                let labels: Vec<&str> = v.label.split(',').collect();
+                entry["Labels"] = json!(labels);
+            }
+            entry
         }).collect();
         AwsResponse::json(200, json!({ "Parameters": versions }))
     }
