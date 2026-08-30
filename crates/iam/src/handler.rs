@@ -231,6 +231,9 @@ impl IamHandler {
             "TagMFADevice" => self.xml_empty(&req, "TagMFADevice"),
             "TagOpenIDConnectProvider" => self.xml_empty(&req, "TagOpenIDConnectProvider"),
             "TagSAMLProvider" => self.xml_empty(&req, "TagSAMLProvider"),
+            "UntagMFADevice" => self.xml_empty(&req, "UntagMFADevice"),
+            "UntagOpenIDConnectProvider" => self.xml_empty(&req, "UntagOpenIDConnectProvider"),
+            "UntagSAMLProvider" => self.xml_empty(&req, "UntagSAMLProvider"),
             other => AwsResponse::error(400, "InvalidParameterValue",
                 &format!("The operation {} is not implemented", other)),
         }
@@ -244,7 +247,7 @@ impl IamHandler {
 
     fn get_credential_report(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "GetCredentialReport",
-            "<Content></Content><State>COMPLETE</State><Description/>".into())
+            "<Content></Content><State>COMPLETE</State><ReportFormat>text/csv</ReportFormat><Description/>".into())
     }
 
     fn list_ip_for_role(&self, req: &AwsRequest) -> AwsResponse {
@@ -701,11 +704,13 @@ impl IamHandler {
             <RoleId>{}</RoleId>\
             <Arn>{}</Arn>\
             <CreateDate>{}</CreateDate>\
+            <Description>{}</Description>\
             <AssumeRolePolicyDocument>{}</AssumeRolePolicyDocument>\
             <MaxSessionDuration>3600</MaxSessionDuration>\
             </Role>",
             role.path, role.role_name, role.role_id, role.arn,
             chrono::Utc::now().to_rfc3339(),
+            role.description.read().as_str(),
             role.assume_role_policy.read().as_str()
         )
     }
