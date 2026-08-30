@@ -431,29 +431,62 @@ impl DynamoDbHandler {
     }
 
     fn matches_key_condition(&self, item: &Value, expr: &str, vals: &Value, names: &HashMap<String, String>) -> bool {
-        // Parse "attr = :val AND attr2 BETWEEN :lo AND :hi"
         let expr = expr.trim();
-        let conditions: Vec<&str> = expr.split(" AND ").map(|s| s.trim()).collect();
-        for cond in conditions {
-            let cond = cond.trim();
-            if cond.contains(" BETWEEN ") {
-                let parts: Vec<&str> = cond.split(" BETWEEN ").collect();
-                if parts.len() == 2 {
-                    let attr = self.resolve_name(parts[0].trim(), names);
-                    let bounds: Vec<&str> = parts[1].split(" AND ").collect();
-                    if bounds.len() == 2 {
-                        let lo_val = vals.get(bounds[0].trim()).cloned().unwrap_or(Value::Null);
-                        let hi_val = vals.get(bounds[1].trim()).cloned().unwrap_or(Value::Null);
-                        let item_val = item.get(&attr).cloned().unwrap_or(Value::Null);
-                        let item_s = self.dyn_to_str(&item_val);
-                        let lo_s = self.dyn_to_str(&lo_val);
-                        let hi_s = self.dyn_to_str(&hi_val);
-                        if item_s < lo_s || item_s > hi_s {
+
+        // First, handle BETWEEN clauses (they contain " AND " inside)
+        // Pattern: "attr BETWEEN :lo AND :hi"
+        if let Some(between_pos) = expr.find(" BETWEEN ") {
+            // Find the attr name (everything before BETWEEN, after last AND or start)
+            let before = &expr[..between_pos];
+            let attr_start = before.rfind(" AND ").map(|i| i + 4).unwrap_or(0);
+            let attr = before[attr_start..].trim();
+            let attr_resolved = self.resolve_name(attr, names);
+
+            // After BETWEEN: ":lo AND :hi"
+            let after = &expr[between_pos + 9..]; // skip " BETWEEN "
+            let and_pos = after.rfind(" AND ").unwrap_or(0);
+            let lo_ref = if and_pos > 0 { after[..and_pos].trim() } else { after.trim() };
+            let hi_ref = if and_pos > 0 { after[and_pos + 5..].trim() } else { "" };
+
+            let lo_val = vals.get(lo_ref).cloned().unwrap_or(Value::Null);
+            let hi_val = vals.get(hi_ref).cloned().unwrap_or(Value::Null);
+            let item_val = item.get(&attr_resolved).cloned().unwrap_or(Value::Null);
+            let item_s = self.dyn_to_str(&item_val);
+            let lo_s = self.dyn_to_str(&lo_val);
+            let hi_s = self.dyn_to_str(&hi_val);
+            if item_s < lo_s || item_s > hi_s {
+                return false;
+            }
+
+            // Now handle the remaining conditions (before BETWEEN)
+            if !before.is_empty() {
+                let eq_parts: Vec<&str> = before.split(" AND ").map(|s| s.trim()).collect();
+                for part in eq_parts {
+                    if part.is_empty() || part.contains(" BETWEEN ") {
+                        continue;
+                    }
+                    if let Some(eq_pos) = part.find('=') {
+                        let p_attr = self.resolve_name(&part[..eq_pos].trim(), names);
+                        let p_val_ref = part[eq_pos+1..].trim();
+                        let p_val = vals.get(p_val_ref).cloned().unwrap_or(Value::Null);
+                        let p_item_val = item.get(&p_attr).cloned().unwrap_or(Value::Null);
+                        if p_item_val != p_val {
                             return false;
                         }
                     }
                 }
-            } else if let Some(eq_pos) = cond.find('=') {
+            }
+            return true;
+        }
+
+        // No BETWEEN - handle simple equality conditions
+        let conditions: Vec<&str> = expr.split(" AND ").map(|s| s.trim()).collect();
+        for cond in conditions {
+            let cond = cond.trim();
+            if cond.is_empty() {
+                continue;
+            }
+            if let Some(eq_pos) = cond.find('=') {
                 let attr = self.resolve_name(&cond[..eq_pos].trim(), names);
                 let val_ref = cond[eq_pos+1..].trim();
                 let val = vals.get(val_ref).cloned().unwrap_or(Value::Null);
