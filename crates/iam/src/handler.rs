@@ -158,7 +158,7 @@ impl IamHandler {
             "UpdateLoginProfile" => self.xml_empty(&req, "UpdateLoginProfile"),
             "DeleteLoginProfile" => self.xml_empty(&req, "DeleteLoginProfile"),
             "GetAccountAuthorizationDetails" => self.get_account_authorization_details(&req),
-            "GenerateCredentialReport" => self.xml_empty(&req, "GenerateCredentialReport"),
+            "GenerateCredentialReport" => self.generate_credential_report(&req),
             "GetCredentialReport" => self.xml_empty(&req, "GetCredentialReport"),
             "GetContextKeyPolicy" => self.xml_empty(&req, "GetContextKeyPolicy"),
             "CreateContextKey" => self.xml_empty(&req, "CreateContextKey"),
