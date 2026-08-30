@@ -23,14 +23,20 @@ impl EventsHandler {
     }
 
     fn rule_value(r: &Rule) -> Value {
-        json!({
+        let mut resp = json!({
             "Name": r.name,
             "Arn": r.arn,
-            "EventPattern": r.event_pattern,
             "State": r.state,
-            "CreatedBy": "robotocore",
-            "Description": r.description
-        })
+            "Description": r.description,
+            "EventBusName": "default",
+        });
+        if !r.event_pattern.is_empty() {
+            resp.as_object_mut().unwrap().insert("EventPattern".into(), json!(r.event_pattern));
+        }
+        if let Some(ref sched) = r.schedule_expression {
+            resp.as_object_mut().unwrap().insert("ScheduleExpression".into(), json!(sched));
+        }
+        resp
     }
 
     fn json_stub(&self, _req: &AwsRequest, field: &str) -> AwsResponse {
