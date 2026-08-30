@@ -164,9 +164,181 @@ impl IamHandler {
             "CreateContextKey" => self.xml_empty(&req, "CreateContextKey"),
             "DeleteContextKey" => self.xml_empty(&req, "DeleteContextKey"),
             "PutContextKey" => self.xml_empty(&req, "PutContextKey"),
+            // Extended operations
+            "GenerateCredentialReport" => self.generate_credential_report(&req),
+            "GetCredentialReport" => self.get_credential_report(&req),
+            "ListInstanceProfilesForRole" => self.list_ip_for_role(&req),
+            "PutUserPermissionsBoundary" => self.xml_empty(&req, "PutUserPermissionsBoundary"),
+            "RemoveUserPermissionsBoundary" => self.xml_empty(&req, "RemoveUserPermissionsBoundary"),
+            "GetUserPermissionsBoundary" => self.xml_empty(&req, "GetUserPermissionsBoundary"),
+            "PutRolePermissionsBoundary" => self.xml_empty(&req, "PutRolePermissionsBoundary"),
+            "RemoveRolePermissionsBoundary" => self.xml_empty(&req, "RemoveRolePermissionsBoundary"),
+            "GetRolePermissionsBoundary" => self.xml_empty(&req, "GetRolePermissionsBoundary"),
+            "PutGroupPermissionsBoundary" => self.xml_empty(&req, "PutGroupPermissionsBoundary"),
+            "RemoveGroupPermissionsBoundary" => self.xml_empty(&req, "RemoveGroupPermissionsBoundary"),
+            "GetGroupPermissionsBoundary" => self.xml_empty(&req, "GetGroupPermissionsBoundary"),
+            "CreateServiceLinkedRole" => self.create_service_linked_role(&req),
+            "DeleteServiceLinkedRole" => self.xml_empty(&req, "DeleteServiceLinkedRole"),
+            "ListServiceLinkedRoles" => self.list_service_linked_roles(&req),
+            "GetAccountSummary" => self.get_account_summary(&req),
+            "GetAccountPasswordPolicy" => self.get_account_password_policy(&req),
+            "UpdateAccountPasswordPolicy" => self.xml_empty(&req, "UpdateAccountPasswordPolicy"),
+            "DeleteAccountPasswordPolicy" => self.xml_empty(&req, "DeleteAccountPasswordPolicy"),
+            "ListMFADevices" => self.list_mfa_devices(&req),
+            "CreateOpenIDConnectProvider" => self.xml_stub(&req, "OpenIDConnectProviderArn", "CreateOpenIDConnectProvider"),
+            "GetOpenIDConnectProvider" => self.xml_stub(&req, "OpenIDConnectProviderArn", "GetOpenIDConnectProvider"),
+            "DeleteOpenIDConnectProvider" => self.xml_empty(&req, "DeleteOpenIDConnectProvider"),
+            "ListOpenIDConnectProviders" => self.xml_stub_list(&req, "OpenIDConnectProviderArnList", "ListOpenIDConnectProviders"),
+            "UpdateOpenIDConnectProviderThumbprint" => self.xml_empty(&req, "UpdateOpenIDConnectProviderThumbprint"),
+            "CreateSAMLProvider" => self.xml_stub(&req, "SAMLProviderArn", "CreateSAMLProvider"),
+            "GetSAMLProvider" => self.xml_stub(&req, "SAMLMetadataDocument", "GetSAMLProvider"),
+            "DeleteSAMLProvider" => self.xml_empty(&req, "DeleteSAMLProvider"),
+            "ListSAMLProviders" => self.xml_stub_list(&req, "SAMLProviderList", "ListSAMLProviders"),
+            "UpdateUser" => self.update_user_full(&req),
+            "CreateLoginProfile" => self.create_login_profile(&req),
+            "UpdateLoginProfile" => self.update_login_profile(&req),
+            "GetLoginProfile" => self.get_login_profile(&req),
+            "DeleteLoginProfile" => self.xml_empty(&req, "DeleteLoginProfile"),
+            "ChangePassword" => self.change_password(&req),
+            "GetAccountAuthorizationDetails" => self.get_account_authorization_details(&req),
+            "SimulatePrincipalPolicy" => self.xml_stub(&req, "EvaluationResults", "SimulatePrincipalPolicy"),
+            "AddClientIDToOpenIDConnectProvider" => self.xml_empty(&req, "AddClientIDToOpenIDConnectProvider"),
+            "RemoveClientFromOpenIDConnectProvider" => self.xml_empty(&req, "RemoveClientFromOpenIDConnectProvider"),
+            "ListInstanceProfiles" => self.ip_list(&req),
+            "CreateInstanceProfile" => self.xml_ip_create(&req),
+            "GetInstanceProfile" => self.xml_ip_get(&req),
+            "DeleteInstanceProfile" => self.xml_empty(&req, "DeleteInstanceProfile"),
+            "AddRoleToInstanceProfile" => self.ip_add_role(&req),
+            "RemoveRoleFromInstanceProfile" => self.ip_remove_role(&req),
+            "TagInstanceProfile" => self.xml_empty(&req, "TagInstanceProfile"),
+            "UntagInstanceProfile" => self.xml_empty(&req, "UntagInstanceProfile"),
+            "ListInstanceProfileTags" => self.xml_empty(&req, "ListInstanceProfileTags"),
+            "GenerateServiceLastAccessedDetails" => self.xml_stub(&req, "JobId", "GenerateServiceLastAccessedDetails"),
+            "GetServiceLastAccessed" => self.xml_stub(&req, "ServicesLastAccessed", "GetServiceLastAccessed"),
+            "GetServiceLastAccessedByExternalAccount" => self.xml_stub(&req, "AccountDetails", "GetServiceLastAccessedByExternalAccount"),
+            "ResetServiceSpecificCredential" => self.xml_empty(&req, "ResetServiceSpecificCredential"),
+            "UpdateServiceSpecificCredential" => self.xml_empty(&req, "UpdateServiceSpecificCredential"),
+            "DeactivateServiceSpecificCredential" => self.xml_empty(&req, "DeactivateServiceSpecificCredential"),
+            "ActivateServiceSpecificCredential" => self.xml_empty(&req, "ActivateServiceSpecificCredential"),
+            "ListServiceSpecificCredentials" => self.xml_stub_list(&req, "ServiceSpecificCredentials", "ListServiceSpecificCredentials"),
+            "CreateDelegationRequest" => self.xml_stub(&req, "DelegationRequestId", "CreateDelegationRequest"),
+            "GetDelegationRequest" => self.xml_stub(&req, "DelegationRequestId", "GetDelegationRequest"),
+            "ListDelegationRequests" => self.xml_stub_list(&req, "DelegationRequests", "ListDelegationRequests"),
+            "UpdateDelegationRequest" => self.xml_empty(&req, "UpdateDelegationRequest"),
+            "UntagUser" => self.untag_user(&req),
+            "TagUser" => self.tag_user(&req),
+            "UntagRole" => self.untag_role(&req),
+            "TagRole" => self.tag_role(&req),
+            "UntagPolicy" => self.xml_empty(&req, "UntagPolicy"),
+            "TagPolicy" => self.tag_policy(&req),
+            "UntagGroup" => self.untag_group(&req),
+            "TagGroup" => self.tag_group(&req),
+            "UntagRole" => self.untag_role(&req),
+            "UntagPolicy" => self.xml_empty(&req, "UntagPolicy"),
+            "UntagInstanceProfile" => self.xml_empty(&req, "UntagInstanceProfile"),
+            "UntagUser" => self.untag_user(&req),
             other => AwsResponse::error(400, "InvalidParameterValue",
                 &format!("The operation {} is not implemented", other)),
         }
+    }
+
+    // ---- Extended operations ----
+    fn generate_credential_report(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::xml(200, "GenerateCredentialReport",
+            "<GenerateCredentialReportResult><State>COMPLETE</State><Description/></GenerateCredentialReportResult>".into())
+    }
+
+    fn get_credential_report(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::xml(200, "GetCredentialReport",
+            "<GetCredentialReportResult><Content></Content><State>COMPLETE</State><Description/></GetCredentialReportResult>".into())
+    }
+
+    fn list_ip_for_role(&self, req: &AwsRequest) -> AwsResponse {
+        let role_name = get_param(req, "RoleName").unwrap_or_default();
+        let state = self.get_state(req.account);
+        let mut body = String::new();
+        let profiles = state.instance_profiles.read();
+        for (name, roles) in profiles.iter() {
+            if roles.contains(&role_name) {
+                body.push_str(&format!(
+                    "<InstanceProfile><InstanceProfileName>{}</InstanceProfileName><InstanceProfileArn>arn:aws:iam::{}:instance-profile/{}</InstanceProfileArn><Path>/</Path><Roles><Role><RoleName>{}</RoleName></Role></Roles></InstanceProfile>",
+                    name, req.account, name, role_name
+                ));
+            }
+        }
+        AwsResponse::xml(200, "ListInstanceProfilesForRole", format!("<InstanceProfiles>{}</InstanceProfiles>", body))
+    }
+
+    fn create_service_linked_role(&self, req: &AwsRequest) -> AwsResponse {
+        let desc = get_param(req, "Description").unwrap_or_else(|| "service-linked-role".into());
+        let id = uuid::Uuid::new_v4().simple();
+        AwsResponse::xml(200, "CreateServiceLinkedRole", format!(
+            "<CreateServiceLinkedRoleResult><Role><Path>/aws-service-role/</Path><RoleName>SLR-{}-{}<</RoleName><RoleId>AROA{}<</RoleId><Arn>arn:aws:iam::{}:role/aws-service-role/SLR-{}<</Arn><CreateDate>{}</CreateDate><Description>{}</Description></Role></CreateServiceLinkedRoleResult>",
+            desc, id,
+            uuid::Uuid::new_v4().simple(),
+            req.account,
+            desc,
+            chrono::Utc::now().to_rfc3339(),
+            desc
+        ))
+    }
+
+    fn list_service_linked_roles(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::xml(200, "ListServiceLinkedRoles", String::new())
+    }
+
+    fn list_mfa_devices(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::xml(200, "ListMFADevices", String::new())
+    }
+
+    fn update_user_full(&self, req: &AwsRequest) -> AwsResponse {
+        let user_name = get_param(req, "UserName").unwrap_or_default();
+        let state = self.get_state(req.account);
+        match state.get_user(&user_name) {
+            Some(user) => AwsResponse::xml(200, "UpdateUser", self.user_xml(&*user)),
+            None => AwsResponse::error(404, "NoSuchEntity", &format!("User {} not found", user_name)),
+        }
+    }
+
+    fn create_login_profile(&self, req: &AwsRequest) -> AwsResponse {
+        let user_name = get_param(req, "UserName").unwrap_or_default().to_string();
+        let _pw = get_param(req, "Password").unwrap_or_default();
+        AwsResponse::xml(200, "CreateLoginProfile", format!(
+            "<CreateLoginProfileResult><LoginProfile><UserName>{}</UserName><PasswordResetRequired>true</PasswordResetRequired><CreateDate>{}</CreateDate></LoginProfile></CreateLoginProfileResult>",
+            user_name, chrono::Utc::now().to_rfc3339()
+        ))
+    }
+
+    fn update_login_profile(&self, req: &AwsRequest) -> AwsResponse {
+        let user_name = get_param(req, "UserName").unwrap_or_default().to_string();
+        let _pw = get_param(req, "Password").unwrap_or_default();
+        AwsResponse::xml(200, "UpdateLoginProfile", format!(
+            "<UpdateLoginProfileResult><LoginProfile><UserName>{}</UserName><PasswordResetRequired>false</PasswordResetRequired></LoginProfile></UpdateLoginProfileResult>",
+            user_name
+        ))
+    }
+
+    fn get_login_profile(&self, req: &AwsRequest) -> AwsResponse {
+        let user_name = get_param(req, "UserName").unwrap_or_default().to_string();
+        let state = self.get_state(req.account);
+        if state.get_user(&user_name).is_some() {
+            AwsResponse::xml(200, "GetLoginProfile", format!(
+                "<GetLoginProfileResult><LoginProfile><UserName>{}</UserName><PasswordResetRequired>false</PasswordResetRequired><CreateDate>{}</CreateDate></LoginProfile></GetLoginProfileResult>",
+                user_name, chrono::Utc::now().to_rfc3339()
+            ))
+        } else {
+            AwsResponse::error(404, "NoSuchEntity", &format!("User {} not found", user_name))
+        }
+    }
+
+    fn xml_stub(&self, req: &AwsRequest, field: &str, op: &str) -> AwsResponse {
+        let _ = req;
+        AwsResponse::xml(200, op, format!("<{}Result><{}>{}</{}></{}Result>", op, field, "", field, op))
+    }
+
+    fn xml_stub_list(&self, req: &AwsRequest, field: &str, op: &str) -> AwsResponse {
+        let _ = req;
+        AwsResponse::xml(200, op, format!("<{}Result><{}/></{}Result>", op, field, op))
     }
 
     // ---- Users ----
