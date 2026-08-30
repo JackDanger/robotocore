@@ -131,6 +131,13 @@ impl SsmHandler {
             "UpdateManagedInstanceRole" => self.json_stub(&req, "{}"),
             "UpdateOpsItem" => self.json_stub(&req, "OpsItemId"),
             "UpdateServiceSetting" => self.json_stub(&req, "{}"),
+            "CreateAssociationBatch" => self.json_stub_list(&req, "AssociationDescriptions"),
+            "DeleteResourceDataSync" => self.json_stub(&req, "{}"),
+            "ResetServiceSetting" => self.json_stub(&req, "{}"),
+            "ResumeSession" => self.json_stub(&req, "SessionId"),
+            "TerminateSession" => self.json_stub(&req, "{}"),
+            "UnlabelParameterVersion" => self.json_stub(&req, "{}"),
+            "UpdateDocumentDefaultVersion" => self.json_stub(&req, "DocumentVersion"),
             other => AwsResponse::error(400, "InvalidParameterException",
                 &format!("The operation {} is not implemented", other)),
         }
@@ -191,6 +198,9 @@ impl SsmHandler {
         }
 
         let param = Arc::new(Parameter::new(name, value, param_type));
+        if let Some(tags) = req.params.get("Tags").and_then(|v| v.as_array()).cloned() {
+            *param.tags.write() = tags;
+        }
         state.put_parameter(param);
         AwsResponse::json(200, json!({
             "Version": 1,
