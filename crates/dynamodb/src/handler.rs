@@ -424,6 +424,10 @@ impl DynamoDbHandler {
         let key_json = req.params.get("Key").cloned().unwrap_or(Value::Null);
         let update_expr = req.params.get("UpdateExpression").and_then(|v| v.as_str()).unwrap_or("");
         let expression_values = req.params.get("ExpressionAttributeValues").cloned().unwrap_or(Value::Null);
+        let attr_names: HashMap<String, String> = req.params.get("ExpressionAttributeNames")
+            .and_then(|v| v.as_object())
+            .map(|m| m.iter().filter_map(|(k, v)| v.as_str().map(|s| (k.clone(), s.to_string()))).collect())
+            .unwrap_or_default();
         let return_values = req.params.get("ReturnValues").and_then(|v| v.as_str()).unwrap_or("NONE");
 
         // Find the item
@@ -447,7 +451,7 @@ impl DynamoDbHandler {
                 drop(items);
                 let mut new_attrs: HashMap<String, Value> = key_attrs.clone();
                 // Apply ADD expression to create new item
-                self.apply_add_expr(&mut new_attrs, update_expr, &expression_values);
+                self.apply_add_expr(&mut new_attrs, update_expr, &expression_values, &attr_names);
                 let new_item = Item::new(new_attrs.clone());
                 if let Some(key) = table.compute_key(&new_item) {
                     table.items.write().insert(key, Arc::new(new_item));
@@ -472,7 +476,7 @@ impl DynamoDbHandler {
         let mut attrs: HashMap<String, Value> = item.attributes.clone();
 
         // Parse and apply the update expression
-        self.apply_update_expr(&mut attrs, update_expr, &expression_values);
+        self.apply_update_expr(&mut attrs, update_expr, &expression_values, &attr_names);
 
         // Update the item
         let updated_item = Item::new(attrs.clone());
@@ -489,7 +493,15 @@ impl DynamoDbHandler {
         AwsResponse::json(200, resp)
     }
 
-    fn apply_update_expr(&self, attrs: &mut HashMap<String, Value>, expr: &str, values: &Value) {
+    fn resolve_name(&self, attr: &str, names: &HashMap<String, String>) -> String {
+        if attr.starts_with('#') {
+            names.get(attr).cloned().unwrap_or_else(|| attr.to_string())
+        } else {
+            attr.to_string()
+        }
+    }
+
+    fn apply_update_expr(&self, attrs: &mut HashMap<String, Value>, expr: &str, values: &Value, attr_names: &HashMap<String, String>) {
         let expr = expr.trim();
 
         // Handle SET clause
@@ -540,7 +552,8 @@ impl DynamoDbHandler {
                         json!({ "S": val_expr })
                     };
 
-                    attrs.insert(attr.to_string(), val);
+                    let resolved = self.resolve_name(attr, attr_names);
+                    attrs.insert(resolved, val);
                 }
             }
         }
@@ -548,29 +561,30 @@ impl DynamoDbHandler {
         // Handle ADD clause
         if let Some(add_pos) = expr.find("ADD") {
             let rest = expr[add_pos + 3..].trim();
-            self.apply_add_expr(attrs, rest, values);
+            self.apply_add_expr(attrs, rest, values, attr_names);
         }
 
         // Handle REMOVE clause
         if let Some(remove_pos) = expr.find("REMOVE") {
             let rest = expr[remove_pos + 6..].trim();
-            let names: Vec<&str> = rest.split(",").map(|s| s.trim()).collect();
-            for name in names {
-                attrs.remove(name);
+            let remove_names: Vec<&str> = rest.split(",").map(|s| s.trim()).collect();
+            for rn in remove_names {
+                let resolved = self.resolve_name(rn, attr_names);
+                attrs.remove(&resolved);
             }
         }
     }
 
-    fn apply_add_expr(&self, attrs: &mut HashMap<String, Value>, expr: &str, values: &Value) {
+    fn apply_add_expr(&self, attrs: &mut HashMap<String, Value>, expr: &str, values: &Value, attr_names: &HashMap<String, String>) {
         // ADD attr :val, attr2 :val2
         let parts: Vec<&str> = expr.split(",").map(|s| s.trim()).collect();
         for part in parts {
             let words: Vec<&str> = part.split_whitespace().collect();
             if words.len() == 2 {
-                let attr = words[0];
+                let attr = self.resolve_name(words[0], attr_names);
                 let val_ref = words[1];
                 let add_val = values.get(val_ref).cloned().unwrap_or(json!(0));
-                let current = attrs.get(attr).cloned().unwrap_or(json!({ "N": "0" }));
+                let current = attrs.get(&attr).cloned().unwrap_or(json!({ "N": "0" }));
                 let cur_num: f64 = self.dyn_to_f64(&current);
                 let add_num: f64 = self.dyn_to_f64(&add_val);
                 let result = cur_num + add_num;
@@ -727,11 +741,23 @@ impl DynamoDbHandler {
         }
     }
 
-    fn update_ttl(&self, _req: &AwsRequest) -> AwsResponse {
+    fn update_ttl(&self, req: &AwsRequest) -> AwsResponse {
+        let table_name = req.params.get("TableName").and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        let table = match state.get_table(table_name) {
+            Some(t) => t,
+            None => return AwsResponse::error(400, "ResourceNotFoundException",
+                &format!("Requested resource not found: Table: {}", table_name)),
+        };
+        let ttl_spec = req.params.get("TimeToLiveSpecification").cloned().unwrap_or(Value::Null);
+        let enabled = ttl_spec.get("Enabled").and_then(|v| v.as_bool()).unwrap_or(false);
+        let attr = ttl_spec.get("AttributeName").and_then(|v| v.as_str()).unwrap_or("").to_string();
+        *table.ttl_enabled.write() = enabled;
+        *table.ttl_attribute.write() = attr.clone();
         AwsResponse::json(200, json!({
             "TimeToLiveSpecification": {
-                "TableName": "unknown",
-                "TimeToLive": { "Enabled": false, "AttributeName": "" }
+                "TableName": table_name,
+                "TimeToLive": { "Enabled": enabled, "AttributeName": attr }
             }
         }))
     }

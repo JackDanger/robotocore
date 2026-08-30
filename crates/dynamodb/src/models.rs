@@ -43,6 +43,8 @@ pub struct Table {
     pub stream_enabled: RwLock<bool>,
     pub stream_view_type: RwLock<Option<String>>,
     pub tags: RwLock<HashMap<String, String>>,
+    pub ttl_enabled: RwLock<bool>,
+    pub ttl_attribute: RwLock<String>,
 }
 
 impl Table {
@@ -70,6 +72,8 @@ impl Table {
             stream_enabled: RwLock::new(false),
             stream_view_type: RwLock::new(None),
             tags: RwLock::new(HashMap::new()),
+            ttl_enabled: RwLock::new(false),
+            ttl_attribute: RwLock::new(String::new()),
         }
     }
 
