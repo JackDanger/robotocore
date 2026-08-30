@@ -107,7 +107,7 @@ other => AwsResponse::error(400, "ValidationException",
             "encryptionType": "AES256",
         });
         repos.insert(name.clone(), repo.clone());
-        AwsResponse::json(200, repo)
+        AwsResponse::json(200, json!({ "repository": repo }))
     }
 
     fn delete_repository(&self, req: &AwsRequest) -> AwsResponse {
