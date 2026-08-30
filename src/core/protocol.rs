@@ -434,7 +434,7 @@ fn resolve_rest_operation(service: &str, method: &str, path: &str) -> Option<&'s
                         Some("GetFunction")
                     } else if after.contains("/versions") {
                         if m == "POST" { Some("PublishVersion") }
-                        else if m == "GET" { Some("ListFunctionVersions") }
+                        else if m == "GET" { Some("ListVersionsByFunction") }
                         else { None }
                     } else {
                         None
