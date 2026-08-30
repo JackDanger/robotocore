@@ -43,7 +43,7 @@ impl SsmHandler {
             "CreateOpsItem" => self.json_stub(&req, "OpsItemId"),
             "GetOpsItem" => self.json_stub(&req, "OpsItemId"),
             "ListOpsItems" => self.json_stub_list(&req, "OpsItems"),
-            "CreateMaintenanceWindow" => self.json_stub(&req, "WindowId"),
+            "CreateMaintenanceWindow" => self.create_maintenance_window(&req),
             "GetMaintenanceWindow" => self.json_stub(&req, "WindowId"),
             "DeleteMaintenanceWindow" => self.json_stub(&req, "WindowId"),
             "DeleteParameters" => self.delete_parameters(&req),
@@ -538,6 +538,12 @@ impl SsmHandler {
             "DeletedParameters": deleted,
             "InvalidParameters": invalid
         }))
+    }
+
+    fn create_maintenance_window(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("Name").and_then(|v| v.as_str()).unwrap_or("mw").to_string();
+        let window_id = format!("mw-{}", uuid::Uuid::new_v4().simple().to_string().chars().take(20).collect::<String>());
+        AwsResponse::json(200, json!({ "WindowId": window_id }))
     }
 
     fn label_parameter_version(&self, req: &AwsRequest) -> AwsResponse {
