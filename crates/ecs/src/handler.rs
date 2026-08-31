@@ -107,6 +107,14 @@ other => AwsResponse::error(400, "ValidationException",
             "activeServicesCount": 0,
         });
         state.clusters.write().insert(name.clone(), cluster.clone());
+        // Store tags if provided
+        let tags: Vec<Value> = req.params.get("tags")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        if !tags.is_empty() {
+            state.tags.write().insert(arn, tags);
+        }
         AwsResponse::json(200, json!({ "cluster": cluster }))
     }
 
