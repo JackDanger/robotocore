@@ -139,14 +139,44 @@ other => AwsResponse::error(400, "ValidationException",
             .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
             .unwrap_or_default();
 
-        let repos: Vec<Value> = if repo_names.is_empty() {
+        let mut all_repos: Vec<Value> = if repo_names.is_empty() {
             repos.values().cloned().collect()
         } else {
             repo_names.iter()
                 .filter_map(|n| repos.get(n).cloned())
                 .collect()
         };
-        AwsResponse::json(200, json!({ "repositories": repos }))
+        all_repos.sort_by(|a, b| {
+            let na = a.get("repositoryName").and_then(|v| v.as_str()).unwrap_or("");
+            let nb = b.get("repositoryName").and_then(|v| v.as_str()).unwrap_or("");
+            na.cmp(nb)
+        });
+
+        let max_results = req.params.get("maxResults")
+            .and_then(|v| v.as_u64()).map(|v| v as usize).unwrap_or(100);
+        let next_token = req.params.get("nextToken")
+            .and_then(|v| v.as_str()).unwrap_or("");
+        let start_idx = if next_token.is_empty() {
+            0
+        } else {
+            all_repos.iter().position(|r| {
+                r.get("repositoryName").and_then(|v| v.as_str()) == Some(next_token)
+            })
+            .map(|i| i + 1)
+            .unwrap_or(0)
+        };
+
+        let remaining = &all_repos[start_idx..];
+        let limited: Vec<Value> = remaining.iter().take(max_results).cloned().collect();
+        let mut resp = json!({ "repositories": limited });
+        if remaining.len() > max_results {
+            let next = limited.last()
+                .and_then(|r| r.get("repositoryName").and_then(|v| v.as_str()).map(String::from));
+            if let Some(nt) = next {
+                resp["nextToken"] = Value::String(nt);
+            }
+        }
+        AwsResponse::json(200, resp)
     }
 
     fn list_images(&self, req: &AwsRequest) -> AwsResponse {
