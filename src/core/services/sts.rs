@@ -16,9 +16,9 @@ pub async fn handle_sts_request(
         "GetAccessKeyInfo" => handle_get_access_key_info(req),
         "GetSessionToken" => handle_get_session_token(req),
         "GetFederationToken" => handle_get_federation_token(req),
-        "AssumeRole" => handle_assume_role(req),
-        "AssumeRoleWithWebIdentity" => handle_assume_role(req),
-        "AssumeRoleWithSAML" => handle_assume_role(req),
+        "AssumeRole" => handle_assume_role(req, "AssumeRole"),
+        "AssumeRoleWithWebIdentity" => handle_assume_role(req, "AssumeRoleWithWebIdentity"),
+        "AssumeRoleWithSAML" => handle_assume_role(req, "AssumeRoleWithSAML"),
         "GetWebIdentityToken" => handle_get_web_identity_token(req),
         "DecodeAuthorizationMessage" => handle_decode_auth_message(req),
         "DecodeAWSAccountId" => handle_decode_aws_account_id(req),
@@ -170,6 +170,7 @@ fn handle_get_federation_token(
 /// AssumeRole / AssumeRoleWithWebIdentity / AssumeRoleWithSAML.
 fn handle_assume_role(
     req: &ParsedRequest,
+    op: &str,
 ) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
     let account = req.account;
     let role_arn = req.params.get("RoleArn")
@@ -184,8 +185,8 @@ fn handle_assume_role(
     let role_id = format!("AROA{}:{}", account, session_name);
     let body = format!(
         r#"<?xml version="1.0" encoding="UTF-8"?>
-<AssumeRoleResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
-    <AssumeRoleResult>
+<{}Response xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+    <{}Result>
         <Credentials>
             <AccessKeyId>ASIAIOSFODNN7EXAMPLE</AccessKeyId>
             <SecretAccessKey>wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</SecretAccessKey>
@@ -196,12 +197,12 @@ fn handle_assume_role(
             <Arn>{}</Arn>
             <AssumedRoleId>{}</AssumedRoleId>
         </AssumedRoleUser>
-    </AssumeRoleResult>
+    </{}Result>
     <ResponseMetadata>
         <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
     </ResponseMetadata>
-</AssumeRoleResponse>"#,
-        arn, role_id
+</{}Response>"#,
+        op, op, arn, role_id, op, op
     );
     Ok(xml_response(&body))
 }
