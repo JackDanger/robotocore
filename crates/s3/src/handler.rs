@@ -7,6 +7,7 @@ use std::sync::Arc;
 use crate::models::{Bucket, MultipartUpload, S3State};
 use crate::protocol::{AwsRequest, AwsResponse};
 use crate::xml;
+use serde_json::{json, Value};
 
 /// HTTP method enum for S3 operation detection.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -1194,12 +1195,71 @@ impl S3Handler {
 
     // ---- Website ----
 
-    fn get_bucket_website(&self, _req: &AwsRequest) -> AwsResponse {
-        let body = r#"<?xml version="1.0" encoding="UTF-8"?><WebsiteConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"></WebsiteConfiguration>"#;
-        AwsResponse::xml(200, body.to_string())
+    fn get_bucket_website(&self, req: &AwsRequest) -> AwsResponse {
+        let bucket_name = req.bucket.clone().unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let bucket = match state.get_bucket(&bucket_name) {
+            Some(b) => b,
+            None => return AwsResponse::error(404, "NoSuchBucket", "The specified bucket does not exist"),
+        };
+        let website = bucket.website.read();
+        if website.is_none() {
+            return AwsResponse::error(404, "NoSuchWebsiteConfiguration", "The specified bucket does not have a website configuration");
+        }
+        // Convert the stored JSON to XML
+        let w = website.as_ref().unwrap();
+        let mut xml = String::from(r#"<?xml version="1.0" encoding="UTF-8"?><WebsiteConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">"#);
+        if let Some(idx) = w.get("IndexDocument").and_then(|v| v.as_object()) {
+            xml.push_str("<IndexDocument>");
+            if let Some(suffix) = idx.get("Suffix").and_then(|v| v.as_str()) {
+                xml.push_str(&format!("<Suffix>{}</Suffix>", suffix));
+            }
+            xml.push_str("</IndexDocument>");
+        }
+        if let Some(err) = w.get("ErrorDocument").and_then(|v| v.as_object()) {
+            xml.push_str("<ErrorDocument>");
+            if let Some(key) = err.get("Key").and_then(|v| v.as_str()) {
+                xml.push_str(&format!("<Key>{}</Key>", key));
+            }
+            xml.push_str("</ErrorDocument>");
+        }
+        xml.push_str("</WebsiteConfiguration>");
+        AwsResponse::xml(200, xml)
     }
 
-    fn put_bucket_website(&self, _req: &AwsRequest) -> AwsResponse {
+    fn put_bucket_website(&self, req: &AwsRequest) -> AwsResponse {
+        let bucket_name = req.bucket.clone().unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let bucket = match state.get_bucket(&bucket_name) {
+            Some(b) => b,
+            None => return AwsResponse::error(404, "NoSuchBucket", "The specified bucket does not exist"),
+        };
+        // Parse the XML body to get the website config
+        let body = String::from_utf8_lossy(&req.body).to_string();
+        let mut config = serde_json::Map::new();
+        if let Some(start) = body.find("<IndexDocument>") {
+            if let Some(end) = body.rfind("</IndexDocument>") {
+                let inner = &body[start..end];
+                if let Some(suffix_start) = inner.find("<Suffix>") {
+                    if let Some(suffix_end) = inner.rfind("</Suffix>") {
+                        let suffix = &inner[suffix_start + 8..suffix_end];
+                        config.insert("IndexDocument".to_string(), json!({"Suffix": suffix}));
+                    }
+                }
+            }
+        }
+        if let Some(start) = body.find("<ErrorDocument>") {
+            if let Some(end) = body.rfind("</ErrorDocument>") {
+                let inner = &body[start..end];
+                if let Some(key_start) = inner.find("<Key>") {
+                    if let Some(key_end) = inner.rfind("</Key>") {
+                        let key = &inner[key_start + 5..key_end];
+                        config.insert("ErrorDocument".to_string(), json!({"Key": key}));
+                    }
+                }
+            }
+        }
+        *bucket.website.write() = Some(Value::Object(config));
         AwsResponse::no_content(200)
     }
 
