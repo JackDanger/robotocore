@@ -249,10 +249,12 @@ fn handle_get_delegated_access_token(
         r#"<?xml version="1.0" encoding="UTF-8"?>
 <GetDelegatedAccessTokenResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
     <GetDelegatedAccessTokenResult>
-        <DelegatedAccessToken>
-            <AccessToken>delegated-token-12345</AccessToken>
-            <Expiration>2024-12-31T23:59:59Z</Expiration>
-        </DelegatedAccessToken>
+        <Credentials>
+            <AccessKeyId>ASIADELEGATED0000001</AccessKeyId>
+            <SecretAccessKey>delegated-secret-key-0000000000000000</SecretAccessKey>
+            <SessionToken>delegated-session-token-0000000000000000</SessionToken>
+            <Expiration>2027-12-31T23:59:59Z</Expiration>
+        </Credentials>
     </GetDelegatedAccessTokenResult>
     <ResponseMetadata>
         <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
