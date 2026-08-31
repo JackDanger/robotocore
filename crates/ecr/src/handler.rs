@@ -186,7 +186,9 @@ other => AwsResponse::error(400, "ValidationException",
         });
         let mut images = state.images.write();
         images.entry(repo_name).or_insert_with(Vec::new).push(image.clone());
-        AwsResponse::json(200, image)
+        AwsResponse::json(200, json!({
+            "image": image
+        }))
     }
 
     fn batch_get_image(&self, req: &AwsRequest) -> AwsResponse {
