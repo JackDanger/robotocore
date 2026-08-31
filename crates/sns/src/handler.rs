@@ -131,11 +131,12 @@ other => AwsResponse::error(
         body.push_str(&format!("<entry><key>Owner</key><value>{}</value></entry>", topic.owner));
         if let Some(dn) = topic.display_name.read().as_ref() {
             body.push_str(&format!("<entry><key>DisplayName</key><value>{}</value></entry>", dn));
+        } else {
+            body.push_str(&format!("<entry><key>DisplayName</key><value>{}</value></entry>", topic.name));
         }
         if let Some(policy) = topic.policy.read().as_ref() {
             body.push_str(&format!("<entry><key>Policy</key><value>{}</value></entry>", policy));
         }
-        body.push_str(&format!("<entry><key>DisplayName</key><value>{}</value></entry>", topic.name));
         body.push_str(&format!("<entry><key>SubscriptionsConfirmed</key><value>0</value></entry>"));
         body.push_str(&format!("<entry><key>SubscriptionsPending</key><value>0</value></entry>"));
         body.push_str(&format!("<entry><key>SubscriptionsDeleted</key><value>0</value></entry>"));
