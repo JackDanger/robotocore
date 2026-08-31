@@ -287,7 +287,7 @@ other => AwsResponse::error(400, "ValidationException",
         if let Some(alarm) = alarms.get_mut(name) {
             let value = req.params.get("StateValue")
                 .and_then(|v| v.as_str()).unwrap_or("OK");
-            alarm["State"]["Value"] = json!(value);
+            alarm["StateValue"] = json!(value);
         }
         AwsResponse::json(200, json!({}))
     }
