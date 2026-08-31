@@ -409,8 +409,10 @@ other => AwsResponse::error(400, "ValidationException",
             .and_then(|v| v.as_str()).unwrap_or_default();
         let state = self.get_state(req.account, &req.region);
         let defs = state.task_definitions.read();
+        let family_only = family.split(':').next().unwrap_or(family);
         if let Some((arn, def)) = defs.iter().find(|(_, def)| {
             def.get("family").and_then(|f| f.as_str()) == Some(family)
+                || def.get("family").and_then(|f| f.as_str()) == Some(family_only)
         }) {
             let mut v = def.clone();
             v["taskDefinitionArn"] = json!(arn);
