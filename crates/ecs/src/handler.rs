@@ -83,6 +83,10 @@ impl EcsHandler {
             "SubmitTaskStateChange" => self.json_stub(&req, "SubmitTaskStateChange"),
             "UpdateContainerInstancesState" => self.json_stub(&req, "ContainerInstancesState"),
             "UpdateExpressGatewayService" => self.json_stub(&req, "ExpressGatewayService"),
+    "CreateService" => self.create_service(&req),
+    "DeleteService" => self.json_stub(&req, "{}"),
+    "UpdateService" => self.json_stub(&req, "{}"),
+    "ListServices" => self.json_stub(&req, "{}"),
 other => AwsResponse::error(400, "ValidationException",
                 &format!("The operation {} is not implemented", other)),
         }
@@ -557,6 +561,28 @@ other => AwsResponse::error(400, "ValidationException",
             "taskDefinitionArn": arn,
             "status": "INACTIVE"
         }}))
+    }
+
+    fn create_service(&self, req: &AwsRequest) -> AwsResponse {
+        let service_name = req.params.get("serviceName")
+            .and_then(|v| v.as_str()).unwrap_or("").to_string();
+        let cluster = req.params.get("cluster")
+            .and_then(|v| v.as_str()).unwrap_or("default").to_string();
+        let state = self.get_state(req.account, &req.region);
+        let service_arn = format!("arn:aws:ecs:{}:{}:service/{}", req.region, req.account, service_name);
+        let service = json!({
+            "serviceArn": service_arn,
+            "serviceName": service_name,
+            "clusterArn": format!("arn:aws:ecs:{}:{}:cluster/{}", req.region, req.account, cluster),
+            "status": "ACTIVE",
+            "desiredCount": req.params.get("desiredCount").cloned().unwrap_or(json!(1)),
+            "runningCount": 0,
+            "pendingCount": 0,
+            "launchType": "FARGATE",
+            "taskDefinition": "undefined",
+        });
+        state.services.write().insert(service_name, service.clone());
+        AwsResponse::json(200, json!({ "service": service }))
     }
 }
 
