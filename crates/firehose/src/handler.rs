@@ -143,6 +143,7 @@ impl FirehoseHandler {
                 let mut v = Self::stream_value(&s);
                 v["DeliveryStreamType"] = json!("standard");
                 v["DeliveryStreamStatus"] = json!("ACTIVE");
+                v["VersionId"] = json!("v0");
                 if let Some(enc) = &s.encryption {
                     v["EncryptionConfiguration"] = enc.clone();
                 }
