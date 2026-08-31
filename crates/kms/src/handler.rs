@@ -44,6 +44,7 @@ impl KmsHandler {
             "DeleteAlias" => self.delete_alias(&req),
             "TagResource" => self.tag_resource(&req),
             "UntagResource" => self.untag_resource(&req),
+            "ListResourceTags" => self.list_resource_tags(&req),
             "Encrypt" => self.encrypt(&req),
             "Decrypt" => self.decrypt(&req),
             "GenerateDataKey" => self.generate_data_key(&req),
@@ -239,12 +240,49 @@ other => AwsResponse::error(400, "InvalidException",
         AwsResponse::json(200, json!({}))
     }
 
-    fn tag_resource(&self, _req: &AwsRequest) -> AwsResponse {
+    fn tag_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");
+        let tags: Vec<Value> = req.params.get("Tags")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut all_tags = state.tags.write();
+        let entry = all_tags.entry(key_id.to_string()).or_insert_with(|| serde_json::Map::new());
+        for tag in &tags {
+            let key = tag.get("TagKey").and_then(|v| v.as_str()).unwrap_or("");
+            let value = tag.get("TagValue").and_then(|v| v.as_str()).unwrap_or("");
+            entry.insert(key.to_string(), json!(value));
+        }
         AwsResponse::json(200, json!({}))
     }
 
-    fn untag_resource(&self, _req: &AwsRequest) -> AwsResponse {
+    fn untag_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");
+        let tag_keys: Vec<String> = req.params.get("TagKeys")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut all_tags = state.tags.write();
+        if let Some(entry) = all_tags.get_mut(key_id) {
+            for key in &tag_keys {
+                entry.remove(key);
+            }
+        }
         AwsResponse::json(200, json!({}))
+    }
+
+    fn list_resource_tags(&self, req: &AwsRequest) -> AwsResponse {
+        let key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        let tags = state.tags.read().get(key_id)
+            .cloned()
+            .unwrap_or_else(|| serde_json::Map::new());
+        let tags_list: Vec<Value> = tags.iter()
+            .map(|(k, v)| json!({ "TagKey": k, "TagValue": v.as_str().unwrap_or("") }))
+            .collect();
+        AwsResponse::json(200, json!({ "Tags": tags_list }))
     }
 
     fn get_key_rotation_status(&self, req: &AwsRequest) -> AwsResponse {
@@ -268,10 +306,6 @@ other => AwsResponse::error(400, "InvalidException",
         AwsResponse::json(200, json!({}))
     }
 
-    fn list_resource_tags(&self, req: &AwsRequest) -> AwsResponse {
-        let _key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");
-        AwsResponse::json(200, json!({ "Tags": [] }))
-    }
 
     fn encrypt(&self, req: &AwsRequest) -> AwsResponse {
         let key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");

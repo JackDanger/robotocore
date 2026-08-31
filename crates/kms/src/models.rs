@@ -46,6 +46,7 @@ impl Key {
 pub struct KmsState {
     pub keys: Arc<RwLock<HashMap<String, Arc<Key>>>>,
     pub aliases: Arc<RwLock<HashMap<String, String>>>,
+    pub tags: Arc<RwLock<HashMap<String, serde_json::Map<String, serde_json::Value>>>>,
 }
 
 impl KmsState {
@@ -53,6 +54,7 @@ impl KmsState {
         Self {
             keys: Arc::new(RwLock::new(HashMap::new())),
             aliases: Arc::new(RwLock::new(HashMap::new())),
+            tags: Arc::new(RwLock::new(HashMap::new())),
         }
     }
 
