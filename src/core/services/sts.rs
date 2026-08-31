@@ -269,7 +269,7 @@ fn handle_get_web_identity_token(
     let body = r#"<?xml version="1.0" encoding="UTF-8"?>
 <GetWebIdentityTokenResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
     <GetWebIdentityTokenResult>
-        <Token>web-identity-token-001</Token>
+        <WebIdentityToken>web-identity-token-001</WebIdentityToken>
     </GetWebIdentityTokenResult>
     <ResponseMetadata>
         <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
