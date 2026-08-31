@@ -83,7 +83,10 @@ impl KmsHandler {
             "GenerateDataKeyWithoutPlaintext" => self.json_stub(&req, "GenerateDataKeyWithoutPlaintext"),
             "GenerateMac" => self.json_stub(&req, "GenerateMac"),
             "GetParametersForImport" => self.json_stub(&req, "ParametersForImport"),
-            "ListKeyPolicies" => self.json_stub_list(&req, "KeyPolicies"),
+            "ListKeyPolicies" => AwsResponse::json(200, json!({
+                "PolicyNames": [],
+                "NextMarker": null
+            })),
             "ListKeyRotations" => self.json_stub_list(&req, "KeyRotations"),
             "ListRetirableGrants" => self.json_stub_list(&req, "RetirableGrants"),
             "ReplicateKey" => self.json_stub(&req, "ReplicateKey"),
