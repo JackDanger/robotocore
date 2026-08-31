@@ -135,6 +135,10 @@ other => AwsResponse::error(
         if let Some(policy) = &topic.policy {
             body.push_str(&format!("<entry><key>Policy</key><value>{}</value></entry>", policy));
         }
+        body.push_str(&format!("<entry><key>DisplayName</key><value>{}</value></entry>", topic.name));
+        body.push_str(&format!("<entry><key>SubscriptionsConfirmed</key><value>0</value></entry>"));
+        body.push_str(&format!("<entry><key>SubscriptionsPending</key><value>0</value></entry>"));
+        body.push_str(&format!("<entry><key>SubscriptionsDeleted</key><value>0</value></entry>"));
         body.push_str("</Attributes>");
 
         AwsResponse::query_success("GetTopicAttributes", body)
