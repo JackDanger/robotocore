@@ -78,7 +78,7 @@ impl EventsHandler {
             "ListPartnerEventSourceFactories" => self.json_stub_list(&req, "PartnerEventSourceFactories"),
             "DeleteArchive" => self.json_stub(&req, "{}"),
             "DescribeArchive" => self.json_stub(&req, "Archive"),
-            "DescribeEventBus" => self.json_stub(&req, "EventBusName"),
+            "DescribeEventBus" => self.describe_event_bus(&req),
             "DescribeRule" => self.describe_rule(&req),
             "StartArchive" => self.json_stub(&req, "State"),
             "StopArchive" => self.json_stub(&req, "State"),
@@ -289,6 +289,15 @@ other => AwsResponse::error(400, "ValidationException",
             resp.as_object_mut().unwrap().insert("Description".into(), json!(rule.description));
         }
         AwsResponse::json(200, resp)
+    }
+
+    fn describe_event_bus(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("Name").and_then(|v| v.as_str()).unwrap_or("default").to_string();
+        let arn = format!("arn:aws:events:{}:{}:event-bus/{}", req.region, req.account, name);
+        AwsResponse::json(200, json!({
+            "Name": name,
+            "Arn": arn
+        }))
     }
 }
 
