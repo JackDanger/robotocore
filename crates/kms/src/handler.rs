@@ -412,6 +412,7 @@ other => AwsResponse::error(400, "InvalidException",
         match state.get_key(key_id) {
             Some(key) => AwsResponse::json(200, json!({
                 "PublicKey": base64::encode(vec![0u8; 256]),
+                "KeyId": key.key_id,
                 "KeyMetadata": {
                     "KeyId": key.key_id,
                     "KeySpec": key.key_spec,
