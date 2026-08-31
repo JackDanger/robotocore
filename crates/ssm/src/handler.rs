@@ -106,7 +106,9 @@ impl SsmHandler {
             "GetConnectionStatus" => self.json_stub(&req, "ConnectionStatus"),
             "GetDefaultPatchBaseline" => self.json_stub(&req, "PatchBaseline"),
             "GetDeployablePatchSnapshotForInstance" => self.json_stub(&req, "SnapshotId"),
-            "GetInventorySchema" => self.json_stub_list(&req, "SchemaAttributes"),
+            "GetInventorySchema" => AwsResponse::json(200, json!({
+                "Schemas": []
+            })),
             "GetOpsSummary" => self.json_stub(&req, "OpsSummary"),
             "GetResourcePolicies" => self.json_stub_list(&req, "ResourcePolicies"),
             "GetServiceSetting" => self.json_stub(&req, "Setting"),
