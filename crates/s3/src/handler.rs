@@ -654,7 +654,37 @@ impl S3Handler {
             );
         }
 
-        let body = r#"<?xml version="1.0" encoding="UTF-8"?><CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"></CORSConfiguration>"#.to_string();
+        let mut rules_xml = String::new();
+        for rule in bucket.cors_rules.read().iter() {
+            rules_xml.push_str("<CORSRule>");
+            if let Some(m) = rule.get("AllowedMethods").and_then(|v| v.as_array()) {
+                rules_xml.push_str("<AllowedMethod>");
+                for m in m.iter().filter_map(|v| v.as_str()) {
+                    rules_xml.push_str(m);
+                    rules_xml.push_str("</AllowedMethod><AllowedMethod>");
+                }
+                rules_xml.pop(); // remove trailing <AllowedMethod>
+                rules_xml.pop(); rules_xml.pop(); rules_xml.pop(); // remove >
+                rules_xml.push_str("</AllowedMethod>");
+            }
+            if let Some(o) = rule.get("AllowedOrigins").and_then(|v| v.as_array()) {
+                for o in o.iter().filter_map(|v| v.as_str()) {
+                    rules_xml.push_str(&format!("<AllowedOrigin>{}</AllowedOrigin>", o));
+                }
+            }
+            if let Some(h) = rule.get("AllowedHeaders").and_then(|v| v.as_array()) {
+                for h in h.iter().filter_map(|v| v.as_str()) {
+                    rules_xml.push_str(&format!("<AllowedHeader>{}</AllowedHeader>", h));
+                }
+            }
+            if let Some(e) = rule.get("ExposeHeaders").and_then(|v| v.as_array()) {
+                for e in e.iter().filter_map(|v| v.as_str()) {
+                    rules_xml.push_str(&format!("<ExposeHeader>{}</ExposeHeader>", e));
+                }
+            }
+            rules_xml.push_str("</CORSRule>");
+        }
+        let body = format!(r#"<?xml version="1.0" encoding="UTF-8"?><CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">{}</CORSConfiguration>"#, rules_xml);
         AwsResponse::xml(200, body)
     }
 
