@@ -19,6 +19,7 @@ pub struct Key {
     pub key_material: Vec<u8>,
     pub created: u64,
     pub tags: RwLock<Vec<serde_json::Value>>,
+    pub rotation_enabled: RwLock<bool>,
 }
 
 impl Key {
@@ -37,6 +38,7 @@ impl Key {
             key_material: vec![0u8; 32],
             created: chrono::Utc::now().timestamp() as u64,
             tags: RwLock::new(Vec::new()),
+            rotation_enabled: RwLock::new(false),
         }
     }
 }

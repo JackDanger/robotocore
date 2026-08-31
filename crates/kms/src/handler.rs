@@ -291,9 +291,10 @@ other => AwsResponse::error(400, "InvalidException",
     fn get_key_rotation_status(&self, req: &AwsRequest) -> AwsResponse {
         let key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");
         let state = self.get_state(req.account, &req.region);
-        if state.get_key(key_id).is_some() {
+        if let Some(key) = state.get_key(key_id) {
+            let rotation = *key.rotation_enabled.read();
             AwsResponse::json(200, json!({
-                "KeyRotationEnabled": false,
+                "KeyRotationEnabled": rotation,
                 "KeyRotationPeriod": "DAYS_30"
             }))
         } else {
@@ -301,11 +302,21 @@ other => AwsResponse::error(400, "InvalidException",
         }
     }
 
-    fn enable_key_rotation(&self, _req: &AwsRequest) -> AwsResponse {
+    fn enable_key_rotation(&self, req: &AwsRequest) -> AwsResponse {
+        let key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        if let Some(key) = state.get_key(key_id) {
+            *key.rotation_enabled.write() = true;
+        }
         AwsResponse::json(200, json!({}))
     }
 
-    fn disable_key_rotation(&self, _req: &AwsRequest) -> AwsResponse {
+    fn disable_key_rotation(&self, req: &AwsRequest) -> AwsResponse {
+        let key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        if let Some(key) = state.get_key(key_id) {
+            *key.rotation_enabled.write() = false;
+        }
         AwsResponse::json(200, json!({}))
     }
 
