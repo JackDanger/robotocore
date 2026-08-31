@@ -12,8 +12,8 @@ pub struct Topic {
     pub owner: u64,
     pub region: String,
     pub created: u64,
-    pub display_name: Option<String>,
-    pub policy: Option<String>,
+    pub display_name: RwLock<Option<String>>,
+    pub policy: RwLock<Option<String>>,
     pub subscriptions: RwLock<HashMap<String, Subscription>>,
     pub fifo: bool,
 }
@@ -31,8 +31,8 @@ impl Topic {
             owner: account,
             region,
             created: chrono::Utc::now().timestamp() as u64,
-            display_name: None,
-            policy: None,
+            display_name: RwLock::new(None),
+            policy: RwLock::new(None),
             subscriptions: RwLock::new(HashMap::new()),
             fifo,
         }

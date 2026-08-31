@@ -129,10 +129,10 @@ other => AwsResponse::error(
         let mut body = String::from("<Attributes>");
         body.push_str(&format!("<entry><key>TopicArn</key><value>{}</value></entry>", topic.arn));
         body.push_str(&format!("<entry><key>Owner</key><value>{}</value></entry>", topic.owner));
-        if let Some(dn) = &topic.display_name {
+        if let Some(dn) = topic.display_name.read().as_ref() {
             body.push_str(&format!("<entry><key>DisplayName</key><value>{}</value></entry>", dn));
         }
-        if let Some(policy) = &topic.policy {
+        if let Some(policy) = topic.policy.read().as_ref() {
             body.push_str(&format!("<entry><key>Policy</key><value>{}</value></entry>", policy));
         }
         body.push_str(&format!("<entry><key>DisplayName</key><value>{}</value></entry>", topic.name));
@@ -165,9 +165,10 @@ other => AwsResponse::error(
         };
 
         if let Some(display_name) = req.params.get("DisplayName").and_then(|v| v.as_str()) {
-            // Can't modify Arc<Topic> directly - would need interior mutability
-            // For now, just return success
-            let _ = display_name;
+            *topic.display_name.write() = Some(display_name.to_string());
+        }
+        if let Some(policy) = req.params.get("Policy").and_then(|v| v.as_str()) {
+            *topic.policy.write() = Some(policy.to_string());
         }
 
         let body = String::new();
