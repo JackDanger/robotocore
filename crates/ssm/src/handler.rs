@@ -54,7 +54,7 @@ impl SsmHandler {
             "CreatePatchBaseline" => self.json_stub(&req, "BaselineId"),
             "GetPatchBaseline" => self.json_stub(&req, "BaselineId"),
             "ListPatchBaselines" => self.json_stub_list(&req, "PatchBaselines"),
-            "SendCommand" => self.json_stub(&req, "CommandId"),
+            "SendCommand" => self.send_command(&req),
             "ListCommands" => self.json_stub_list(&req, "Commands"),
             "CreateAssociation" => self.json_stub(&req, "AssociationVersion"),
             "GetAssociation" => self.json_stub(&req, "AssociationVersion"),
@@ -586,6 +586,26 @@ impl SsmHandler {
     }
     fn json_stub_tags(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::json(200, serde_json::json!({"Tags": []}))
+    }
+
+    fn send_command(&self, req: &AwsRequest) -> AwsResponse {
+        let doc_name = req.params.get("DocumentName")
+            .and_then(|v| v.as_str()).unwrap_or("").to_string();
+        let cmd_id = uuid::Uuid::new_v4().to_string();
+        let status = json!({
+            "CommandId": cmd_id,
+            "DocumentName": doc_name,
+            "Status": "Pending",
+            "StatusDetails": "Started",
+            "Comment": "",
+            "Expires": chrono::Utc::now().timestamp_millis() + 3600000,
+            "OutputS3Region": req.region,
+            "OutputS3BucketName": "",
+            "OutputS3KeyPrefix": "",
+            "MaxErrors": "0",
+            "MaxConcurrency": "1",
+        });
+        AwsResponse::json(200, json!({ "Command": status }))
     }
 }
 
