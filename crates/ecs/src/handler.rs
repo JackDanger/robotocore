@@ -68,7 +68,9 @@ impl EcsHandler {
             "DescribeServiceDeployments" => self.json_stub(&req, "ServiceDeployments"),
             "DescribeServiceRevisions" => self.json_stub(&req, "ServiceRevisions"),
             "DiscoverPollEndpoint" => self.json_stub(&req, "DiscoverPollEndpoint"),
-            "ListAccountSettings" => self.json_stub_list(&req, "AccountSettings"),
+            "ListAccountSettings" => AwsResponse::json(200, json!({
+                "settings": []
+            })),
             "ListAttributes" => self.json_stub_list(&req, "Attributes"),
             "ListServicesByNamespace" => self.json_stub_list(&req, "ServicesByNamespace"),
             "ListTaskDefinitionFamilies" => self.list_task_def_families(&req),
