@@ -157,12 +157,23 @@ impl FirehoseHandler {
     fn list_streams(&self, req: &AwsRequest) -> AwsResponse {
         let limit = req.params.get("Limit")
             .and_then(|v| v.as_u64()).unwrap_or(24) as usize;
+        let start = req.params.get("ExclusiveStartDeliveryStreamName")
+            .and_then(|v| v.as_str()).unwrap_or("");
         let state = self.get_state(req.account, &req.region);
-        let streams: Vec<String> = state.resources.read().keys().cloned().collect();
-        let limited: Vec<String> = streams.iter().take(limit).cloned().collect();
+        let mut streams: Vec<String> = state.resources.read().keys().cloned().collect();
+        streams.sort();
+        let start_idx = if start.is_empty() {
+            0
+        } else {
+            streams.iter().position(|s| s == start)
+                .map(|i| i + 1)
+                .unwrap_or(0)
+        };
+        let remaining = &streams[start_idx..];
+        let limited: Vec<String> = remaining.iter().take(limit).cloned().collect();
         AwsResponse::json(200, json!({
             "DeliveryStreamNames": limited,
-            "HasMoreDeliveryStreams": streams.len() > limit
+            "HasMoreDeliveryStreams": remaining.len() > limit
         }))
     }
 
