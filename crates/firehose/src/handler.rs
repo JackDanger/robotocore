@@ -190,11 +190,12 @@ impl FirehoseHandler {
                 &format!("Firehose {name} not found"));
         }
         let ids: Vec<Value> = records.iter()
-            .map(|_| json!(uuid::Uuid::new_v4().simple().to_string()))
+            .map(|_| json!({ "RecordId": uuid::Uuid::new_v4().simple().to_string() }))
             .collect();
         AwsResponse::json(200, json!({
             "FailedPutCount": 0,
-            "RequestIds": ids
+            "Encrypted": false,
+            "RequestResponses": ids
         }))
     }
 
