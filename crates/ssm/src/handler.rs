@@ -92,7 +92,9 @@ impl SsmHandler {
             "DescribeMaintenanceWindows" => self.json_stub_list(&req, "Items"),
             "DescribeMaintenanceWindowSchedule" => self.json_stub(&req, "Schedule"),
             "DescribeMaintenanceWindowsForTarget" => self.json_stub_list(&req, "Items"),
-            "DescribePatchBaselines" => self.json_stub_list(&req, "PatchBaselines"),
+            "DescribePatchBaselines" => AwsResponse::json(200, json!({
+                "BaselineIdentities": []
+            })),
             "DescribePatchGroups" => self.json_stub_list(&req, "PatchGroups"),
             "DescribePatchGroupState" => self.json_stub(&req, "PatchGroupState"),
             "DescribePatchProperties" => self.json_stub(&req, "Properties"),
