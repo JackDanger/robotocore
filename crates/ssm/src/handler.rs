@@ -95,7 +95,10 @@ impl SsmHandler {
             "DescribePatchBaselines" => AwsResponse::json(200, json!({
                 "BaselineIdentities": []
             })),
-            "DescribePatchGroups" => self.json_stub_list(&req, "PatchGroups"),
+            "DescribePatchGroups" => AwsResponse::json(200, json!({
+                "Mappings": [],
+                "NextToken": null
+            })),
             "DescribePatchGroupState" => self.json_stub(&req, "PatchGroupState"),
             "DescribePatchProperties" => self.json_stub(&req, "Properties"),
             "DescribeSessions" => self.json_stub_list(&req, "Sessions"),
