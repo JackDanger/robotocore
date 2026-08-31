@@ -67,7 +67,9 @@ impl EcrHandler {
             "BatchGetRepositoryScanningConfiguration" => self.batch_get_scanning_config(&req),
                         "CreatePullThroughCacheRule" => self.json_stub(&req, "PullThroughCacheRule"),
             "CreateRepositoryCreationTemplate" => self.json_stub(&req, "RepositoryCreationTemplate"),
-            "DescribeImages" => self.json_stub(&req, "Images"),
+            "DescribeImages" => AwsResponse::json(200, json!({
+                "imageDetails": []
+            })),
             "DescribePullThroughCacheRules" => self.json_stub(&req, "PullThroughCacheRules"),
             "GetSigningConfiguration" => self.json_stub(&req, "SigningConfiguration"),
             "ListImageReferrers" => self.json_stub_list(&req, "ImageReferrers"),
