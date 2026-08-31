@@ -949,15 +949,23 @@ impl DynamoDbHandler {
     fn describe_ttl(&self, req: &AwsRequest) -> AwsResponse {
         let table_name = req.params.get("TableName").and_then(|v| v.as_str()).unwrap_or("");
         let state = self.get_state(req.account, &req.region);
-        if state.get_table(&table_name).is_some() {
-            AwsResponse::json(200, json!({
-                "TimeToLiveDescription": {
-                    "TableName": table_name,
-                    "TimeToLiveStatus": "DISABLED"
+        match state.get_table(&table_name) {
+            Some(table) => {
+                let enabled = *table.ttl_enabled.read();
+                let status = if enabled { "ENABLED" } else { "DISABLED" };
+                let mut resp = json!({
+                    "TimeToLiveDescription": {
+                        "TableName": table_name,
+                        "TimeToLiveStatus": status
+                    }
+                });
+                if enabled {
+                    resp.as_object_mut().unwrap()["TimeToLiveDescription"].as_object_mut().unwrap()
+                        .insert("TimeToLiveAttributeName".into(), json!(*table.ttl_attribute.read()));
                 }
-            }))
-        } else {
-            AwsResponse::error(400, "ResourceNotFoundException", &format!("Table not found: {}", table_name))
+                AwsResponse::json(200, resp)
+            }
+            None => AwsResponse::error(400, "ResourceNotFoundException", &format!("Table not found: {}", table_name))
         }
     }
 
