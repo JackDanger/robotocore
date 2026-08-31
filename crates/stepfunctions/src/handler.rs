@@ -53,7 +53,7 @@ impl StepfunctionsHandler {
             "GetActivityTask" => self.get_activity_task(&req),
             "ListStateMachines" => self.list_sms(&req),
                         "DescribeActivity" => self.json_stub(&req, "Activity"),
-            "DescribeExecution" => self.json_stub(&req, "Execution"),
+            "DescribeExecution" => self.describe_exec(&req),
             "DescribeMapRun" => self.json_stub(&req, "MapRun"),
             "DescribeStateMachineForExecution" => self.json_stub(&req, "StateMachineForExecution"),
             "GetExecutionHistory" => self.json_stub(&req, "ExecutionHistory"),
@@ -162,7 +162,12 @@ other => AwsResponse::error(400, "ValidationException",
             return AwsResponse::error(400, "StateMachineDoesNotExist",
                 &format!("State machine {sm_arn} not found"));
         }
-        let exec_arn = format!("{}:execution:{}", sm_arn, uuid::Uuid::new_v4().simple());
+        let exec_name = req.params.get("name").and_then(|v| v.as_str()).unwrap_or_default();
+        let exec_arn = if !exec_name.is_empty() {
+            format!("{}:execution:{}", sm_arn, exec_name)
+        } else {
+            format!("{}:execution:{}", sm_arn, uuid::Uuid::new_v4().simple())
+        };
         let exec = json!({
             "executionArn": exec_arn,
             "stateMachineArn": sm_arn,
@@ -310,6 +315,25 @@ other => AwsResponse::error(400, "ValidationException",
         AwsResponse::json(200, json!({
             "taskToken": uuid::Uuid::new_v4().simple().to_string()
         }))
+    }
+
+    fn describe_exec(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("executionArn").and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let state = self.get_state(req.account, &req.region);
+        let execs = state.executions.read();
+        // Try to find by ARN or by name (last part of ARN)
+        let name = arn.rsplit(':').next().unwrap_or(&arn).to_string();
+        if let Some(exec) = execs.get(&arn).or_else(|| execs.get(&name)) {
+            return AwsResponse::json(200, exec.clone());
+        }
+        // Check if any execution has this ARN
+        for (key, exec) in execs.iter() {
+            if exec.get("executionArn").and_then(|v| v.as_str()) == Some(&arn) {
+                return AwsResponse::json(200, exec.clone());
+            }
+        }
+        AwsResponse::error(400, "ExecutionDoesNotExist",
+            &format!("Execution {arn} does not exist"))
     }
 }
 
