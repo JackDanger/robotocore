@@ -19,6 +19,7 @@ pub async fn handle_sts_request(
         "AssumeRole" => handle_assume_role(req, "AssumeRole"),
         "AssumeRoleWithWebIdentity" => handle_assume_role(req, "AssumeRoleWithWebIdentity"),
         "AssumeRoleWithSAML" => handle_assume_role(req, "AssumeRoleWithSAML"),
+        "AssumeRoot" => handle_assume_root(req),
         "GetWebIdentityToken" => handle_get_web_identity_token(req),
         "DecodeAuthorizationMessage" => handle_decode_auth_message(req),
         "DecodeAWSAccountId" => handle_decode_aws_account_id(req),
@@ -204,6 +205,36 @@ fn handle_assume_role(
     </ResponseMetadata>
 </{}Response>"#,
         op, op, arn, role_id, op, op
+    );
+    Ok(xml_response(&body))
+}
+
+/// AssumeRoot operation.
+fn handle_assume_root(
+    req: &ParsedRequest,
+) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+    let account = req.account;
+    let arn = format!("arn:aws:sts::{}:assumed-role/Root/root", account);
+    let body = format!(
+        r#"<?xml version="1.0" encoding="UTF-8"?>
+<AssumeRootResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+    <AssumeRootResult>
+        <Credentials>
+            <AccessKeyId>ASIAIOSFODNN7EXAMPLE</AccessKeyId>
+            <SecretAccessKey>wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</SecretAccessKey>
+            <SessionToken>session-token-root</SessionToken>
+            <Expiration>2024-12-31T23:59:59Z</Expiration>
+        </Credentials>
+        <AssumedRoleUser>
+            <Arn>{}</Arn>
+            <AssumedRoleId>AROA000000000000000000:root</AssumedRoleId>
+        </AssumedRoleUser>
+    </AssumeRootResult>
+    <ResponseMetadata>
+        <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
+    </ResponseMetadata>
+</AssumeRootResponse>"#,
+        arn
     );
     Ok(xml_response(&body))
 }
