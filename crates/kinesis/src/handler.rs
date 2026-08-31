@@ -65,7 +65,7 @@ impl KinesisHandler {
             "DescribeLimits" => self.json_stub(&req, "Limits"),
             "DescribeStreamSummary" => self.describe_stream_summary(&req),
             "EnableEnhancedMonitoring" => self.json_stub(&req, "EnableEnhancedMonitoring"),
-            "IncreaseStreamRetentionPeriod" => self.json_stub(&req, "IncreaseStreamRetentionPeriod"),
+            "IncreaseStreamRetentionPeriod" => self.increase_retention(&req),
             "ListShards" => self.list_shards(&req),
             "ListStreamConsumers" => self.json_stub_list(&req, "StreamConsumers"),
             "PutResourcePolicy" => self.json_stub(&req, "ResourcePolicy"),
@@ -132,7 +132,7 @@ other => AwsResponse::error(400, "ValidationException",
                         "StreamStatus": *stream.stream_status.read(),
                         "HasShards": true,
                         "HasSubscription": false,
-                        "RetentionPeriodHours": stream.retention_period_hours,
+                        "RetentionPeriodHours": *stream.retention_period_hours.read(),
                         "ShardLevelMetrics": *stream.shard_level_metrics.read(),
                         "StreamModeDetails": {
                             "StreamMode": stream.stream_mode
@@ -234,13 +234,7 @@ other => AwsResponse::error(400, "ValidationException",
         AwsResponse::json(200, json!({}))
     }
 
-    fn increase_retention(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::json(200, json!({}))
-    }
 
-    fn decrease_retention(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::json(200, json!({}))
-    }
 
     fn tag_stream(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::json(200, json!({}))
@@ -276,7 +270,7 @@ other => AwsResponse::error(400, "ValidationException",
                         "StreamModeDetails": {
                             "StreamMode": stream.stream_mode
                         },
-                        "RetentionPeriodHours": stream.retention_period_hours,
+                        "RetentionPeriodHours": *stream.retention_period_hours.read(),
                         "OpenShardCount": shard_count,
                         "ConsumerCount": 0,
                         "EnhancedMonitoring": [{ "ShardLevelMetrics": [] }],
@@ -315,6 +309,30 @@ other => AwsResponse::error(400, "ValidationException",
             None => AwsResponse::error(400, "ResourceNotFoundException",
                 &format!("Stream {stream_name} not found.")),
         }
+    }
+
+    fn increase_retention(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("StreamName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let hours = req.params.get("RetentionPeriodHours")
+            .and_then(|v| v.as_u64()).unwrap_or(24) as u32;
+        let state = self.get_state(req.account, &req.region);
+        if let Some(stream) = state.get_stream(name) {
+            *stream.retention_period_hours.write() = hours;
+        }
+        AwsResponse::json(200, Value::Null)
+    }
+
+    fn decrease_retention(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("StreamName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let hours = req.params.get("RetentionPeriodHours")
+            .and_then(|v| v.as_u64()).unwrap_or(24) as u32;
+        let state = self.get_state(req.account, &req.region);
+        if let Some(stream) = state.get_stream(name) {
+            *stream.retention_period_hours.write() = hours;
+        }
+        AwsResponse::json(200, Value::Null)
     }
 }
 
