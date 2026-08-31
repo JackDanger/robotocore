@@ -85,6 +85,9 @@ impl S3Handler {
             "PutBucketWebsite" => self.put_bucket_website(&req),
             "GetLifecycleConfiguration" => self.get_lifecycle_config(&req),
             "PutLifecycleConfiguration" => self.put_lifecycle_config(&req),
+            "GetBucketEncryption" => self.get_bucket_encryption(&req),
+            "PutBucketEncryption" => self.put_bucket_encryption(&req),
+            "DeleteBucketEncryption" => self.delete_bucket_encryption(&req),
             "DeleteBucketWebsite" => self.delete_bucket_website(&req),
             other => AwsResponse::error(
                 400,
@@ -1196,6 +1199,19 @@ impl S3Handler {
     }
 
     // ---- Website ----
+
+    fn get_bucket_encryption(&self, _req: &AwsRequest) -> AwsResponse {
+        let body = r#"<?xml version="1.0" encoding="UTF-8"?><ServerSideEncryptionConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Rules><Rule><ApplyServerSideEncryptionByDefault><SSEAlgorithm>AES256</SSEAlgorithm></ApplyServerSideEncryptionByDefault></Rule></Rules></ServerSideEncryptionConfiguration>"#;
+        AwsResponse::xml(200, body.to_string())
+    }
+
+    fn put_bucket_encryption(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::no_content(200)
+    }
+
+    fn delete_bucket_encryption(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::no_content(200)
+    }
 
     fn get_lifecycle_config(&self, _req: &AwsRequest) -> AwsResponse {
         let body = r#"<?xml version="1.0" encoding="UTF-8"?><LifecycleConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Rules/></LifecycleConfiguration>"#;
