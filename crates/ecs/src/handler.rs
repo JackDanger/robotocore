@@ -71,7 +71,7 @@ impl EcsHandler {
             "ListAccountSettings" => self.json_stub_list(&req, "AccountSettings"),
             "ListAttributes" => self.json_stub_list(&req, "Attributes"),
             "ListServicesByNamespace" => self.json_stub_list(&req, "ServicesByNamespace"),
-            "ListTaskDefinitionFamilies" => self.json_stub_list(&req, "TaskDefinitionFamilies"),
+            "ListTaskDefinitionFamilies" => self.json_stub_list(&req, "families"),
             "PutAccountSetting" => self.json_stub(&req, "AccountSetting"),
             "PutAccountSettingDefault" => self.json_stub(&req, "AccountSettingDefault"),
             "PutAttributes" => self.json_stub(&req, "Attributes"),
