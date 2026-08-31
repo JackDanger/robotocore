@@ -368,8 +368,17 @@ impl SsmHandler {
             "DocumentDescription": "",
             "Owner": "123456789012"
         })).collect();
+        let identifiers: Vec<Value> = docs.iter().map(|d| json!({
+            "Name": d.name,
+            "Owner": "123456789012",
+            "PlatformTypes": ["Not Implemented (moto)"],
+            "DocumentVersion": format!("{}", d.version),
+            "DocumentType": d.document_type,
+            "SchemaVersion": "2.2",
+            "DocumentFormat": "JSON"
+        })).collect();
         AwsResponse::json(200, json!({
-            "Documents": doc_list,
+            "DocumentIdentifiers": identifiers,
             "NextToken": null
         }))
     }
