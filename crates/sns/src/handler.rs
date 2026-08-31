@@ -165,11 +165,13 @@ other => AwsResponse::error(
             }
         };
 
-        if let Some(display_name) = req.params.get("DisplayName").and_then(|v| v.as_str()) {
-            *topic.display_name.write() = Some(display_name.to_string());
+        let attr_name = req.params.get("AttributeName").and_then(|v| v.as_str()).unwrap_or("");
+        let attr_value = req.params.get("AttributeValue").and_then(|v| v.as_str()).unwrap_or("");
+        if attr_name == "DisplayName" && !attr_value.is_empty() {
+            *topic.display_name.write() = Some(attr_value.to_string());
         }
-        if let Some(policy) = req.params.get("Policy").and_then(|v| v.as_str()) {
-            *topic.policy.write() = Some(policy.to_string());
+        if attr_name == "Policy" && !attr_value.is_empty() {
+            *topic.policy.write() = Some(attr_value.to_string());
         }
 
         let body = String::new();
