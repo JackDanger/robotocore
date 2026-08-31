@@ -126,7 +126,14 @@ impl LogsHandler {
                 &format!("The resource ({}) already exists.", name));
         }
         let group = Arc::new(LogGroup::new(req.account, &req.region, name));
-        state.log_groups.write().insert(group.name.clone(), group);
+        state.log_groups.write().insert(group.name.clone(), group.clone());
+        // Store tags if provided
+        let tags = req.params.get("tags").and_then(|v| v.as_object()).cloned().unwrap_or_default();
+        if !tags.is_empty() {
+            for (k, v) in tags {
+                group.tags.write().insert(k, v.as_str().unwrap_or("").to_string());
+            }
+        }
         AwsResponse::json(200, json!({}))
     }
 
