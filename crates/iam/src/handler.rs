@@ -1482,9 +1482,9 @@ impl IamHandler {
             <key>Roles</key>\
             <value>{}</value>\
             <key>GlobalEndpointUseEnabled</key>\
-            <value>Disabled</value>\
+            <key>Policies</key><value>{}</value><key>PoliciesQuota</key><value>1500</value><key>GlobalEndpointUseEnabled</key><value>Disabled</value>\
             </SummaryMap>",
-            groups, users, roles
+            groups, users, roles, state.policies.read().len()
         ))
     }
 
