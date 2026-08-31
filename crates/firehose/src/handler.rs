@@ -61,7 +61,12 @@ impl FirehoseHandler {
             "RecordCount": s.record_count,
             "RecordSize": s.record_size,
             "HasEncryptionConfiguration": s.encryption.is_some(),
-            "Destinations": [],
+            "Destinations": [{
+                "ExtendedS3DestinationConfiguration": {
+                    "BucketARN": s.destination,
+                    "RoleARN": "arn:aws:iam::123456789012:role/firehose-role"
+                }
+            }],
         })
     }
 
