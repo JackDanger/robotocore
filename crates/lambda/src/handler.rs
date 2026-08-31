@@ -686,7 +686,7 @@ impl LambdaHandler {
         let tag_obj: serde_json::Map<String, Value> = tags.into_iter()
             .map(|(k, v)| (k, Value::String(v)))
             .collect();
-        AwsResponse::json(200, Value::Object(tag_obj))
+        AwsResponse::json(200, json!({ "Tags": tag_obj }))
     }
 
     fn put_function_concurrency(&self, req: &AwsRequest) -> AwsResponse {
