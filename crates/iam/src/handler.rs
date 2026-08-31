@@ -330,12 +330,12 @@ impl IamHandler {
 
     fn xml_stub(&self, req: &AwsRequest, field: &str, op: &str) -> AwsResponse {
         let _ = req;
-        AwsResponse::xml(200, op, format!("<{}Result><{}>{}</{}></{}Result>", op, field, "", field, op))
+        AwsResponse::xml(200, op, format!("<{}>{}</{}>", field, "", field))
     }
 
     fn xml_stub_list(&self, req: &AwsRequest, field: &str, op: &str) -> AwsResponse {
         let _ = req;
-        AwsResponse::xml(200, op, format!("<{}Result><{}/></{}Result>", op, field, op))
+        AwsResponse::xml(200, op, format!("<{}/>", field))
     }
 
     // ---- Users ----
