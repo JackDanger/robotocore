@@ -334,7 +334,7 @@ other => AwsResponse::error(
         let subs = state.list_subscriptions();
         if let Some(sub) = subs.iter().find(|s| s.subscription_arn == sub_arn) {
             let body = format!(
-                "<Attributes><entry><key>SubscriptionArn</key><value>{}</value></entry><entry><key>TopicArn</key><value>{}</value></entry><entry><key>Protocol</key><value>{}</value></entry><entry><key>Endpoint</key><value>{}</value></entry></Attributes>",
+                "<Attributes><entry><key>SubscriptionArn</key><value>{}</value></entry><entry><key>TopicArn</key><value>{}</value></entry><entry><key>Protocol</key><value>{}</value></entry><entry><key>Endpoint</key><value>{}</value></entry><entry><key>RawMessageDelivery</key><value>false</value></entry></Attributes>",
                 sub.subscription_arn, sub.topic_arn, sub.protocol, sub.endpoint
             );
             AwsResponse::query_success("GetSubscriptionAttributes", body)
