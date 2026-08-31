@@ -93,7 +93,7 @@ impl FirehoseHandler {
         }
         let state = self.get_state(req.account, &req.region);
         if state.get_stream(&name).is_some() {
-            return AwsResponse::error(400, "ResourceAlreadyExistsException",
+            return AwsResponse::error(400, "ResourceInUseException",
                 &format!("Firehose {name} already exists"));
         }
         let arn = format!("arn:aws:firehose:{}:{}:deliverystream/{}", req.region, req.account, name);
