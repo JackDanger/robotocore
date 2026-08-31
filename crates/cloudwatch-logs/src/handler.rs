@@ -64,7 +64,7 @@ impl LogsHandler {
             "CreateImportTask" => self.json_stub(&req, "taskId"),
             "CreateLogAnomalyDetector" => self.json_stub(&req, "logGroupIdentifier"),
             "CreateScheduledQuery" => self.json_stub(&req, "scheduledQueryName"),
-            "DeleteRetentionPolicy" => self.json_stub(&req, "{}"),
+            "DeleteRetentionPolicy" => AwsResponse::json(200, json!({})),
             "DescribeAccountPolicies" => self.json_stub_list(&req, "policies"),
             "DescribeConfigurationTemplates" => self.json_stub_list(&req, "configurationTemplates"),
             "DescribeDeliveries" => self.json_stub_list(&req, "deliveries"),
