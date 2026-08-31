@@ -125,6 +125,9 @@ other => AwsResponse::error(400, "ValidationException",
             let mut v = sm.clone();
             v["stateMachineArn"] = sm.get("arn").cloned().unwrap_or(Value::Null);
             v["name"] = json!(name);
+            v["status"] = json!("ACTIVE");
+            v["type"] = json!("STANDARD");
+            v["creationDate"] = json!(chrono::Utc::now().to_rfc3339());
             AwsResponse::json(200, v)
         } else {
             AwsResponse::error(400, "StateMachineDoesNotExist",
