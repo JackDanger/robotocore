@@ -181,9 +181,22 @@ other => AwsResponse::error(400, "ValidationException",
         }))
     }
 
-    fn describe_alarms(&self, _req: &AwsRequest) -> AwsResponse {
+    fn describe_alarms(&self, req: &AwsRequest) -> AwsResponse {
+        let state = self.get_state(req.account, &req.region);
+        let alarms = state.alarms.read();
+        let alarm_names: Vec<String> = req.params.get("AlarmNames")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let items: Vec<Value> = if alarm_names.is_empty() {
+            alarms.values().cloned().collect()
+        } else {
+            alarm_names.iter()
+                .filter_map(|n| alarms.get(n).cloned())
+                .collect()
+        };
         AwsResponse::json(200, json!({
-            "MetricAlarms": [],
+            "MetricAlarms": items,
             "CompositeAlarms": [],
             "NextToken": Value::Null
         }))
