@@ -347,8 +347,8 @@ other => AwsResponse::error(400, "ValidationException",
             json!({
                 "id": 1,
                 "timestamp": chrono::Utc::now().to_rfc3339(),
+                "type": "ExecutionStarted",
                 "detail": {
-                    "type": "ExecutionStarted",
                     "executionArn": execution_arn,
                     "stateMachineArn": "",
                     "input": "{}"
@@ -357,8 +357,8 @@ other => AwsResponse::error(400, "ValidationException",
             json!({
                 "id": 2,
                 "timestamp": chrono::Utc::now().to_rfc3339(),
+                "type": "ExecutionSucceeded",
                 "detail": {
-                    "type": "ExecutionSucceeded",
                     "executionArn": execution_arn,
                     "output": "{}"
                 }
