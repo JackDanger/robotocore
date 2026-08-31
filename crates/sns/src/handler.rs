@@ -167,6 +167,8 @@ other => AwsResponse::error(
 
         let attr_name = req.params.get("AttributeName").and_then(|v| v.as_str()).unwrap_or("");
         let attr_value = req.params.get("AttributeValue").and_then(|v| v.as_str()).unwrap_or("");
+        // URL-decode the attribute value (query protocol encodes spaces as +)
+        let attr_value = attr_value.replace('+', " ");
         if attr_name == "DisplayName" && !attr_value.is_empty() {
             *topic.display_name.write() = Some(attr_value.to_string());
         }
