@@ -712,6 +712,33 @@ impl DefaultSqsHandler {
             body,
         })
     }
+    fn json_stub_batch(&self, params: &Value) -> AwsResponse {
+        let entries: Vec<Value> = params.get("Entries")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        let successful: Vec<Value> = entries.iter()
+            .map(|e| {
+                let id = e.get("Id").and_then(|v| v.as_str()).unwrap_or("").to_string();
+                json!({ "Id": id })
+            })
+            .collect();
+        let body = json!({ "Successful": successful, "Failed": Vec::<Value>::new() }).to_string();
+        AwsResponse {
+            status: 200,
+            headers: vec![("Content-Type".to_string(), "application/x-amz-json-1.0".to_string())],
+            body,
+        }
+    }
+
+    fn json_success(&self) -> AwsResponse {
+        AwsResponse {
+            status: 200,
+            headers: vec![("Content-Type".to_string(), "application/x-amz-json-1.0".to_string())],
+            body: "{}".to_string(),
+        }
+    }
+
     fn handle_send_message_batch(
         &self,
         params: &Value,
