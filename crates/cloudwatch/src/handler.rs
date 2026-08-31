@@ -40,6 +40,7 @@ impl CloudwatchHandler {
             "DescribeAlarms" => self.describe_alarms(&req),
             "PutMetricAlarm" => self.put_metric_alarm(&req),
             "DeleteAlarms" => self.delete_alarms(&req),
+            "DeleteDashboards" => self.delete_dashboards(&req),
             "GetMetricAlarmHistory" => self.get_alarm_history(&req),
             "ListDashboards" => self.list_dashboards(&req),
             "CreateDashboard" => self.create_dashboard(&req),
@@ -396,6 +397,19 @@ other => AwsResponse::error(400, "ValidationException",
                     .map(|k| !keys.contains(&k.to_string()))
                     .unwrap_or(true)
             });
+        }
+        AwsResponse::json(200, json!({}))
+    }
+
+    fn delete_dashboards(&self, req: &AwsRequest) -> AwsResponse {
+        let names: Vec<String> = req.params.get("DashboardNames")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut dashboards = state.dashboards.write();
+        for name in &names {
+            dashboards.remove(name);
         }
         AwsResponse::json(200, json!({}))
     }
