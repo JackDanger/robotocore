@@ -69,10 +69,17 @@ impl KmsState {
     }
 
     pub fn get_key(&self, id: &str) -> Option<Arc<Key>> {
-        // Try direct lookup, then by ARN
+        // Try direct lookup, then by ARN, then by alias
         let keys = self.keys.read();
         if let Some(k) = keys.get(id) { return Some(k.clone()); }
-        keys.values().find(|k| k.arn == id).cloned()
+        if let Some(k) = keys.values().find(|k| k.arn == id) { return Some(k.clone()); }
+        // Try alias resolution
+        let aliases = self.aliases.read();
+        if let Some(target) = aliases.get(id) {
+            if let Some(k) = keys.get(target) { return Some(k.clone()); }
+            return keys.values().find(|k| k.arn == *target).cloned();
+        }
+        None
     }
 
     pub fn put_key(&self, key: Arc<Key>) {
