@@ -324,8 +324,11 @@ other => AwsResponse::error(400, "ValidationException",
         let policy = req.params.get("policyText")
             .and_then(|v| v.as_str()).unwrap_or_default().to_string();
         let state = self.get_state(req.account, &req.region);
-        state.policies.write().insert(name, policy);
-        AwsResponse::json(200, json!({}))
+        state.policies.write().insert(name.clone(), policy.clone());
+        AwsResponse::json(200, json!({
+            "repositoryName": name,
+            "policyText": policy
+        }))
     }
 
     fn delete_repository_policy(&self, req: &AwsRequest) -> AwsResponse {
@@ -443,8 +446,11 @@ other => AwsResponse::error(400, "ValidationException",
         let policy = req.params.get("lifecyclePolicyText")
             .and_then(|v| v.as_str()).unwrap_or_default().to_string();
         let state = self.get_state(req.account, &req.region);
-        state.policies.write().insert(name, policy);
-        AwsResponse::json(200, json!({}))
+        state.policies.write().insert(name.clone(), policy.clone());
+        AwsResponse::json(200, json!({
+            "repositoryName": name,
+            "lifecyclePolicyText": policy
+        }))
     }
 
     fn get_lifecycle_policy(&self, req: &AwsRequest) -> AwsResponse {
