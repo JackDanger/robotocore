@@ -712,6 +712,78 @@ impl DefaultSqsHandler {
             body,
         })
     }
+    fn handle_send_message_batch(
+        &self,
+        params: &Value,
+        account: u64,
+        region: &str,
+    ) -> Result<AwsResponse, SqsError> {
+        let queue_url = params
+            .get("QueueUrl")
+            .and_then(|v| v.as_str())
+            .ok_or_else(|| SqsError::MissingParameter("QueueUrl is required".to_string()))?;
+        let entries = params
+            .get("Entries")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .ok_or_else(|| SqsError::MissingParameter("Entries is required".to_string()))?;
+
+        let queue_name = self.extract_queue_name_from_url(queue_url)?;
+        let store = self.get_store(account, region);
+        let queue_arc = store
+            .get_queue(&queue_name)
+            .ok_or_else(|| SqsError::NonExistentQueue(format!("Queue {} does not exist", queue_url)))?;
+
+        let mut successful: Vec<Value> = Vec::new();
+
+        for entry in &entries {
+            let id = entry.get("Id").and_then(|v| v.as_str()).unwrap_or("").to_string();
+            let body = entry.get("MessageBody").and_then(|v| v.as_str()).unwrap_or("").to_string();
+            let message_id = Uuid::new_v4().to_string();
+            let md5_body = Self::md5_hash(&body);
+            let receipt_handle = Self::generate_receipt_handle(&message_id, queue_url);
+            let sent_timestamp = Utc::now().timestamp_millis() as u64;
+
+            let message = SqsMessage {
+                message_id: message_id.clone(),
+                body,
+                md5_of_body: md5_body.clone(),
+                receipt_handle,
+                sent_timestamp,
+                visibility_until: None,
+                receive_count: 0,
+                first_receive_timestamp: None,
+                attributes: HashMap::new(),
+            };
+
+            {
+                let mut q = queue_arc.write();
+                q.send_message(message);
+            }
+
+            successful.push(json!({
+                "Id": id,
+                "MessageId": message_id,
+                "MD5OfMessageBody": md5_body,
+            }));
+        }
+
+        let body = json!({
+            "Successful": successful,
+            "Failed": Vec::<Value>::new()
+        })
+        .to_string();
+
+        Ok(AwsResponse {
+            status: 200,
+            headers: vec![(
+                "Content-Type".to_string(),
+                "application/x-amz-json-1.0".to_string(),
+            )],
+            body,
+        })
+    }
+
 }
 
 impl Default for DefaultSqsHandler {
@@ -747,6 +819,7 @@ impl DefaultSqsHandler {
                 self.handle_change_message_visibility(&req.params, req.account, &req.region)
             }
             "PurgeQueue" => self.handle_purge_queue(&req.params, req.account, &req.region),
+            "SendMessageBatch" => self.handle_send_message_batch(&req.params, req.account, &req.region),
             _ => Err(SqsError::ValidationError(format!(
                 "Unknown operation: {}",
                 req.operation
