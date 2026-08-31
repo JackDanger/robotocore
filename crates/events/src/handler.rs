@@ -26,7 +26,7 @@ impl EventsHandler {
         let mut resp = json!({
             "Name": r.name,
             "Arn": r.arn,
-            "State": r.state,
+            "State": r.state.read().clone(),
             "Description": r.description,
             "EventBusName": "default",
         });
@@ -97,8 +97,8 @@ impl EventsHandler {
             "StartArchive" => self.json_stub(&req, "State"),
             "StopArchive" => self.json_stub(&req, "State"),
             "PutPartnerEvents" => self.json_stub(&req, "{}"),
-                "DisableRule" => self.json_stub(&req, "{}"),
-    "EnableRule" => self.json_stub(&req, "{}"),
+                "DisableRule" => self.set_rule_state(&req, "DISABLED"),
+    "EnableRule" => self.set_rule_state(&req, "ENABLED"),
     "TagResource" => self.json_stub(&req, "{}"),
     "UntagResource" => self.json_stub(&req, "{}"),
     "ListTagsForResource" => self.json_stub(&req, "{}"),
@@ -121,7 +121,7 @@ other => AwsResponse::error(400, "ValidationException",
             arn: format!("arn:aws:events:{}:{}:rule/{}", req.region, req.account, name),
             description: req.params.get("Description").and_then(|v| v.as_str()).unwrap_or("").to_string(),
             event_pattern: req.params.get("EventPattern").and_then(|v| v.as_str()).unwrap_or("{}").to_string(),
-            state: "ENABLED".to_string(),
+            state: parking_lot::RwLock::new("ENABLED".to_string()),
             role_arn: req.params.get("RoleArn").and_then(|v| v.as_str()).map(String::from),
             schedule_expression: req.params.get("ScheduleExpression").and_then(|v| v.as_str()).map(String::from),
             created: chrono::Utc::now().timestamp() as u64,
@@ -290,7 +290,7 @@ other => AwsResponse::error(400, "ValidationException",
         let mut resp = json!({
             "Name": rule.name,
             "Arn": rule.arn,
-            "State": rule.state,
+            "State": rule.state.read().clone(),
             "EventBusName": "default",
         });
         if let Some(ref sched) = rule.schedule_expression {
@@ -334,6 +334,16 @@ other => AwsResponse::error(400, "ValidationException",
 
     fn list_archives(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::json(200, json!({ "Archives": Vec::<Value>::new() }))
+    }
+
+    fn set_rule_state(&self, req: &AwsRequest, state: &str) -> AwsResponse {
+        let name = req.params.get("Name")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state_store = self.get_state(req.account, &req.region);
+        if let Some(rule) = state_store.get_rule(name) {
+            *rule.state.write() = state.to_string();
+        }
+        AwsResponse::json(200, json!({}))
     }
 }
 

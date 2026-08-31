@@ -11,7 +11,7 @@ pub struct Rule {
     pub arn: String,
     pub description: String,
     pub event_pattern: String,
-    pub state: String,
+    pub state: parking_lot::RwLock<String>,
     pub role_arn: Option<String>,
     pub schedule_expression: Option<String>,
     pub created: u64,
