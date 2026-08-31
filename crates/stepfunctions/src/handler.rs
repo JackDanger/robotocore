@@ -174,11 +174,14 @@ other => AwsResponse::error(400, "ValidationException",
         } else {
             format!("{}:execution:{}", sm_arn, uuid::Uuid::new_v4().simple())
         };
+        let now = chrono::Utc::now().timestamp() as u64;
         let exec = json!({
             "executionArn": exec_arn,
             "stateMachineArn": sm_arn,
             "status": "SUCCEEDED",
-            "startDate": chrono::Utc::now().timestamp() as u64,
+            "startDate": now,
+            "stopDate": now,
+            "completed": true,
             "input": req.params.get("input").cloned().unwrap_or(Value::Null),
             "output": req.params.get("input").cloned().unwrap_or(Value::Null),
         });
