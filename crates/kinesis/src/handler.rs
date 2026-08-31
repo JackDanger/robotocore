@@ -66,7 +66,7 @@ impl KinesisHandler {
             "DescribeStreamSummary" => self.describe_stream_summary(&req),
             "EnableEnhancedMonitoring" => self.json_stub(&req, "EnableEnhancedMonitoring"),
             "IncreaseStreamRetentionPeriod" => self.json_stub(&req, "IncreaseStreamRetentionPeriod"),
-            "ListShards" => self.json_stub_list(&req, "Shards"),
+            "ListShards" => self.list_shards(&req),
             "ListStreamConsumers" => self.json_stub_list(&req, "StreamConsumers"),
             "PutResourcePolicy" => self.json_stub(&req, "ResourcePolicy"),
             "RegisterStreamConsumer" => self.json_stub(&req, "RegisterStreamConsumer"),
@@ -281,6 +281,31 @@ other => AwsResponse::error(400, "ValidationException",
             }
             None => AwsResponse::error(400, "ResourceNotFoundException",
                 &format!("Stream {name} not found")),
+        }
+    }
+
+    fn list_shards(&self, req: &AwsRequest) -> AwsResponse {
+        let stream_name = req.params.get("StreamName").and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        match state.get_stream(stream_name) {
+            Some(stream) => {
+                let shards: Vec<Value> = stream.shards.read().iter().map(|s| {
+                    json!({
+                        "ShardId": s.shard_id,
+                        "SequenceNumberRange": {
+                            "StartingSequenceNumber": s.sequence_number,
+                            "EndingSequenceNumber": null
+                        },
+                        "ParentShardId": s.parent_id
+                    })
+                }).collect();
+                AwsResponse::json(200, json!({
+                    "Shards": shards,
+                    "HasMoreShards": false
+                }))
+            }
+            None => AwsResponse::error(400, "ResourceNotFoundException",
+                &format!("Stream {stream_name} not found.")),
         }
     }
 }
