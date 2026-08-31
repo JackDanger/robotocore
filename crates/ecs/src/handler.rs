@@ -71,7 +71,7 @@ impl EcsHandler {
             "ListAccountSettings" => self.json_stub_list(&req, "AccountSettings"),
             "ListAttributes" => self.json_stub_list(&req, "Attributes"),
             "ListServicesByNamespace" => self.json_stub_list(&req, "ServicesByNamespace"),
-            "ListTaskDefinitionFamilies" => self.json_stub_list(&req, "families"),
+            "ListTaskDefinitionFamilies" => self.list_task_def_families(&req),
             "PutAccountSetting" => self.json_stub(&req, "AccountSetting"),
             "PutAccountSettingDefault" => self.json_stub(&req, "AccountSettingDefault"),
             "PutAttributes" => self.json_stub(&req, "Attributes"),
@@ -593,6 +593,17 @@ other => AwsResponse::error(400, "ValidationException",
         });
         state.services.write().insert(service_name, service.clone());
         AwsResponse::json(200, json!({ "service": service }))
+    }
+
+    fn list_task_def_families(&self, req: &AwsRequest) -> AwsResponse {
+        let state = self.get_state(req.account, &req.region);
+        let tds = state.task_definitions.read();
+        let mut families: Vec<String> = tds.keys().map(|k| {
+            k.rsplit(':').next().unwrap_or(k).to_string()
+        }).collect();
+        families.sort();
+        families.dedup();
+        AwsResponse::json(200, json!({ "families": families }))
     }
 }
 
