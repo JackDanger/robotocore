@@ -1549,7 +1549,7 @@ impl IamHandler {
     }
     fn xml_saml_list(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "ListSAMLProviders",
-            "<ListSAMLProvidersResult><SAMLProviderList/></ListSAMLProvidersResult>".into())
+            "<SAMLProviderList/>".into())
     }
     fn xml_mfa_list(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "ListMFADevices",
@@ -1565,7 +1565,7 @@ impl IamHandler {
     }
     fn xml_cert_list(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "ListServerCertificates",
-            "<ListServerCertificatesResult><ServerCertificates/></ListServerCertificatesResult>".into())
+            "<ServerCertificates/>".into())
     }
     fn xml_login_get(&self, req: &AwsRequest) -> AwsResponse {
         let user = get_param(req, "UserName").unwrap_or_else(|| "unknown".into());
