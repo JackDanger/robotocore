@@ -61,6 +61,7 @@ impl FirehoseHandler {
             "RecordCount": s.record_count,
             "RecordSize": s.record_size,
             "HasEncryptionConfiguration": s.encryption.is_some(),
+            "Destinations": [],
         })
     }
 
