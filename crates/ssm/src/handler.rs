@@ -311,7 +311,7 @@ impl SsmHandler {
         state.documents.write().insert(name.clone(), doc.clone());
 
         AwsResponse::json(200, json!({
-            "Document": {
+            "DocumentDescription": {
                 "Name": name,
                 "Version": 1,
                 "DocumentType": doc.document_type,
