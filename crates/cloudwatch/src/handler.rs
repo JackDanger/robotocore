@@ -63,7 +63,8 @@ impl CloudwatchHandler {
             "DescribeAlarmContributors" => self.json_stub(&req, "AlarmContributors"),
             "DescribeAlarmHistory" => self.json_stub(&req, "AlarmHistory"),
             "DescribeAnomalyDetectors" => self.json_stub(&req, "AnomalyDetectors"),
-            "DisableAlarmActions" => self.json_stub(&req, "DisableAlarmActions"),
+            "DisableAlarmActions" => self.set_alarm_actions(&req, false),
+            "EnableAlarmActions" => self.set_alarm_actions(&req, true),
             "GetMetricWidgetImage" => self.json_stub(&req, "MetricWidgetImage"),
             "ListAlarmMuteRules" => self.json_stub_list(&req, "AlarmMuteRules"),
             "ListManagedInsightRules" => self.json_stub_list(&req, "ManagedInsightRules"),
@@ -410,6 +411,21 @@ other => AwsResponse::error(400, "ValidationException",
         let mut dashboards = state.dashboards.write();
         for name in &names {
             dashboards.remove(name);
+        }
+        AwsResponse::json(200, json!({}))
+    }
+
+    fn set_alarm_actions(&self, req: &AwsRequest, enabled: bool) -> AwsResponse {
+        let names: Vec<String> = req.params.get("AlarmNames")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut alarms = state.alarms.write();
+        for name in &names {
+            if let Some(alarm) = alarms.get_mut(name) {
+                alarm["AlarmActionsEnabled"] = json!(enabled);
+            }
         }
         AwsResponse::json(200, json!({}))
     }
