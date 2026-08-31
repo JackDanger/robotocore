@@ -953,17 +953,14 @@ impl DynamoDbHandler {
             Some(table) => {
                 let enabled = *table.ttl_enabled.read();
                 let status = if enabled { "ENABLED" } else { "DISABLED" };
-                let mut resp = json!({
-                    "TimeToLiveDescription": {
-                        "TableName": table_name,
-                        "TimeToLiveStatus": status
-                    }
+                let mut desc = json!({
+                    "TimeToLiveStatus": status
                 });
                 if enabled {
-                    resp.as_object_mut().unwrap()["TimeToLiveDescription"].as_object_mut().unwrap()
-                        .insert("TimeToLiveAttributeName".into(), json!(*table.ttl_attribute.read()));
+                    desc.as_object_mut().unwrap()
+                        .insert("AttributeName".into(), json!(*table.ttl_attribute.read()));
                 }
-                AwsResponse::json(200, resp)
+                AwsResponse::json(200, json!({ "TimeToLiveDescription": desc }))
             }
             None => AwsResponse::error(400, "ResourceNotFoundException", &format!("Table not found: {}", table_name))
         }
