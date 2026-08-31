@@ -495,7 +495,7 @@ other => AwsResponse::error(400, "ValidationException",
                     .unwrap_or(true)
             });
         }
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn register_task_def(&self, req: &AwsRequest) -> AwsResponse {
