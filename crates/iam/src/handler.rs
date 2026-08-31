@@ -1553,7 +1553,7 @@ impl IamHandler {
     }
     fn xml_mfa_list(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "ListMFADevices",
-            "<ListMFADevicesResult><MFADevices/></ListMFADevicesResult>".into())
+            "<MFADevices/>".into())
     }
     fn xml_ip_list(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "ListInstanceProfiles",
