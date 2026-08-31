@@ -181,7 +181,8 @@ fn handle_assume_role(
         .and_then(|v| v.as_str())
         .map(|s| s.to_string())
         .unwrap_or_else(|| format!("session-{}", uuid::Uuid::new_v4().to_string().split('-').next().unwrap_or("0000")));
-    let arn = format!("{}/{}", role_arn, session_name);
+    let role_name = role_arn.rsplit('/').next().unwrap_or(&role_arn);
+    let arn = format!("arn:aws:sts::{}:assumed-role/{}/{}", account, role_name, session_name);
     let role_id = format!("AROA{}:{}", account, session_name);
     let body = format!(
         r#"<?xml version="1.0" encoding="UTF-8"?>
