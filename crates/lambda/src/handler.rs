@@ -837,7 +837,8 @@ impl LambdaHandler {
         AwsResponse::json(200, json!({
             "AccountID": req.account.to_string(),
             "TotalTracedFunctions": 0,
-            "TracedFunctions": []
+            "TracedFunctions": [],
+            "AccountLimit": 1000
         }))
     }
 
