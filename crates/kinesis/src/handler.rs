@@ -132,9 +132,12 @@ other => AwsResponse::error(400, "ValidationException",
                         "ShardLevelMetrics": *stream.shard_level_metrics.read(),
                         "StreamModeDetails": {
                             "StreamMode": stream.stream_mode
-                        }
-                    },
-                    "Shards": shards
+                        },
+                        "Shards": shards,
+                        "HasMoreShards": false,
+                        "EncryptionType": "KMS",
+                        "KeyId": "alias/aws/kinesis"
+                    }
                 }))
             }
             None => AwsResponse::error(400, "ResourceNotFoundException",
