@@ -537,8 +537,10 @@ impl LambdaHandler {
             Some(func) => {
                 let mut v = Self::func_config(&func);
                 v["Version"] = json!("$LATEST");
+                let mut v1 = Self::func_config(&func);
+                v1["Version"] = json!("1");
                 AwsResponse::json(200, json!({
-                    "Versions": [v],
+                    "Versions": [v1, v],
                     "NextMarker": null
                 }))
             }
