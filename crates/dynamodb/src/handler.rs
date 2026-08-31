@@ -484,6 +484,20 @@ impl DynamoDbHandler {
             }
         }
 
+        // Sort by sort key if present
+        let sort_key = table.key_schema.iter()
+            .find(|k| k.key_type == "RANGE")
+            .map(|k| k.attribute_name.clone());
+        if let Some(sk) = sort_key {
+            result_items.sort_by(|a, b| {
+                let av = a.get(&sk).cloned().unwrap_or(Value::Null);
+                let bv = b.get(&sk).cloned().unwrap_or(Value::Null);
+                let as_str = av.to_string();
+                let bs_str = bv.to_string();
+                as_str.cmp(&bs_str)
+            });
+        }
+
         AwsResponse::json(200, json!({
             "Items": result_items,
             "Count": result_items.len(),
