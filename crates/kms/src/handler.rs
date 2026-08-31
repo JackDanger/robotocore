@@ -66,7 +66,10 @@ impl KmsHandler {
             "DeleteAlias" => self.delete_alias(&req),
             "ListAliases" => self.list_aliases(&req),
             "CreateAlias" => self.create_alias(&req),
-            "CreateGrant" => AwsResponse::json(200, json!({ "GrantToken": uuid::Uuid::new_v4().simple().to_string() })),
+            "CreateGrant" => AwsResponse::json(200, json!({
+                "GrantId": uuid::Uuid::new_v4().simple().to_string(),
+                "GrantToken": uuid::Uuid::new_v4().simple().to_string()
+            })),
             "ListGrants" => AwsResponse::json(200, json!({ "Grants": [], "NextMarker": null })),
             "RetireGrant" => AwsResponse::json(200, json!({})),
             "RevokeGrant" => AwsResponse::json(200, json!({})),
@@ -155,7 +158,10 @@ other => AwsResponse::error(400, "InvalidException",
                     "KeySpec": key.key_spec,
                     "Description": *key.description.read(),
                     "Origin": "AWS_KMS",
-                    "KeyManagerType": "CUSTOMER"
+                    "KeyManagerType": "CUSTOMER",
+                    "KeyRotationEnabled": false,
+                    "RotationPeriodInDays": 365,
+                    "BypassKeyReplicationCheck": false
                 }
             })),
             None => AwsResponse::error(400, "NotFoundException",
