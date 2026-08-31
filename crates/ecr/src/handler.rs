@@ -75,7 +75,12 @@ impl EcrHandler {
             "ListImageReferrers" => self.json_stub_list(&req, "ImageReferrers"),
             "ListPullTimeUpdateExclusions" => self.json_stub_list(&req, "PullTimeUpdateExclusions"),
             "PutAccountSetting" => self.json_stub(&req, "AccountSetting"),
-            "PutRegistryPolicy" => self.json_stub(&req, "RegistryPolicy"),
+            "PutRegistryPolicy" => {
+                let text = req.params.get("policyText").and_then(|v| v.as_str()).unwrap_or_default();
+                AwsResponse::json(200, json!({
+                    "policyText": text
+                }))
+            }
             "PutReplicationConfiguration" => self.json_stub(&req, "ReplicationConfiguration"),
             "PutSigningConfiguration" => self.json_stub(&req, "SigningConfiguration"),
             "UpdateImageStorageClass" => self.json_stub(&req, "ImageStorageClass"),
