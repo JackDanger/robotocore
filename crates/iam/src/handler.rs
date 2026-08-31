@@ -996,15 +996,13 @@ impl IamHandler {
                 let mut body = self.group_xml(&*group);
                 // Include users in the group
                 let users = group.users.read();
-                if !users.is_empty() {
-                    body.push_str("<Users>");
-                    for user_name in users.iter() {
-                        if let Some(user) = state.users.read().get(user_name) {
-                            body.push_str(&self.user_xml(user));
-                        }
+                body.push_str("<Users>");
+                for user_name in users.iter() {
+                    if let Some(user) = state.users.read().get(user_name) {
+                        body.push_str(&self.user_xml(user));
                     }
-                    body.push_str("</Users>");
                 }
+                body.push_str("</Users>");
                 AwsResponse::xml(200, "GetGroup", body)
             }
             None => AwsResponse::error(404, "NoSuchEntity",
