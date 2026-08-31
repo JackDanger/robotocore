@@ -76,8 +76,10 @@ impl EventsHandler {
             "CreatePartnerEventSource" => self.json_stub(&req, "PartnerEventSource"),
             "DeletePartnerEventSource" => self.json_stub(&req, "{}"),
             "ListPartnerEventSourceFactories" => self.json_stub_list(&req, "PartnerEventSourceFactories"),
+            "CreateArchive" => self.create_archive(&req),
             "DeleteArchive" => self.json_stub(&req, "{}"),
-            "DescribeArchive" => self.json_stub(&req, "Archive"),
+            "DescribeArchive" => self.describe_archive(&req),
+            "ListArchives" => self.list_archives(&req),
             "DescribeEventBus" => self.describe_event_bus(&req),
             "DescribeRule" => self.describe_rule(&req),
             "StartArchive" => self.json_stub(&req, "State"),
@@ -298,6 +300,27 @@ other => AwsResponse::error(400, "ValidationException",
             "Name": name,
             "Arn": arn
         }))
+    }
+
+    fn create_archive(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("ArchiveName").and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let arn = format!("arn:aws:events:{}:{}:archive/{}", req.region, req.account, name);
+        AwsResponse::json(200, json!({ "ArchiveArn": arn }))
+    }
+
+    fn describe_archive(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("ArchiveName").and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let arn = format!("arn:aws:events:{}:{}:archive/{}", req.region, req.account, name);
+        AwsResponse::json(200, json!({
+            "ArchiveName": name,
+            "ArchiveArn": arn,
+            "State": "ENABLED",
+            "CreationTime": chrono::Utc::now().to_rfc3339()
+        }))
+    }
+
+    fn list_archives(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::json(200, json!({ "Archives": Vec::<Value>::new() }))
     }
 }
 
