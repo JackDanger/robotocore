@@ -94,7 +94,10 @@ other => AwsResponse::error(400, "ValidationException",
                 .and_then(|v| v.as_str()).unwrap_or("{}"),
         });
         sms.insert(name.clone(), sm.clone());
-        AwsResponse::json(200, json!({ "stateMachineArn": arn }))
+        AwsResponse::json(200, json!({
+            "stateMachineArn": arn,
+            "creationDate": sm["creationDate"]
+        }))
     }
 
     fn delete_sm(&self, req: &AwsRequest) -> AwsResponse {
