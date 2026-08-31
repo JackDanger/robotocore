@@ -245,6 +245,61 @@ impl DefaultSqsHandler {
         })
     }
 
+    fn handle_delete_message_batch(
+        &self,
+        params: &Value,
+        account: u64,
+        region: &str,
+    ) -> Result<AwsResponse, SqsError> {
+        let queue_url = params.get("QueueUrl")
+            .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+        let queue_name = self.extract_queue_name_from_url(&queue_url)?;
+        let store = self.get_store(account, region);
+        let queue_opt = store.get_queue(&queue_name);
+        let queue_arc = queue_opt.ok_or_else(|| {
+            SqsError::NonExistentQueue(format!("Queue {} does not exist", queue_url))
+        })?;
+
+        let entries = params.get("Entries")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+
+        let mut successful: Vec<Value> = Vec::new();
+        let mut failed: Vec<Value> = Vec::new();
+
+        for entry in &entries {
+            let id = entry.get("Id").and_then(|v| v.as_str()).unwrap_or_default().to_string();
+            let receipt_handle = entry.get("ReceiptHandle")
+                .and_then(|v| v.as_str()).unwrap_or_default().to_string();
+            let mut q = queue_arc.write();
+            if q.delete_message(&receipt_handle).is_ok() {
+                successful.push(json!({ "Id": id }));
+            } else {
+                failed.push(json!({
+                    "Id": id,
+                    "Code": "ReceiptHandleIsInvalid",
+                    "Message": "The specified receipt handle is not valid."
+                }));
+            }
+        }
+
+        let body = json!({
+            "Successful": successful,
+            "Failed": failed
+        })
+        .to_string();
+
+        Ok(AwsResponse {
+            status: 200,
+            headers: vec![(
+                "Content-Type".to_string(),
+                "application/x-amz-json-1.0".to_string(),
+            )],
+            body,
+        })
+    }
+
     fn handle_receive_message(
         &self,
         params: &Value,
@@ -835,6 +890,7 @@ impl DefaultSqsHandler {
             "SendMessage" => self.handle_send_message(&req.params, req.account, &req.region),
             "ReceiveMessage" => self.handle_receive_message(&req.params, req.account, &req.region),
             "DeleteMessage" => self.handle_delete_message(&req.params, req.account, &req.region),
+            "DeleteMessageBatch" => self.handle_delete_message_batch(&req.params, req.account, &req.region),
             "DeleteQueue" => self.handle_delete_queue(&req.params, req.account, &req.region),
             "ListQueues" => self.handle_list_queues(&req.params, req.account, &req.region),
             "GetQueueUrl" => self.handle_get_queue_url(&req.params, req.account, &req.region),
