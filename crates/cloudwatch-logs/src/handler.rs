@@ -67,7 +67,7 @@ impl LogsHandler {
             "CreateImportTask" => self.json_stub(&req, "taskId"),
             "CreateLogAnomalyDetector" => self.json_stub(&req, "logGroupIdentifier"),
             "CreateScheduledQuery" => self.json_stub(&req, "scheduledQueryName"),
-            "DeleteRetentionPolicy" => AwsResponse::json(200, json!({})),
+            "DeleteRetentionPolicy" => self.delete_retention_policy(&req),
             "DescribeAccountPolicies" => self.json_stub_list(&req, "policies"),
             "DescribeConfigurationTemplates" => self.json_stub_list(&req, "configurationTemplates"),
             "DescribeDeliveries" => self.json_stub_list(&req, "deliveries"),
@@ -441,6 +441,17 @@ impl LogsHandler {
         let state = self.get_state(req.account, &req.region);
         if let Some(g) = state.get_log_group(name) {
             g.tags.write().retain(|k, _| !keys.contains(k));
+        }
+        AwsResponse::json(200, json!({}))
+    }
+
+    fn delete_retention_policy(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("logGroupName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut groups = state.log_groups.write();
+        if let Some(group) = groups.get_mut(name) {
+            *group.retention_in_days.write() = None;
         }
         AwsResponse::json(200, json!({}))
     }
