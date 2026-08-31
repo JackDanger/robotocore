@@ -290,8 +290,8 @@ other => AwsResponse::error(400, "InvalidException",
         let state = self.get_state(req.account, &req.region);
         if state.get_key(key_id).is_some() {
             AwsResponse::json(200, json!({
-                "RotationEnabled": false,
-                "RotationPeriodInDays": 30
+                "KeyRotationEnabled": false,
+                "KeyRotationPeriod": "DAYS_30"
             }))
         } else {
             AwsResponse::error(400, "NotFoundException", "Key not found")
