@@ -292,9 +292,18 @@ other => AwsResponse::error(400, "ValidationException",
         AwsResponse::json(200, json!({}))
     }
 
-    fn list_dashboards(&self, _req: &AwsRequest) -> AwsResponse {
+    fn list_dashboards(&self, req: &AwsRequest) -> AwsResponse {
+        let state = self.get_state(req.account, &req.region);
+        let dashboards = state.dashboards.read();
+        let entries: Vec<Value> = dashboards.iter().map(|(name, _)| {
+            json!({
+                "DashboardName": name,
+                "DashboardArn": format!("arn:aws:cloudwatch:{}:{}:dashboard:{}:{}", req.region, req.account, req.account, name),
+                "LastModified": "2024-01-01T00:00:00Z"
+            })
+        }).collect();
         AwsResponse::json(200, json!({
-            "DashboardEntries": []
+            "DashboardEntries": entries
         }))
     }
 
