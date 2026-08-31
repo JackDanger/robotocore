@@ -177,6 +177,7 @@ other => AwsResponse::error(400, "ValidationException",
         }
         let digest = format!("sha256:{}", &uuid::Uuid::new_v4().simple().to_string()[..32]);
         let image = json!({
+            "repositoryName": repo_name,
             "imageDigest": digest,
             "imageTag": req.params.get("imageTag").cloned().unwrap_or(Value::Null),
             "imageUrl": format!("{}.dkr.ecr.{}.amazonaws.com/{}:{}", req.account, req.region, repo_name,
