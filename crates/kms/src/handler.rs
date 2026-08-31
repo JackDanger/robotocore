@@ -84,7 +84,7 @@ impl KmsHandler {
             "GenerateMac" => self.json_stub(&req, "GenerateMac"),
             "GetParametersForImport" => self.json_stub(&req, "ParametersForImport"),
             "ListKeyPolicies" => AwsResponse::json(200, json!({
-                "PolicyNames": [],
+                "PolicyNames": ["default"],
                 "NextMarker": null
             })),
             "ListKeyRotations" => self.json_stub_list(&req, "KeyRotations"),
