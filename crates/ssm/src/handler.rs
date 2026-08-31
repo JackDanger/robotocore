@@ -170,7 +170,7 @@ impl SsmHandler {
         let now = chrono::Utc::now().timestamp() as u64;
 
         // Check Overwrite parameter
-        let overwrite = req.params.get("Overwrite").and_then(|v| v.as_bool()).unwrap_or(true);
+        let overwrite = req.params.get("Overwrite").and_then(|v| v.as_bool()).unwrap_or(false);
         if !overwrite && state.get_parameter(&name).is_some() {
             return AwsResponse::error(400, "ParameterAlreadyExists",
                 &format!("An error occurred (ParameterAlreadyExists) when calling the PutParameter operation: Parameter {} already exists", name));
