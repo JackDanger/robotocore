@@ -224,11 +224,30 @@ other => AwsResponse::error(400, "ValidationException",
                 .and_then(|v| v.as_u64()).unwrap_or(1),
             "Period": req.params.get("Period")
                 .and_then(|v| v.as_u64()).unwrap_or(300),
-            "State": {
-                "Value": "OK",
-                "Reason": "Insufficient Data",
-                "StateUpdatedTimestamp": chrono::Utc::now().to_rfc3339()
-            }
+            "ActionsEnabled": req.params.get("ActionsEnabled")
+                .and_then(|v| v.as_bool()).unwrap_or(true),
+            "AlarmActions": req.params.get("AlarmActions")
+                .and_then(|v| v.as_array())
+                .cloned()
+                .unwrap_or_default(),
+            "OKActions": req.params.get("OKActions")
+                .and_then(|v| v.as_array())
+                .cloned()
+                .unwrap_or_default(),
+            "InsufficientDataActions": req.params.get("InsufficientDataActions")
+                .and_then(|v| v.as_array())
+                .cloned()
+                .unwrap_or_default(),
+            "StateValue": "OK",
+            "StateReason": "Unchecked: Initial alarm creation",
+            "StateReasonData": "{}",
+            "StateUpdatedTimestamp": chrono::Utc::now().to_rfc3339(),
+            "TreatMissingData": req.params.get("TreatMissingData")
+                .and_then(|v| v.as_str()).unwrap_or("missing"),
+            "Dimensions": req.params.get("Dimensions")
+                .and_then(|v| v.as_array())
+                .cloned()
+                .unwrap_or_default(),
         });
         state.alarms.write().insert(name.clone(), alarm);
         AwsResponse::json(200, json!({}))
