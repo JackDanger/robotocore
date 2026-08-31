@@ -214,7 +214,7 @@ impl IamHandler {
             "ListEntitiesForPolicy" => self.xml_empty(&req, "ListEntitiesForPolicy"),
             "ListOrganizationsFeatures" => self.xml_empty(&req, "ListOrganizationsFeatures"),
             "ListPoliciesGrantingServiceAccess" => self.xml_empty(&req, "ListPoliciesGrantingServiceAccess"),
-            "ListSigningCertificates" => self.xml_empty(&req, "ListSigningCertificates"),
+            "ListSigningCertificates" => AwsResponse::xml(200, "ListSigningCertificates", "<Certificates/>".into()),
             "RejectDelegationRequest" => self.xml_empty(&req, "RejectDelegationRequest"),
             "SendDelegationToken" => self.xml_empty(&req, "SendDelegationToken"),
             "SetSecurityTokenServicePreferences" => self.xml_empty(&req, "SetSecurityTokenServicePreferences"),
