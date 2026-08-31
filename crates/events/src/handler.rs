@@ -83,7 +83,15 @@ impl EventsHandler {
             "StartArchive" => self.json_stub(&req, "State"),
             "StopArchive" => self.json_stub(&req, "State"),
             "PutPartnerEvents" => self.json_stub(&req, "{}"),
-            other => AwsResponse::error(400, "ValidationException",
+                "DisableRule" => self.json_stub(&req, "{}"),
+    "EnableRule" => self.json_stub(&req, "{}"),
+    "TagResource" => self.json_stub(&req, "{}"),
+    "UntagResource" => self.json_stub(&req, "{}"),
+    "ListTagsForResource" => self.json_stub(&req, "{}"),
+    "DeleteRule" => self.json_stub(&req, "{}"),
+    "PutTargets" => self.json_stub(&req, "{}"),
+    "RemoveTargets" => self.json_stub(&req, "{}"),
+other => AwsResponse::error(400, "ValidationException",
                 &format!("The operation {} is not implemented", other)),
         }
     }
