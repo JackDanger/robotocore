@@ -20,6 +20,7 @@ pub async fn handle_sts_request(
         "AssumeRoleWithWebIdentity" => handle_assume_role(req, "AssumeRoleWithWebIdentity"),
         "AssumeRoleWithSAML" => handle_assume_role(req, "AssumeRoleWithSAML"),
         "AssumeRoot" => handle_assume_root(req),
+        "GetDelegatedAccessToken" => handle_get_delegated_access_token(req),
         "GetWebIdentityToken" => handle_get_web_identity_token(req),
         "DecodeAuthorizationMessage" => handle_decode_auth_message(req),
         "DecodeAWSAccountId" => handle_decode_aws_account_id(req),
@@ -235,6 +236,28 @@ fn handle_assume_root(
     </ResponseMetadata>
 </AssumeRootResponse>"#,
         arn
+    );
+    Ok(xml_response(&body))
+}
+
+/// GetDelegatedAccessToken operation.
+fn handle_get_delegated_access_token(
+    req: &ParsedRequest,
+) -> Result<ParsedResponse, Box<dyn std::error::Error>> {
+    let account = req.account;
+    let body = format!(
+        r#"<?xml version="1.0" encoding="UTF-8"?>
+<GetDelegatedAccessTokenResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+    <GetDelegatedAccessTokenResult>
+        <DelegatedAccessToken>
+            <AccessToken>delegated-token-12345</AccessToken>
+            <Expiration>2024-12-31T23:59:59Z</Expiration>
+        </DelegatedAccessToken>
+    </GetDelegatedAccessTokenResult>
+    <ResponseMetadata>
+        <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
+    </ResponseMetadata>
+</GetDelegatedAccessTokenResponse>"#
     );
     Ok(xml_response(&body))
 }

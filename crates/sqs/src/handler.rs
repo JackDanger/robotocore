@@ -230,7 +230,8 @@ impl DefaultSqsHandler {
 
         let body = json!({
             "MessageId": message_id,
-            "MD5OfMessageBody": md5_body
+            "MD5OfMessageBody": md5_body,
+            "MD5OfMessageAttributes": "d41d8cd98f00b204e9800998ecf8427e"
         })
         .to_string();
 
