@@ -314,6 +314,7 @@ other => AwsResponse::error(400, "ValidationException",
         AwsResponse::json(200, json!({
             "ArchiveName": name,
             "ArchiveArn": arn,
+            "EventSourceArn": format!("arn:aws:events:{}:{}:event-bus/default", req.region, req.account),
             "State": "ENABLED",
             "CreationTime": chrono::Utc::now().to_rfc3339()
         }))
