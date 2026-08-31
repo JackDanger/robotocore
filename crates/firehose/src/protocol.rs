@@ -32,7 +32,7 @@ impl AwsResponse {
 }
 
     pub fn error(status: u16, code: &str, message: &str) -> Self {
-        let body = serde_json::json!({ " __type": code, "message": message });
+        let body = serde_json::json!({ "__type": code, "message": message });
         Self { status,
             headers: vec![
                 ("Content-Type".to_string(), "application/x-amz-json-1.0".to_string()),
