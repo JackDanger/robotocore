@@ -75,7 +75,8 @@ impl EcsHandler {
             "PutAccountSetting" => self.json_stub(&req, "AccountSetting"),
             "PutAccountSettingDefault" => self.json_stub(&req, "AccountSettingDefault"),
             "PutAttributes" => self.json_stub(&req, "Attributes"),
-            "RegisterTaskDefinition" => self.json_stub(&req, "RegisterTaskDefinition"),
+            "RegisterTaskDefinition" => self.register_task_def(&req),
+            "DeregisterTaskDefinition" => self.deregister_task_def(&req),
             "StopServiceDeployment" => self.json_stub(&req, "StopServiceDeployment"),
             "SubmitAttachmentStateChanges" => self.json_stub(&req, "SubmitAttachmentStateChanges"),
             "SubmitContainerStateChange" => self.json_stub(&req, "SubmitContainerStateChange"),
@@ -489,6 +490,73 @@ other => AwsResponse::error(400, "ValidationException",
             });
         }
         AwsResponse::json(200, Value::Null)
+    }
+
+    fn register_task_def(&self, req: &AwsRequest) -> AwsResponse {
+        let family = req.params.get("family").and_then(|v| v.as_str()).unwrap_or_default();
+        if family.is_empty() {
+            return AwsResponse::error(400, "ValidationException", "family required");
+        }
+        let state = self.get_state(req.account, &req.region);
+        let mut tds = state.task_definitions.write();
+        // Find existing family to determine revision
+        let revision = tds.values()
+            .filter(|td| td.get("family").and_then(|f| f.as_str()) == Some(family))
+            .map(|td| td.get("revision").and_then(|r| r.as_u64()).unwrap_or(0))
+            .max()
+            .unwrap_or(0) + 1;
+        let arn = format!("arn:aws:ecs:{}:{}:task-definition/{}:{}", req.region, req.account, family, revision);
+        let td = json!({
+            "taskDefinitionArn": arn,
+            "family": family,
+            "revision": revision,
+            "status": "ACTIVE",
+            "containerDefinitions": req.params.get("containerDefinitions").cloned().unwrap_or(json!([])),
+            "requiresCompatibilities": req.params.get("requiresCompatibilities").cloned().unwrap_or(json!(["EC2"])),
+            "cpu": req.params.get("cpu").cloned().unwrap_or(Value::Null),
+            "memory": req.params.get("memory").cloned().unwrap_or(Value::Null),
+            "executionRoleArn": req.params.get("executionRoleArn").cloned().unwrap_or(Value::Null),
+            "taskRoleArn": req.params.get("taskRoleArn").cloned().unwrap_or(Value::Null),
+            "networkMode": req.params.get("networkMode").cloned().unwrap_or(json!("bridge")),
+            "pidMode": "task",
+            "ipcMode": "task",
+            "runtimePlatform": { "operatingSystemFamily": "LINUX" },
+            "compatibilities": ["EC2"],
+            "revisionPatch": "",
+        });
+        tds.insert(arn.clone(), td.clone());
+        AwsResponse::json(200, json!({ "taskDefinition": td }))
+    }
+
+    fn deregister_task_def(&self, req: &AwsRequest) -> AwsResponse {
+        let family = req.params.get("taskDefinition").and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let mut tds = state.task_definitions.write();
+        // Find the ARN
+        let arn = if family.contains(':') && !family.starts_with("arn:") {
+            format!("arn:aws:ecs:{}:{}:task-definition/{}", req.region, req.account, family)
+        } else if family.starts_with("arn:") {
+            family.to_string()
+        } else {
+            // Just a family name - find latest revision
+            tds.keys()
+                .filter(|k| k.contains(&format!("/task-definition/{}:", family)))
+                .max()
+                .cloned()
+                .unwrap_or_default()
+        };
+        if arn.is_empty() {
+            return AwsResponse::error(400, "TaskDefinitionNotFoundException",
+                &format!("Task definition {} not found", family));
+        }
+        // Mark as INACTIVE instead of deleting
+        if let Some(td) = tds.get_mut(&arn) {
+            td.as_object_mut().unwrap().insert("status".into(), json!("INACTIVE"));
+        }
+        AwsResponse::json(200, json!({ "deregisteredTaskDefinition": {
+            "taskDefinitionArn": arn,
+            "status": "INACTIVE"
+        }}))
     }
 }
 
