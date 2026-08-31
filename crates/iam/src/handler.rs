@@ -1561,7 +1561,7 @@ impl IamHandler {
     }
     fn xml_ssh_list(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "ListSSHPublicKeys",
-            "<ListSSHPublicKeysResult><SSHPublicKeys/></ListSSHPublicKeysResult>".into())
+            "<SSHPublicKeys/>".into())
     }
     fn xml_cert_list(&self, _req: &AwsRequest) -> AwsResponse {
         AwsResponse::xml(200, "ListServerCertificates",
