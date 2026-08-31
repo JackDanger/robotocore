@@ -534,10 +534,14 @@ impl LambdaHandler {
         let name = self.extract_name(req);
         let state = self.get_state(req.account, &req.region);
         match state.get_function(&name) {
-            Some(func) => AwsResponse::json(200, json!({
-                "Versions": [Self::func_config(&func)],
-                "NextMarker": null
-            })),
+            Some(func) => {
+                let mut v = Self::func_config(&func);
+                v["Version"] = json!("$LATEST");
+                AwsResponse::json(200, json!({
+                    "Versions": [v],
+                    "NextMarker": null
+                }))
+            }
             None => AwsResponse::error(404, "ResourceNotFoundException", "Function not found"),
         }
     }
