@@ -56,7 +56,7 @@ impl StepfunctionsHandler {
             "DescribeExecution" => self.describe_exec(&req),
             "DescribeMapRun" => self.json_stub(&req, "MapRun"),
             "DescribeStateMachineForExecution" => self.json_stub(&req, "StateMachineForExecution"),
-            "GetExecutionHistory" => self.json_stub(&req, "ExecutionHistory"),
+            "GetExecutionHistory" => self.get_execution_history(&req),
             "ListMapRuns" => self.json_stub_list(&req, "MapRuns"),
             "ListStateMachineAliases" => self.json_stub_list(&req, "StateMachineAliases"),
             "ListStateMachineVersions" => self.json_stub_list(&req, "StateMachineVersions"),
@@ -337,6 +337,36 @@ other => AwsResponse::error(400, "ValidationException",
         }
         AwsResponse::error(400, "ExecutionDoesNotExist",
             &format!("Execution {arn} does not exist"))
+    }
+
+    fn get_execution_history(&self, req: &AwsRequest) -> AwsResponse {
+        let execution_arn = req.params.get("executionArn").and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        // Return a simple execution history with a few events
+        let events: Vec<Value> = vec![
+            json!({
+                "id": 1,
+                "timestamp": chrono::Utc::now().to_rfc3339(),
+                "detail": {
+                    "type": "ExecutionStarted",
+                    "executionArn": execution_arn,
+                    "stateMachineArn": "",
+                    "input": "{}"
+                }
+            }),
+            json!({
+                "id": 2,
+                "timestamp": chrono::Utc::now().to_rfc3339(),
+                "detail": {
+                    "type": "ExecutionSucceeded",
+                    "executionArn": execution_arn,
+                    "output": "{}"
+                }
+            })
+        ];
+        AwsResponse::json(200, json!({
+            "events": events
+        }))
     }
 }
 
