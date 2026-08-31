@@ -83,6 +83,8 @@ impl S3Handler {
             "DeleteBucketLifecycle" => self.delete_bucket_lifecycle(&req),
             "GetBucketWebsite" => self.get_bucket_website(&req),
             "PutBucketWebsite" => self.put_bucket_website(&req),
+            "GetLifecycleConfiguration" => self.get_lifecycle_config(&req),
+            "PutLifecycleConfiguration" => self.put_lifecycle_config(&req),
             "DeleteBucketWebsite" => self.delete_bucket_website(&req),
             other => AwsResponse::error(
                 400,
@@ -1194,6 +1196,15 @@ impl S3Handler {
     }
 
     // ---- Website ----
+
+    fn get_lifecycle_config(&self, _req: &AwsRequest) -> AwsResponse {
+        let body = r#"<?xml version="1.0" encoding="UTF-8"?><LifecycleConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Rules/></LifecycleConfiguration>"#;
+        AwsResponse::xml(200, body.to_string())
+    }
+
+    fn put_lifecycle_config(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::no_content(200)
+    }
 
     fn get_bucket_website(&self, req: &AwsRequest) -> AwsResponse {
         let bucket_name = req.bucket.clone().unwrap_or_default();
