@@ -633,9 +633,41 @@ impl S3Handler {
             }
         };
 
-        let _cors_xml = String::from_utf8_lossy(&req.body).to_string();
-        *bucket.cors_rules.write() = Vec::new();
+        let cors_xml = String::from_utf8_lossy(&req.body).to_string();
+        // Parse CORS rules from XML (simplified)
+        let rules = self.parse_cors_rules(&cors_xml);
+        *bucket.cors_rules.write() = rules;
         AwsResponse::no_content(200)
+    }
+
+    fn parse_cors_rules(&self, xml: &str) -> Vec<serde_json::Value> {
+        let mut rules = Vec::new();
+        let mut in_rule = false;
+        let mut current_rule = serde_json::Map::new();
+        let mut current_method = String::new();
+
+        for line in xml.lines() {
+            let trimmed = line.trim();
+            if trimmed.starts_with("<CORSRule>") {
+                in_rule = true;
+                current_rule = serde_json::Map::new();
+            } else if trimmed.starts_with("</CORSRule>") {
+                in_rule = false;
+                if !current_rule.is_empty() {
+                    rules.push(serde_json::Value::Object(current_rule.clone()));
+                }
+                current_rule = serde_json::Map::new();
+            } else if in_rule {
+                if trimmed.starts_with("<AllowedMethod>") {
+                    current_method = trimmed.trim_start_matches("<AllowedMethod>").trim_end_matches("</AllowedMethod>").to_string();
+                } else if current_method.is_empty() && trimmed.starts_with("<") {
+                    let key = trimmed.trim_start_matches('<').split('/').next().unwrap_or("").to_string();
+                    let value = trimmed.split('>').nth(1).and_then(|v| v.split('<').next()).unwrap_or("").to_string();
+                    current_rule.insert(key, serde_json::Value::String(value));
+                }
+            }
+        }
+        rules
     }
 
     fn get_bucket_cors(&self, req: &AwsRequest) -> AwsResponse {
