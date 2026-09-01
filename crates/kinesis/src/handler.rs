@@ -69,6 +69,7 @@ impl KinesisHandler {
             "DescribeStreamSummary" => self.describe_stream_summary(&req),
             "EnableEnhancedMonitoring" => self.json_stub(&req, "EnableEnhancedMonitoring"),
             "IncreaseStreamRetentionPeriod" => self.increase_retention(&req),
+            "DecreaseStreamRetentionPeriod" => self.json_stub(&req, "DecreaseStreamRetentionPeriod"),
             "ListShards" => self.list_shards(&req),
             "ListStreamConsumers" => self.json_stub_list(&req, "StreamConsumers"),
             "PutResourcePolicy" => self.json_stub(&req, "ResourcePolicy"),
