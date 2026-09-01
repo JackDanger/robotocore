@@ -193,7 +193,7 @@ impl SsmHandler {
             "ResetServiceSetting" => self.json_stub(&req, "{}"),
             "ResumeSession" => self.json_stub(&req, "SessionId"),
             "TerminateSession" => self.json_stub(&req, "{}"),
-            "UnlabelParameterVersion" => self.json_stub(&req, "{}"),
+            "UnlabelParameterVersion" => self.unlabel_parameter_version(&req),
             "UpdateDocumentDefaultVersion" => self.json_stub(&req, "DocumentVersion"),
             other => AwsResponse::error(400, "InvalidParameterException",
                 &format!("The operation {} is not implemented", other)),
@@ -672,6 +672,23 @@ impl SsmHandler {
             "MaxConcurrency": "1",
         });
         AwsResponse::json(200, json!({ "Command": status }))
+    }
+
+    fn unlabel_parameter_version(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("Name").and_then(|v| v.as_str()).unwrap_or_default();
+        let label = req.params.get("VersionLabel")
+            .and_then(|v| v.as_str())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        if let Some(param) = state.get_parameter(name) {
+            let version = *param.version.read();
+            if let Some(v) = param.history.write().iter_mut().find(|v| v.version == version) {
+                let current_labels: Vec<String> = v.label.split(',').filter(|s| !s.is_empty()).map(String::from).collect();
+                let new_labels: Vec<String> = current_labels.into_iter().filter(|l| l != label).collect();
+                v.label = new_labels.join(",");
+            }
+        }
+        AwsResponse::json(200, json!({}))
     }
 }
 
