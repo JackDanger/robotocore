@@ -119,7 +119,9 @@ impl SsmHandler {
             "ListNodes" => self.json_stub_list(&req, "Nodes"),
             "ListNodesByAssociation" => self.json_stub_list(&req, "Nodes"),
             "ListNodesSummary" => self.json_stub_list(&req, "Nodes"),
-            "ListOpsItemEvents" => self.json_stub_list(&req, "Events"),
+            "ListOpsItemEvents" => AwsResponse::json(200, json!({
+                "Summaries": []
+            })),
             "ListOpsMetadata" => self.json_stub_list(&req, "OpsMetadata"),
             "ListResourceDataSync" => AwsResponse::json(200, json!({
                 "ResourceDataSyncItems": []
