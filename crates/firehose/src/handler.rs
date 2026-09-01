@@ -149,6 +149,7 @@ impl FirehoseHandler {
                 v["DeliveryStreamType"] = json!("standard");
                 v["DeliveryStreamStatus"] = json!("ACTIVE");
                 v["VersionId"] = json!("v0");
+                v["HasMoreDestinations"] = json!(false);
                 if let Some(enc) = &s.encryption {
                     v["DeliveryStreamEncryptionConfiguration"] = enc.clone();
                 }
