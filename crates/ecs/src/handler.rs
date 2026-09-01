@@ -60,7 +60,16 @@ impl EcsHandler {
             "ListTagsForResource" => self.list_tags(&req),
             "TagResource" => self.tag_resource(&req),
             "UntagResource" => self.untag_resource(&req),
-                        "CreateCapacityProvider" => self.json_stub(&req, "CapacityProvider"),
+                        "CreateCapacityProvider" => {
+                            let name = req.params.get("capacityProviderName")
+                                .and_then(|v| v.as_str()).unwrap_or_default();
+                            AwsResponse::json(200, json!({
+                                "capacityProvider": {
+                                    "capacityProviderName": name,
+                                    "status": "ACTIVE"
+                                }
+                            }))
+                        }
             "CreateExpressGatewayService" => self.json_stub(&req, "ExpressGatewayService"),
             "DeleteExpressGatewayService" => self.json_stub(&req, "ExpressGatewayService"),
             "DescribeCapacityProviders" => self.json_stub(&req, "CapacityProviders"),
