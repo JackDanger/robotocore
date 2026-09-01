@@ -258,10 +258,31 @@ impl LogsHandler {
     fn put_log_events(&self, req: &AwsRequest) -> AwsResponse {
         let group_name = req.params.get("logGroupName").and_then(|v| v.as_str()).unwrap_or_default();
         let stream_name = req.params.get("logStreamName").and_then(|v| v.as_str()).unwrap_or_default();
-        let events: Vec<Value> = req.params.get("logEvents")
-            .and_then(|v| v.as_array())
-            .cloned()
-            .unwrap_or_default();
+        let events_val = req.params.get("logEvents").cloned().unwrap_or(Value::Null);
+        let events: Vec<Value> = match events_val {
+            Value::Array(a) => a,
+            _ => {
+                // Parse from query protocol format (logEvents.member.N.timestamp/message)
+                let mut result = vec![];
+                let mut i = 1;
+                loop {
+                    let ts_name = format!("logEvents.member.{}.timestamp", i);
+                    let msg_name = format!("logEvents.member.{}.message", i);
+                    match (req.params.get(&ts_name), req.params.get(&msg_name)) {
+                        (Some(ts), Some(msg)) => {
+                            result.push(json!({
+                                "timestamp": ts.as_i64().unwrap_or(0),
+                                "message": msg.as_str().unwrap_or("")
+                            }));
+                            i += 1;
+                        }
+                        _ => break,
+                    }
+                }
+                result
+            }
+        };
+
         let state = self.get_state(req.account, &req.region);
         let group = match state.get_log_group(group_name) {
             Some(g) => g,
