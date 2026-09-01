@@ -112,7 +112,45 @@ impl SsmHandler {
             "DescribeSessions" => self.json_stub_list(&req, "Sessions"),
             "GetAccessToken" => self.json_stub(&req, "AccessToken"),
             "GetConnectionStatus" => self.json_stub(&req, "ConnectionStatus"),
-            "GetDefaultPatchBaseline" => self.json_stub(&req, "PatchBaseline"),
+            "GetDefaultPatchBaseline" => AwsResponse::json(200, json!({
+                "BaselineId": "PATCH-BASELINE-ID",
+                "Name": "AWS-DEFAULT-PATCH-BASELINE",
+                "OperatingSystem": "WINDOWS",
+                "PatchGroup": "DEFAULT",
+                "ApprovalRules": {
+                    "ApprovedPatchTypes": [
+                        "SECURITY_UPDATE",
+                        "UPDATE",
+                        "HOTFIX",
+                        "CRITICAL_UPDATE",
+                        "DRIVER",
+                        "SECURITY_PATCH",
+                        "TOOL",
+                        "DEFINITION",
+                        "FEATURE_PACK",
+                        "HOTFIX",
+                        "MODEL",
+                        "DRIVER_PACKAGE",
+                        "RECOMMENDED",
+                        "PATCH"
+                    ],
+                    "ApprovedPatches": [],
+                    "ApprovedPatchGroups": [],
+                    "RejectedPatches": [],
+                    "RejectedPatchGroups": []
+                },
+                "Description": "Default patch baseline",
+                "Options": {
+                    "PatchEnableReboot": "DISABLED",
+                    "StackedUpdates": "DISABLED",
+                    "ResetStackedUpdates": false,
+                    "ExcludeNewerPatches": false,
+                    "UpdateGroups": []
+                },
+                "CreatedBy": "AWS",
+                "CreatedDate": chrono::Utc::now().to_rfc3339(),
+                "ModifiedDate": chrono::Utc::now().to_rfc3339()
+            })),
             "GetDeployablePatchSnapshotForInstance" => self.json_stub(&req, "SnapshotId"),
             "GetInventorySchema" => AwsResponse::json(200, json!({
                 "Schemas": []
