@@ -112,6 +112,23 @@ other => AwsResponse::error(400, "InvalidException",
         }
         let state = self.get_state(req.account, &req.region);
         state.put_key(key.clone());
+
+        // Store tags if provided
+        if let Some(tags_val) = req.params.get("Tags") {
+            let tags: Vec<Value> = match tags_val {
+                Value::Object(m) => m.into_iter().map(|(k, v)| json!({"TagKey": k, "TagValue": v})).collect(),
+                Value::Array(a) => a.clone(),
+                _ => vec![],
+            };
+            let mut all_tags = state.tags.write();
+            let entry = all_tags.entry(key.key_id.clone()).or_insert_with(|| serde_json::Map::new());
+            for tag in &tags {
+                let key_name = tag.get("TagKey").and_then(|v| v.as_str()).unwrap_or("");
+                let value = tag.get("TagValue").and_then(|v| v.as_str()).unwrap_or("");
+                entry.insert(key_name.to_string(), json!(value));
+            }
+        }
+
         AwsResponse::json(200, json!({
             "KeyMetadata": {
                 "KeyId": key.key_id,
@@ -250,10 +267,12 @@ other => AwsResponse::error(400, "InvalidException",
 
     fn tag_resource(&self, req: &AwsRequest) -> AwsResponse {
         let key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");
-        let tags: Vec<Value> = req.params.get("Tags")
-            .and_then(|v| v.as_array())
-            .cloned()
-            .unwrap_or_default();
+        let tags_val = req.params.get("Tags").cloned().unwrap_or(Value::Null);
+        let tags: Vec<Value> = match tags_val {
+            Value::Object(m) => m.into_iter().map(|(k, v)| json!({"TagKey": k, "TagValue": v})).collect(),
+            Value::Array(a) => a,
+            _ => vec![],
+        };
         let state = self.get_state(req.account, &req.region);
         let mut all_tags = state.tags.write();
         let entry = all_tags.entry(key_id.to_string()).or_insert_with(|| serde_json::Map::new());
