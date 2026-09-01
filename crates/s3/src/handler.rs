@@ -660,8 +660,22 @@ impl S3Handler {
                 current_rule = serde_json::Map::new();
             } else if in_rule {
                 if trimmed.starts_with("<AllowedMethod>") {
-                    current_method = trimmed.trim_start_matches("<AllowedMethod>").trim_end_matches("</AllowedMethod>").to_string();
-                } else if current_method.is_empty() && trimmed.starts_with("<") {
+                    let method = trimmed.trim_start_matches("<AllowedMethod>").trim_end_matches("</AllowedMethod>").to_string();
+                    if !method.is_empty() {
+                        let arr = current_rule.entry("AllowedMethods").or_insert_with(|| serde_json::Value::Array(vec![]));
+                        if let Some(a) = arr.as_array_mut() {
+                            a.push(serde_json::Value::String(method));
+                        }
+                    }
+                } else if trimmed.starts_with("<AllowedOrigin>") {
+                    let origin = trimmed.trim_start_matches("<AllowedOrigin>").trim_end_matches("</AllowedOrigin>").to_string();
+                    if !origin.is_empty() {
+                        let arr = current_rule.entry("AllowedOrigins").or_insert_with(|| serde_json::Value::Array(vec![]));
+                        if let Some(a) = arr.as_array_mut() {
+                            a.push(serde_json::Value::String(origin));
+                        }
+                    }
+                } else if trimmed.starts_with("<") {
                     let key = trimmed.trim_start_matches('<').split('/').next().unwrap_or("").to_string();
                     let value = trimmed.split('>').nth(1).and_then(|v| v.split('<').next()).unwrap_or("").to_string();
                     current_rule.insert(key, serde_json::Value::String(value));
