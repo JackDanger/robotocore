@@ -166,12 +166,12 @@ impl IamHandler {
             "PutContextKey" => self.xml_empty(&req, "PutContextKey"),
             // Extended operations
             "ListInstanceProfilesForRole" => self.list_ip_for_role(&req),
-            "PutUserPermissionsBoundary" => self.xml_empty(&req, "PutUserPermissionsBoundary"),
+            "PutUserPermissionsBoundary" => self.put_user_permissions_boundary(&req),
             "RemoveUserPermissionsBoundary" => self.xml_empty(&req, "RemoveUserPermissionsBoundary"),
-            "GetUserPermissionsBoundary" => self.xml_empty(&req, "GetUserPermissionsBoundary"),
-            "PutRolePermissionsBoundary" => self.xml_empty(&req, "PutRolePermissionsBoundary"),
+            "GetUserPermissionsBoundary" => self.get_user_permissions_boundary(&req),
+            "PutRolePermissionsBoundary" => self.put_role_permissions_boundary(&req),
             "RemoveRolePermissionsBoundary" => self.xml_empty(&req, "RemoveRolePermissionsBoundary"),
-            "GetRolePermissionsBoundary" => self.xml_empty(&req, "GetRolePermissionsBoundary"),
+            "GetRolePermissionsBoundary" => self.get_role_permissions_boundary(&req),
             "PutGroupPermissionsBoundary" => self.xml_empty(&req, "PutGroupPermissionsBoundary"),
             "RemoveGroupPermissionsBoundary" => self.xml_empty(&req, "RemoveGroupPermissionsBoundary"),
             "GetGroupPermissionsBoundary" => self.xml_empty(&req, "GetGroupPermissionsBoundary"),
@@ -1789,6 +1789,52 @@ impl IamHandler {
             "<Password>TempPassword123!</Password><PasswordResetRequired>true</PasswordResetRequired>".into())
     }
 
+
+    fn put_user_permissions_boundary(&self, req: &AwsRequest) -> AwsResponse {
+        let user_name = get_param(req, "UserName").unwrap_or_default();
+        let arn = get_param(req, "PermissionsBoundary").unwrap_or_default();
+        let state = self.get_state(req.account);
+        if let Some(user) = state.get_user(&user_name) {
+            user.permissions_boundary.write().clone_from(&Some(arn.to_string()));
+        }
+        AwsResponse::xml(200, "PutUserPermissionsBoundary", String::new())
+    }
+
+    fn get_user_permissions_boundary(&self, req: &AwsRequest) -> AwsResponse {
+        let user_name = get_param(req, "UserName").unwrap_or_default();
+        let state = self.get_state(req.account);
+        let boundary = state.get_user(&user_name)
+            .map(|u| u.permissions_boundary.read().clone())
+            .unwrap_or_default();
+        let arn = boundary.unwrap_or_default();
+        AwsResponse::xml(200, "GetUserPermissionsBoundary", format!(
+            "<PermissionsBoundary><PermissionsBoundaryArn>{}</PermissionsBoundaryArn></PermissionsBoundary>",
+            arn
+        ))
+    }
+
+    fn put_role_permissions_boundary(&self, req: &AwsRequest) -> AwsResponse {
+        let role_name = get_param(req, "RoleName").unwrap_or_default();
+        let arn = get_param(req, "PermissionsBoundary").unwrap_or_default();
+        let state = self.get_state(req.account);
+        if let Some(role) = state.get_role(&role_name) {
+            role.permissions_boundary.write().clone_from(&Some(arn.to_string()));
+        }
+        AwsResponse::xml(200, "PutRolePermissionsBoundary", String::new())
+    }
+
+    fn get_role_permissions_boundary(&self, req: &AwsRequest) -> AwsResponse {
+        let role_name = get_param(req, "RoleName").unwrap_or_default();
+        let state = self.get_state(req.account);
+        let boundary = state.get_role(&role_name)
+            .map(|r| r.permissions_boundary.read().clone())
+            .unwrap_or_default();
+        let arn = boundary.unwrap_or_default();
+        AwsResponse::xml(200, "GetRolePermissionsBoundary", format!(
+            "<PermissionsBoundary><PermissionsBoundaryArn>{}</PermissionsBoundaryArn></PermissionsBoundary>",
+            arn
+        ))
+    }
 }
 
 impl Default for IamHandler {

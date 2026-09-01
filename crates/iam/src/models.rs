@@ -18,6 +18,7 @@ pub struct User {
     pub tags: RwLock<Vec<serde_json::Value>>,
     pub policies: RwLock<Vec<String>>,
     pub attached_policies: RwLock<Vec<String>>,
+    pub permissions_boundary: RwLock<Option<String>>,
 }
 
 impl User {
@@ -36,6 +37,7 @@ impl User {
             tags: RwLock::new(Vec::new()),
             policies: RwLock::new(Vec::new()),
             attached_policies: RwLock::new(Vec::new()),
+            permissions_boundary: RwLock::new(None),
         }
     }
 }
@@ -82,6 +84,7 @@ pub struct Role {
     pub tags: RwLock<Vec<serde_json::Value>>,
     pub attached_policies: RwLock<Vec<String>>,
     pub inline_policies: RwLock<Vec<String>>,
+    pub permissions_boundary: RwLock<Option<String>>,
 }
 
 impl Role {
@@ -100,6 +103,7 @@ impl Role {
             tags: RwLock::new(Vec::new()),
             attached_policies: RwLock::new(Vec::new()),
             inline_policies: RwLock::new(Vec::new()),
+            permissions_boundary: RwLock::new(None),
         }
     }
 }
@@ -116,6 +120,7 @@ pub struct Group {
     pub tags: RwLock<Vec<serde_json::Value>>,
     pub attached_policies: RwLock<Vec<String>>,
     pub inline_policies: RwLock<Vec<String>>,
+    pub permissions_boundary: RwLock<Option<String>>,
 }
 
 impl Group {
@@ -132,6 +137,7 @@ impl Group {
             tags: RwLock::new(Vec::new()),
             attached_policies: RwLock::new(Vec::new()),
             inline_policies: RwLock::new(Vec::new()),
+            permissions_boundary: RwLock::new(None),
         }
     }
 }
