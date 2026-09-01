@@ -419,9 +419,18 @@ impl LogsHandler {
     }
 
     fn list_tags(&self, req: &AwsRequest) -> AwsResponse {
-        let name = req.params.get("logGroupName").and_then(|v| v.as_str()).unwrap_or_default();
+        let name = req.params.get("logGroupName")
+            .or_else(|| req.params.get("resourceArn"))
+            .and_then(|v| v.as_str())
+            .unwrap_or_default();
+        // If it's an ARN, extract the name
+        let name = if name.starts_with("arn:aws:logs:") {
+            name.rsplit_once(":").map(|(_, n)| n.to_string()).unwrap_or(name)
+        } else {
+            name.to_string()
+        };
         let state = self.get_state(req.account, &req.region);
-        let tags = state.get_log_group(name)
+        let tags = state.get_log_group(&name)
             .map(|g| g.tags.read().clone())
             .unwrap_or_default();
         AwsResponse::json(200, json!({ "tags": tags }))
