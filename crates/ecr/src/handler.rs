@@ -231,7 +231,8 @@ other => AwsResponse::error(400, "ValidationException",
         let mut images = state.images.write();
         images.entry(repo_name).or_insert_with(Vec::new).push(image.clone());
         AwsResponse::json(200, json!({
-            "image": image
+            "image": image,
+            "imageId": image["imageUrl"].clone()
         }))
     }
 
