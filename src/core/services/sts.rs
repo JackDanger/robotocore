@@ -271,7 +271,7 @@ fn handle_get_web_identity_token(
     let body = r#"<?xml version="1.0" encoding="UTF-8"?>
 <GetWebIdentityTokenResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
     <GetWebIdentityTokenResult>
-        <WebIdentityToken>web-identity-token-001</WebIdentityToken>
+        <WebIdentityToken>eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</WebIdentityToken>
         <Expiration>2027-12-31T23:59:59Z</Expiration>
     </GetWebIdentityTokenResult>
     <ResponseMetadata>
