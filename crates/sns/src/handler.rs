@@ -47,11 +47,11 @@ impl SnsHandler {
     "UntagResource" => self.untag_resource(&req),
     "ListTagsForResource" => self.list_tags_for_resource(&req),
     "PublishBatch" => AwsResponse::query_success("PublishBatch", "<Successful/><Failed/>".to_string()),
-    "CreatePlatformApplication" => AwsResponse::query_success("CreatePlatformApplication", "<PlatformApplicationArn>arn:aws:sns:us-east-1:123456789012:application:custom:app</PlatformApplicationArn>".to_string()),
-    "ListPlatformApplications" => AwsResponse::query_success("ListPlatformApplications", "<PlatformApplications/>".to_string()),
-    "DeletePlatformApplication" => AwsResponse::query_success("DeletePlatformApplication", String::new()),
-    "GetPlatformApplication" => AwsResponse::query_success("GetPlatformApplication", "<PlatformApplication><PlatformApplicationArn/></PlatformApplication>".to_string()),
-    "UpdatePlatformApplication" => AwsResponse::query_success("UpdatePlatformApplication", String::new()),
+    "CreatePlatformApplication" => self.create_platform_application(&req),
+    "ListPlatformApplications" => self.list_platform_applications(&req),
+    "DeletePlatformApplication" => self.delete_platform_application(&req),
+    "GetPlatformApplication" => self.get_platform_application(&req),
+    "UpdatePlatformApplication" => self.update_platform_application(&req),
 other => AwsResponse::error(
                 400,
                 "InvalidAction",
@@ -405,6 +405,38 @@ other => AwsResponse::error(
         }
         xml.push_str("</Tags>");
         AwsResponse::query_success("ListTagsForResource", xml)
+    }
+
+    fn create_platform_application(&self, req: &AwsRequest) -> AwsResponse {
+        let platform = req.params.get("Platform")
+            .and_then(|v| v.as_str()).unwrap_or("custom");
+        let name = req.params.get("Name")
+            .and_then(|v| v.as_str()).unwrap_or("app");
+        let arn = format!("arn:aws:sns:{}:{}:application:{}:{}", req.region, req.account, platform, name);
+        // Store the application (simplified - just return the ARN)
+        AwsResponse::query_success("CreatePlatformApplication", format!("<PlatformApplicationArn>{}</PlatformApplicationArn>", arn))
+    }
+
+    fn list_platform_applications(&self, _req: &AwsRequest) -> AwsResponse {
+        // Return empty list (no storage implemented)
+        AwsResponse::query_success("ListPlatformApplications", "<PlatformApplications/>".to_string())
+    }
+
+    fn delete_platform_application(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::query_success("DeletePlatformApplication", String::new())
+    }
+
+    fn get_platform_application(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("PlatformApplicationArn")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        AwsResponse::query_success("GetPlatformApplication", format!(
+            "<PlatformApplication><PlatformApplicationArn>{}</PlatformApplicationArn></PlatformApplication>",
+            arn
+        ))
+    }
+
+    fn update_platform_application(&self, _req: &AwsRequest) -> AwsResponse {
+        AwsResponse::query_success("UpdatePlatformApplication", String::new())
     }
 }
 
