@@ -267,10 +267,25 @@ impl FirehoseHandler {
             .and_then(|v| v.as_str()).unwrap_or_default();
         let limit = req.params.get("Limit")
             .and_then(|v| v.as_u64()).map(|v| v as usize).unwrap_or(127);
+        let exclusive_start = req.params.get("ExclusiveStartKey")
+            .and_then(|v| v.as_str()).map(|s| s.to_string());
         let state = self.get_state(req.account, &req.region);
-        let tags: Vec<Value> = state.get_stream(name)
-            .map(|s| s.tags.iter().take(limit).cloned().collect())
+        let mut tags: Vec<Value> = state.get_stream(name)
+            .map(|s| s.tags)
             .unwrap_or_default();
+
+        // Filter by ExclusiveStartKey
+        if let Some(start_key) = &exclusive_start {
+            if let Some(pos) = tags.iter().position(|t| {
+                t.get("Key").and_then(|k| k.as_str()) == Some(start_key.as_str())
+            }) {
+                tags = tags.split_off(pos + 1);
+            }
+        }
+
+        // Apply limit
+        tags.truncate(limit);
+
         AwsResponse::json(200, json!({ "Tags": tags }))
     }
 
