@@ -1,7 +1,7 @@
 //! IAM operation handler (query protocol, XML responses).
 
 use parking_lot::RwLock;
-use serde_json::Value;
+use serde_json::{json, Value};
 use std::collections::HashMap;
 use std::sync::Arc;
 
