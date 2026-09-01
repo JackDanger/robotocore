@@ -61,10 +61,12 @@ impl EcsHandler {
             "TagResource" => self.tag_resource(&req),
             "UntagResource" => self.untag_resource(&req),
                         "CreateCapacityProvider" => {
-                            let name = req.params.get("capacityProviderName")
+                            let name = req.params.get("name")
+                                .or_else(|| req.params.get("capacityProviderName"))
                                 .and_then(|v| v.as_str()).unwrap_or_default();
                             AwsResponse::json(200, json!({
                                 "capacityProvider": {
+                                    "name": name,
                                     "capacityProviderName": name,
                                     "status": "ACTIVE"
                                 }
