@@ -78,6 +78,7 @@ impl EcrHandler {
             "PutRegistryPolicy" => {
                 let text = req.params.get("policyText").and_then(|v| v.as_str()).unwrap_or_default();
                 AwsResponse::json(200, json!({
+                    "registryId": req.account.to_string(),
                     "policyText": text
                 }))
             }
