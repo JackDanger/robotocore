@@ -238,10 +238,12 @@ impl FirehoseHandler {
     fn tag_stream(&self, req: &AwsRequest) -> AwsResponse {
         let name = req.params.get("DeliveryStreamName")
             .and_then(|v| v.as_str()).unwrap_or_default();
-        let tags: Vec<Value> = req.params.get("Tags")
-            .and_then(|v| v.as_array())
-            .cloned()
-            .unwrap_or_default();
+        let tags_val = req.params.get("Tags").cloned().unwrap_or(Value::Null);
+        let tags: Vec<Value> = match tags_val {
+            Value::Object(m) => m.into_iter().map(|(k, v)| json!({"Key": k, "Value": v})).collect(),
+            Value::Array(a) => a,
+            _ => vec![],
+        };
         let state = self.get_state(req.account, &req.region);
         if let Some(mut s) = state.get_stream(name) {
             s.tags.extend(tags);
@@ -253,7 +255,7 @@ impl FirehoseHandler {
     fn untag_stream(&self, req: &AwsRequest) -> AwsResponse {
         let name = req.params.get("DeliveryStreamName")
             .and_then(|v| v.as_str()).unwrap_or_default();
-        let keys: Vec<String> = req.params.get("RemoveTagKeys")
+        let keys: Vec<String> = req.params.get("TagKeys")
             .and_then(|v| v.as_array())
             .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
             .unwrap_or_default();
