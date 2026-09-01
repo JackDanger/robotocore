@@ -164,6 +164,12 @@ impl LambdaHandler {
             let env_value = serde_json::to_value(env).unwrap_or(Value::Null);
             *func.environment.write() = Some(env_value);
         }
+        // Store tags from the request
+        if let Some(tags) = req.params.get("Tags").and_then(|v| v.as_object()) {
+            for (k, v) in tags {
+                func.tags.write().insert(k.clone(), v.as_str().unwrap_or("").to_string());
+            }
+        }
         state.functions.write().insert(func.function_name.clone(), func.clone());
         AwsResponse::json(201, Self::func_config(&func))
     }
