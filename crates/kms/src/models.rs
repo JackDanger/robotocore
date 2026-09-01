@@ -64,6 +64,10 @@ impl KmsState {
         self.aliases.write().insert(alias_name.to_string(), key_id.to_string());
     }
 
+    pub fn update_alias(&self, alias_name: &str, key_id: &str) {
+        self.aliases.write().insert(alias_name.to_string(), key_id.to_string());
+    }
+
     pub fn delete_alias(&self, alias_name: &str) {
         self.aliases.write().remove(alias_name);
     }

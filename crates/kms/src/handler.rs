@@ -92,7 +92,7 @@ impl KmsHandler {
             "ReplicateKey" => self.json_stub(&req, "ReplicateKey"),
             "RotateKeyOnDemand" => self.json_stub(&req, "RotateKeyOnDemand"),
             "Sign" => self.json_stub(&req, "Sign"),
-            "UpdateAlias" => self.json_stub(&req, "Alias"),
+            "UpdateAlias" => self.update_alias(&req),
             "UpdatePrimaryRegion" => self.json_stub(&req, "PrimaryRegion"),
 other => AwsResponse::error(400, "InvalidException",
                 &format!("The operation {} is not implemented", other)),
@@ -449,6 +449,16 @@ other => AwsResponse::error(400, "InvalidException",
             "CiphertextBlob": ciphertext,
             "KeyId": key_id
         }))
+    }
+
+    fn update_alias(&self, req: &AwsRequest) -> AwsResponse {
+        let alias_name = req.params.get("AliasName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let key_id = req.params.get("TargetKeyId")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        state.update_alias(alias_name, key_id);
+        AwsResponse::json(200, json!({}))
     }
 }
 
