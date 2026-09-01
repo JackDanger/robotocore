@@ -63,7 +63,9 @@ impl EventsHandler {
             "UpdateApiDestination" => self.json_stub(&req, "UpdateApiDestination"),
             "DeleteApiDestination" => self.json_stub(&req, "DeleteApiDestination"),
             "ListApiDestinations" => self.json_stub_list(&req, "ApiDestinations"),
-            "PutPartnerEventsSource" => self.json_stub(&req, "PutPartnerEventsSource"),
+            "PutPartnerEventsSource" => AwsResponse::json(200, json!({
+                "FailedEntryCount": 0
+            })),
             "ListPartnerEventsSources" => self.json_stub_list(&req, "PartnerEventsSources"),
             "ListRules" => self.list_rules(&req),
             "PutTargets" => self.put_targets(&req),
