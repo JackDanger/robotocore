@@ -435,8 +435,11 @@ other => AwsResponse::error(400, "ValidationException",
             .and_then(|v| v.as_str()).unwrap_or_default().to_string();
         let state = self.get_state(req.account, &req.region);
         let config = req.params.get("imageScanningConfiguration").cloned().unwrap_or(Value::Null);
-        state.scanning_configs.write().insert(name, config);
-        AwsResponse::json(200, json!({}))
+        state.scanning_configs.write().insert(name.clone(), config.clone());
+        AwsResponse::json(200, json!({
+            "repositoryName": name,
+            "imageScanningConfiguration": config
+        }))
     }
 
     fn put_image_tag_mutability(&self, _req: &AwsRequest) -> AwsResponse {
