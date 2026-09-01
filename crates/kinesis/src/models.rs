@@ -26,6 +26,7 @@ pub struct KinesisStream {
     pub stream_mode: String,
     pub created: u64,
     pub shards: RwLock<Vec<Shard>>,
+    pub tags: RwLock<Vec<serde_json::Value>>,
 }
 
 impl KinesisStream {
@@ -50,6 +51,7 @@ impl KinesisStream {
             stream_mode: "ON_DEMAND".to_string(),
             created: chrono::Utc::now().timestamp_millis() as u64,
             shards: RwLock::new(shards),
+            tags: RwLock::new(vec![]),
         }
     }
 }

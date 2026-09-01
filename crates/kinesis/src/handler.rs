@@ -247,15 +247,42 @@ other => AwsResponse::error(400, "ValidationException",
         AwsResponse::json(200, json!({}))
     }
 
-    fn list_tags_for_stream(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::json(200, json!({ "Tags": [] }))
+    fn list_tags_for_stream(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("StreamName").and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let tags = state.get_stream(name).map(|s| s.tags.read().clone()).unwrap_or_default();
+        AwsResponse::json(200, json!({ "Tags": tags }))
     }
 
-    fn add_tags(&self, _req: &AwsRequest) -> AwsResponse {
+    fn add_tags(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("StreamName").and_then(|v| v.as_str()).unwrap_or_default();
+        let tags = req.params.get("Tags").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        if let Some(stream) = state.get_stream(name) {
+            let mut existing = stream.tags.write();
+            for tag in tags {
+                if !existing.iter().any(|t| t.get("Key").and_then(|k| k.as_str()) == tag.get("Key").and_then(|k| k.as_str())) {
+                    existing.push(tag);
+                }
+            }
+        }
         AwsResponse::json(200, json!({}))
     }
 
-    fn remove_tags(&self, _req: &AwsRequest) -> AwsResponse {
+    fn remove_tags(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("StreamName").and_then(|v| v.as_str()).unwrap_or_default();
+        let keys: Vec<String> = req.params.get("TagKeys")
+            .and_then(|v| v.as_array())
+            .map(|a| a.iter().filter_map(|k| k.as_str().map(|s| s.to_string())).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        if let Some(stream) = state.get_stream(name) {
+            let mut existing = stream.tags.write();
+            existing.retain(|t| {
+                let key = t.get("Key").and_then(|k| k.as_str()).unwrap_or_default();
+                !keys.contains(&key.to_string())
+            });
+        }
         AwsResponse::json(200, json!({}))
     }
 
