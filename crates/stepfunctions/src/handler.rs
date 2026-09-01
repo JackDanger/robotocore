@@ -256,7 +256,11 @@ other => AwsResponse::error(400, "ValidationException",
                 sm["roleArn"] = role.clone();
             }
         }
-        AwsResponse::json(200, json!({}))
+        let now = chrono::Utc::now().timestamp() as u64;
+        AwsResponse::json(200, json!({
+            "stateMachineArn": arn,
+            "updateDate": now
+        }))
     }
 
     fn list_tags(&self, req: &AwsRequest) -> AwsResponse {
