@@ -264,9 +264,11 @@ impl FirehoseHandler {
     fn list_tags(&self, req: &AwsRequest) -> AwsResponse {
         let name = req.params.get("DeliveryStreamName")
             .and_then(|v| v.as_str()).unwrap_or_default();
+        let limit = req.params.get("Limit")
+            .and_then(|v| v.as_u64()).map(|v| v as usize).unwrap_or(127);
         let state = self.get_state(req.account, &req.region);
-        let tags = state.get_stream(name)
-            .map(|s| s.tags)
+        let tags: Vec<Value> = state.get_stream(name)
+            .map(|s| s.tags.iter().take(limit).cloned().collect())
             .unwrap_or_default();
         AwsResponse::json(200, json!({ "Tags": tags }))
     }
