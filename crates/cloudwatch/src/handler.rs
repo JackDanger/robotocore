@@ -251,7 +251,13 @@ other => AwsResponse::error(400, "ValidationException",
                 .cloned()
                 .unwrap_or_default(),
         });
-        state.alarms.write().insert(name.clone(), alarm);
+        state.alarms.write().insert(name.clone(), alarm.clone());
+        // Store tags from the request
+        if let Some(tags) = req.params.get("Tags").and_then(|v| v.as_array()) {
+            let mut all_tags = state.tags.write();
+            let entry = all_tags.entry(arn.clone()).or_insert_with(Vec::new);
+            entry.extend(tags.iter().cloned());
+        }
         AwsResponse::json(200, json!({}))
     }
 
