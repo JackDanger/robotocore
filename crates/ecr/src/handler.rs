@@ -519,8 +519,9 @@ other => AwsResponse::error(400, "ValidationException",
         AwsResponse::json(200, json!({}))
     }
 
-    fn get_registry_scanning(&self, _req: &AwsRequest) -> AwsResponse {
+    fn get_registry_scanning(&self, req: &AwsRequest) -> AwsResponse {
         AwsResponse::json(200, json!({
+            "registryId": req.account.to_string(),
             "scanningConfiguration": {
                 "scanOnPush": true,
                 "imageSignatureWatchingEnabled": false
