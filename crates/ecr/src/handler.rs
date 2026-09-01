@@ -109,6 +109,9 @@ other => AwsResponse::error(400, "ValidationException",
             "createdAt": chrono::Utc::now().to_rfc3339(),
             "imageTagMutability": req.params.get("imageTagMutability")
                 .and_then(|v| v.as_str()).unwrap_or("MUTABLE"),
+            "encryptionConfiguration": req.params.get("encryptionConfiguration")
+                .cloned()
+                .unwrap_or(json!({"encryptionType": "AES256"})),
             "imageScanningConfiguration": req.params.get("imageScanningConfiguration")
                 .cloned().unwrap_or(json!({ "scanOnPush": true })),
             "encryptionType": "AES256",

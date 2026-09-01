@@ -425,7 +425,7 @@ impl LogsHandler {
             .unwrap_or_default();
         // If it's an ARN, extract the name
         let name = if name.starts_with("arn:aws:logs:") {
-            name.rsplit_once(":").map(|(_, n)| n.to_string()).unwrap_or(name)
+            name.rsplit_once(":").map(|(_, n)| n.to_string()).unwrap_or_else(|| name.to_string())
         } else {
             name.to_string()
         };
