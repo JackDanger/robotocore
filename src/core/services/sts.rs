@@ -184,6 +184,17 @@ fn handle_assume_role(
         .map(|s| s.to_string())
         .unwrap_or_else(|| format!("session-{}", uuid::Uuid::new_v4().to_string().split('-').next().unwrap_or("0000")));
     let role_name = role_arn.rsplit('/').next().unwrap_or(&role_arn);
+
+    // Check policy size limit (2048 characters when packed)
+    if let Some(policy) = req.params.get("Policy").and_then(|v| v.as_str()) {
+        if policy.len() > 2048 {
+            return Err(Box::new(std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                "Policy is too large"
+            )));
+        }
+    }
+
     let arn = format!("arn:aws:sts::{}:assumed-role/{}/{}", account, role_name, session_name);
     let role_id = format!("AROA{}:{}", account, session_name);
     let body = format!(
