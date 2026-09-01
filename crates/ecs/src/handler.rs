@@ -76,7 +76,11 @@ impl EcsHandler {
             "DescribeExpressGatewayService" => self.json_stub(&req, "ExpressGatewayService"),
             "DescribeServiceDeployments" => self.json_stub(&req, "ServiceDeployments"),
             "DescribeServiceRevisions" => self.json_stub(&req, "ServiceRevisions"),
-            "DiscoverPollEndpoint" => self.json_stub(&req, "DiscoverPollEndpoint"),
+            "DiscoverPollEndpoint" => AwsResponse::json(200, json!({
+                "endpoint": "http://localhost:4567",
+                "agentArgs": [],
+                "agentConfig": {}
+            })),
             "ListAccountSettings" => AwsResponse::json(200, json!({
                 "settings": []
             })),
