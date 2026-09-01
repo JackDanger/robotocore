@@ -517,23 +517,30 @@ impl LambdaHandler {
         let name = self.extract_name(req);
         let state = self.get_state(req.account, &req.region);
         match state.get_function(&name) {
-            Some(func) => AwsResponse::json(201, json!({
-                "FunctionName": func.function_name,
-                "FunctionArn": format!("{}:{}" , func.function_arn, "1"),
-                "Runtime": *func.runtime.read(),
-                "Role": *func.role.read(),
-                "Handler": *func.handler.read(),
-                "Description": *func.description.read(),
-                "Timeout": *func.timeout.read(),
-                "MemorySize": *func.memory_size.read(),
-                "CodeSize": func.code_size,
-                "PublishDate": *func.last_modified.read() as f64,
-                "Version": "1",
-                "State": "Active",
-                "Reason": "",
-                "CodeSha256": func.code_sha256,
-                "RevisionId": uuid::Uuid::new_v4().simple().to_string()
-            })),
+            Some(func) => {
+                // Increment the version
+                let current_version: i32 = func.version.parse().unwrap_or(1);
+                let new_version = current_version + 1;
+                let version_str = new_version.to_string();
+
+                AwsResponse::json(201, json!({
+                    "FunctionName": func.function_name,
+                    "FunctionArn": format!("{}:{}", func.function_arn, version_str),
+                    "Runtime": *func.runtime.read(),
+                    "Role": *func.role.read(),
+                    "Handler": *func.handler.read(),
+                    "Description": *func.description.read(),
+                    "Timeout": *func.timeout.read(),
+                    "MemorySize": *func.memory_size.read(),
+                    "CodeSize": func.code_size,
+                    "PublishDate": *func.last_modified.read() as f64,
+                    "Version": version_str,
+                    "State": "Active",
+                    "Reason": "",
+                    "CodeSha256": func.code_sha256,
+                    "RevisionId": uuid::Uuid::new_v4().simple().to_string()
+                }))
+            }
             None => AwsResponse::error(404, "ResourceNotFoundException", "Function not found"),
         }
     }
