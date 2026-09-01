@@ -577,6 +577,21 @@ impl DynamoDbHandler {
     fn matches_filter(&self, item: &Value, expr: &str, vals: &Value, names: &HashMap<String, String>) -> bool {
         // Basic filter: "attr = :val" or "attr > :val" etc.
         let expr = expr.trim();
+        // Handle begins_with
+        if expr.starts_with("begins_with(") {
+            let inner = expr[12..expr.len()-1].trim();
+            let parts: Vec<&str> = inner.split(',').collect();
+            if parts.len() == 2 {
+                let attr = self.resolve_name(parts[0].trim(), names);
+                let val_ref = parts[1].trim();
+                let val = vals.get(val_ref).cloned().unwrap_or(Value::Null);
+                let item_val = item.get(&attr).cloned().unwrap_or(Value::Null);
+                let item_s = self.dyn_to_str(&item_val);
+                let val_s = self.dyn_to_str(&val);
+                if !item_s.starts_with(&val_s) { return false; }
+            }
+            return true;
+        }
         // Handle simple "attr op :val" patterns
         for op in [">=", "<=", ">", "<", "="] {
             if expr.contains(op) {
