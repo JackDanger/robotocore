@@ -320,8 +320,21 @@ other => AwsResponse::error(400, "ValidationException",
     fn create_archive(&self, req: &AwsRequest) -> AwsResponse {
         let name = req.params.get("ArchiveName").and_then(|v| v.as_str()).unwrap_or_default().to_string();
         let arn = format!("arn:aws:events:{}:{}:archive/{}", req.region, req.account, name);
-        AwsResponse::json(200, json!({ "ArchiveArn": arn }))
+        let state = self.get_state(req.account, &req.region);
+        let archive = json!({
+            "ArchiveName": name,
+            "ArchiveArn": arn,
+            "EventSourceArn": req.params.get("EventSourceArn").cloned().unwrap_or(Value::Null),
+            "Description": req.params.get("Description").cloned().unwrap_or(Value::Null),
+            "RetentionDays": req.params.get("RetentionDays").and_then(|v| v.as_u64()).unwrap_or(0),
+            "State": "ENABLED",
+            "CreationTime": chrono::Utc::now().to_rfc3339()
+        });
+        state.archives.write().insert(name.clone(), archive.clone());
+        AwsResponse::json(200, archive)
     }
+
+
 
     fn describe_archive(&self, req: &AwsRequest) -> AwsResponse {
         let name = req.params.get("ArchiveName").and_then(|v| v.as_str()).unwrap_or_default().to_string();
@@ -336,8 +349,10 @@ other => AwsResponse::error(400, "ValidationException",
         }))
     }
 
-    fn list_archives(&self, _req: &AwsRequest) -> AwsResponse {
-        AwsResponse::json(200, json!({ "Archives": Vec::<Value>::new() }))
+    fn list_archives(&self, req: &AwsRequest) -> AwsResponse {
+        let state = self.get_state(req.account, &req.region);
+        let archives: Vec<Value> = state.archives.read().values().cloned().collect();
+        AwsResponse::json(200, json!({ "Archives": archives }))
     }
 
     fn set_rule_state(&self, req: &AwsRequest, state: &str) -> AwsResponse {

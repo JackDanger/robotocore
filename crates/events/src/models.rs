@@ -25,6 +25,7 @@ pub struct Rule {
 pub struct EventsState {
     pub rules: Arc<RwLock<HashMap<String, Arc<Rule>>>>,
     pub event_buses: Arc<RwLock<HashMap<String, String>>>,
+    pub archives: Arc<RwLock<HashMap<String, serde_json::Value>>>,
 }
 
 impl EventsState {
@@ -32,6 +33,7 @@ impl EventsState {
         Self {
             rules: Arc::new(RwLock::new(HashMap::new())),
             event_buses: Arc::new(RwLock::new(HashMap::new())),
+            archives: Arc::new(RwLock::new(HashMap::new())),
         }
     }
 
