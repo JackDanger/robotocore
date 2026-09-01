@@ -11,6 +11,7 @@ pub struct EcsState {
     pub container_instances: Arc<RwLock<HashMap<String, serde_json::Value>>>,
     pub task_definitions: Arc<RwLock<HashMap<String, serde_json::Value>>>,
     pub tags: Arc<RwLock<HashMap<String, Vec<serde_json::Value>>>>,
+    pub account_settings: Arc<RwLock<HashMap<String, serde_json::Value>>>,
 }
 
 impl EcsState {
@@ -22,6 +23,7 @@ impl EcsState {
             container_instances: Arc::new(RwLock::new(HashMap::new())),
             task_definitions: Arc::new(RwLock::new(HashMap::new())),
             tags: Arc::new(RwLock::new(HashMap::new())),
+            account_settings: Arc::new(RwLock::new(HashMap::new())),
         }
     }
 }

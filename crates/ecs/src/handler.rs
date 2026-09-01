@@ -83,13 +83,11 @@ impl EcsHandler {
                 "agentArgs": [],
                 "agentConfig": {}
             })),
-            "ListAccountSettings" => AwsResponse::json(200, json!({
-                "settings": []
-            })),
+            "ListAccountSettings" => self.list_account_settings(&req),
+            "PutAccountSetting" => self.put_account_setting(&req),
             "ListAttributes" => self.json_stub_list(&req, "Attributes"),
             "ListServicesByNamespace" => self.json_stub_list(&req, "ServicesByNamespace"),
             "ListTaskDefinitionFamilies" => self.list_task_def_families(&req),
-            "PutAccountSetting" => self.json_stub(&req, "AccountSetting"),
             "PutAccountSettingDefault" => self.json_stub(&req, "AccountSettingDefault"),
             "PutAttributes" => self.json_stub(&req, "Attributes"),
             "RegisterTaskDefinition" => self.register_task_def(&req),
@@ -621,6 +619,32 @@ other => AwsResponse::error(400, "ValidationException",
         families.sort();
         families.dedup();
         AwsResponse::json(200, json!({ "families": families }))
+    }
+
+    fn list_account_settings(&self, req: &AwsRequest) -> AwsResponse {
+        let state = self.get_state(req.account, &req.region);
+        let settings = state.account_settings.read();
+        let settings_list: Vec<Value> = settings.values().cloned().collect();
+        AwsResponse::json(200, json!({ "settings": settings_list }))
+    }
+
+    fn put_account_setting(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("name")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let value = req.params.get("value")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let setting = json!({
+            "name": name,
+            "value": value,
+            "type": "STRING",
+            "valueType": "STRING",
+            "unit": "",
+            "defaultValue": value,
+            "effectiveOnUpdate": false
+        });
+        state.account_settings.write().insert(name.to_string(), setting.clone());
+        AwsResponse::json(200, json!({ "setting": setting }))
     }
 }
 
