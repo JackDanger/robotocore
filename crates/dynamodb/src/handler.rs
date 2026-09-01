@@ -603,12 +603,35 @@ impl DynamoDbHandler {
                     let item_val = item.get(&attr).cloned().unwrap_or(Value::Null);
                     let item_s = self.dyn_to_str(&item_val);
                     let val_s = self.dyn_to_str(&val);
+                    // Check if both values are numeric
+                    let item_num = item_s.parse::<f64>();
+                    let val_num = val_s.parse::<f64>();
                     match op {
-                        "=" => { if item_s != val_s { return false; } }
-                        ">" => { if item_s <= val_s { return false; } }
-                        "<" => { if item_s >= val_s { return false; } }
-                        ">=" => { if item_s < val_s { return false; } }
-                        "<=" => { if item_s > val_s { return false; } }
+                        "=" => { 
+                            if item_num.is_ok() && val_num.is_ok() {
+                                if item_num.unwrap() != val_num.unwrap() { return false; }
+                            } else if item_s != val_s { return false; }
+                        }
+                        ">" => { 
+                            if item_num.is_ok() && val_num.is_ok() {
+                                if item_num.unwrap() <= val_num.unwrap() { return false; }
+                            } else if item_s <= val_s { return false; }
+                        }
+                        "<" => { 
+                            if item_num.is_ok() && val_num.is_ok() {
+                                if item_num.unwrap() >= val_num.unwrap() { return false; }
+                            } else if item_s >= val_s { return false; }
+                        }
+                        ">=" => { 
+                            if item_num.is_ok() && val_num.is_ok() {
+                                if item_num.unwrap() < val_num.unwrap() { return false; }
+                            } else if item_s < val_s { return false; }
+                        }
+                        "<=" => { 
+                            if item_num.is_ok() && val_num.is_ok() {
+                                if item_num.unwrap() > val_num.unwrap() { return false; }
+                            } else if item_s > val_s { return false; }
+                        }
                         _ => {}
                     }
                 }
