@@ -175,9 +175,15 @@ other => AwsResponse::error(400, "ValidationException",
             format!("{}:execution:{}", sm_arn, uuid::Uuid::new_v4().simple())
         };
         let now = chrono::Utc::now().timestamp() as u64;
+        let exec_name_for_storage: String = if !exec_name.is_empty() {
+            exec_name.to_string()
+        } else {
+            exec_arn.rsplit(':').next().unwrap_or("").to_string()
+        };
         let exec = json!({
             "executionArn": exec_arn,
             "stateMachineArn": sm_arn,
+            "name": exec_name_for_storage,
             "status": "SUCCEEDED",
             "startDate": now,
             "stopDate": now,
