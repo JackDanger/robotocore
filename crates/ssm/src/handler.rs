@@ -43,6 +43,10 @@ impl SsmHandler {
             "CreateOpsItem" => self.json_stub(&req, "OpsItemId"),
             "GetOpsItem" => self.json_stub(&req, "OpsItemId"),
             "ListOpsItems" => self.json_stub_list(&req, "OpsItems"),
+            "ListOpsItemRelatedItems" => self.json_stub_list(&req, "RelatedItems"),
+            "ListOpsItemMetadata" => AwsResponse::json(200, json!({
+                "Status": "SUCCESS"
+            })),
             "CreateMaintenanceWindow" => self.create_maintenance_window(&req),
             "GetMaintenanceWindow" => self.json_stub(&req, "WindowId"),
             "DeleteMaintenanceWindow" => self.json_stub(&req, "WindowId"),
