@@ -100,9 +100,9 @@ impl EventsHandler {
             "PutPartnerEvents" => self.json_stub(&req, "{}"),
                 "DisableRule" => self.set_rule_state(&req, "DISABLED"),
     "EnableRule" => self.set_rule_state(&req, "ENABLED"),
-    "TagResource" => self.json_stub(&req, "{}"),
-    "UntagResource" => self.json_stub(&req, "{}"),
-    "ListTagsForResource" => self.json_stub(&req, "{}"),
+    "TagResource" => self.tag_resource(&req),
+    "UntagResource" => self.untag_resource(&req),
+    "ListTagsForResource" => self.list_tags_for_resource(&req),
     "DeleteRule" => self.json_stub(&req, "{}"),
     "PutTargets" => self.json_stub(&req, "{}"),
     "RemoveTargets" => self.json_stub(&req, "{}"),
@@ -346,6 +346,50 @@ other => AwsResponse::error(400, "ValidationException",
             *rule.state.write() = state.to_string();
         }
         AwsResponse::json(200, json!({}))
+    }
+
+    fn tag_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("ResourceArn").and_then(|v| v.as_str()).unwrap_or_default();
+        let tags: Vec<Value> = req.params.get("Tags")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        if let Some(rule) = state.rules.read().values().find(|r| r.arn == arn) {
+            let mut existing = rule.tags.write();
+            for tag in tags {
+                if !existing.iter().any(|t| t.get("Key").and_then(|k| k.as_str()) == tag.get("Key").and_then(|k| k.as_str())) {
+                    existing.push(tag);
+                }
+            }
+        }
+        AwsResponse::json(200, json!({}))
+    }
+
+    fn untag_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("ResourceArn").and_then(|v| v.as_str()).unwrap_or_default();
+        let keys: Vec<String> = req.params.get("TagKeys")
+            .and_then(|v| v.as_array())
+            .map(|a| a.iter().filter_map(|k| k.as_str().map(|s| s.to_string())).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        if let Some(rule) = state.rules.read().values().find(|r| r.arn == arn) {
+            let mut existing = rule.tags.write();
+            existing.retain(|t| {
+                let key = t.get("Key").and_then(|k| k.as_str()).unwrap_or_default();
+                !keys.contains(&key.to_string())
+            });
+        }
+        AwsResponse::json(200, json!({}))
+    }
+
+    fn list_tags_for_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("ResourceArn").and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let tags = state.rules.read().values().find(|r| r.arn == arn)
+            .map(|r| r.tags.read().clone())
+            .unwrap_or_default();
+        AwsResponse::json(200, json!({ "Tags": tags }))
     }
 }
 
