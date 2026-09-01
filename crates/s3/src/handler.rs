@@ -78,6 +78,7 @@ impl S3Handler {
             "PutObjectAcl" => self.put_object_acl(&req),
             "RestoreObject" => self.restore_object(&req),
             "DeleteObjects" => self.delete_objects(&req),
+            "ListObjectVersions" => self.list_object_versions(&req),
             "GetBucketLifecycle" => self.get_bucket_lifecycle(&req),
             "PutBucketLifecycle" => self.put_bucket_lifecycle(&req),
             "DeleteBucketLifecycle" => self.delete_bucket_lifecycle(&req),
@@ -1429,6 +1430,35 @@ impl S3Handler {
         let bucket = req.bucket.clone().unwrap_or_default();
         let key = req.key.clone().unwrap_or_default();
         (bucket, key)
+    }
+
+    fn list_object_versions(&self, req: &AwsRequest) -> AwsResponse {
+        let bucket_name = req.bucket.clone().unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let bucket = match state.get_bucket(&bucket_name) {
+            Some(b) => b,
+            None => return AwsResponse::error(404, "NoSuchBucket", "Bucket not found")
+        };
+        let objects = bucket.objects.read();
+
+        let mut xml = String::new();
+        xml.push_str("<IsTruncated>false</IsTruncated>");
+        xml.push_str(&format!("<KeyCount>{}</KeyCount>", objects.len()));
+        for (key, obj) in objects.iter() {
+            xml.push_str(&format!(
+                "<Version><Key>{}</Key><VersionId>null</VersionId><IsLatest>true</IsLatest>                 <LastModified>{}</LastModified><ETag>{}</ETag>                 <Size>{}</Size><StorageClass>STANDARD</StorageClass>                 <Owner><ID>{}</ID><DisplayName>owner</DisplayName></Owner></Version>",
+                key,
+                chrono::Utc::now().to_rfc3339(),
+                obj.etag,
+                obj.size,
+                req.account
+            ));
+        }
+
+        AwsResponse::xml(200, format!(
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n             <ListVersionsResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">{}\n             </ListVersionsResult>",
+            xml
+        ))
     }
 }
 
