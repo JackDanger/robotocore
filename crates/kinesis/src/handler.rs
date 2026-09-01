@@ -72,7 +72,9 @@ impl KinesisHandler {
             "ListShards" => self.list_shards(&req),
             "ListStreamConsumers" => self.json_stub_list(&req, "StreamConsumers"),
             "PutResourcePolicy" => self.json_stub(&req, "ResourcePolicy"),
-            "RegisterStreamConsumer" => self.json_stub(&req, "RegisterStreamConsumer"),
+            "RegisterStreamConsumer" => self.json_stub(&req, "ConsumerARN"),
+            "DescribeStreamConsumer" => self.describe_stream_consumer(&req),
+            "DeregisterStreamConsumer" => self.json_stub(&req, "DeregisterStreamConsumer"),
             "StartStreamEncryption" => self.json_stub(&req, "StartStreamEncryption"),
             "TagResource" => self.json_stub(&req, "TagResource"),
             "UpdateAccountSettings" => self.json_stub(&req, "AccountSettings"),
@@ -363,6 +365,25 @@ other => AwsResponse::error(400, "ValidationException",
             *stream.retention_period_hours.write() = hours;
         }
         AwsResponse::json(200, Value::Null)
+    }
+
+    fn describe_stream_consumer(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("StreamARN").or(req.params.get("StreamName"))
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let consumer_arn = req.params.get("ConsumerARN")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let consumer_name = req.params.get("ConsumerName")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        AwsResponse::json(200, json!({
+            "Consumer": {
+                "ConsumerARN": consumer_arn,
+                "ConsumerName": consumer_name,
+                "ConsumerStatus": "ACTIVE",
+                "ConsumerCreateTime": chrono::Utc::now().to_rfc3339(),
+                "ConsumerStatusReason": "",
+                "StreamARN": name
+            }
+        }))
     }
 }
 
