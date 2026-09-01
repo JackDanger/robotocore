@@ -259,7 +259,12 @@ other => AwsResponse::error(400, "ValidationException",
 
     fn add_tags(&self, req: &AwsRequest) -> AwsResponse {
         let name = req.params.get("StreamName").and_then(|v| v.as_str()).unwrap_or_default();
-        let tags = req.params.get("Tags").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+        let tags_val = req.params.get("Tags").cloned().unwrap_or(Value::Null);
+        let tags = match tags_val {
+            Value::Object(m) => m.into_iter().map(|(k, v)| json!({"Key": k, "Value": v})).collect::<Vec<Value>>(),
+            Value::Array(a) => a,
+            _ => vec![],
+        };
         let state = self.get_state(req.account, &req.region);
         if let Some(stream) = state.get_stream(name) {
             let mut existing = stream.tags.write();
