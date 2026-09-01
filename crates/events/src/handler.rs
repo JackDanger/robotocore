@@ -68,6 +68,7 @@ impl EventsHandler {
             "ListRules" => self.list_rules(&req),
             "PutTargets" => self.put_targets(&req),
             "RemoveTargets" => self.remove_targets(&req),
+            "ListRuleNamesByTarget" => self.json_stub_list(&req, "RuleNames"),
             "ListTargetsByRule" => self.list_targets_by_rule(&req),
             "PutEvents" => self.put_events(&req),
             "TestEventPattern" => self.test_event_pattern(&req),
