@@ -150,7 +150,7 @@ impl FirehoseHandler {
                 v["DeliveryStreamStatus"] = json!("ACTIVE");
                 v["VersionId"] = json!("v0");
                 if let Some(enc) = &s.encryption {
-                    v["EncryptionConfiguration"] = enc.clone();
+                    v["DeliveryStreamEncryptionConfiguration"] = enc.clone();
                 }
                 AwsResponse::json(200, json!({ "DeliveryStreamDescription": v }))
             }
@@ -276,10 +276,13 @@ impl FirehoseHandler {
             .and_then(|v| v.as_str()).unwrap_or_default();
         let state = self.get_state(req.account, &req.region);
         if let Some(mut s) = state.get_stream(name) {
+            let key_type = req.params.get("DeliveryStreamEncryptionConfigurationInput")
+                .and_then(|v| v.get("KeyType"))
+                .and_then(|v| v.as_str())
+                .unwrap_or("AWS_OWNED_CMK");
             s.encryption = Some(json!({
-                "KeyType": "KMS",
-                "KeyARN": req.params.get("KeyARN")
-                    .and_then(|v| v.as_str()).unwrap_or("")
+                "KeyType": key_type,
+                "KeyARN": "arn:aws:kms:us-east-1:123456789012:key/aws/firehose/default"
             }));
             state.put_stream(s);
         }
