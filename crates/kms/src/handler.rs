@@ -44,6 +44,7 @@ impl KmsHandler {
             "DeleteAlias" => self.delete_alias(&req),
             "TagResource" => self.tag_resource(&req),
             "UntagResource" => self.untag_resource(&req),
+            "ListTags" => self.list_tags(&req),
             "ListResourceTags" => self.list_resource_tags(&req),
             "Encrypt" => self.encrypt(&req),
             "Decrypt" => self.decrypt(&req),
@@ -62,6 +63,7 @@ impl KmsHandler {
             "ListResourceTags" => self.list_resource_tags(&req),
             "TagResource" => self.tag_resource(&req),
             "UntagResource" => self.untag_resource(&req),
+            "ListTags" => self.list_tags(&req),
             "PutKeyPolicy" => self.put_key_policy(&req),
             "GetKeyPolicy" => self.get_key_policy(&req),
             "DeleteAlias" => self.delete_alias(&req),
@@ -459,6 +461,16 @@ other => AwsResponse::error(400, "InvalidException",
         let state = self.get_state(req.account, &req.region);
         state.update_alias(alias_name, key_id);
         AwsResponse::json(200, json!({}))
+    }
+
+    fn list_tags(&self, req: &AwsRequest) -> AwsResponse {
+        let key_id = req.params.get("KeyId").and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        let tags = state.tags.read().get(key_id).cloned().unwrap_or_default();
+        let tag_list: Vec<Value> = tags.iter()
+            .map(|(k, v)| json!({"TagKey": k, "TagValue": v}))
+            .collect();
+        AwsResponse::json(200, json!({ "Tags": tag_list }))
     }
 }
 
