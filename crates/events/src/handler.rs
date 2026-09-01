@@ -328,7 +328,8 @@ other => AwsResponse::error(400, "ValidationException",
             "ArchiveArn": arn,
             "EventSourceArn": format!("arn:aws:events:{}:{}:event-bus/default", req.region, req.account),
             "State": "ENABLED",
-            "CreationTime": chrono::Utc::now().to_rfc3339()
+            "CreationTime": chrono::Utc::now().to_rfc3339(),
+            "RetentionDays": 0
         }))
     }
 
