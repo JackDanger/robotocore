@@ -22,7 +22,7 @@ pub struct Topic {
 impl Topic {
     pub fn new(name: String, account: u64, region: String, fifo: bool) -> Self {
         let arn = if fifo {
-            format!("arn:aws:sns:{}:{}:{}:FIFO", region, account, name)
+            format!("arn:aws:sns:{}:{}:{}", region, account, name)
         } else {
             format!("arn:aws:sns:{}:{}:{}", region, account, name)
         };
