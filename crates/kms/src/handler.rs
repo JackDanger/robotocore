@@ -126,7 +126,8 @@ other => AwsResponse::error(400, "InvalidException",
                 "KeySpec": key.key_spec,
                 "Description": *key.description.read(),
                 "Origin": "AWS_KMS",
-                "KeyManagerType": "CUSTOMER"
+                "KeyManagerType": "CUSTOMER",
+                "MultiRegion": false
             }
         }))
     }
