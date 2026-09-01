@@ -121,7 +121,9 @@ impl SsmHandler {
             "ListNodesSummary" => self.json_stub_list(&req, "Nodes"),
             "ListOpsItemEvents" => self.json_stub_list(&req, "Events"),
             "ListOpsMetadata" => self.json_stub_list(&req, "OpsMetadata"),
-            "ListResourceDataSync" => self.json_stub_list(&req, "ResourceDataSyncList"),
+            "ListResourceDataSync" => AwsResponse::json(200, json!({
+                "ResourceDataSyncItems": []
+            })),
             "ModifyDocumentPermission" => self.json_stub(&req, "{}"),
             "PutComplianceItems" => self.json_stub(&req, "{}"),
             "PutInventory" => self.json_stub(&req, "{}"),
