@@ -211,6 +211,10 @@ impl DefaultSqsHandler {
         let receipt_handle = Self::generate_receipt_handle(&message_id, queue_url);
         let sent_timestamp = (Utc::now().timestamp_millis()) as u64;
 
+        let message_attributes: HashMap<String, serde_json::Value> = params.get("MessageAttributes")
+            .and_then(|v| v.as_object())
+            .map(|m| m.iter().map(|(k, v)| (k.clone(), v.clone())).collect())
+            .unwrap_or_default();
         let message = SqsMessage {
             message_id: message_id.clone(),
             body: message_body.to_string(),
@@ -221,6 +225,7 @@ impl DefaultSqsHandler {
             receive_count: 0,
             first_receive_timestamp: None,
             attributes: HashMap::new(),
+            message_attributes,
         };
 
         {
@@ -403,6 +408,7 @@ impl DefaultSqsHandler {
                     "MD5OfBody": msg.md5_of_body,
                     "Body": msg.body,
                     "Attributes": msg.attributes,
+                    "MessageAttributes": msg.message_attributes,
                     "MD5OfMessageAttributes": "d41d8cd98f00b204e9800998ecf8427e"
                 })
             })
@@ -886,6 +892,10 @@ impl DefaultSqsHandler {
             let receipt_handle = Self::generate_receipt_handle(&message_id, queue_url);
             let sent_timestamp = Utc::now().timestamp_millis() as u64;
 
+            let message_attributes: HashMap<String, serde_json::Value> = entry.get("MessageAttributes")
+                .and_then(|v| v.as_object())
+                .map(|m| m.iter().map(|(k, v)| (k.clone(), v.clone())).collect())
+                .unwrap_or_default();
             let message = SqsMessage {
                 message_id: message_id.clone(),
                 body,
@@ -896,6 +906,7 @@ impl DefaultSqsHandler {
                 receive_count: 0,
                 first_receive_timestamp: None,
                 attributes: HashMap::new(),
+                message_attributes,
             };
 
             {

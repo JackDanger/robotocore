@@ -18,6 +18,7 @@ pub struct SqsMessage {
     pub receive_count: u32,
     pub first_receive_timestamp: Option<u64>,
     pub attributes: HashMap<String, String>,
+    pub message_attributes: HashMap<String, serde_json::Value>,
 }
 
 impl SqsMessage {
