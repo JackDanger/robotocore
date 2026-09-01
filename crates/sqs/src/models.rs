@@ -75,6 +75,7 @@ pub struct Queue {
     pub last_modified: u64,
     pub attributes: QueueAttributes,
     pub messages: VecDeque<SqsMessage>,
+    pub tags: parking_lot::RwLock<std::collections::HashMap<String, String>>,
 }
 
 impl Queue {
@@ -90,6 +91,7 @@ impl Queue {
             last_modified: now_ms,
             attributes: QueueAttributes::default(),
             messages: VecDeque::new(),
+            tags: parking_lot::RwLock::new(std::collections::HashMap::new()),
         }
     }
 

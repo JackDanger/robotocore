@@ -937,6 +937,80 @@ impl DefaultSqsHandler {
         })
     }
 
+
+    fn handle_tag_queue(&self, params: &Value, account: u64, region: &str) -> Result<AwsResponse, SqsError> {
+        let queue_url = params.get("QueueUrl").and_then(|v| v.as_str()).unwrap_or_default();
+        let tags_val = params.get("Tags").cloned().unwrap_or(Value::Null);
+        let tags: HashMap<String, String> = match tags_val {
+            Value::Object(m) => m.into_iter().map(|(k, v)| (k, v.as_str().unwrap_or("").to_string())).collect(),
+            _ => {
+                // Parse from query protocol format (Tags.member.N.Key/Value)
+                let mut result = HashMap::new();
+                let mut i = 1;
+                loop {
+                    let key_name = format!("Tags.member.{}.Key", i);
+                    let val_name = format!("Tags.member.{}.Value", i);
+                    match (params.get(&key_name), params.get(&val_name)) {
+                        (Some(k), Some(v)) => {
+                            result.insert(k.as_str().unwrap_or("").to_string(), v.as_str().unwrap_or("").to_string());
+                            i += 1;
+                        }
+                        _ => break,
+                    }
+                }
+                result
+            }
+        };
+        let store = self.get_store(account, region);
+        if let Some(q) = store.get_queue(queue_url) {
+            let mut queue = q.write();
+            for (k, v) in tags {
+                queue.tags.write().insert(k, v);
+            }
+        }
+        let body = json!({}).to_string();
+        Ok(AwsResponse {
+            status: 200,
+            headers: vec![("Content-Type".to_string(), "application/x-amz-json-1.0".to_string())],
+            body,
+        })
+    }
+
+    fn handle_untag_queue(&self, params: &Value, account: u64, region: &str) -> Result<AwsResponse, SqsError> {
+        let queue_url = params.get("QueueUrl").and_then(|v| v.as_str()).unwrap_or_default();
+        let tag_keys: Vec<String> = params.get("TagKeys")
+            .and_then(|v| v.as_array())
+            .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+            .unwrap_or_default();
+        let store = self.get_store(account, region);
+        if let Some(q) = store.get_queue(queue_url) {
+            let mut queue = q.write();
+            for k in &tag_keys {
+                queue.tags.write().remove(k);
+            }
+        }
+        let body = json!({}).to_string();
+        Ok(AwsResponse {
+            status: 200,
+            headers: vec![("Content-Type".to_string(), "application/x-amz-json-1.0".to_string())],
+            body,
+        })
+    }
+
+    fn handle_list_queue_tags(&self, params: &Value, account: u64, region: &str) -> Result<AwsResponse, SqsError> {
+        let queue_url = params.get("QueueUrl").and_then(|v| v.as_str()).unwrap_or_default();
+        let store = self.get_store(account, region);
+        let tags = store.get_queue(queue_url).map(|q| q.read().tags.read().clone()).unwrap_or_default();
+        let tag_list: Vec<Value> = tags.iter()
+            .map(|(k, v)| json!({"Key": k, "Value": v}))
+            .collect();
+        let body = json!({ "Tags": tag_list }).to_string();
+        Ok(AwsResponse {
+            status: 200,
+            headers: vec![("Content-Type".to_string(), "application/x-amz-json-1.0".to_string())],
+            body,
+        })
+    }
 }
 
 impl Default for DefaultSqsHandler {
