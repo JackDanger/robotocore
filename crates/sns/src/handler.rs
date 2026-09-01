@@ -43,9 +43,9 @@ impl SnsHandler {
             "ListSubscriptionsByTopic" => self.list_subscriptions_by_topic(&req),
             "GetSubscriptionAttributes" => self.get_subscription_attributes(&req),
             "SetSubscriptionAttributes" => self.set_subscription_attributes(&req),
-                "TagResource" => AwsResponse::query_success("TagResource", String::new()),
-    "UntagResource" => AwsResponse::query_success("UntagResource", String::new()),
-    "ListTagsForResource" => AwsResponse::query_success("ListTagsForResource", "<Tags/>".to_string()),
+                "TagResource" => self.tag_resource(&req),
+    "UntagResource" => self.untag_resource(&req),
+    "ListTagsForResource" => self.list_tags_for_resource(&req),
     "PublishBatch" => AwsResponse::query_success("PublishBatch", "<Successful/><Failed/>".to_string()),
     "CreatePlatformApplication" => AwsResponse::query_success("CreatePlatformApplication", "<PlatformApplicationArn>arn:aws:sns:us-east-1:123456789012:application:custom:app</PlatformApplicationArn>".to_string()),
     "ListPlatformApplications" => AwsResponse::query_success("ListPlatformApplications", "<PlatformApplications/>".to_string()),
@@ -352,6 +352,59 @@ other => AwsResponse::error(
     fn set_subscription_attributes(&self, _req: &AwsRequest) -> AwsResponse {
         let body = String::new();
         AwsResponse::query_success("SetSubscriptionAttributes", body)
+    }
+
+    fn tag_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("ResourceArn").and_then(|v| v.as_str()).unwrap_or_default();
+        let tags: Vec<(String, String)> = req.params.get("Tags")
+            .and_then(|v| v.as_array())
+            .map(|a| a.iter()
+                .filter_map(|t| {
+                    let key = t.get("Key").and_then(|k| k.as_str()).unwrap_or_default().to_string();
+                    let val = t.get("Value").and_then(|v| v.as_str()).unwrap_or_default().to_string();
+                    Some((key, val))
+                })
+                .collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        if let Some(topic) = state.get_topic(arn) {
+            let mut existing = topic.tags.write();
+            for (key, val) in tags {
+                if let Some(e) = existing.iter_mut().find(|(k, _)| *k == key) {
+                    e.1 = val;
+                } else {
+                    existing.push((key, val));
+                }
+            }
+        }
+        AwsResponse::query_success("TagResource", String::new())
+    }
+
+    fn untag_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("ResourceArn").and_then(|v| v.as_str()).unwrap_or_default();
+        let keys: Vec<String> = req.params.get("TagKeys")
+            .and_then(|v| v.as_array())
+            .map(|a| a.iter().filter_map(|k| k.as_str().map(|s| s.to_string())).collect())
+            .unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        if let Some(topic) = state.get_topic(arn) {
+            let mut existing = topic.tags.write();
+            existing.retain(|(k, _)| !keys.contains(&k.to_string()));
+        }
+        AwsResponse::query_success("UntagResource", String::new())
+    }
+
+    fn list_tags_for_resource(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("ResourceArn").and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        let tags = state.get_topic(arn).map(|t| t.tags.read().clone()).unwrap_or_default();
+        let mut xml = String::new();
+        xml.push_str("<Tags>");
+        for (key, val) in &tags {
+            xml.push_str(&format!("<member><Key>{}</Key><Value>{}</Value></member>", key, val));
+        }
+        xml.push_str("</Tags>");
+        AwsResponse::query_success("ListTagsForResource", xml)
     }
 }
 

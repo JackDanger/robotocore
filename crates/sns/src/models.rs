@@ -16,6 +16,7 @@ pub struct Topic {
     pub policy: RwLock<Option<String>>,
     pub subscriptions: RwLock<HashMap<String, Subscription>>,
     pub fifo: bool,
+    pub tags: RwLock<Vec<(String, String)>>,
 }
 
 impl Topic {
@@ -35,6 +36,7 @@ impl Topic {
             policy: RwLock::new(None),
             subscriptions: RwLock::new(HashMap::new()),
             fifo,
+            tags: RwLock::new(vec![]),
         }
     }
 }
