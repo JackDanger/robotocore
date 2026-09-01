@@ -75,6 +75,8 @@ impl EcrHandler {
             "ListImageReferrers" => self.json_stub_list(&req, "ImageReferrers"),
             "ListPullTimeUpdateExclusions" => self.json_stub_list(&req, "PullTimeUpdateExclusions"),
             "PutAccountSetting" => self.json_stub(&req, "AccountSetting"),
+            "GetRegistryPolicy" => self.json_stub(&req, "GetRegistryPolicy"),
+            "DeleteRegistryPolicy" => self.json_stub(&req, "DeleteRegistryPolicy"),
             "PutRegistryPolicy" => {
                 let text = req.params.get("policyText").and_then(|v| v.as_str()).unwrap_or_default();
                 AwsResponse::json(200, json!({
