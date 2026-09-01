@@ -109,6 +109,8 @@ impl LambdaHandler {
             "GetFunctionUrlConfig" => self.json_stub(&req, "FunctionArn"),
             "UpdateFunctionUrlConfig" => self.json_stub(&req, "FunctionArn"),
             "DeleteFunctionUrlConfig" => self.json_stub(&req, "{}"),
+            "ListLayers" => self.json_stub_list(&req, "Layers"),
+            "ListLayerVersions" => self.json_stub_list(&req, "LayerVersions"),
             "GetLayerVersionByArn" => self.json_stub(&req, "LayerArn"),
             "GetCodeSigningConfig" => self.json_stub(&req, "CodeSigningConfigArn"),
             "PutCodeSigningConfig" => self.json_stub(&req, "CodeSigningConfigArn"),
