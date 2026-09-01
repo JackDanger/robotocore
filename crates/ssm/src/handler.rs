@@ -80,7 +80,9 @@ impl SsmHandler {
             "CreateOpsMetadata" => self.json_stub(&req, "OpsMetadata"),
             "CreateResourceDataSync" => self.json_stub(&req, "{}"),
             "DeleteInventory" => self.json_stub(&req, "{}"),
-            "DescribeActivations" => self.json_stub_list(&req, "Activations"),
+            "DescribeActivations" => AwsResponse::json(200, json!({
+                "ActivationList": []
+            })),
             "DescribeAvailablePatches" => self.json_stub_list(&req, "Patches"),
             "DescribeDocument" => self.json_stub(&req, "Document"),
             "DescribeDocumentPermission" => self.json_stub(&req, "Permissions"),
