@@ -1341,15 +1341,32 @@ impl IamHandler {
         let next_version = *policy.version_count.read() + 1;
         *policy.version_count.write() = next_version;
         let version_id = format!("v{}", next_version);
+        let now = chrono::Utc::now().to_rfc3339();
 
+        // Store the version
+        let document = req.params.get("PolicyDocument").cloned().unwrap_or(json!("{}"));
+        let version = json!({
+            "VersionId": version_id,
+            "IsDefaultVersion": set_as_default,
+            "CreateDate": now,
+            "Document": document
+        });
+        policy.versions.write().push(version.clone());
+
+        // Update default version if needed
+        if set_as_default {
+            *policy.default_version_id.write() = version_id.clone();
+        }
+
+        let doc_str = document.to_string();
         let body = format!(
             "<PolicyVersion>\
              <VersionId>{}</VersionId>\
              <IsDefaultVersion>{}</IsDefaultVersion>\
              <CreateDate>{}</CreateDate>\
-             <Document>{{}}</Document>\
+             <Document>{}</Document>\
              </PolicyVersion>",
-            version_id, set_as_default, chrono::Utc::now().to_rfc3339()
+            version_id, set_as_default, now, doc_str
         );
 
         AwsResponse::xml(200, "CreatePolicyVersion", body)
