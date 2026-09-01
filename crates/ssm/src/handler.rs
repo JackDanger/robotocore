@@ -96,7 +96,9 @@ impl SsmHandler {
             "DescribeInventoryDeletions" => self.json_stub_list(&req, "InventoryDeletions"),
             "DescribeMaintenanceWindowExecutions" => self.json_stub_list(&req, "Executions"),
             "DescribeMaintenanceWindows" => self.json_stub_list(&req, "Items"),
-            "DescribeMaintenanceWindowSchedule" => self.json_stub(&req, "Schedule"),
+            "DescribeMaintenanceWindowSchedule" => AwsResponse::json(200, json!({
+                "ScheduledWindowExecutions": []
+            })),
             "DescribeMaintenanceWindowsForTarget" => self.json_stub_list(&req, "Items"),
             "DescribePatchBaselines" => AwsResponse::json(200, json!({
                 "BaselineIdentities": []
