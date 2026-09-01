@@ -69,7 +69,7 @@ impl KinesisHandler {
             "DescribeStreamSummary" => self.describe_stream_summary(&req),
             "EnableEnhancedMonitoring" => self.json_stub(&req, "EnableEnhancedMonitoring"),
             "IncreaseStreamRetentionPeriod" => self.increase_retention(&req),
-            "DecreaseStreamRetentionPeriod" => self.json_stub(&req, "DecreaseStreamRetentionPeriod"),
+            "DecreaseStreamRetentionPeriod" => self.decrease_stream_retention_period(&req),
             "ListShards" => self.list_shards(&req),
             "ListStreamConsumers" => self.json_stub_list(&req, "StreamConsumers"),
             "PutResourcePolicy" => self.json_stub(&req, "ResourcePolicy"),
@@ -390,6 +390,16 @@ other => AwsResponse::error(400, "ValidationException",
                 "StreamARN": name
             }
         }))
+    }
+
+    fn decrease_stream_retention_period(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("StreamName").and_then(|v| v.as_str()).unwrap_or_default();
+        let hours = req.params.get("RetentionPeriodHours").and_then(|v| v.as_u64()).unwrap_or(24) as u32;
+        let state = self.get_state(req.account, &req.region);
+        if let Some(stream) = state.get_stream(name) {
+            *stream.retention_period_hours.write() = hours;
+        }
+        AwsResponse::json(200, json!({}))
     }
 }
 
