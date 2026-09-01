@@ -498,7 +498,7 @@ other => AwsResponse::error(400, "ValidationException",
         let mut all_tags = state.tags.write();
         let entry = all_tags.entry(arn).or_insert_with(Vec::new);
         entry.extend(tags);
-        AwsResponse::json(200, Value::Null)
+        AwsResponse::json(200, json!({}))
     }
 
     fn untag_resource(&self, req: &AwsRequest) -> AwsResponse {
