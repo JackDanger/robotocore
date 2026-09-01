@@ -1,6 +1,7 @@
 //! IAM in-memory state models.
 
 use parking_lot::RwLock;
+use serde_json::json;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
@@ -157,6 +158,7 @@ pub struct Policy {
     pub policy_document: RwLock<String>,
     pub tags: RwLock<Vec<serde_json::Value>>,
     pub version_count: RwLock<u32>,
+    pub versions: RwLock<Vec<serde_json::Value>>,
 }
 
 impl Policy {
@@ -174,9 +176,15 @@ impl Policy {
             created: now,
             modified: now,
             attachments: 0,
-            policy_document: RwLock::new(document),
+            policy_document: RwLock::new(document.clone()),
             tags: RwLock::new(Vec::new()),
             version_count: RwLock::new(1),
+            versions: RwLock::new(vec![json!({
+                "VersionId": "v1",
+                "IsDefaultVersion": true,
+                "CreateDate": chrono::Utc::now().to_rfc3339(),
+                "Document": document
+            })]),
         }
     }
 }
