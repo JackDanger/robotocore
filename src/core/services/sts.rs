@@ -272,6 +272,7 @@ fn handle_get_web_identity_token(
 <GetWebIdentityTokenResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
     <GetWebIdentityTokenResult>
         <WebIdentityToken>web-identity-token-001</WebIdentityToken>
+        <Expiration>2027-12-31T23:59:59Z</Expiration>
     </GetWebIdentityTokenResult>
     <ResponseMetadata>
         <RequestId>00000000-0000-0000-0000-000000000000</RequestId>
