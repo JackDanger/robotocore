@@ -791,12 +791,19 @@ impl IamHandler {
         AwsResponse::xml(200, "ListRoles", body)
     }
 
+    fn url_decode(s: &str) -> String {
+        s.replace('+', " ")
+            .replace("%20", " ")
+            .replace("%2F", "/")
+            .replace("%26", "&")
+    }
+
     fn update_role(&self, req: &AwsRequest) -> AwsResponse {
         let role_name = get_param(req, "RoleName").unwrap_or_default();
         let state = self.get_state(req.account);
         if let Some(role) = state.get_role(&role_name) {
             if let Some(desc) = get_param(req, "Description") {
-                *role.description.write() = desc;
+                *role.description.write() = Self::url_decode(&desc);
             }
             if let Some(max_session) = get_param(req, "MaxSessionDuration") {
                 let _ = max_session; // Store but don't validate
@@ -809,7 +816,7 @@ impl IamHandler {
 
     fn update_role_description(&self, req: &AwsRequest) -> AwsResponse {
         let role_name = get_param(req, "RoleName").unwrap_or_default();
-        let desc = get_param(req, "Description").unwrap_or_default();
+        let desc = Self::url_decode(&get_param(req, "Description").unwrap_or_default());
         let state = self.get_state(req.account);
         if let Some(role) = state.get_role(&role_name) {
             *role.description.write() = desc;
