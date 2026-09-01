@@ -236,7 +236,7 @@ impl DefaultSqsHandler {
         let body = json!({
             "MessageId": message_id,
             "MD5OfMessageBody": md5_body,
-            "MD5OfMessageAttributes": "d41d8cd98f00b204e9800998ecf8427e"
+            "MD5OfMessageAttributes": Self::md5_hash("")
         })
         .to_string();
 
@@ -409,7 +409,7 @@ impl DefaultSqsHandler {
                     "Body": msg.body,
                     "Attributes": msg.attributes,
                     "MessageAttributes": msg.message_attributes,
-                    "MD5OfMessageAttributes": "d41d8cd98f00b204e9800998ecf8427e"
+                    "MD5OfMessageAttributes": Self::md5_hash("")
                 })
             })
             .collect();
