@@ -267,14 +267,16 @@ impl IamHandler {
     }
 
     fn create_service_linked_role(&self, req: &AwsRequest) -> AwsResponse {
-        let desc = get_param(req, "Description").unwrap_or_else(|| "service-linked-role".into());
+        let service = get_param(req, "AWSServiceName").unwrap_or_else(|| "service".into());
+        let desc = get_param(req, "Description").unwrap_or_else(|| "Service Linked Role".into());
         let id = uuid::Uuid::new_v4().simple();
+        let role_name = format!("AWSServiceRoleFor{}", service);
+        let arn = format!("arn:aws:iam::{}:role/aws-service-role/{}/{}", req.account, service, role_name);
         AwsResponse::xml(200, "CreateServiceLinkedRole", format!(
-            "<Role><Path>/aws-service-role/</Path><RoleName>SLR-{}-{}</RoleName><RoleId>AROA{}</RoleId><Arn>arn:aws:iam::{}:role/aws-service-role/SLR-{}-{}</Arn><CreateDate>{}</CreateDate><Description>{}</Description></Role>",
-            desc, id,
+            "<Role><Path>/aws-service-role/</Path><RoleName>{}</RoleName><RoleId>AROA{}</RoleId><Arn>{}</Arn><CreateDate>{}</CreateDate><Description>{}</Description></Role>",
+            role_name,
             uuid::Uuid::new_v4().simple(),
-            req.account,
-            desc, id,
+            arn,
             chrono::Utc::now().to_rfc3339(),
             desc
         ))
