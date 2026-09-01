@@ -844,7 +844,17 @@ impl LambdaHandler {
             "AccountID": req.account.to_string(),
             "TotalTracedFunctions": 0,
             "TracedFunctions": [],
-            "AccountLimit": 1000
+            "AccountLimit": {
+                "TotalCodeSize": 80000000000u64,
+                "CodeSizeUnzipped": 268435456u64,
+                "CodeSizeZipped": 52428800u64,
+                "ConcurrentExecutions": 1000u64,
+                "UnreservedConcurrentExecutions": 900u64
+            },
+            "AccountUsage": {
+                "TotalCodeSize": 0u64,
+                "FunctionCount": 0u64
+            }
         }))
     }
 
