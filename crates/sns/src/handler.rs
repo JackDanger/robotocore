@@ -356,24 +356,32 @@ other => AwsResponse::error(
 
     fn tag_resource(&self, req: &AwsRequest) -> AwsResponse {
         let arn = req.params.get("ResourceArn").and_then(|v| v.as_str()).unwrap_or_default();
-        let tags: Vec<(String, String)> = req.params.get("Tags")
-            .and_then(|v| v.as_array())
-            .map(|a| a.iter()
-                .filter_map(|t| {
-                    let key = t.get("Key").and_then(|k| k.as_str()).unwrap_or_default().to_string();
-                    let val = t.get("Value").and_then(|v| v.as_str()).unwrap_or_default().to_string();
-                    Some((key, val))
-                })
-                .collect())
-            .unwrap_or_default();
+
+        // Parse tags from query protocol format (Tags.member.N.Key/Value)
+        let tags: Vec<(String, String)> = {
+            let mut result = vec![];
+            let mut i = 1;
+            loop {
+                let key_name = format!("Tags.member.{}.Key", i);
+                let val_name = format!("Tags.member.{}.Value", i);
+                match (req.params.get(&key_name), req.params.get(&val_name)) {
+                    (Some(k), Some(v)) => {
+                        result.push((k.as_str().unwrap_or("").to_string(), v.as_str().unwrap_or("").to_string()));
+                        i += 1;
+                    }
+                    _ => break,
+                }
+            }
+            result
+        };
         let state = self.get_state(req.account, &req.region);
-        if let Some(topic) = state.get_topic(arn) {
+        if let Some(topic) = state.topics.read().get(arn).cloned() {
             let mut existing = topic.tags.write();
-            for (key, val) in tags {
-                if let Some(e) = existing.iter_mut().find(|(k, _)| *k == key) {
-                    e.1 = val;
+            for (key, val) in &tags {
+                if let Some(e) = existing.iter_mut().find(|(k, _)| *k == *key) {
+                    e.1 = val.clone();
                 } else {
-                    existing.push((key, val));
+                    existing.push((key.clone(), val.clone()));
                 }
             }
         }
@@ -387,7 +395,7 @@ other => AwsResponse::error(
             .map(|a| a.iter().filter_map(|k| k.as_str().map(|s| s.to_string())).collect())
             .unwrap_or_default();
         let state = self.get_state(req.account, &req.region);
-        if let Some(topic) = state.get_topic(arn) {
+        if let Some(topic) = state.topics.read().get(arn).cloned() {
             let mut existing = topic.tags.write();
             existing.retain(|(k, _)| !keys.contains(&k.to_string()));
         }
