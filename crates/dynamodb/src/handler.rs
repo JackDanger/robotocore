@@ -859,6 +859,9 @@ impl DynamoDbHandler {
                 };
 
                 let keys = keys_json.get("Keys").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+                let projection = keys_json.get("ProjectionExpression")
+                    .and_then(|v| v.as_str())
+                    .map(|s| s.split(", ").map(|p| p.trim().to_string()).collect::<Vec<_>>());
                 let items = table.items.read();
                 let mut found: Vec<Value> = Vec::new();
                 for key_json in &keys {
@@ -868,8 +871,18 @@ impl DynamoDbHandler {
                         .unwrap_or_default();
                     for (_key_str, item) in items.iter() {
                         if key_attrs.iter().all(|(name, val)| item.attributes.get(name) == Some(val)) {
-                            let item_json = serde_json::to_value(&item.attributes).unwrap_or(Value::Null);
-                            found.push(item_json);
+                            let attrs = &item.attributes;
+                            let mut item_obj = serde_json::Map::new();
+                            for (name, val) in attrs {
+                                match &projection {
+                                    Some(proj) if !proj.contains(name) => continue,
+                                    _ => {}
+                                }
+                                if let Ok(val_json) = serde_json::to_value(val) {
+                                    item_obj.insert(name.clone(), val_json);
+                                }
+                            }
+                            found.push(Value::Object(item_obj));
                             break;
                         }
                     }
