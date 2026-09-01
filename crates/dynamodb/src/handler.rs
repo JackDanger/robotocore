@@ -775,12 +775,19 @@ impl DynamoDbHandler {
 
     fn apply_update_expr(&self, attrs: &mut HashMap<String, Value>, expr: &str, values: &Value, attr_names: &HashMap<String, String>) {
         let expr = expr.trim();
-
         // Handle SET clause
         if let Some(set_pos) = expr.find("SET") {
             let rest = expr[set_pos + 3..].trim();
+            // Stop at REMOVE or ADD keyword
+            let set_rest = if let Some(remove_pos) = rest.find(" REMOVE ") {
+                &rest[..remove_pos]
+            } else if let Some(add_pos) = rest.find(" ADD ") {
+                &rest[..add_pos]
+            } else {
+                rest
+            };
             // Parse SET attr = value pairs
-            let pairs: Vec<&str> = rest.split(",").map(|s| s.trim()).collect();
+            let pairs: Vec<&str> = set_rest.split(",").map(|s| s.trim()).collect();
             for pair in pairs {
                 if let Some(eq_pos) = pair.find('=') {
                     let attr = pair[..eq_pos].trim();
