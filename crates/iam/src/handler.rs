@@ -245,9 +245,19 @@ impl IamHandler {
             "<State>COMPLETE</State><Description/>".into())
     }
 
-    fn get_credential_report(&self, _req: &AwsRequest) -> AwsResponse {
+    fn get_credential_report(&self, req: &AwsRequest) -> AwsResponse {
+        let state = self.get_state(req.account);
+        let users = state.users.read();
+        let mut csv = String::new();
+        csv.push_str("user,arn,last_used,access_key_last_used,secret_key_last_rotated,certificate_last_rotated,account_mfa_active,credentials_report_generator");
+        for user in users.values() {
+            csv.push_str(&format!("
+{},{}", user.username, user.arn));
+        }
+        // URL-encode the CSV content for XML
+        let encoded = base64::encode(csv.as_bytes());
         AwsResponse::xml(200, "GetCredentialReport",
-            "<Content></Content><State>COMPLETE</State><ReportFormat>text/csv</ReportFormat><Description/>".into())
+            format!("<Content>{}</Content><State>COMPLETE</State><ReportFormat>text/csv</ReportFormat><Description/>", encoded))
     }
 
     fn list_ip_for_role(&self, req: &AwsRequest) -> AwsResponse {
