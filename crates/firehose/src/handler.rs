@@ -123,8 +123,15 @@ impl FirehoseHandler {
                 .cloned()
                 .unwrap_or_default(),
         };
-        state.put_stream(stream);
-        AwsResponse::json(200, json!({ "DeliveryStreamARN": arn }))
+        state.put_stream(stream.clone());
+        let extended_s3_dest = req.params.get("ExtendedS3DestinationConfiguration")
+            .cloned()
+            .unwrap_or(json!({}));
+        AwsResponse::json(200, json!({
+            "DeliveryStreamARN": arn,
+            "HasMoreDestinations": false,
+            "ExtendedS3DestinationDescription": extended_s3_dest
+        }))
     }
 
     fn delete_stream(&self, req: &AwsRequest) -> AwsResponse {
