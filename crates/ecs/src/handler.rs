@@ -613,8 +613,8 @@ other => AwsResponse::error(400, "ValidationException",
     fn list_task_def_families(&self, req: &AwsRequest) -> AwsResponse {
         let state = self.get_state(req.account, &req.region);
         let tds = state.task_definitions.read();
-        let mut families: Vec<String> = tds.keys().map(|k| {
-            k.rsplit(':').next().unwrap_or(k).to_string()
+        let mut families: Vec<String> = tds.values().filter_map(|td| {
+            td.get("family").and_then(|f| f.as_str()).map(String::from)
         }).collect();
         families.sort();
         families.dedup();
