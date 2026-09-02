@@ -321,7 +321,10 @@ other => AwsResponse::error(400, "ValidationException",
         let name = req.params.get("name")
             .and_then(|v| v.as_str()).unwrap_or_default().to_string();
         let arn = format!("arn:aws:states:{}:{}:activity:{}", req.region, req.account, name);
-        AwsResponse::json(200, json!({ "activityArn": arn }))
+        AwsResponse::json(200, json!({
+            "activityArn": arn,
+            "creationDate": chrono::Utc::now().to_rfc3339()
+        }))
     }
 
     fn delete_activity(&self, req: &AwsRequest) -> AwsResponse {
