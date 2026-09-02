@@ -96,6 +96,24 @@ def id_prefix(op, sp):
     return (res[:2] or "xx").lower() + "-"
 
 
+def id_prefix_for(svc, op, sp, id_wire):
+    """Try the botocore pattern; else 2 leading letters of the resource name.
+    NOTE: AWS id prefixes are irregular (oi- for OpsItem, pb- for PatchBaseline).
+    The generated code carries a TODO so the agent can verify against the
+    failing test's startswith() assertion before committing."""
+    out = sp["operations"][op].get("output", {}).get("shape")
+    if out:
+        for name, info in sp["shapes"][out].get("members", {}).items():
+            if name == id_wire:
+                sub = sp["shapes"].get(info.get("shape"), {})
+                pat = sub.get("pattern", "")
+                m = re.match(r"^([a-z0-9]{1,4}-)", pat)
+                if m:
+                    return m.group(1)
+    res = re.sub(r"^(Create|Put|Set|Register|Add|Import|Start)", "", op) or op
+    return (res[:2] or "xx").lower() + "-"
+
+
 def gen(svc, op):
     sp = spec(svc)
     shapes = sp["shapes"]
@@ -109,7 +127,6 @@ def gen(svc, op):
     resource = re.sub(r"^(Create|Put|Set|Register|Add|Import|Start|Delete|Get|List|Update|Remove|Tag|Untag)", "", op) or op
     R = to_pascal(resource)
     snake = re.sub(r"(?<!^)(?=[A-Z])", "_", op).lower()
-    prefix = id_prefix(op, sp)
 
     # Find the resource's canonical GET op to learn the full model shape
     # (Create ops usually return only the Id; Get ops return the whole resource).
@@ -155,6 +172,7 @@ def gen(svc, op):
             break
     if id_wire is None and out_members:
         id_wire = list(out_members)[0]
+    prefix = id_prefix_for(svc, op, sp, id_wire)
 
     # ---- models.rs ----
     m = []
@@ -169,7 +187,7 @@ def gen(svc, op):
     m.append("}")
     m.append(f"impl {R} {{")
     m.append(f"    pub fn from_request(req: &AwsRequest) -> Self {{")
-    m.append(f'        let {id_wire.lower()} = format!("{id_wire[:2].lower()}-{{}}", uuid::Uuid::new_v4().simple());')
+    m.append(f'        let {id_wire.lower()} = format!("{prefix}{{}}", uuid::Uuid::new_v4().simple()); // TODO: verify prefix against test startswith() assertion')
     m.append('        let now_iso = chrono::Utc::now().to_rfc3339();')
     m.append(f'        let arn = format!("arn:aws:{{s}}:{{r}}:{{a}}:{{id}}", s = req.service, r = req.region, a = req.account, id = &{id_wire.lower()});')
     # for each model field: if an input param of the same name exists, read it; else default

@@ -84,7 +84,7 @@ impl SsmHandler {
                 "ActivationList": []
             })),
             "DescribeAvailablePatches" => self.json_stub_list(&req, "Patches"),
-            "DescribeDocument" => self.json_stub(&req, "Document"),
+            "DescribeDocument" => self.describe_document(&req),
             "DescribeDocumentPermission" => self.json_stub(&req, "Permissions"),
             "DescribeEffectiveInstanceAssociations" => self.json_stub_list(&req, "InstanceAssociations"),
             "DescribeEffectivePatchesForPatchBaseline" => self.json_stub_list(&req, "Patches"),
@@ -689,6 +689,33 @@ impl SsmHandler {
             }
         }
         AwsResponse::json(200, json!({}))
+    }
+
+    fn describe_document(&self, req: &AwsRequest) -> AwsResponse {
+        let name = req.params.get("Name").and_then(|v| v.as_str()).unwrap_or("");
+        let state = self.get_state(req.account, &req.region);
+        let doc = state.documents.read().get(name).cloned();
+        match doc {
+            Some(doc) => AwsResponse::json(200, json!({
+                "Document": {
+                    "Name": doc.name,
+                    "DocumentType": doc.document_type,
+                    "DocumentFormat": "JSON",
+                    "DocumentStatus": doc.status,
+                    "VersionName": doc.version.to_string(),
+                    "CreatedDate": doc.created as f64,
+                    "LastUpdatedDate": doc.created as f64,
+                    "Description": "",
+                    "Owner": "123456789012",
+                    "Hash": "0".repeat(64),
+                    "HashType": "Sha256",
+                    "DocumentVersion": doc.version.to_string(),
+                    "MaxAllowedVersion": 1
+                }
+            })),
+            None => AwsResponse::error(400, "InvalidDocument",
+                &format!("The document {name} does not exist")),
+        }
     }
 }
 

@@ -363,3 +363,59 @@ in the next file run.
 
   Realistic trajectory: 51% -> 70% after WS1+WS3 (~1 week), -> 85%
   after WS2 (~2 weeks), remaining 15% is WS4 + bridge services.
+
+
+=====================================================================
+8. IMPLEMENTED (scripts/harness/) — verified end-to-end 2026-08-30
+=====================================================================
+
+The three-stage pipeline is now real, runnable code:
+
+  classify_gaps.py   Stage 1  -> .parity/gap_report.json
+  plan_fixes.py      Stage 2  -> .parity/worklist.json
+  gen_rust_op.py     Stage 2b -> concrete Rust patch (stdout)
+  next_work.py       Stage 3  -> .parity/next.json (the #1 work item)
+
+Run order (no server needed for 1-2b):
+  python scripts/harness/classify_gaps.py --all
+  python scripts/harness/plan_fixes.py
+  python scripts/harness/next_work.py --json     # prints item #1
+
+Verified output (top of the worklist, 2026-08-30):
+  rank  group                      action       tests  line
+  1     logs/CreateLogGroup        add_fields    26    36
+  2     stepfunctions/CreateStateMachine fix_shape 32  36
+  3     sqs/CreateQueue            fix_shape     23   1032
+  4     ecr/CreateRepository       add_fields    22    36
+  5     kms/CreateKey              add_fields    17    36
+
+gen_rust_op.py emits a 3-part patch (models struct + handler method +
+match arm) from the botocore spec alone. Example for ssm/CreateOpsItem:
+  * struct Opsitem with 21 fields (union of Create+GetOpsItem output shapes)
+  * from_request() reads Title/Source/Description/Priority/Severity/Category,
+    sets Status="Open", CreatedTime=now, OpsItemArn=arn:aws:...,
+    OpsItemId="op-<uuid>" (TODO marker to verify prefix against the test's
+    startswith("oi-") assertion)
+  * create_ops_item() stores in state and returns {"OpsItem": to_aws_json()}
+  * dispatch arm: "CreateOpsItem" => self.create_ops_item(&req)
+
+Apply loop (agent or human), per next_work.py item:
+  1. cargo build --release -p <crate>          # must compile
+  2. restart rust server with fresh state
+  3. pytest <first test in item> -x -q         # verify
+  4. if green: pytest <whole file> to confirm group
+  5. commit; re-run next_work.py to re-rank
+
+Known generator limitations (by design, marked in code):
+  * id prefix fallback is 2-letter of the resource name; AWS prefixes are
+    irregular (oi-, pb-, sm-) — the TODO marker tells the agent to check
+    the test's startswith() assertion and adjust the one format!() line.
+  * the state struct is NOT auto-extended; the handler stores into
+    st.<resource>s with a TODO(state) marker. The agent adds the field to
+    the crate's State struct (one line) when applying.
+  * add_fields/fix_shape items (implemented ops) need a response-shape
+    diff against the botocore output shape; next_work.py reports the
+    missing-field list from gap_report details and the agent edits the
+    existing json!() body. The generator covers the de_stub path fully;
+    add_fields is guided (file+line+missing fields) rather than fully
+    generated, because the existing method must be edited, not replaced.
