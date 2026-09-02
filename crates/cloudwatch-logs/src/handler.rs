@@ -37,9 +37,7 @@ impl LogsHandler {
             "DeleteLogGroup" => self.delete_log_group(&req),
             "DescribeLogGroups" => self.describe_log_groups(&req),
             "DescribeTagsLogGroup" => AwsResponse::json(200, json!({ "tags": [] })),
-            "ListTagsForResource" => AwsResponse::json(200, json!({ "tags": [] })),
-            "TagResource" => AwsResponse::json(200, json!({})),
-            "UntagResource" => AwsResponse::json(200, json!({})),
+
             "GetLogGroup" => self.get_log_group(&req),
             "PutRetentionPolicy" => self.put_retention_policy(&req),
             "DescribeLogGroups" => self.describe_log_groups(&req),
