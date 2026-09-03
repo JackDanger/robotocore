@@ -52,7 +52,7 @@ impl StepfunctionsHandler {
             "DeleteActivity" => self.delete_activity(&req),
             "GetActivityTask" => self.get_activity_task(&req),
             "ListStateMachines" => self.list_sms(&req),
-                        "DescribeActivity" => self.json_stub(&req, "Activity"),
+                        "DescribeActivity" => self.describe_activity(&req),
             "DescribeExecution" => self.describe_exec(&req),
             "DescribeMapRun" => self.json_stub(&req, "MapRun"),
             "DescribeStateMachineForExecution" => self.json_stub(&req, "StateMachineForExecution"),
@@ -310,9 +310,11 @@ other => AwsResponse::error(400, "ValidationException",
         AwsResponse::json(200, json!({}))
     }
 
-    fn list_activities(&self, _req: &AwsRequest) -> AwsResponse {
+    fn list_activities(&self, req: &AwsRequest) -> AwsResponse {
+        let state = self.get_state(req.account, &req.region);
+        let activities: Vec<Value> = state.activities.read().values().cloned().collect();
         AwsResponse::json(200, json!({
-            "activities": [],
+            "activities": activities,
             "nextToken": Value::Null
         }))
     }
@@ -321,9 +323,16 @@ other => AwsResponse::error(400, "ValidationException",
         let name = req.params.get("name")
             .and_then(|v| v.as_str()).unwrap_or_default().to_string();
         let arn = format!("arn:aws:states:{}:{}:activity:{}", req.region, req.account, name);
+        let now = chrono::Utc::now().to_rfc3339();
+        let state = self.get_state(req.account, &req.region);
+        state.activities.write().insert(arn.clone(), json!({
+            "activityArn": arn,
+            "name": name,
+            "creationDate": now
+        }));
         AwsResponse::json(200, json!({
             "activityArn": arn,
-            "creationDate": chrono::Utc::now().to_rfc3339()
+            "creationDate": now
         }))
     }
 
@@ -385,6 +394,24 @@ other => AwsResponse::error(400, "ValidationException",
         ];
         AwsResponse::json(200, json!({
             "events": events
+        }))
+    }
+
+    fn describe_activity(&self, req: &AwsRequest) -> AwsResponse {
+        let arn = req.params.get("activityArn")
+            .and_then(|v| v.as_str()).unwrap_or_default();
+        let state = self.get_state(req.account, &req.region);
+        if let Some(activity) = state.activities.read().get(arn) {
+            return AwsResponse::json(200, activity.clone());
+        }
+        // Fallback: construct from ARN
+        let name = arn.rsplit_once(':')
+            .map(|(_, n)| n.to_string())
+            .unwrap_or_default();
+        AwsResponse::json(200, json!({
+            "activityArn": arn,
+            "name": name,
+            "creationDate": chrono::Utc::now().to_rfc3339()
         }))
     }
 }
