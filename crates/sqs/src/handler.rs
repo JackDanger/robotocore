@@ -1049,6 +1049,9 @@ impl DefaultSqsHandler {
             }
             "PurgeQueue" => self.handle_purge_queue(&req.params, req.account, &req.region),
             "SendMessageBatch" => self.handle_send_message_batch(&req.params, req.account, &req.region),
+            "TagQueue" => self.handle_tag_queue(&req.params, req.account, &req.region),
+            "UntagQueue" => self.handle_untag_queue(&req.params, req.account, &req.region),
+            "ListQueueTags" => self.handle_list_queue_tags(&req.params, req.account, &req.region),
             _ => Err(SqsError::ValidationError(format!(
                 "Unknown operation: {}",
                 req.operation
